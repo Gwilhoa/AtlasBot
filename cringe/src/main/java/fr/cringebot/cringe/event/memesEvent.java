@@ -31,7 +31,7 @@ public class memesEvent {
         int nb = u-d;
         if (nb <= -5)
             message.delete().queue();
-        else if (nb >= 1) {
+        else if (nb >= 5) {
             ArrayList<Message.Attachment> attachments = new ArrayList<>(message.getAttachments());
             if ((message.getAttachments().size() >= 1 && message.getAttachments().get(0).isImage()) || (message.getAttachments().size() >= 1 && message.getAttachments().get(0).isVideo())) {
                 MessageAction msg;
