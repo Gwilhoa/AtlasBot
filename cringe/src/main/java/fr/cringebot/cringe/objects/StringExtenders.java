@@ -1,8 +1,6 @@
 package fr.cringebot.cringe.objects;
 
 
-import java.io.StringBufferInputStream;
-
 public class StringExtenders {
     public static boolean containsIgnoreCase(String s, String s2) {
         return s.toLowerCase().contains(s2.toLowerCase());

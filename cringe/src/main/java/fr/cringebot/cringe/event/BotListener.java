@@ -1,17 +1,9 @@
 package fr.cringebot.cringe.event;
 
-import com.github.jreddit.entity.Subreddit;
-import com.github.jreddit.entity.User;
-import com.github.jreddit.retrieval.Subreddits;
-import com.github.jreddit.retrieval.params.SubredditsView;
-import com.github.jreddit.utils.restclient.HttpRestClient;
-import com.github.jreddit.utils.restclient.RestClient;
 import fr.cringebot.BotDiscord;
-import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.*;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -28,10 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-
-
 import static fr.cringebot.cringe.event.ReactionEvent.*;
-import static fr.cringebot.cringe.objects.StringExtenders.*;
+import static fr.cringebot.cringe.objects.StringExtenders.containsIgnoreCase;
+import static fr.cringebot.cringe.objects.StringExtenders.startWithIgnoreCase;
 
 
 public class BotListener implements EventListener {
