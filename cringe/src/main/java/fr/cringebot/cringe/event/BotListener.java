@@ -3,8 +3,10 @@ package fr.cringebot.cringe.event;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.*;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -118,12 +120,16 @@ public class BotListener implements EventListener {
 
         if (msg.getChannel().getId().equals("461606547064356864") && UtilFunction.isAnyLink(msg))
         {
-            if (UtilFunction.isImage(msg.getContentRaw()))
-            {
+            if (UtilFunction.isImage(msg.getContentRaw())) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 BufferedImage im = imgExtenders.getImage(new URL(msg.getContentRaw()));
                 ImageIO.write(im, "png", baos);
-                Message temp = msg.getTextChannel().sendFile(baos.toByteArray(), msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1]).complete();
+                String fileName = msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1];
+                MessageEmbed embed = new EmbedBuilder().setImage("attachment://" + fileName)
+                        .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getEffectiveAvatarUrl())
+                        .setDescription(msg.getContentRaw()).build();
+                Message temp = msg.getTextChannel().sendFile(baos.toByteArray(), fileName)
+                        .setEmbeds(embed).complete();
                 msg.delete().queue();
                 msg = temp;
 
