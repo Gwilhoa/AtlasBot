@@ -1,18 +1,12 @@
 package fr.cringebot.cringe.event;
 
-import com.github.jreddit.entity.Subreddit;
-import com.github.jreddit.entity.User;
-import com.github.jreddit.retrieval.Subreddits;
-import com.github.jreddit.retrieval.params.SubredditsView;
-import com.github.jreddit.utils.restclient.HttpRestClient;
-import com.github.jreddit.utils.restclient.RestClient;
 import fr.cringebot.BotDiscord;
-import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.*;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -28,10 +22,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-
-
 import static fr.cringebot.cringe.event.ReactionEvent.*;
-import static fr.cringebot.cringe.objects.StringExtenders.*;
+import static fr.cringebot.cringe.objects.StringExtenders.containsIgnoreCase;
+import static fr.cringebot.cringe.objects.StringExtenders.startWithIgnoreCase;
 
 
 public class BotListener implements EventListener {
@@ -127,12 +120,16 @@ public class BotListener implements EventListener {
 
         if (msg.getChannel().getId().equals("461606547064356864") && UtilFunction.isAnyLink(msg))
         {
-            if (UtilFunction.isImage(msg.getContentRaw()))
-            {
+            if (UtilFunction.isImage(msg.getContentRaw())) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 BufferedImage im = imgExtenders.getImage(new URL(msg.getContentRaw()));
                 ImageIO.write(im, "png", baos);
-                Message temp = msg.getTextChannel().sendFile(baos.toByteArray(), msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1]).complete();
+                String fileName = msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1];
+                MessageEmbed embed = new EmbedBuilder().setImage("attachment://" + fileName)
+                        .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getEffectiveAvatarUrl())
+                        .setDescription(msg.getContentRaw()).build();
+                Message temp = msg.getTextChannel().sendFile(baos.toByteArray(), fileName)
+                        .setEmbeds(embed).complete();
                 msg.delete().queue();
                 msg = temp;
 

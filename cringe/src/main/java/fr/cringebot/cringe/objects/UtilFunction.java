@@ -3,7 +3,6 @@ package fr.cringebot.cringe.objects;
 import net.dv8tion.jda.api.entities.Message;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;

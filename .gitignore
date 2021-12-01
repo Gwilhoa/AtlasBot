@@ -1,0 +1,7 @@
+.idea/
+out/
+target/
+dependency-reduced-pom.xml
+*.class
+*.jar
+hs_err_pid*

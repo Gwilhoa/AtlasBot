@@ -2,7 +2,6 @@ package fr.cringebot.cringe.command;
 
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command;
-import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.UtilFunction;
 import fr.cringebot.cringe.objects.activity;
 import net.dv8tion.jda.api.JDA;
@@ -18,7 +17,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-
 
 import static fr.cringebot.cringe.objects.imgExtenders.resize;
 

@@ -11,8 +11,7 @@ import net.dv8tion.jda.api.entities.*;
 
 import java.awt.*;
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.List;
+import java.util.Queue;
 
 public class MusicCommand {
 
