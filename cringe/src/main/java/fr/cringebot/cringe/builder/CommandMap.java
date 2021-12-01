@@ -1,11 +1,11 @@
 package fr.cringebot.cringe.builder;
 
 import fr.cringebot.BotDiscord;
+import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.command.CommandDefault;
 import fr.cringebot.cringe.command.HelpCommand;
 import fr.cringebot.cringe.command.UtilCommand;
 import fr.cringebot.music.MusicCommand;
-import fr.cringebot.cringe.builder.Command.ExecutorType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 

@@ -1,7 +1,5 @@
 package fr.cringebot.cringe.command;
 
-import java.awt.Color;
-
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
@@ -12,6 +10,8 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.internal.entities.UserImpl;
 
+import java.awt.*;
+
 public class HelpCommand {
 
     private final CommandMap commandMap;
@@ -20,7 +20,7 @@ public class HelpCommand {
         this.commandMap = commandMap;
     }
 
-    @Command(name="help",type= ExecutorType.USER,description="affiche la liste des commandes.")
+    @Command(name = "help", type = ExecutorType.USER, description = "affiche la liste des commandes.")
     private void help(User user, MessageChannel channel, Guild guild){
 
         EmbedBuilder builder = new EmbedBuilder();

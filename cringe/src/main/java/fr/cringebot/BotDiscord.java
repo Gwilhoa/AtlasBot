@@ -11,13 +11,8 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
-/**
- * Hello world!
- *
- */
-import java.util.Scanner;
-
 import javax.security.auth.login.LoginException;
+import java.util.Scanner;
 
 
 

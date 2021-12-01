@@ -1,6 +1,8 @@
 package fr.cringebot.cringe.builder;
-import java.lang.reflect.Method;
+
 import fr.cringebot.cringe.builder.Command.ExecutorType;
+
+import java.lang.reflect.Method;
 
 
 public final class SimpleCommand {
@@ -10,7 +12,7 @@ public final class SimpleCommand {
     private final Object object;
     private final Method method;
 
-    public SimpleCommand(String name, String description, ExecutorType executorType, Object object, Method method, int power){
+    public SimpleCommand(String name, String description, ExecutorType executorType, Object object, Method method, int power) {
         super();
         this.name = name;
         this.description = description;

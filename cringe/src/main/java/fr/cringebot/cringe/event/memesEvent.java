@@ -1,15 +1,10 @@
 package fr.cringebot.cringe.event;
 
 import fr.cringebot.cringe.objects.UtilFunction;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageActivity;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import net.dv8tion.jda.internal.requests.restaction.MessageActionImpl;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 
