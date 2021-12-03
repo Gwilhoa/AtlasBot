@@ -42,7 +42,6 @@ public class imgExtenders {
     }
     public static BufferedImage getImage(URL url){
         BufferedImage image;
-        System.out.println("yes..");
         try {
             image = ImageIO.read(url);
         } catch (Exception e) {

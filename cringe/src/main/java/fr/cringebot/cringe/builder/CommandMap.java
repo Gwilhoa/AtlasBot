@@ -3,6 +3,7 @@ package fr.cringebot.cringe.builder;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.command.CommandDefault;
+import fr.cringebot.cringe.command.CommandPokemon;
 import fr.cringebot.cringe.command.HelpCommand;
 import fr.cringebot.cringe.command.UtilCommand;
 import fr.cringebot.music.MusicCommand;
@@ -28,8 +29,7 @@ public final class CommandMap {
 
     public CommandMap(BotDiscord botDiscord) {
         this.botDiscord = botDiscord;
-        registerCommands(new CommandDefault(botDiscord, this), new HelpCommand(this), new MusicCommand(), new UtilCommand(this.botDiscord));
-
+        registerCommands(new CommandDefault(botDiscord, this), new HelpCommand(this), new MusicCommand(), new UtilCommand(this.botDiscord), new CommandPokemon());
     }
 
     public static String getTag() {
