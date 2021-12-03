@@ -26,6 +26,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.14.3</version>
+    </dependency>
+    <dependency>
       <groupId>net.dv8tion</groupId>
       <artifactId>JDA</artifactId>
       <version>4.3.0_314</version>
@@ -43,6 +48,7 @@
   </dependencies>
 
   <build>
+    <finalName>cringebot</finalName>
     <pluginManagement>
       <plugins>
         <plugin>

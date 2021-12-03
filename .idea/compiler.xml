@@ -12,6 +12,7 @@
     <bytecodeTargetLevel>
       <module name="beta" target="8" />
       <module name="cringe" target="1.5" />
+      <module name="cringebot" target="1.8" />
       <module name="mvn" target="16" />
     </bytecodeTargetLevel>
   </component>

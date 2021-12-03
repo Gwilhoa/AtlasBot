@@ -5,6 +5,8 @@ import fr.cringebot.cringe.objects.UtilFunction;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -51,7 +53,6 @@ public class ReactionEvent {
     }
 
     public static void rage(Message msg) {
-
         if (msg.getAuthor().getId().equals("358659144330248193")) {
             msg.getTextChannel().sendMessage("aaaaah on le reconnait bien").reference(msg).queue();
         } else {
@@ -60,33 +61,13 @@ public class ReactionEvent {
     }
 
     public static void randomcity(Message msg) throws IOException {
-
-        HttpURLConnection conn = (HttpURLConnection) new URL(
-                "https://randomcity.net/").openConnection();
-        conn.connect();
-
-        BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
-
-        byte[] bytes = new byte[1024];
-        int tmp;
-        int i = 0;
-        int j = 0;
-        String chaine = "";
-        while ((tmp = bis.read(bytes)) != -1 || i < 2) {
-            if (i == 1) {
-                chaine = new String(bytes, 0, tmp);
-            }
-            i++;
-        }
-        j = firstsearch(chaine,"h1>");
-        j++;
-        i = firstsearch(chaine.substring(j),"  ");
-        EmbedBuilder eb =new EmbedBuilder().setTitle(chaine.substring(j,i + j)).setColor(new Color(new Random().nextInt(255),new Random().nextInt(255),new Random().nextInt(255)));
-        j = firstsearch(chaine,"<img class=\"flag\" src=\"") + 1;
-        i = firstsearch(chaine,".png\" alt=\"Flag of") - 13;
-        eb.setImage("https://randomcity.net/"+chaine.substring(j,i)).setColor(Color.green);
-        msg.getTextChannel().sendMessageEmbeds(eb.build()).reference(msg).queue();
-
+        Document doc = Jsoup.connect("https://randomcity.net").get();
+        EmbedBuilder eb = new EmbedBuilder();
+        String str = doc.select("body:nth-child(2) div.pure-g:nth-child(1) div.pure-u-1:nth-child(2) > h1:nth-child(1)").text();
+        eb.setTitle(str).setColor(new Color(255,215,0));
+        str = doc.select("body:nth-child(2) div.pure-g:nth-child(1) div.pure-u-1:nth-child(2) h1:nth-child(1) > img.flag").attr("src");
+        eb.setImage("https://randomcity.net/" + str);
+        msg.getChannel().sendMessageEmbeds(eb.build()).queue();
     }
 
     public static void putain(Message msg){

@@ -12,7 +12,6 @@ import static fr.cringebot.cringe.objects.Emote.getEmote;
 
 public class memesEvent {
     public static void addReaction(Message message, MessageReaction react) {
-        System.out.println("test");
         int u = 0;
         int d = 0;
         for ( MessageReaction reaction : message.getReactions()) {
@@ -28,6 +27,11 @@ public class memesEvent {
             message.delete().queue();
         else if (nb >= 5) {
             ArrayList<Message.Attachment> attachments = new ArrayList<>(message.getAttachments());
+            if (!message.getEmbeds().isEmpty()) {
+                message.getGuild().getTextChannelById("911549374696411156").sendMessageEmbeds(message.getEmbeds().get(0)).queue();
+                message.delete().queue();
+                return;
+            }
             if ((message.getAttachments().size() >= 1 && message.getAttachments().get(0).isImage()) || (message.getAttachments().size() >= 1 && message.getAttachments().get(0).isVideo())) {
                 MessageAction msg;
                 if (!message.getContentRaw().isEmpty())

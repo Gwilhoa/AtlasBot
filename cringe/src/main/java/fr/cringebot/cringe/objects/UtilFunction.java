@@ -98,6 +98,25 @@ public class UtilFunction {
         }
         return false;
     }
+    public static boolean isReddit(String message)
+    {
+        Matcher m = p.matcher(message);
+        if (m.find()){
+            String url = m.group();
+            return url.contains("reddit.com");
+        }
+        return false;
+    }
+
+    public static boolean isTenor(String message)
+    {
+        Matcher m = p.matcher(message);
+        if (m.find()){
+            String url = m.group();
+            return url.contains("tenor.co");
+        }
+        return false;
+    }
 
     public static boolean isYoutube(String message) {
         Matcher m = p.matcher(message);
