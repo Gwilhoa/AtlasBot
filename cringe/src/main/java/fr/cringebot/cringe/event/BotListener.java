@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/05 11:47:26 by                  ###   ########.fr       */
+/*   Updated: 2021/12/05 14:38:31 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@ package fr.cringebot.cringe.event;
 
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.CommandMap;
-import fr.cringebot.cringe.objects.*;
-import net.dv8tion.jda.api.EmbedBuilder;
+import fr.cringebot.cringe.objects.DetectorAttachment;
+import fr.cringebot.cringe.objects.StringExtenders;
+import fr.cringebot.cringe.objects.activity;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -27,16 +27,12 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import okhttp3.internal.Util;
 import org.jetbrains.annotations.NotNull;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.URL;
+import java.io.IOException;
 
 import static fr.cringebot.cringe.event.ReactionEvent.*;
+import static fr.cringebot.cringe.event.memesEvent.postmeme;
 import static fr.cringebot.cringe.objects.StringExtenders.containsIgnoreCase;
 import static fr.cringebot.cringe.objects.StringExtenders.startWithIgnoreCase;
 
@@ -149,93 +145,7 @@ public class BotListener implements EventListener {
 
         //fonction mêmes quand un memes est postée (pas finie)
         if (msg.getChannel().getId().equals("461606547064356864") && (DetectorAttachment.isAnyLink(msg)))
-        {
-            if (DetectorAttachment.isImage(msg.getContentRaw())) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                BufferedImage im = imgExtenders.getImage(new URL(msg.getContentRaw()));
-                ImageIO.write(im, "png", baos);
-                String fileName = msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1];
-                MessageEmbed embed = new EmbedBuilder().setImage("attachment://" + fileName)
-                        .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getEffectiveAvatarUrl())
-                        .setDescription("").build();
-                Message temp = msg.getTextChannel().sendFile(baos.toByteArray(), fileName)
-                        .setEmbeds(embed).complete();
-                msg.delete().queue();
-                msg = temp;
-            }
-            if (msg.getAttachments().size() == 1 && msg.getAttachments().get(0).isImage())
-            {
-                File f = msg.getAttachments().get(0).downloadToFile().join();
-                EmbedBuilder eb = new EmbedBuilder().setImage("attachment://"+f.getName())
-                        .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getEffectiveAvatarUrl());
-                if (!msg.getContentRaw().isEmpty())
-                        eb.setDescription(msg.getContentRaw());
-                msg.delete().queue();
-                msg = msg.getChannel().sendFile(f).setEmbeds(eb.build()).complete();
-                f.deleteOnExit();
-
-            }
-            if (DetectorAttachment.isVideo(msg.getContentRaw())
-                    && !DetectorAttachment.isYoutube(msg.getContentRaw())
-                    && !DetectorAttachment.isTwitter(msg.getContentRaw())
-                    && !DetectorAttachment.isReddit(msg.getContentRaw())
-                    && !DetectorAttachment.isTenor(msg.getContentRaw()))
-            {
-                BufferedInputStream bs = new BufferedInputStream(new URL(msg.getContentRaw()).openStream());
-                FileOutputStream fos = new FileOutputStream(msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1]);
-                byte[] data = new byte[1024];
-                int ByteContent;
-                while ((ByteContent = bs.read(data,0,1024)) != -1){
-                    fos.write(data, 0, ByteContent);
-                }
-                File f = new File(msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1]);
-                msg.delete().queue();
-                msg = msg.getChannel().sendFile(f).complete();
-                f.deleteOnExit();
-            }
-            if (!msg.getAttachments().isEmpty() && msg.getAttachments().get(0).isVideo())
-            {
-                File f = msg.getAttachments().get(0).downloadToFile().join();
-                Message temp;
-                if (!msg.getContentRaw().isEmpty())
-                    temp = msg.getChannel().sendMessage("by > "+msg.getAuthor().getName()+"< >>"+ msg.getContentRaw()).addFile(f).complete();
-                else
-                    temp = msg.getChannel().sendMessage("by >"+msg.getAuthor().getName()).addFile(f).complete();
-                msg.delete().queue();
-                msg = temp;
-                f.deleteOnExit();
-            }
-            if (DetectorAttachment.isTwitter(msg.getContentRaw()))
-            {
-                EmbedBuilder eb = new EmbedBuilder()
-                        .setDescription(msg.getEmbeds().get(0).getDescription())
-                        .setTitle(msg.getEmbeds().get(0).getAuthor().getName())
-                        .setColor(msg.getEmbeds().get(0).getColor())
-                        .setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl())
-                        .setAuthor("twitter", msg.getEmbeds().get(0).getUrl(), msg.getEmbeds().get(0).getFooter().getIconUrl());
-                msg.delete().queue();
-                msg = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
-            }
-            if (DetectorAttachment.isReddit(msg.getContentRaw()))
-            {
-                EmbedBuilder eb = new EmbedBuilder()
-                        .setTitle(msg.getEmbeds().get(0).getTitle());
-                        eb.setAuthor("reddit",msg.getContentRaw(),"https://www.elementaryos-fr.org/wp-content/uploads/2019/08/logo-reddit.png");
-                        eb.setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
-                        eb.setImage(msg.getEmbeds().get(0).getThumbnail().getUrl());
-                msg.delete().queue();
-                msg = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
-            }
-            if (DetectorAttachment.isTenor(msg.getContentRaw()))
-            {
-                String str = msg.getContentRaw();
-                msg.delete().queue();
-                msg = msg.getChannel().sendMessage(str).complete();
-            }
-            msg.addReaction(msg.getGuild().getEmoteById(Emote.rirederoite)).queue();
-            msg.addReaction(msg.getGuild().getEmoteById(Emote.anto)).queue();
-            msg.addReaction(msg.getGuild().getEmoteById(Emote.porte)).queue();
-        }
+            postmeme(msg);
 
     }
 

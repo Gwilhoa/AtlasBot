@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:09:51 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/05 12:09:51 by gchatain         ###   ########lyon.fr   */
+/*   Updated: 2021/12/05 13:38:21 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,8 @@ public final class CommandMap {
     /**
      * sert à voir par son nom si c'est une command qui est executé depuis la console
      * si c'est le cas, elle va etre executée
-     * @param Command name
+     *
+     * @param command name
      */
     public void commandConsole(String command){
         Object[] object = getCommand(command);
