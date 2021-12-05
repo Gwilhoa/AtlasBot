@@ -83,21 +83,21 @@ public class memesEvent {
     public static void postmeme(Message msg) throws IOException {
         if (DetectorAttachment.isImage(msg.getContentRaw()))
             msg = repostmemeimg(msg);
-        if (msg.getAttachments().size() == 1 && msg.getAttachments().get(0).isImage())
+        else if (msg.getAttachments().size() == 1 && msg.getAttachments().get(0).isImage())
             msg = repostOnlyAttachment(msg);
-        if (DetectorAttachment.isVideo(msg.getContentRaw())
+        else if (DetectorAttachment.isVideo(msg.getContentRaw())
                 && !DetectorAttachment.isYoutube(msg.getContentRaw())
                 && !DetectorAttachment.isTwitter(msg.getContentRaw())
                 && !DetectorAttachment.isReddit(msg.getContentRaw())
                 && !DetectorAttachment.isTenor(msg.getContentRaw()))
             msg = repostmemevid(msg);
-        if (!msg.getAttachments().isEmpty() && msg.getAttachments().get(0).isVideo())
+        else if (!msg.getAttachments().isEmpty() && msg.getAttachments().get(0).isVideo())
             msg = repostVidAttachment(msg);
-        if (DetectorAttachment.isTwitter(msg.getContentRaw()))
+        else if (DetectorAttachment.isTwitter(msg.getContentRaw()))
             msg = repostTwitter(msg);
-        if (DetectorAttachment.isReddit(msg.getContentRaw()))
+        else if (DetectorAttachment.isReddit(msg.getContentRaw()))
             msg = repostReddit(msg);
-        if (DetectorAttachment.isTenor(msg.getContentRaw())) {
+        else if (DetectorAttachment.isTenor(msg.getContentRaw())) {
             String str = msg.getContentRaw();
             msg.delete().queue();
             msg = msg.getChannel().sendMessage(str).complete();
