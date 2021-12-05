@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   UserExtenders.java                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 13:28:53 by gchatain          #+#    #+#             */
+/*   Updated: 2021/12/05 13:28:53 by gchatain         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 package fr.cringebot.cringe.objects;
 
 import net.dv8tion.jda.api.entities.Member;
@@ -7,6 +19,11 @@ import net.dv8tion.jda.api.entities.User;
 
 
 public class UserExtenders {
+    /**
+     * récupère l'hypesquad d'un membre
+     * @param mem
+     * @return
+     */
     public static User.UserFlag getHypesquad(Member mem){
             if (mem.getUser().getFlags().contains(User.UserFlag.HYPESQUAD_BALANCE)){
                 return User.UserFlag.HYPESQUAD_BALANCE;
@@ -17,6 +34,11 @@ public class UserExtenders {
             }
             return null;
         }
+        /**
+         * ça marche pas.
+         * @param mem
+         * @return
+         */
         public static Integer getAllmsg(Member mem){
         Integer i = 0;
             for ( TextChannel ch : mem.getGuild().getTextChannels()){

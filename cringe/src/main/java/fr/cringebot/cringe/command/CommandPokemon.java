@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   CommandPokemon.java                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 12:47:09 by gchatain          #+#    #+#             */
+/*   Updated: 2021/12/05 12:47:09 by gchatain         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 package fr.cringebot.cringe.command;
 
 import fr.cringebot.cringe.builder.Command;
@@ -9,8 +20,11 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
+/**
+toutes les commandes concernant les pokemon
+*/
 public class CommandPokemon {
-    @Command(name="pokedex",type= Command.ExecutorType.USER)
+    @Command(name="pokedex", description = "la connaissances sur les pokémons n'ont plus de limite, cherche le pokemon que tu veux !",type= Command.ExecutorType.USER)
     private void pokedex(Message msg){
         new Thread(()->{
             msg.getChannel().sendTyping().queue();
@@ -31,18 +45,6 @@ public class CommandPokemon {
             }
             msg.getChannel().sendMessageEmbeds(eb.build()).queue();
         }).start();
-		/*
-		Document doc = Jsoup.connect("https://pokestrat.io/pokemon-aleatoire/").get();
-		String str = doc.select("main.cadre:nth-child(5) section.espacement.aleat:nth-child(6) div.block-base1:nth-child(2) a:nth-child(1) div.block-base2.aleatoire.details.effet-hover div.inline-block-middle.nom > span.big-font:nth-child(3)").text();
-		String nameFr = str;
-		str = "https://www.pokemon.com/fr/pokedex/"+str;
-		doc = Jsoup.connect(str).get();
-		str = "https://www.pokepedia.fr/"+str;
-		doc = Jsoup.connect(str).get();
-		str = doc.selectXpath("(//th[contains(text(),'Nom anglais')]/following::td)[1]").text();
-		String nameAgl = str;
-		EmbedBuilder eb = new EmbedBuilder().setColor(Color.red).setTitle(nameFr).setImage("https://play.pokemonshowdown.com/sprites/ani/"+nameAgl.toLowerCase(Locale.ROOT)+".gif");
-		msg.getChannel().sendMessageEmbeds(eb.build()).queue();*/
     }
 
 }

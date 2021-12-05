@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ReactionEvent.java                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
+/*   Updated: 2021/12/05 13:00:42 by gchatain         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 package fr.cringebot.cringe.event;
 
 import fr.cringebot.cringe.objects.MessageConsumer;
-import fr.cringebot.cringe.objects.UtilFunction;
+import fr.cringebot.cringe.objects.DetectorAttachment;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -24,6 +36,10 @@ import static fr.cringebot.cringe.objects.imgExtenders.getImage;
 import static fr.cringebot.cringe.objects.imgExtenders.resize;
 
 public class ReactionEvent {
+    /**
+     * quelqu'un veut rendre respect ? press f to respect
+     * @param msg
+     */
     public static void pressf(Message msg) {
         String[] args = msg.getContentRaw().split(" ");
         if (msg.getContentRaw().length() < 60) {
@@ -52,6 +68,10 @@ public class ReactionEvent {
         }
     }
 
+    /**
+     * on vous demande d'éviter de crier
+     * @param msg
+     */
     public static void rage(Message msg) {
         if (msg.getAuthor().getId().equals("358659144330248193")) {
             msg.getTextChannel().sendMessage("aaaaah on le reconnait bien").reference(msg).queue();
@@ -60,7 +80,13 @@ public class ReactionEvent {
         }
     }
 
-    public static void randomcity(Message msg) throws IOException {
+    /**
+     * nice
+     * récupère les données sur un cite
+     * @param msg
+     * @throws IOException
+     */
+    public static void nice(Message msg) throws IOException {
         Document doc = Jsoup.connect("https://randomcity.net").get();
         EmbedBuilder eb = new EmbedBuilder();
         String str = doc.select("body:nth-child(2) div.pure-g:nth-child(1) div.pure-u-1:nth-child(2) > h1:nth-child(1)").text();
@@ -70,14 +96,27 @@ public class ReactionEvent {
         msg.getChannel().sendMessageEmbeds(eb.build()).queue();
     }
 
+    /**
+     * on évite de casser une table à chaque putain bordel
+     * @param msg
+     */
     public static void putain(Message msg){
         msg.getChannel().sendMessage("┬─┬ノ( º _ ºノ)").queue(new MessageConsumer("(°-°)\\ ┬─┬", 100, new MessageConsumer("(╯°□°)╯    ]", 100, new MessageConsumer("(╯°□°)╯  ︵  ┻━┻", 100, null))));
     }
 
+    /**
+     * va te coiffer, tu me fais peur
+     * @param msg
+     */
     public static void feur(Message msg){
         msg.getTextChannel().sendMessage("feur").queue();
     }
 
+    /**
+     * hmmm dépend du nombre de m
+     * @param msg
+     * @param rec
+     */
     public static void hmm(Message msg,String rec){
         int i = 1;
         while ( i < rec.length() && rec.charAt(i) == 'm')
@@ -85,7 +124,7 @@ public class ReactionEvent {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             BufferedImage im = getImage("hmmm.png");
-            if (UtilFunction.percent(2)) {
+            if (DetectorAttachment.percent(2)) {
                 msg.getChannel().sendMessage("https://cdn.discordapp.com/emojis/439511275437948938.gif?size=4096").queue();
                 return;
             }

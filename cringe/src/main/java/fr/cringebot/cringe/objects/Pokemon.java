@@ -6,6 +6,9 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.Locale;
 
+/**
+ * sert à garder tout les objets qui sont pokemon vont bientot etre modif
+ */
 public class Pokemon {
     public static String getRandomPokemon(){
         Document doc;

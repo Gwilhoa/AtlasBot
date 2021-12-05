@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   BotListener.java                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
+/*   Updated: 2021/12/05 11:47:26 by                  ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 package fr.cringebot.cringe.event;
 
 import fr.cringebot.BotDiscord;
@@ -27,7 +40,9 @@ import static fr.cringebot.cringe.event.ReactionEvent.*;
 import static fr.cringebot.cringe.objects.StringExtenders.containsIgnoreCase;
 import static fr.cringebot.cringe.objects.StringExtenders.startWithIgnoreCase;
 
-
+/**
+ * capture tout les evenements du bot
+ */
 public class BotListener implements EventListener {
 
     private final CommandMap commandMap;
@@ -40,6 +55,9 @@ public class BotListener implements EventListener {
     }
 
     @Override
+    /**
+     * à chaque event fonction qui sert d'aiguillage vers les fonction visée
+     */
     public void onEvent(@NotNull GenericEvent event){
         System.out.println(event.getClass().getSimpleName());
         if (event instanceof ReadyEvent) onEnable((ReadyEvent)event);
@@ -55,26 +73,36 @@ public class BotListener implements EventListener {
         else if(event instanceof MessageReactionAddEvent) onAddReact((MessageReactionAddEvent) event);
     }
 
+    /**
+     * au lancement
+     * @param event
+     */
     private void onEnable(ReadyEvent event){
         Activity act = new activity(", si tu lis ça tu es cringe", null ,Activity.ActivityType.LISTENING);
         bot.getJda().getPresence().setActivity(act);
     }
 
+    /**
+     * à la recption d'un message
+     * @param event
+     * @throws IOException
+     */
     private void onMessage(MessageReceivedEvent event) throws IOException {
         if(event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 
         Message msg = event.getMessage();
 
+        //si ça commence par le prefix, chercher et executer la commande en passant par Commandmap
         if(msg.getContentRaw().startsWith(CommandMap.getTag())){
             commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
             return;
         }
 
 
-
+        //split le message
         String[] args = msg.getContentRaw().split(" ");
 
-
+        //tous les events mis sans le prefix les reactions en gros
         if (args[0].equalsIgnoreCase("f")) {
             pressf(msg);
         }
@@ -90,14 +118,15 @@ public class BotListener implements EventListener {
         }
 
         if (containsIgnoreCase(msg.getContentRaw(), "nice")) {
-            if (!UtilFunction.isAnyLink(msg)) {
+            if (!DetectorAttachment.isAnyLink(msg)) {
                 try {
-                    randomcity(msg);
+                    nice(msg);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
+
         String[] s = msg.getContentRaw().replace("?","").replace(".","").split(" ");
         if (containsIgnoreCase(s[s.length - 1], "quoi" )){
             feur(msg);
@@ -114,13 +143,14 @@ public class BotListener implements EventListener {
         }
 
         if (containsIgnoreCase(msg.getContentRaw(),"cringe")){
-            if (!UtilFunction.isAnyLink(msg))
+            if (!DetectorAttachment.isAnyLink(msg))
                 msg.getTextChannel().sendMessage("https://tenor.com/view/oh-no-cringe-cringe-oh-no-kimo-kimmo-gif-23168319").queue();
         }
 
-        if (msg.getChannel().getId().equals("461606547064356864") && (UtilFunction.isAnyLink(msg)))
+        //fonction mêmes quand un memes est postée (pas finie)
+        if (msg.getChannel().getId().equals("461606547064356864") && (DetectorAttachment.isAnyLink(msg)))
         {
-            if (UtilFunction.isImage(msg.getContentRaw())) {
+            if (DetectorAttachment.isImage(msg.getContentRaw())) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 BufferedImage im = imgExtenders.getImage(new URL(msg.getContentRaw()));
                 ImageIO.write(im, "png", baos);
@@ -145,11 +175,11 @@ public class BotListener implements EventListener {
                 f.deleteOnExit();
 
             }
-            if (UtilFunction.isVideo(msg.getContentRaw())
-                    && !UtilFunction.isYoutube(msg.getContentRaw())
-                    && !UtilFunction.isTwitter(msg.getContentRaw())
-                    && !UtilFunction.isReddit(msg.getContentRaw())
-                    && !UtilFunction.isTenor(msg.getContentRaw()))
+            if (DetectorAttachment.isVideo(msg.getContentRaw())
+                    && !DetectorAttachment.isYoutube(msg.getContentRaw())
+                    && !DetectorAttachment.isTwitter(msg.getContentRaw())
+                    && !DetectorAttachment.isReddit(msg.getContentRaw())
+                    && !DetectorAttachment.isTenor(msg.getContentRaw()))
             {
                 BufferedInputStream bs = new BufferedInputStream(new URL(msg.getContentRaw()).openStream());
                 FileOutputStream fos = new FileOutputStream(msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1]);
@@ -175,7 +205,7 @@ public class BotListener implements EventListener {
                 msg = temp;
                 f.deleteOnExit();
             }
-            if (UtilFunction.isTwitter(msg.getContentRaw()))
+            if (DetectorAttachment.isTwitter(msg.getContentRaw()))
             {
                 EmbedBuilder eb = new EmbedBuilder()
                         .setDescription(msg.getEmbeds().get(0).getDescription())
@@ -186,7 +216,7 @@ public class BotListener implements EventListener {
                 msg.delete().queue();
                 msg = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
             }
-            if (UtilFunction.isReddit(msg.getContentRaw()))
+            if (DetectorAttachment.isReddit(msg.getContentRaw()))
             {
                 EmbedBuilder eb = new EmbedBuilder()
                         .setTitle(msg.getEmbeds().get(0).getTitle());
@@ -196,7 +226,7 @@ public class BotListener implements EventListener {
                 msg.delete().queue();
                 msg = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
             }
-            if (UtilFunction.isTenor(msg.getContentRaw()))
+            if (DetectorAttachment.isTenor(msg.getContentRaw()))
             {
                 String str = msg.getContentRaw();
                 msg.delete().queue();
@@ -209,14 +239,26 @@ public class BotListener implements EventListener {
 
     }
 
+    /**
+     * si une nouvelle personne a rejoint
+     * @param event
+    */
     private void onGuildMemberJoin(GuildMemberJoinEvent event){
         event.getGuild().getTextChannelById("687244482739044370").sendMessage(event.getUser().getAsMention()+" a rejoint la Guild.").queue();
     }
 
+    /**
+     * si une personne nous as quitté
+     * @param event
+     */
     private void onGuildMemberLeave(GuildMemberRemoveEvent event){
         event.getGuild().getTextChannelById("687244482739044370").sendMessage(event.getUser().getAsMention()+" a quitté la Guild.").queue();
     }
 
+    /**
+     * si une personne ajoute une réaction
+     * @param event
+     */
     private void onAddReact(MessageReactionAddEvent event){
         if (event.getChannel().getId().equals("461606547064356864"))
         {

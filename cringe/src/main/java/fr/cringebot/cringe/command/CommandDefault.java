@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   CommandDefault.java                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
+/*   Updated: 2021/12/05 12:46:08 by gchatain         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 package fr.cringebot.cringe.command;
 
 
@@ -17,10 +29,18 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 
+/**
+ * fichier de commandes de base
+ */
 public class CommandDefault {
 
 	private final BotDiscord botDiscord;
 
+	/**
+	 * intialisation de l'objet
+	 * @param botDiscord
+	 * @param commandMap
+	 */
 	public CommandDefault(BotDiscord botDiscord, CommandMap commandMap) {
 		this.botDiscord = botDiscord;
 	}
@@ -31,7 +51,7 @@ public class CommandDefault {
 	}
 
 
-	@Command(name = "info", type = ExecutorType.USER)
+	@Command(name = "info", description = "information sur un joueur", type = ExecutorType.USER)
 	private void info(MessageChannel channel, Message msg) {
 		Member mem = msg.getMember();
 		if (msg.getMentionedMembers().size() != 0) {
