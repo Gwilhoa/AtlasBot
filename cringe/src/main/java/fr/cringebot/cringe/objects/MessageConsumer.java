@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   MessageConsumer.java                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 13:11:59 by gchatain          #+#    #+#             */
+/*   Updated: 2021/12/05 13:12:30 by gchatain         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 package fr.cringebot.cringe.objects;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -6,6 +18,9 @@ import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+/**
+ * sert a simplifier la modification des messages en static
+ */
 public class MessageConsumer implements Consumer<Message> {
     public String edit;
     public int time;

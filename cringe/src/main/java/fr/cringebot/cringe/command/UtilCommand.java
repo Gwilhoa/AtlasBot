@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   UtilCommand.java                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 12:50:04 by gchatain          #+#    #+#             */
+/*   Updated: 2021/12/05 12:50:04 by gchatain         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 package fr.cringebot.cringe.command;
 
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command;
-import fr.cringebot.cringe.objects.UtilFunction;
+import fr.cringebot.cringe.objects.DetectorAttachment;
 import fr.cringebot.cringe.objects.activity;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -62,13 +74,6 @@ public class UtilCommand {
 
         @Command(name = "test", type= Command.ExecutorType.CONSOLE, description = "juste pour les tests")
         private void test(){
-                TextChannel tc = bot.getJda().getGuildById("382938797442334720").getTextChannelById("461606547064356864");
-                for (Message msg : tc.getIterableHistory().complete()){
-                        if ( msg.getChannel().getId().equals("461606547064356864") && UtilFunction.isAnyLink(msg)) {
-                                msg.addReaction("⬆️").queue();
-                                msg.addReaction("⬇️").queue();
-                        }
-                }
-
+                System.out.println("bref...");
         }
 }

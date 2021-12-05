@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   memesEvent.java                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
+/*   Updated: 2021/12/05 13:00:28 by gchatain         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 package fr.cringebot.cringe.event;
 
-import fr.cringebot.cringe.objects.UtilFunction;
+import fr.cringebot.cringe.objects.DetectorAttachment;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
@@ -11,6 +23,12 @@ import java.util.ArrayList;
 import static fr.cringebot.cringe.objects.Emote.getEmote;
 
 public class memesEvent {
+    /**
+     * fonction servant si quelqu'un réagit à un même
+     * suite au modifications des memes elle est a modifier
+     * @param message
+     * @param react
+     */
     public static void addReaction(Message message, MessageReaction react) {
         int u = 0;
         int d = 0;
@@ -49,7 +67,7 @@ public class memesEvent {
                 }
                 msg.queue();
             }
-            else if (UtilFunction.isImage(message.getContentRaw()) || UtilFunction.isTwitter(message.getContentRaw()) || UtilFunction.isVideo(message.getContentRaw()) || UtilFunction.isYoutube(message.getContentRaw())) {
+            else if (DetectorAttachment.isImage(message.getContentRaw()) || DetectorAttachment.isTwitter(message.getContentRaw()) || DetectorAttachment.isVideo(message.getContentRaw()) || DetectorAttachment.isYoutube(message.getContentRaw())) {
                 message.getGuild().getTextChannelById("911549374696411156").sendMessage(message.getContentRaw()).queue();
             }
             message.delete().queue();

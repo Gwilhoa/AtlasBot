@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   imgExtenders.java                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 13:07:13 by gchatain          #+#    #+#             */
+/*   Updated: 2021/12/05 13:07:13 by gchatain         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 package fr.cringebot.cringe.objects;
 
 
@@ -6,7 +18,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 
+/**
+ * tout ce qui touche au images
+ */
 public class imgExtenders {
+    //sert a re tailler une image
     public static BufferedImage resize(BufferedImage img, int newW, int newH, int posx, int posy, boolean scale){
         return resize(img,newW,newH,posx,posy,scale,true);
     }
@@ -30,6 +46,11 @@ public class imgExtenders {
         return dimg;
     }
 
+    /**
+     * sert a récuperer une image integrer au bot
+     * @param name
+     * @return
+     */
     public static BufferedImage getImage(String name){
         BufferedImage image;
         try {
@@ -40,6 +61,12 @@ public class imgExtenders {
         }
         return image;
     }
+
+    /**
+     * sert a récuperer une image depuis internet
+     * @param url
+     * @return
+     */
     public static BufferedImage getImage(URL url){
         BufferedImage image;
         try {

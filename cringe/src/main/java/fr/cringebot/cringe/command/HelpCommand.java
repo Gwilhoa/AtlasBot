@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   HelpCommand.java                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 12:49:58 by gchatain          #+#    #+#             */
+/*   Updated: 2021/12/05 12:49:58 by gchatain         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 package fr.cringebot.cringe.command;
 
 import fr.cringebot.cringe.builder.Command;
@@ -34,7 +46,7 @@ public class HelpCommand {
         }
 
         if(!user.hasPrivateChannel()) user.openPrivateChannel().complete();
-        ((UserImpl)user).getPrivateChannel().sendMessage(builder.build()).queue();
+        ((UserImpl)user).getPrivateChannel().sendMessageEmbeds(builder.build()).queue();
 
         channel.sendMessage(user.getAsMention()+", veuillez regarder vos message privé.").queue();
 

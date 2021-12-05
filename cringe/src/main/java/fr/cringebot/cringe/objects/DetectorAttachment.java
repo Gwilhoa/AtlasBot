@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class UtilFunction {
+public class DetectorAttachment {
     private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
     private static final Pattern p = Pattern.compile(URL_REGEX);
 
@@ -122,7 +122,7 @@ public class UtilFunction {
         Matcher m = p.matcher(message);
         if (m.find()) {
             String url = m.group();
-            return url.contains("www.youtube.com") || url.contains("youtu.be"); //short links
+            return url.contains("youtube.com") || url.contains("youtu.be"); //short links
         }
         return false;
     }
@@ -130,12 +130,12 @@ public class UtilFunction {
     public static boolean isAnyLink(Message msg)
     {
         //image link
-        return UtilFunction.isTwitter(msg.getContentRaw()) //twitter.com link
-                || UtilFunction.isYoutube(msg.getContentRaw()) //www.youtube.com & youtu.be link
+        return DetectorAttachment.isTwitter(msg.getContentRaw()) //twitter.com link
+                || DetectorAttachment.isYoutube(msg.getContentRaw()) //www.youtube.com & youtu.be link
                 || (msg.getAttachments().size() >= 1 && msg.getAttachments().get(0).isImage()) //image attachment
                 || (msg.getAttachments().size() >= 1 && msg.getAttachments().get(0).isVideo())    //video attachment
                 || (msg.getAttachments().size() >= 1 && msg.getAttachments().get(0).getHeight() != -1) // image/video added test
-                || UtilFunction.isVideo(msg.getContentRaw()) //video link
-                || UtilFunction.isImage(msg.getContentRaw());
+                || DetectorAttachment.isVideo(msg.getContentRaw()) //video link
+                || DetectorAttachment.isImage(msg.getContentRaw());
     }
 }
