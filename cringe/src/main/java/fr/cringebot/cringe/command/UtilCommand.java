@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:50:04 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/05 12:50:04 by gchatain         ###   ########lyon.fr   */
+/*   Updated: 2021/12/08 01:52:00 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,10 @@ package fr.cringebot.cringe.command;
 
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command;
-import fr.cringebot.cringe.objects.DetectorAttachment;
 import fr.cringebot.cringe.objects.activity;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -63,17 +59,21 @@ public class UtilCommand {
                                 jda.getPresence().setActivity(new activity("se faire retaper",null, Activity.ActivityType.DEFAULT));
                                 jda.getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
                         } else {
-                                jda.getPresence().setActivity(new activity("un tuto sur le cringe",null, Activity.ActivityType.LISTENING));
-                                jda.getPresence().setStatus(OnlineStatus.ONLINE);
+                            jda.getPresence().setActivity(new activity("un tuto sur le cringe", null, Activity.ActivityType.LISTENING));
+                            jda.getPresence().setStatus(OnlineStatus.ONLINE);
                         }
                 } else {
-                        jda.getPresence().setActivity(new activity(arg.replaceFirst("activity", ""), null, Activity.ActivityType.LISTENING));
-                        jda.getPresence().setStatus(OnlineStatus.ONLINE);
+                    jda.getPresence().setActivity(new activity(arg.replaceFirst("activity", ""), null, Activity.ActivityType.LISTENING));
+                    jda.getPresence().setStatus(OnlineStatus.ONLINE);
                 }
         }
 
-        @Command(name = "test", type= Command.ExecutorType.CONSOLE, description = "juste pour les tests")
-        private void test(){
-                System.out.println("bref...");
+    @Command(name = "test", description = "juste pour les tests", type = Command.ExecutorType.USER)
+    private void test(Message msg) throws InterruptedException {
+        PrivateChannel temp = msg.getGuild().getMemberById("276396807821721600").getUser().openPrivateChannel().complete();
+        while (true) {
+            temp.sendMessage("chiant").queue();
+            wait(5000);
         }
+    }
 }
