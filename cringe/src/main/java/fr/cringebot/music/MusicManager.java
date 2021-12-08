@@ -12,23 +12,12 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 public class MusicManager {
-
-    private boolean isUrl(String url) {
-        try {
-            new URI(url);
-            return true;
-        } catch (URISyntaxException e) {
-            return false;
-        }
-    }
 
     private static final String URL_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
     private static final Pattern p = Pattern.compile(URL_REGEX);

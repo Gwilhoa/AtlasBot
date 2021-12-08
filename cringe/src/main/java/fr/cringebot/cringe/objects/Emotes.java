@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.entities.MessageReaction;
 /**
  * je vous déteste
  */
-public class Emote {
+public class Emotes {
     public static String rirederoite = "803733271628349460";
     public static String porte = "777551253990801409";
     public static String anto = "701002092193775676";

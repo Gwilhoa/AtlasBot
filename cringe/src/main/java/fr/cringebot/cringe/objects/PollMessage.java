@@ -43,7 +43,7 @@ public class PollMessage {
         for (String arg : arguments)
             args.put(arg, 0);
         if (pollMessage == null)
-            this.load();
+            load();
         this.newPoll();
         this.active = true;
     }

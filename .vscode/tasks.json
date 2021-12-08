@@ -1,0 +1,20 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "java",
+			"mainClass": "fr.cringebot.BotDiscord",
+			"targetPath": "${workspaceFolder}/${workspaceFolderBasename}.jar",
+			"elements": [
+				"${compileOutput}",
+				"${dependencies}"
+			],
+			"problemMatcher": [],
+			"label": "java: exportjar:CringeBot",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}

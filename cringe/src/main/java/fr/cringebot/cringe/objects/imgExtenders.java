@@ -90,6 +90,8 @@ public class imgExtenders {
         while ((ByteContent = bs.read(data, 0, 1024)) != -1) {
             fos.write(data, 0, ByteContent);
         }
+        bs.close();
+        fos.close();
         File f = new File(directory);
         return f;
     }
