@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:07:13 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/05 13:37:15 by                  ###   ########.fr       */
+/*   Updated: 2021/12/08 01:52:01 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@ package fr.cringebot.cringe.objects;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -67,7 +71,7 @@ public class imgExtenders {
      * @param url
      * @return
      */
-    public static BufferedImage getImage(URL url){
+    public static BufferedImage getImage(URL url) {
         BufferedImage image;
         try {
             image = ImageIO.read(url);
@@ -76,5 +80,17 @@ public class imgExtenders {
             e.printStackTrace();
         }
         return image;
+    }
+
+    public static File getFile(URL url, String name, String directory) throws IOException {
+        BufferedInputStream bs = new BufferedInputStream(url.openStream());
+        FileOutputStream fos = new FileOutputStream(name);
+        byte[] data = new byte[1024];
+        int ByteContent;
+        while ((ByteContent = bs.read(data, 0, 1024)) != -1) {
+            fos.write(data, 0, ByteContent);
+        }
+        File f = new File(directory);
+        return f;
     }
 }

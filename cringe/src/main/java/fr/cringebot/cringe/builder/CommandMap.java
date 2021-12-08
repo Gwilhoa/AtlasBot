@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:09:51 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/05 13:38:21 by                  ###   ########.fr       */
+/*   Updated: 2021/12/06 21:04:21 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@ package fr.cringebot.cringe.builder;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.command.CommandDefault;
-import fr.cringebot.cringe.command.CommandPokemon;
 import fr.cringebot.cringe.command.HelpCommand;
 import fr.cringebot.cringe.command.UtilCommand;
 import fr.cringebot.music.MusicCommand;
@@ -55,7 +54,7 @@ public final class CommandMap {
      */
     public CommandMap(BotDiscord botDiscord) {
         this.botDiscord = botDiscord;
-        registerCommands(new CommandDefault(botDiscord, this), new HelpCommand(this), new MusicCommand(), new UtilCommand(this.botDiscord), new CommandPokemon());
+        registerCommands(new CommandDefault(botDiscord, this), new HelpCommand(this), new MusicCommand(), new UtilCommand(this.botDiscord));
     }
 
     /**

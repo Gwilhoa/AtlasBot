@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/05 14:48:37 by                  ###   ########.fr       */
+/*   Updated: 2021/12/08 01:52:01 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,11 @@ import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -81,6 +84,7 @@ public class memesEvent {
     }
 
     public static void postmeme(Message msg) throws IOException {
+        msg.getChannel().sendTyping().queue();
         if (DetectorAttachment.isImage(msg.getContentRaw()))
             msg = repostmemeimg(msg);
         else if (msg.getAttachments().size() == 1 && msg.getAttachments().get(0).isImage())
@@ -94,9 +98,9 @@ public class memesEvent {
         else if (!msg.getAttachments().isEmpty() && msg.getAttachments().get(0).isVideo())
             msg = repostVidAttachment(msg);
         else if (DetectorAttachment.isTwitter(msg.getContentRaw()))
-            msg = repostTwitter(msg);
+            return;
         else if (DetectorAttachment.isReddit(msg.getContentRaw()))
-            msg = repostReddit(msg);
+            return;
         else if (DetectorAttachment.isTenor(msg.getContentRaw())) {
             String str = msg.getContentRaw();
             msg.delete().queue();
@@ -107,18 +111,18 @@ public class memesEvent {
         msg.addReaction(msg.getGuild().getEmoteById(Emote.porte)).queue();
     }
 
-    private static Message repostReddit(Message msg) {
+    public static Message repostReddit(Message msg) throws InterruptedException {
         EmbedBuilder eb = new EmbedBuilder()
-                .setDescription(msg.getEmbeds().get(0).getDescription())
-                .setTitle(msg.getEmbeds().get(0).getAuthor().getName())
-                .setColor(msg.getEmbeds().get(0).getColor())
-                .setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl())
-                .setAuthor("twitter", msg.getEmbeds().get(0).getUrl(), msg.getEmbeds().get(0).getFooter().getIconUrl());
+                .setTitle(msg.getEmbeds().get(0).getTitle());
+        eb.setAuthor("reddit", msg.getContentRaw(), "https://www.elementaryos-fr.org/wp-content/uploads/2019/08/logo-reddit.png");
+        eb.setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
+        eb.setImage(msg.getEmbeds().get(0).getThumbnail().getUrl());
+        eb.setColor(new Color(255, 69, 0));
         msg.delete().queue();
         return msg.getChannel().sendMessageEmbeds(eb.build()).complete();
     }
 
-    private static Message repostTwitter(Message msg) {
+    public static Message repostTwitter(Message msg) {
         EmbedBuilder eb = new EmbedBuilder()
                 .setDescription(msg.getEmbeds().get(0).getDescription())
                 .setTitle(msg.getEmbeds().get(0).getAuthor().getName())
@@ -143,23 +147,17 @@ public class memesEvent {
 
 
     private static Message repostmemevid(Message msg) throws IOException {
-        BufferedInputStream bs = new BufferedInputStream(new URL(msg.getContentRaw()).openStream());
-        FileOutputStream fos = new FileOutputStream(msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1]);
-        byte[] data = new byte[1024];
-        int ByteContent;
-        while ((ByteContent = bs.read(data, 0, 1024)) != -1) {
-            fos.write(data, 0, ByteContent);
-        }
-        File f = new File(msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1]);
+        File f = imgExtenders.getFile(new URL(msg.getContentRaw()), msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1], msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1]);
         msg.delete().queue();
         f.deleteOnExit();
-        return msg.getChannel().sendFile(f).complete();
+        return msg.getChannel().sendMessage("by >Gwilhoa").addFile(f).complete();
     }
 
     private static Message repostOnlyAttachment(Message msg) {
         File f = msg.getAttachments().get(0).downloadToFile().join();
         EmbedBuilder eb = new EmbedBuilder().setImage("attachment://" + f.getName())
-                .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getEffectiveAvatarUrl());
+                .setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl())
+                .setColor(new Color(0, 225, 255));
         if (!msg.getContentRaw().isEmpty())
             eb.setDescription(msg.getContentRaw());
         msg.delete().queue();
@@ -173,7 +171,8 @@ public class memesEvent {
         ImageIO.write(im, "png", baos);
         String fileName = msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1];
         MessageEmbed embed = new EmbedBuilder().setImage("attachment://" + fileName)
-                .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getEffectiveAvatarUrl())
+                .setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl())
+                .setColor(new Color(0, 225, 255))
                 .setDescription("").build();
         Message temp = msg.getTextChannel().sendFile(baos.toByteArray(), fileName)
                 .setEmbeds(embed).complete();
