@@ -24,7 +24,9 @@ import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -38,10 +40,12 @@ import net.dv8tion.jda.api.hooks.EventListener;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static fr.cringebot.cringe.event.ReactionEvent.*;
 import static fr.cringebot.cringe.event.memesEvent.postmeme;
@@ -108,9 +112,9 @@ public class BotListener implements EventListener {
                 msg = memesEvent.repostReddit(msg);
             if (DetectorAttachment.isTwitter(msg.getContentRaw()))
                 msg = memesEvent.repostTwitter(msg);
-            msg.addReaction(msg.getGuild().getEmoteById(Emote.rirederoite)).queue();
-            msg.addReaction(msg.getGuild().getEmoteById(Emote.anto)).queue();
-            msg.addReaction(msg.getGuild().getEmoteById(Emote.porte)).queue();
+            msg.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).queue();
+            msg.addReaction(msg.getGuild().getEmoteById(Emotes.anto)).queue();
+            msg.addReaction(msg.getGuild().getEmoteById(Emotes.porte)).queue();
         }
     }
 
@@ -139,6 +143,9 @@ public class BotListener implements EventListener {
      * @param event
      */
     private void onEnable(ReadyEvent event) {
+        new Thread(() -> {
+        recupMeme(event.getJDA().getGuildById("382938797442334720"));
+        }).start();
         Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
         }.getType());
 
@@ -150,6 +157,30 @@ public class BotListener implements EventListener {
         if (new File("save").mkdir())
             System.out.println("création du directoryCentral");
         PollMessage.load();
+    }
+
+    private void recupMeme(Guild g) {
+        TextChannel tc = g.getTextChannelById("461606547064356864");
+        List<Message> msgs = tc.getHistory().retrievePast(100).complete();
+        int i = 0;
+        while(i < 100)
+        {
+            tc.sendTyping();
+            if (!msgs.get(i).getAuthor().isBot() && DetectorAttachment.isAnyLink(msgs.get(i)))
+            {
+                try {
+                    memesEvent.postmeme(msgs.get(i));
+                    Thread.sleep(5000);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if (!msgs.get(i).getAuthor().isBot())
+                msgs.get(i).delete().queue();
+            i++;
+        }
     }
 
     /**

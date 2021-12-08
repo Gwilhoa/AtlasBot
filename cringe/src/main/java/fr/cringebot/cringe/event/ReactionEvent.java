@@ -23,15 +23,10 @@ import org.jsoup.nodes.Document;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
-import java.util.Random;
 
-import static fr.cringebot.cringe.objects.StringExtenders.firstsearch;
 import static fr.cringebot.cringe.objects.imgExtenders.getImage;
 import static fr.cringebot.cringe.objects.imgExtenders.resize;
 

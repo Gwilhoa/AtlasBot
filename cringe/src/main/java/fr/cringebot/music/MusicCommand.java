@@ -45,7 +45,7 @@ public class MusicCommand {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace(); //ca peut arriver en cas de mise a jour de dépendances, mais ca devrait être bon sinon
         }
-        if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isAttemptingToConnect()){
+        if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isConnected()){
             VoiceChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
             if(voiceChannel == null){
                 textChannel.sendMessage("Vous devez être connecté à un salon vocal.").queue();
@@ -60,7 +60,7 @@ public class MusicCommand {
 
     @Command(name="skip",type=ExecutorType.USER, description = "musique suivanta")
     private void skip(Guild guild, TextChannel textChannel){
-        if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isAttemptingToConnect()){
+        if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isConnected()){
             textChannel.sendMessage("Le player n'as pas de piste en cours.").queue();
             return;
         }

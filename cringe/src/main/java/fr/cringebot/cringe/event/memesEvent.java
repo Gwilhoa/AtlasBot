@@ -13,7 +13,7 @@
 package fr.cringebot.cringe.event;
 
 import fr.cringebot.cringe.objects.DetectorAttachment;
-import fr.cringebot.cringe.objects.Emote;
+import fr.cringebot.cringe.objects.Emotes;
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static fr.cringebot.cringe.objects.Emote.getEmote;
+import static fr.cringebot.cringe.objects.Emotes.getEmote;
 
 public class memesEvent {
     /**
@@ -106,9 +106,9 @@ public class memesEvent {
             msg.delete().queue();
             msg = msg.getChannel().sendMessage(str).complete();
         }
-        msg.addReaction(msg.getGuild().getEmoteById(Emote.rirederoite)).queue();
-        msg.addReaction(msg.getGuild().getEmoteById(Emote.anto)).queue();
-        msg.addReaction(msg.getGuild().getEmoteById(Emote.porte)).queue();
+        msg.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).queue();
+        msg.addReaction(msg.getGuild().getEmoteById(Emotes.anto)).queue();
+        msg.addReaction(msg.getGuild().getEmoteById(Emotes.porte)).queue();
     }
 
     public static Message repostReddit(Message msg) throws InterruptedException {
