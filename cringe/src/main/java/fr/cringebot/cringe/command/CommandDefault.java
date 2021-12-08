@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/08 01:52:01 by                  ###   ########.fr       */
+/*   Updated: 2021/12/08 11:46:32 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.PollMessage;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.UserExtenders;
+import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
@@ -27,8 +28,11 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.internal.interactions.SelectionMenuImpl;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -41,6 +45,7 @@ public class CommandDefault {
 
 	/**
 	 * intialisation de l'objet
+	 *
 	 * @param botDiscord
 	 * @param commandMap
 	 */
@@ -91,5 +96,29 @@ public class CommandDefault {
 		msg = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setDescription("chargement").build()).setActionRow(selectionMenu).complete();
 		PollMessage pm = new PollMessage(msg.getId(), Arrays.asList(args), author, msg.getGuild(), msg.getTextChannel().getId(), message.split("\n")[0]);
 		msg.editMessageEmbeds(pm.getMessageEmbed(msg.getGuild())).queue();
+	}
+
+	@Command(name = "pokedex", type = Command.ExecutorType.USER)
+	private void pokedex(Message msg) {
+		new Thread(() -> {
+			msg.getChannel().sendTyping().queue();
+			String str = Pokemon.getRandomPokemon().getRealname();
+			if (msg.getContentRaw().split(" ").length == 2) {
+				str = msg.getContentRaw().split(" ")[1];
+			}
+			Document doc;
+			EmbedBuilder eb = new EmbedBuilder();
+			try {
+				doc = Jsoup.connect("https://www.pokemon.com/fr/pokedex/" + str).get();
+				eb.setTitle(str);
+				str = doc.select("body.fr.fluid.custom-form-elements:nth-child(2) div.container:nth-child(5) section.section.pokedex-pokemon-details:nth-child(3) div.column-6.push-7:nth-child(2) div.pokedex-pokemon-details-right div.version-descriptions.active:nth-child(1) > p.version-y").text();
+				eb.setDescription(str);
+				eb.setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + doc.selectXpath("//body[1]/div[4]/section[1]/div[2]/div[1]/span[1]").text().substring(3) + ".png");
+			} catch (IOException e) {
+				eb.setTitle(msg.getContentRaw().split(" ")[1]);
+				eb.setDescription("ce pokemon existe pas");
+			}
+			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+		}).start();
 	}
 }

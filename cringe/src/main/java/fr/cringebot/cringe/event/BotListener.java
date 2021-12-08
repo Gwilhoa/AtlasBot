@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/08 01:52:01 by                  ###   ########.fr       */
+/*   Updated: 2021/12/08 20:42:33 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
+import com.google.gson.reflect.TypeToken;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.*;
+import fr.cringebot.cringe.pokemon.objects.Attacks;
+import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
@@ -34,9 +37,11 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import static fr.cringebot.cringe.event.ReactionEvent.*;
 import static fr.cringebot.cringe.event.memesEvent.postmeme;
@@ -134,6 +139,12 @@ public class BotListener implements EventListener {
      * @param event
      */
     private void onEnable(ReadyEvent event) {
+        Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
+        }.getType());
+
+        Attacks.capa = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("attacks.json"))), new TypeToken<Collection<Attacks>>() {
+        }.getType());
+
         Activity act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
         bot.getJda().getPresence().setActivity(act);
         if (new File("save").mkdir())
@@ -232,10 +243,15 @@ public class BotListener implements EventListener {
             if (!DetectorAttachment.isAnyLink(msg))
                 msg.getTextChannel().sendMessage("https://tenor.com/view/oh-no-cringe-cringe-oh-no-kimo-kimmo-gif-23168319").queue();
         }
-
-        //fonction mêmes quand un memes est postée (pas finie)
         if (msg.getChannel().getId().equals("461606547064356864") && (DetectorAttachment.isAnyLink(msg)))
             postmeme(msg);
+
+        if (containsIgnoreCase(msg.getContentRaw(), "stonks")) {
+            BufferedImage bi = imgExtenders.getImage("stonks.gif");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bi, "gif", baos);
+            msg.getChannel().sendFile(baos.toByteArray(), "stonks.gif").queue();
+        }
 
     }
 
