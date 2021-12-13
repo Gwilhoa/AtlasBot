@@ -139,7 +139,7 @@ public class DetectorAttachment {
                 || (msg.getAttachments().size() >= 1 && msg.getAttachments().get(0).isImage()) //image attachment
                 || (msg.getAttachments().size() >= 1 && msg.getAttachments().get(0).isVideo())    //video attachment
                 || (msg.getAttachments().size() >= 1 && msg.getAttachments().get(0).getHeight() != -1) // image/video added test
-                || DetectorAttachment.isVideo(msg.getContentRaw()) //video link
-                || DetectorAttachment.isImage(msg.getContentRaw());
+                || DetectorAttachment.isVideo(msg.getContentRaw().split(" ")[0]) //video link
+                || DetectorAttachment.isImage(msg.getContentRaw().split(" ")[0]);
     }
 }
