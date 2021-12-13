@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/13 15:13:40 by gchatain         ###   ########.fr       */
+/*   Updated: 2021/12/13 21:32:40 by gchatain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,13 @@ public class memesEvent {
 		return;
 		}
 	String name;
-	System.out.println(msg.getAttachments().isEmpty());
+	String content = null;
 	if (msg.getAttachments().isEmpty())
 	{
-		name = msg.getContentRaw().split("/")[msg.getContentRaw().split("/").length - 1];
-		try (BufferedInputStream bis = new BufferedInputStream(new URL(msg.getContentRaw()).openStream());
+		System.out.print(msg.getContentRaw().split(" ")[0]);
+		content = msg.getContentRaw().substring(msg.getContentRaw().split(" ")[0].length());
+		name = msg.getContentRaw().split(" ")[0].split("/")[msg.getContentRaw().split("/").length - 1];
+		try (BufferedInputStream bis = new BufferedInputStream(new URL(msg.getContentRaw().split(" ")[0]).openStream());
 		FileOutputStream fos = new FileOutputStream(name)) {
 			byte data[] = new byte[1024];
 			int byteContent;
@@ -125,6 +127,7 @@ public class memesEvent {
 	}
 	else 
 	{
+		content = msg.getContentRaw();
 		name = msg.getAttachments().get(0).getFileName();
 		msg.getAttachments().get(0).downloadToFile().join();
 	}
@@ -139,11 +142,16 @@ public class memesEvent {
 	name = msg.getAuthor().getName();
 	msg.delete().and(msg.getChannel().sendTyping()).queue();
 	if (FilenameUtils.getExtension(f.getName()).equals("mp4") || FilenameUtils.getExtension(f.getName()).equals("mov") || FilenameUtils.getExtension(f.getName()).equals("webm"))
-		msg = msg.getChannel().sendMessage("by > "+ name).addFile(f).complete();
+	{
+		if (content == null)
+			msg = msg.getChannel().sendMessage("by > "+ name).addFile(f).complete();
+		else
+			msg = msg.getChannel().sendMessage("by > "+ name + "\n" + content).addFile(f).complete();
+	}
 	else
 		msg = msg.getChannel().sendFile(f).setEmbeds(
 			new EmbedBuilder()
-			.setTitle(f.getName())
+			.setDescription(content)
 			.setImage("attachment://" + f.getName())
 			.setFooter(name, avatar)
 			.setColor(Color.RED)
