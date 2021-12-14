@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/13 21:32:40 by gchatain         ###   ########.fr       */
+/*   Updated: 2021/12/14 12:39:08 by gchatain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,34 +49,17 @@ public class memesEvent {
 			else if (!getEmote(reaction.getReactionEmote()).equals("anto"))
 				react.removeReaction().queue();
 		}
-		int nb = u-d;
-		if (nb <= -5)
+		if (u-d <= -5)
 			message.delete().queue();
-		else if (nb >= 5) {
-			ArrayList<Message.Attachment> attachments = new ArrayList<>(message.getAttachments());
-			if (!message.getEmbeds().isEmpty()) {
-				message.getGuild().getTextChannelById("911549374696411156").sendMessageEmbeds(message.getEmbeds().get(0)).queue();
-				message.delete().queue();
-				return;
-			}
-			if ((message.getAttachments().size() >= 1 && message.getAttachments().get(0).isImage()) || (message.getAttachments().size() >= 1 && message.getAttachments().get(0).isVideo())) {
-				MessageAction msg;
-				if (!message.getContentRaw().isEmpty())
-					msg = message.getGuild().getTextChannelById("911549374696411156").sendMessage(message.getContentRaw());
-				else {
-					File f = attachments.get(0).downloadToFile(message.getAttachments().get(0).getFileName()).join();
-					msg = message.getGuild().getTextChannelById("911549374696411156").sendFile(f);
-					f.deleteOnExit();
-					attachments.remove(0);
+		else if (u-d >= 5) {
+			MessageAction ma = message.getGuild().getTextChannelById("911549374696411156").sendMessage(message);
+			if (!message.getAttachments().isEmpty())
+				{
+					File f = message.getAttachments().get(0).downloadToFile().join();
+					ma.addFile(f);
+					f.delete();
 				}
-				for ( Message.Attachment ac : attachments) {
-					File file = ac.downloadToFile(ac.getFileName()).join();
-					file.deleteOnExit();
-				}
-				msg.queue();
-			} else if (DetectorAttachment.isImage(message.getContentRaw()) || DetectorAttachment.isTwitter(message.getContentRaw()) || DetectorAttachment.isVideo(message.getContentRaw()) || DetectorAttachment.isYoutube(message.getContentRaw())) {
-				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message.getContentRaw()).queue();
-			}
+			ma.queue();
 			message.delete().queue();
 		}
 	}
