@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/14 12:39:08 by gchatain         ###   ########.fr       */
+/*   Updated: 2021/12/14 12:46:24 by gchatain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ public class memesEvent {
 				u = reaction.getCount();
 			else if (getEmote(reaction.getReactionEmote()).equals("porte"))
 				d = reaction.getCount();
-			else if (!getEmote(reaction.getReactionEmote()).equals("anto"))
-				react.removeReaction().queue();
 		}
 		if (u-d <= -5)
 			message.delete().queue();
@@ -63,7 +61,6 @@ public class memesEvent {
 			message.delete().queue();
 		}
 	}
-
 	/**
 	 * fonction qui va analyser les messages pour préciser la nature d'un meme
 	 * @param msg
