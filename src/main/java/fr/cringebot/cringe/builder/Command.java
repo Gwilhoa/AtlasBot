@@ -17,8 +17,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(value=ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
 /**
  * méthode pour parametrer les commandes
  * name = nom de la commande
@@ -26,13 +24,17 @@ import java.lang.annotation.Target;
  * executortype = personne eligible a l'utilisation de la commande
  * User = utilisateur discord, Console = le terminal du bot.
  */
+@Target(value=ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Command {
 
-     String name();
-     String description() default "Sans description.";
-     ExecutorType type() default ExecutorType.ALL;
+    String name();
 
-     enum ExecutorType{
+    String description() default "Sans description.";
+
+    ExecutorType type() default ExecutorType.ALL;
+
+    enum ExecutorType{
         ALL, USER, CONSOLE;
     }
 }

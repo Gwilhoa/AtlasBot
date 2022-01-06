@@ -22,12 +22,12 @@ public class MusicCommand {
             Field f = DefaultAudioPlayer.class.getDeclaredField("options");
             f.setAccessible(true);
             ((AudioPlayerOptions) f.get(manager.getPlayer(guild).getAudioPlayer())).volumeLevel.set(Integer.parseInt(args[0]));
+            textChannel.sendMessage("mise du volume à " + args[0]).queue();
         } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
             textChannel.sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : volume 500").queue();
-            return;
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace(); //ca peut arriver en cas de mise a jour de dépendances, mais ca devrait être bon sinon
-        }textChannel.sendMessage("mise du volume à "+ args[0]).queue();
+        }
     }
 
 
@@ -45,9 +45,9 @@ public class MusicCommand {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace(); //ca peut arriver en cas de mise a jour de dépendances, mais ca devrait être bon sinon
         }
-        if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isConnected()){
+        if (!guild.getAudioManager().isConnected()) {
             VoiceChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
-            if(voiceChannel == null){
+            if (voiceChannel == null) {
                 textChannel.sendMessage("Vous devez être connecté à un salon vocal.").queue();
                 return;
             }
