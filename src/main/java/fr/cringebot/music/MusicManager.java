@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 public class MusicManager {
 
-    private static final String URL_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+    private static final String URL_REGEX = "^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
     private static final Pattern p = Pattern.compile(URL_REGEX);
     private final AudioPlayerManager manager = new DefaultAudioPlayerManager();
     private final Map<String, MusicPlayer> players = new HashMap<>();
@@ -50,15 +50,15 @@ public class MusicManager {
 
                 @Override
                 public void playlistLoaded(AudioPlaylist playlist) {
-                    if (playlist.isSearchResult()){
+                    if (playlist.isSearchResult()) {
                         trackLoaded(playlist.getTracks().get(0));
-                        return;
-                    }
-                    EmbedBuilder eb = new EmbedBuilder().setColor(Color.red).setTitle("ajout de playlist").setDescription("ajout de "+playlist.getName());
-                    channel.sendMessageEmbeds(eb.build()).queue();
-                    final List<AudioTrack> tracks = playlist.getTracks();
-                    for (final AudioTrack track : tracks){
-                        player.getListener().add(track);
+                    } else {
+                        EmbedBuilder eb = new EmbedBuilder().setColor(Color.red).setTitle("ajout de playlist").setDescription("ajout de " + playlist.getName());
+                        channel.sendMessageEmbeds(eb.build()).queue();
+                        final List<AudioTrack> tracks = playlist.getTracks();
+                        for (final AudioTrack track : tracks) {
+                            player.getListener().add(track);
+                        }
                     }
                 }
 
