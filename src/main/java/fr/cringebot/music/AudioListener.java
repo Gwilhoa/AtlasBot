@@ -111,7 +111,7 @@ public class AudioListener extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (this.loop)
-            player.playTrack(track);
+            player.getPlayingTrack().setPosition(0);
         current = null;
         if (endReason.mayStartNext) nextTrack(null);
     }

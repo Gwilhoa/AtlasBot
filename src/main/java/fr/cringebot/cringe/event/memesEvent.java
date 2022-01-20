@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/14 12:46:24 by gchatain         ###   ########.fr       */
+/*   Updated: 2022/01/18 21:22:19 by gchatain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -58,7 +57,6 @@ public class memesEvent {
 					f.delete();
 				}
 			ma.queue();
-			message.delete().queue();
 		}
 	}
 	/**
