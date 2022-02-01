@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:07:13 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/08 01:52:01 by                  ###   ########.fr       */
+/*   Updated: 2022/01/30 15:37:45 by gchatain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,20 @@ public class imgExtenders {
         return image;
     }
 
+    public static File getFile(String name) throws IOException {
+        BufferedInputStream bs = new BufferedInputStream(imgExtenders.class.getClassLoader().getResource(name).openStream());
+        FileOutputStream fos = new FileOutputStream(name);
+        byte[] data = new byte[1024];
+        int ByteContent;
+        while ((ByteContent = bs.read(data, 0, 1024)) != -1) {
+            fos.write(data, 0, ByteContent);
+        }
+        bs.close();
+        fos.close();
+        File f = new File(name);
+        return f;
+    }
+    
     public static File getFile(URL url, String name, String directory) throws IOException {
         BufferedInputStream bs = new BufferedInputStream(url.openStream());
         FileOutputStream fos = new FileOutputStream(name);

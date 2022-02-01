@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2022/01/18 21:22:19 by gchatain         ###   ########.fr       */
+/*   Updated: 2022/02/01 09:45:38 by gchatain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ import fr.cringebot.cringe.objects.Emotes;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.awt.*;
 import java.io.BufferedInputStream;
@@ -49,14 +48,31 @@ public class memesEvent {
 		if (u-d <= -5)
 			message.delete().queue();
 		else if (u-d >= 5) {
-			MessageAction ma = message.getGuild().getTextChannelById("911549374696411156").sendMessage(message);
-			if (!message.getAttachments().isEmpty())
-				{
-					File f = message.getAttachments().get(0).downloadToFile().join();
-					ma.addFile(f);
-					f.delete();
+			if (message.getEmbeds().isEmpty()){
+				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(message.getAttachments().get(0).downloadToFile().join()).queue();
+			} else {
+				String name = message.getEmbeds().get(0).getImage().getUrl().split(" ")[0].split("/")[message.getEmbeds().get(0).getImage().getUrl().split("/").length - 1];
+		try (BufferedInputStream bis = new BufferedInputStream(new URL(message.getEmbeds().get(0).getImage().getUrl()).openStream());
+		FileOutputStream fos = new FileOutputStream(name)){
+			byte data[] = new byte[1024];
+			int byteContent;
+			while ((byteContent = bis.read(data, 0, 1024)) != -1){
+					fos.write(data, 0, byteContent);
 				}
-			ma.queue();
+			}
+		catch (IOException e) {
+   		e.printStackTrace(System.out);}
+				File f = new File(name);
+				message.getGuild().getTextChannelById("911549374696411156").sendFile(f).setEmbeds(
+				new EmbedBuilder()
+				.setDescription(message.getEmbeds().get(0).getDescription())
+				.setImage("attachment://" + f.getName())
+				.setFooter(message.getEmbeds().get(0).getFooter().getText(), message.getEmbeds().get(0).getFooter().getIconUrl())
+				.setColor(Color.GREEN)
+				.build()
+				).queue();
+			}
+			message.delete().queue();
 		}
 	}
 	/**
