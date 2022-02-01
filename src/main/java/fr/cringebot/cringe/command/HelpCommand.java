@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:49:58 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/05 12:49:58 by gchatain         ###   ########lyon.fr   */
+/*   Updated: 2022/01/29 23:43:32 by gchatain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ public class HelpCommand {
 
         for(SimpleCommand command : commandMap.getCommands()){
             if(command.getExecutorType() == ExecutorType.CONSOLE) continue;
-
             builder.addField(command.getName(), command.getDescription(), false);
         }
 

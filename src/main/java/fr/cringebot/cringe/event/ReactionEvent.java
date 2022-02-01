@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2021/12/05 13:00:42 by gchatain         ###   ########lyon.fr   */
+/*   Updated: 2022/01/30 16:11:19 by gchatain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,28 @@ public class ReactionEvent {
             e.printStackTrace();
         }
     }
+
+    public static void daronned(Message msg)
+    {
+        String[] args = msg.getContentRaw().split(" ");
+        if (args.length != 1) {
+            if ((msg.getContentRaw().contains("@here") || msg.getContentRaw().contains("@everyone"))) {
+                msg.getChannel().sendMessage("tout le monde se fait daronné").queue();
+                return;
+            }
+            List<Member> mbrs = msg.getGuild().getMembers();
+            for (Member m : mbrs) {
+                if (args[1].equalsIgnoreCase(m.getUser().getName())) {
+                    msg.getChannel().sendMessage(m.getAsMention() + "s'est fait darroné").queue();
+                    return;
+                }
+            }
+            if (msg.getMentionedMembers().size() >= 1)
+                msg.getChannel().sendMessage(msg.getMentionedMembers().get(0).getAsMention() + "s'est fait daronné").queue();
+    }
+    else if (args.length == 1)
+        msg.getChannel().sendMessage("il s'est fait daronné").queue();
+}
 }
 
 
