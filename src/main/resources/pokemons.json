@@ -68893,21 +68893,21 @@
   },
   {
     "id": 678,
-    "name": "meowstic-male",
+    "name": "meowstic",
     "starter": false,
     "realname": "Mistigrix",
     "forms": [
       {
         "is_default": true,
         "pokemon": {
-          "name": "meowstic-male",
+          "name": "meowstic",
           "url": "https://pokeapi.co/api/v2/pokemon/678/"
         }
       },
       {
         "is_default": false,
         "pokemon": {
-          "name": "meowstic-female",
+          "name": "meowstic-f",
           "url": "https://pokeapi.co/api/v2/pokemon/10025/"
         }
       }
