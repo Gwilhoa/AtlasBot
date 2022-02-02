@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/02/03 00:05:14 by                  ###   ########.fr       */
+/*   Updated: 2022/02/03 00:36:44 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,12 +274,12 @@ public class BotListener implements EventListener {
 		}
 		if (wtp.wtpThreads.containsKey(msg.getChannel().getId()))
 		{
-			if (wtp.wtpThreads.get(msg.getChannel().getId()).getName().equalsIgnoreCase(msg.getContentRaw()))
+			if (wtp.wtpThreads.get(msg.getChannel().getId()).getName().equalsIgnoreCase(msg.getContentRaw().replace('ï', 'i').replace('ô', 'o').replace('é', 'e').replace('è', 'e').replace('ç', 'c')))
 			{
 				ThreadChannel tc = msg.getGuild().getThreadChannelById(msg.getChannel().getId());
 				EmbedBuilder eb = new EmbedBuilder().setTitle("pokémon trouvé").setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + String.format("%03d", Pokemon.getByRealName(wtp.wtpThreads.get(msg.getChannel().getId()).getName()).getId()) + ".png");
 				Message ed = msg.getGuild().getTextChannelById(tc.getParentChannel().getId()).retrieveMessageById(wtp.wtpThreads.get(msg.getChannel().getId()).getMessage()).complete();
-				eb.setDescription(ed.getEmbeds().get(0).getDescription() + "\n\nle pokémon était : " + wtp.wtpThreads.get(msg.getChannel().getId()).getName());
+				eb.setDescription(ed.getEmbeds().get(0).getDescription().replace("<ce pokémon>", wtp.wtpThreads.get(msg.getChannel().getId()).getName()) + "\n\nle pokémon était : " + wtp.wtpThreads.get(msg.getChannel().getId()).getName());
 				wtp.wtpThreads.remove(msg.getChannel().getId());
 				msg.getChannel().delete().queue();
 				msg.getChannel().sendMessage(ed.getId()).queue();
@@ -299,6 +299,20 @@ public class BotListener implements EventListener {
 						sb.append(" _ ");
 					msg.getGuildChannel().getManager().setName(sb.toString()).queue();
 				}
+			}
+			else if (msg.getContentRaw().equalsIgnoreCase("abandon"))
+			{
+				ThreadChannel tc = msg.getGuild().getThreadChannelById(msg.getChannel().getId());
+				EmbedBuilder eb = new EmbedBuilder().setTitle("pokémon trouvé").setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + String.format("%03d", Pokemon.getByRealName(wtp.wtpThreads.get(msg.getChannel().getId()).getName()).getId()) + ".png");
+				Message ed = msg.getGuild().getTextChannelById(tc.getParentChannel().getId()).retrieveMessageById(wtp.wtpThreads.get(msg.getChannel().getId()).getMessage()).complete();
+				eb.setDescription(ed.getEmbeds().get(0).getDescription() + "\n\nle pokémon était : " + wtp.wtpThreads.get(msg.getChannel().getId()).getName());
+				wtp.wtpThreads.remove(msg.getChannel().getId());
+				msg.getChannel().delete().queue();
+				msg.getChannel().sendMessage(ed.getId()).queue();
+				eb.setFooter("abandonné par "+ msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
+				eb.setColor(new Color(255, 92, 243));
+				ed.editMessageEmbeds(eb.build()).queue();
+				wtp.save();
 			}
 			else
 			{
