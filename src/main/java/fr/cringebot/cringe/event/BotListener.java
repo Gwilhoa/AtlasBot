@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/02/01 09:52:38 by gchatain         ###   ########.fr       */
+/*   Updated: 2022/02/03 00:05:14 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ import static fr.cringebot.cringe.event.memesEvent.postmeme;
 import static fr.cringebot.cringe.objects.StringExtenders.containsIgnoreCase;
 import static fr.cringebot.cringe.objects.StringExtenders.startWithIgnoreCase;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -53,20 +54,22 @@ import fr.cringebot.cringe.objects.activity;
 import fr.cringebot.cringe.objects.imgExtenders;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import fr.cringebot.cringe.pokemon.objects.wtp;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
-import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
+import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.managers.channel.ChannelManager;
+import net.dv8tion.jda.api.utils.MiscUtil;
+import net.dv8tion.jda.internal.managers.channel.ChannelManagerImpl;
 
 /**
  * capture tout les evenements du bot
@@ -110,7 +113,7 @@ public class BotListener implements EventListener {
 		} else if (event instanceof GuildMemberJoinEvent) onGuildMemberJoin((GuildMemberJoinEvent) event);
 		else if (event instanceof GuildMemberRemoveEvent) onGuildMemberLeave((GuildMemberRemoveEvent) event);
 		else if (event instanceof MessageReactionAddEvent) onAddReact((MessageReactionAddEvent) event);
-		else if (event instanceof SelectionMenuEvent) onSelectMenu((SelectionMenuEvent) event);
+		else if (event instanceof SelectMenuInteractionEvent) onSelectMenu((SelectMenuInteractionEvent) event);
 		else if (event instanceof GatewayPingEvent) onPing((GatewayPingEvent) event);
 		else if (event instanceof MessageEmbedEvent) {
 			try {
@@ -154,7 +157,7 @@ public class BotListener implements EventListener {
 				pm.unactive(event.getJDA());
 	}
 
-	private void onSelectMenu(SelectionMenuEvent event) {
+	private void onSelectMenu(SelectMenuInteractionEvent event) {
 		if (!event.getMessage().getEmbeds().isEmpty() && event.getMessage().getEmbeds().get(0).getAuthor().getName().equals("poll")) {
 			PollMessage pm = PollMessage.pollMessage.get(event.getMessageId());
 			pm.newVote(event.getUser(), event.getSelectedOptions().get(0).getLabel());
@@ -183,12 +186,15 @@ public class BotListener implements EventListener {
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
 		PollMessage.load();
+		wtp.load();
 
 		try {
-			TextChannel tc = event.getJDA().getGuildById("382938797442334720").getTextChannels().get(new Random().nextInt(event.getJDA().getGuildById("382938797442334720").getTextChannels().size()));
-			while (tc.getParent().equals(event.getJDA().getGuildById("382938797442334720").getCategoryById("628636837644075038")))
-				tc = event.getJDA().getGuildById("382938797442334720").getTextChannels().get(new Random().nextInt(event.getJDA().getGuildById("382938797442334720").getTextChannels().size()));
-			tc.sendFile(imgExtenders.getFile("internet.png")).queue();
+			String salon = "687244482739044370 461604519533608960 461606547064356864 494549545556901888 633944816505323521 912092369292263534 623851978585407488 506215249225973780 607595951544336397 686623360524091463 874269509064740864 599241915480932392 469499362788114452 617757702256590848 495685773392216097";
+			String[] list = salon.split(" ");
+			TextChannel tc = event.getJDA().getGuildById("382938797442334720").getTextChannelById(list[new Random().nextInt(list.length)]);
+			File internet = imgExtenders.getFile("internet.png");
+			tc.sendMessage(event.getJDA().getGuildById("382938797442334720").getMembers().get(new Random().nextInt(event.getJDA().getGuildById("382938797442334720").getMembers().size())).getAsMention()).addFile(internet).queue();
+			internet.delete();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -251,6 +257,8 @@ public class BotListener implements EventListener {
 		}
 	}
 
+
+
 	/**
 	 * à la recption d'un message
 	 *
@@ -263,6 +271,39 @@ public class BotListener implements EventListener {
 		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {
 			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
 			return;
+		}
+		if (wtp.wtpThreads.containsKey(msg.getChannel().getId()))
+		{
+			if (wtp.wtpThreads.get(msg.getChannel().getId()).getName().equalsIgnoreCase(msg.getContentRaw()))
+			{
+				ThreadChannel tc = msg.getGuild().getThreadChannelById(msg.getChannel().getId());
+				EmbedBuilder eb = new EmbedBuilder().setTitle("pokémon trouvé").setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + String.format("%03d", Pokemon.getByRealName(wtp.wtpThreads.get(msg.getChannel().getId()).getName()).getId()) + ".png");
+				Message ed = msg.getGuild().getTextChannelById(tc.getParentChannel().getId()).retrieveMessageById(wtp.wtpThreads.get(msg.getChannel().getId()).getMessage()).complete();
+				eb.setDescription(ed.getEmbeds().get(0).getDescription() + "\n\nle pokémon était : " + wtp.wtpThreads.get(msg.getChannel().getId()).getName());
+				wtp.wtpThreads.remove(msg.getChannel().getId());
+				msg.getChannel().delete().queue();
+				msg.getChannel().sendMessage(ed.getId()).queue();
+				eb.setFooter("trouvé par "+ msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
+				eb.setColor(Color.green);
+				ed.editMessageEmbeds(eb.build()).queue();
+				wtp.save();
+			}
+			else if (msg.getContentRaw().equalsIgnoreCase("indice"))
+			{
+				if (msg.getChannel().getName().equals("quel est ce pokemon ?"))
+				{
+					StringBuilder sb = new StringBuilder();
+					sb.append(wtp.wtpThreads.get(msg.getChannel().getId()).getName().charAt(0));
+					int	i = 1;
+					while (i++ < wtp.wtpThreads.get(msg.getChannel().getId()).getName().length())
+						sb.append(" _ ");
+					msg.getGuildChannel().getManager().setName(sb.toString()).queue();
+				}
+			}
+			else
+			{
+				msg.getChannel().sendMessage("raté").reference(msg).queue();
+			}
 		}
 
 

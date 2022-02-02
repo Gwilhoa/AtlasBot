@@ -56,7 +56,7 @@ public class UtilCommand {
                 if (arg.equalsIgnoreCase("activity")){
                         if (jda.getPresence().getStatus().equals(OnlineStatus.ONLINE)){
                                 jda.getGuilds().get(0).getMemberById("315431392789921793").getJDA().getPresence().setActivity(new activity("rien"));
-                                jda.getPresence().setActivity(new activity("se faire retaper",null, Activity.ActivityType.DEFAULT));
+                                jda.getPresence().setActivity(new activity("se faire retaper",null, Activity.ActivityType.PLAYING));
                                 jda.getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
                         } else {
                             jda.getPresence().setActivity(new activity("un tuto sur le cringe", null, Activity.ActivityType.LISTENING));

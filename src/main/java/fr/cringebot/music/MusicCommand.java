@@ -46,7 +46,7 @@ public class MusicCommand {
             e.printStackTrace(); //ca peut arriver en cas de mise a jour de dépendances, mais ca devrait être bon sinon
         }
         if (!guild.getAudioManager().isConnected()) {
-            VoiceChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
+            AudioChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
             if (voiceChannel == null) {
                 textChannel.sendMessage("Vous devez être connecté à un salon vocal.").queue();
                 return;

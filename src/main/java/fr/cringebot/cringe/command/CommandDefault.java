@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/02/01 09:54:05 by gchatain         ###   ########.fr       */
+/*   Updated: 2022/02/01 21:21:38 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
-import net.dv8tion.jda.internal.interactions.SelectionMenuImpl;
+import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -92,7 +92,7 @@ public class CommandDefault {
 				}
 			options.add(new SelectOptionImpl(arg, arg));
 		}
-		SelectionMenuImpl selectionMenu = new SelectionMenuImpl(message.split("\n")[0], "selectionnez un choix", 1, 1, false, options);
+		SelectMenuImpl selectionMenu = new SelectMenuImpl(message.split("\n")[0], "selectionnez un choix", 1, 1, false, options);
 		msg = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setDescription("chargement").build()).setActionRow(selectionMenu).complete();
 		PollMessage pm = new PollMessage(msg.getId(), Arrays.asList(args), author, msg.getGuild(), msg.getTextChannel().getId(), message.split("\n")[0]);
 		msg.editMessageEmbeds(pm.getMessageEmbed(msg.getGuild())).queue();

@@ -87,6 +87,15 @@ public class Pokemon {
         return Pokemon.getById(0);
     }
 
+    public static Pokemon getByRealName(String name) {
+        for (Pokemon p : pok) {
+            if (p.getRealname().equalsIgnoreCase(name)) {
+                return p;
+            }
+        }
+        return Pokemon.getById(0);
+    }
+
     public List<Forms> getForm() {
         return form;
     }
