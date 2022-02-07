@@ -33,8 +33,6 @@ public class memesEvent {
 	/**
 	 * fonction servant si quelqu'un réagit à un même
 	 * suite au modifications des memes elle est a modifier
-	 * @param message
-	 * @param react
 	 */
 	public static void addReaction(Message message, MessageReaction react) {
 		int u = 0;
@@ -129,7 +127,8 @@ public class memesEvent {
 	if (f.length() >= 8000000)
 	{
 		f.delete();
-		msg.addReaction(msg.getGuild().getEmoteById(Emotes.anto)).queue();
+		if (msg.getReactions().isEmpty())
+			msg.addReaction(msg.getGuild().getEmoteById(Emotes.anto)).queue();
 		return;
 	}
 	String avatar = msg.getAuthor().getEffectiveAvatarUrl();
