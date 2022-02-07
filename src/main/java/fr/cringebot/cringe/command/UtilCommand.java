@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:50:04 by gchatain          #+#    #+#             */
-/*   Updated: 2022/01/29 23:43:15 by gchatain         ###   ########.fr       */
+/*   Updated: 2022/02/06 21:40:53 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,31 +49,4 @@ public class UtilCommand {
                 }
 
         }
-
-        @Command(name = "activity",type = Command.ExecutorType.CONSOLE, description = "change l'activité du bot")
-        private void changeactivity(String arg){
-                JDA jda = bot.getJda();
-                if (arg.equalsIgnoreCase("activity")){
-                        if (jda.getPresence().getStatus().equals(OnlineStatus.ONLINE)){
-                                jda.getGuilds().get(0).getMemberById("315431392789921793").getJDA().getPresence().setActivity(new activity("rien"));
-                                jda.getPresence().setActivity(new activity("se faire retaper",null, Activity.ActivityType.PLAYING));
-                                jda.getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
-                        } else {
-                            jda.getPresence().setActivity(new activity("un tuto sur le cringe", null, Activity.ActivityType.LISTENING));
-                            jda.getPresence().setStatus(OnlineStatus.ONLINE);
-                        }
-                } else {
-                    jda.getPresence().setActivity(new activity(arg.replaceFirst("activity", ""), null, Activity.ActivityType.LISTENING));
-                    jda.getPresence().setStatus(OnlineStatus.ONLINE);
-                }
-        }
-
-    @Command(name = "test", description = "juste pour les tests", type = Command.ExecutorType.USER)
-    private void test(Message msg) throws InterruptedException {
-        PrivateChannel temp = msg.getGuild().getMemberById("276396807821721600").getUser().openPrivateChannel().complete();
-        while (true) {
-            temp.sendMessage("chiant").queue();
-            wait(5000);
-        }
-    }
 }

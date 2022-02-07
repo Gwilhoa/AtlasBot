@@ -13,6 +13,8 @@ public class wtp {
     };
     private String Message;
     private String Name;
+    private Integer action;
+    private Integer indice;
     public static HashMap<String, wtp> wtpThreads = null;
 
 
@@ -20,16 +22,37 @@ public class wtp {
     {
         Message = message;
         Name = name;
+        indice = 0;
+        action = 0;
     }
 
     public String getMessage() {
         return Message;
     }
 
+    public Integer getAction() {
+        return action;
+    }
+
+    public void addAction()
+    {
+        action++;
+        save();
+    }
+
     public String getName() {
         return Name;
     }
 
+    public Integer getIndice() {
+        return indice;
+    }
+
+    public void addIndice()
+    {
+        indice++;
+        save();
+    }
     public static void load() {
         if (new File(file).exists()) {
             try {

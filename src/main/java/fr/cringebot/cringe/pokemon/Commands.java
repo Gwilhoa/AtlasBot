@@ -52,7 +52,7 @@ public class Commands {
 			try {
 				doc = Jsoup.connect("https://www.pokemon.com/fr/pokedex/" + name).get();
 				eb.setTitle("who's that pokemon");
-				str = doc.select("body.fr.fluid.custom-form-elements:nth-child(2) div.container:nth-child(5) section.section.pokedex-pokemon-details:nth-child(3) div.column-6.push-7:nth-child(2) div.pokedex-pokemon-details-right div.version-descriptions.active:nth-child(1) > p.version-y").text();
+				str = doc.select("body.fr.fluid.custom-form-elements:nth-child(2) div.container:nth-child(5) section.section.pokedex-pokemon-details:nth-child(3) div.column-6.push-7:nth-child(2) div.pokedex-pokemon-details-right div.version-descriptions.active:nth-child(1) > p.version-y").text() + "\n\n" + doc.select("body.fr.fluid.custom-form-elements:nth-child(2) div.container:nth-child(5) section.section.pokedex-pokemon-details:nth-child(3) div.column-6.push-7:nth-child(2) div.pokedex-pokemon-details-right div.version-descriptions.active:nth-child(1) > p.version-x").text();
 				eb.setDescription(str.replace(name, "<ce pokémon>"));
 			} catch (IOException e) {
 				eb.setTitle("who's that pokemon");
@@ -60,7 +60,7 @@ public class Commands {
 			}
 			Message message = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
 			ThreadChannel tc = message.createThreadChannel("quel est ce pokemon ?").complete();
-			wtp.wtpThreads.put(tc.getId(), new wtp(message.getId(), name.replace('ï', 'i').replace('ô', 'o').replace('é', 'e').replace('è', 'e').replace('ç', 'c')));
+			wtp.wtpThreads.put(tc.getId(), new wtp(message.getId(), name));
 			wtp.save();
 		}).start();
 	}
