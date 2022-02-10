@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.Random;
 
 import fr.cringebot.cringe.pokemon.objects.Type;
-import fr.cringebot.cringe.pokemon.objects.wtp;
-import net.dv8tion.jda.api.entities.ThreadChannel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -40,30 +38,6 @@ public class Commands {
 		}).start();
 	}
 
-	@Command(name = "wtp", type = Command.ExecutorType.USER)
-	private void wtp(Message msg) {
-		new Thread(() -> {
-			msg.getChannel().sendTyping().queue();
-
-			String name = Pokemon.getRandomPokemon().getRealname();
-			String str = null;
-			Document doc;
-			EmbedBuilder eb = new EmbedBuilder();
-			try {
-				doc = Jsoup.connect("https://www.pokemon.com/fr/pokedex/" + name).get();
-				eb.setTitle("who's that pokemon");
-				str = doc.select("body.fr.fluid.custom-form-elements:nth-child(2) div.container:nth-child(5) section.section.pokedex-pokemon-details:nth-child(3) div.column-6.push-7:nth-child(2) div.pokedex-pokemon-details-right div.version-descriptions.active:nth-child(1) > p.version-y").text() + "\n\n" + doc.select("body.fr.fluid.custom-form-elements:nth-child(2) div.container:nth-child(5) section.section.pokedex-pokemon-details:nth-child(3) div.column-6.push-7:nth-child(2) div.pokedex-pokemon-details-right div.version-descriptions.active:nth-child(1) > p.version-x").text();
-				eb.setDescription(str.replace(name, "<ce pokémon>"));
-			} catch (IOException e) {
-				eb.setTitle("who's that pokemon");
-				eb.setDescription("ce pokemon existe pas");
-			}
-			Message message = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
-			ThreadChannel tc = message.createThreadChannel("quel est ce pokemon ?").complete();
-			wtp.wtpThreads.put(tc.getId(), new wtp(message.getId(), name));
-			wtp.save();
-		}).start();
-	}
 
 	@Command(name = "pokemon", type = Command.ExecutorType.USER)
 	private void pokemon(Message msg) {
