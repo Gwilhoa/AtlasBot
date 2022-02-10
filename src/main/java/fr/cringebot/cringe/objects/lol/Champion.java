@@ -1,12 +1,13 @@
 package fr.cringebot.cringe.objects.lol;
 
-import java.util.List;
+import java.util.*;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
 
 public class Champion {
-    public static List<Champion> champions;
+    public static HashMap<String, Champion> champions;
 
     @SerializedName("version")
     @Expose
@@ -119,8 +120,21 @@ public class Champion {
         this.stats = stats;
     }
 
+    public static Champion getChampionById(Integer i)
+    {
+        for ( Champion c : Champion.champions.values())
+        {
+            if (c.key.equals(i.toString()))
+                return c;
+        }
+        return null;
+    }
 
-
+    public static Champion getRandomChampion()
+    {
+        ArrayList<Champion> champions = new ArrayList<>(Champion.champions.values());
+        return (champions.get(new Random().nextInt(champions.size())));
+    }
 }
 
 class Info {
@@ -177,16 +191,16 @@ class Stats {
 
     @SerializedName("hp")
     @Expose
-    private int hp;
+    private float hp;
     @SerializedName("hpperlevel")
     @Expose
     private int hpperlevel;
     @SerializedName("mp")
     @Expose
-    private int mp;
+    private float mp;
     @SerializedName("mpperlevel")
     @Expose
-    private int mpperlevel;
+    private float mpperlevel;
     @SerializedName("movespeed")
     @Expose
     private int movespeed;
@@ -198,7 +212,7 @@ class Stats {
     private double armorperlevel;
     @SerializedName("spellblock")
     @Expose
-    private int spellblock;
+    private float spellblock;
     @SerializedName("spellblockperlevel")
     @Expose
     private double spellblockperlevel;
@@ -207,16 +221,16 @@ class Stats {
     private int attackrange;
     @SerializedName("hpregen")
     @Expose
-    private int hpregen;
+    private float hpregen;
     @SerializedName("hpregenperlevel")
     @Expose
-    private int hpregenperlevel;
+    private float hpregenperlevel;
     @SerializedName("mpregen")
     @Expose
-    private int mpregen;
+    private float mpregen;
     @SerializedName("mpregenperlevel")
     @Expose
-    private int mpregenperlevel;
+    private float mpregenperlevel;
     @SerializedName("crit")
     @Expose
     private int crit;
@@ -225,10 +239,10 @@ class Stats {
     private int critperlevel;
     @SerializedName("attackdamage")
     @Expose
-    private int attackdamage;
+    private float attackdamage;
     @SerializedName("attackdamageperlevel")
     @Expose
-    private int attackdamageperlevel;
+    private float attackdamageperlevel;
     @SerializedName("attackspeedperlevel")
     @Expose
     private double attackspeedperlevel;
@@ -236,164 +250,85 @@ class Stats {
     @Expose
     private double attackspeed;
 
-    public int getHp() {
+    public float getHp() {
         return hp;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
     }
 
     public int getHpperlevel() {
         return hpperlevel;
     }
 
-    public void setHpperlevel(int hpperlevel) {
-        this.hpperlevel = hpperlevel;
-    }
-
-    public int getMp() {
+    public float getMp() {
         return mp;
     }
 
-    public void setMp(int mp) {
-        this.mp = mp;
-    }
-
-    public int getMpperlevel() {
+    public float getMpperlevel() {
         return mpperlevel;
-    }
-
-    public void setMpperlevel(int mpperlevel) {
-        this.mpperlevel = mpperlevel;
     }
 
     public int getMovespeed() {
         return movespeed;
     }
 
-    public void setMovespeed(int movespeed) {
-        this.movespeed = movespeed;
-    }
-
     public int getArmor() {
         return armor;
-    }
-
-    public void setArmor(int armor) {
-        this.armor = armor;
     }
 
     public double getArmorperlevel() {
         return armorperlevel;
     }
 
-    public void setArmorperlevel(double armorperlevel) {
-        this.armorperlevel = armorperlevel;
-    }
-
-    public int getSpellblock() {
+    public double getSpellblock() {
         return spellblock;
-    }
-
-    public void setSpellblock(int spellblock) {
-        this.spellblock = spellblock;
     }
 
     public double getSpellblockperlevel() {
         return spellblockperlevel;
     }
 
-    public void setSpellblockperlevel(double spellblockperlevel) {
-        this.spellblockperlevel = spellblockperlevel;
-    }
-
     public int getAttackrange() {
         return attackrange;
     }
 
-    public void setAttackrange(int attackrange) {
-        this.attackrange = attackrange;
-    }
-
-    public int getHpregen() {
+    public float getHpregen() {
         return hpregen;
     }
 
-    public void setHpregen(int hpregen) {
-        this.hpregen = hpregen;
-    }
-
-    public int getHpregenperlevel() {
+    public float getHpregenperlevel() {
         return hpregenperlevel;
     }
 
-    public void setHpregenperlevel(int hpregenperlevel) {
-        this.hpregenperlevel = hpregenperlevel;
-    }
-
-    public int getMpregen() {
+    public float getMpregen() {
         return mpregen;
     }
 
-    public void setMpregen(int mpregen) {
-        this.mpregen = mpregen;
-    }
-
-    public int getMpregenperlevel() {
+    public float getMpregenperlevel() {
         return mpregenperlevel;
-    }
-
-    public void setMpregenperlevel(int mpregenperlevel) {
-        this.mpregenperlevel = mpregenperlevel;
     }
 
     public int getCrit() {
         return crit;
     }
 
-    public void setCrit(int crit) {
-        this.crit = crit;
-    }
-
     public int getCritperlevel() {
         return critperlevel;
     }
 
-    public void setCritperlevel(int critperlevel) {
-        this.critperlevel = critperlevel;
-    }
-
-    public int getAttackdamage() {
+    public float getAttackdamage() {
         return attackdamage;
     }
 
-    public void setAttackdamage(int attackdamage) {
-        this.attackdamage = attackdamage;
-    }
-
-    public int getAttackdamageperlevel() {
+    public float getAttackdamageperlevel() {
         return attackdamageperlevel;
-    }
-
-    public void setAttackdamageperlevel(int attackdamageperlevel) {
-        this.attackdamageperlevel = attackdamageperlevel;
     }
 
     public double getAttackspeedperlevel() {
         return attackspeedperlevel;
     }
 
-    public void setAttackspeedperlevel(double attackspeedperlevel) {
-        this.attackspeedperlevel = attackspeedperlevel;
-    }
-
     public double getAttackspeed() {
         return attackspeed;
     }
 
-    public void setAttackspeed(double attackspeed) {
-        this.attackspeed = attackspeed;
-    }
 
 }

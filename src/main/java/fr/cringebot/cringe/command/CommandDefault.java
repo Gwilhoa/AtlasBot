@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static fr.cringebot.cringe.cki.mainCommand.ckimain;
+
 /**
  * fichier de commandes de base
  */
@@ -96,5 +98,11 @@ public class CommandDefault {
 		msg = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setDescription("chargement").build()).setActionRow(selectionMenu).complete();
 		PollMessage pm = new PollMessage(msg.getId(), Arrays.asList(args), author, msg.getGuild(), msg.getTextChannel().getId(), message.split("\n")[0]);
 		msg.editMessageEmbeds(pm.getMessageEmbed(msg.getGuild())).queue();
+	}
+
+	@Command(name = "cki", type = Command.ExecutorType.USER)
+	private void cki(Message msg)
+	{
+		ckimain(msg);
 	}
 }

@@ -6,13 +6,15 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/02/07 00:43:59 by                  ###   ########.fr       */
+/*   Updated: 2022/02/10 08:39:51 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 package fr.cringebot.cringe.event;
 
+import static fr.cringebot.cringe.cki.mainCommand.wtcmain;
+import static fr.cringebot.cringe.cki.mainCommand.wtpmain;
 import static fr.cringebot.cringe.event.ReactionEvent.feur;
 import static fr.cringebot.cringe.event.ReactionEvent.hmm;
 import static fr.cringebot.cringe.event.ReactionEvent.nice;
@@ -53,7 +55,7 @@ import fr.cringebot.cringe.objects.imgExtenders;
 import fr.cringebot.cringe.objects.lol.Champion;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
-import fr.cringebot.cringe.pokemon.objects.wtp;
+import fr.cringebot.cringe.pokemon.objects.cki;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
@@ -67,15 +69,6 @@ import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
-import net.dv8tion.jda.api.managers.channel.ChannelManager;
-import net.dv8tion.jda.api.utils.MiscUtil;
-import net.dv8tion.jda.internal.managers.channel.ChannelManagerImpl;
-import net.rithms.riot.api.ApiConfig;
-import net.rithms.riot.api.RiotApi;
-import net.rithms.riot.api.RiotApiException;
-import net.rithms.riot.api.endpoints.static_data.constant.ChampionTags;
-import net.rithms.riot.api.endpoints.static_data.constant.Locale;
-import net.rithms.riot.constant.Platform;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -172,6 +165,11 @@ public class BotListener implements EventListener {
 			event.getMessage().editMessageEmbeds(pm.getMessageEmbed(event.getGuild())).queue();
 			event.reply("ton vote a été enregistré \uD83D\uDC4D").setEphemeral(true).queue();
 		}
+		if (event.getComponent().getId().equals("cki"))
+			if (event.getSelectedOptions().get(0).getLabel().equals("quel est ce pokémon"))
+				wtpmain(event.getMessage());
+			if (event.getSelectedOptions().get(0).getLabel().equals("quel est ce champion"))
+				wtcmain(event.getMessage());
 	}
 
 	/**
@@ -181,13 +179,19 @@ public class BotListener implements EventListener {
 	 */
 	private void onEnable(ReadyEvent event) {
 		new Thread(() -> {
+			for (Member mem : event.getJDA().getGuildById("382938797442334720").getMembers())
+			{
+				event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734011696242360331")).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619"))).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
+			}
+		}).start();
+		new Thread(() -> {
 		recupMeme(event.getJDA().getGuildById("382938797442334720"));
 		}).start();
 		Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
 		}.getType());
 
-		//Champion.champions = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("Champions.json"))), new TypeToken<Collection<Champion>>() {
-		//}.getType());
+		Champion.champions = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("Champions.json"))), new TypeToken<HashMap<String, Champion>>() {
+		}.getType());
 
 		Attacks.capa = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("attacks.json"))), new TypeToken<Collection<Attacks>>() {
 		}.getType());
@@ -206,7 +210,7 @@ public class BotListener implements EventListener {
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
 		PollMessage.load();
-		wtp.load();
+		cki.load();
 	}
 
 	/**
@@ -242,6 +246,7 @@ public class BotListener implements EventListener {
 	 */
 	private void onGuildMemberJoin(GuildMemberJoinEvent event) {
 		event.getGuild().getTextChannelById("687244482739044370").sendMessage(event.getUser().getAsMention() + " a rejoint la Guild.").queue();
+		event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("734011696242360331")).and(event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("634839000644845619"))).and(event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("734012661494317077"))).queue();
 	}
 
 	/**
@@ -275,9 +280,9 @@ public class BotListener implements EventListener {
 			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
 			return;
 		}
-		if (wtp.wtpThreads.containsKey(msg.getChannel().getId()))
+		if (cki.wtpThreads.containsKey(msg.getChannel().getId()) && cki.wtpThreads.get(msg.getChannel().getId()).getType().equals("pokémon"))
 		{
-			wtp pok = wtp.wtpThreads.get(msg.getChannel().getId());
+			cki pok = cki.wtpThreads.get(msg.getChannel().getId());
 			if (msg.getContentRaw().equalsIgnoreCase("indice"))
 			{
 				if (msg.getChannel().getName().equals("quel est ce pokemon ?"))
@@ -302,14 +307,24 @@ public class BotListener implements EventListener {
 				}
 				pok.addIndice();
 			}
-			else if (wtp.wtpThreads.get(msg.getChannel().getId()).getName().replace('ï', 'i').replace('ô', 'o').replace('é', 'e').replace('è', 'e').replace('ç', 'c').replace('É', 'e').equalsIgnoreCase(msg.getContentRaw().replace('ï', 'i').replace('ô', 'o').replace('é', 'e').replace('è', 'e').replace('ç', 'c').replace('É', 'e')))
+			else if (cki.wtpThreads.get(msg.getChannel().getId()).getName().replace('ï', 'i').replace('ô', 'o').replace('é', 'e').replace('è', 'e').replace('ç', 'c').replace('É', 'e').equalsIgnoreCase(msg.getContentRaw().replace('ï', 'i').replace('ô', 'o').replace('é', 'e').replace('è', 'e').replace('ç', 'c').replace('É', 'e')))
 			{
-				ThreadChannel tc = msg.getGuild().getThreadChannelById(msg.getChannel().getId());
-				EmbedBuilder eb = new EmbedBuilder().setTitle("pokémon trouvé").setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + String.format("%03d", Pokemon.getByRealName(wtp.wtpThreads.get(msg.getChannel().getId()).getName()).getId()) + ".png");
-				eb.setFooter("trouvé par "+ msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
+				EmbedBuilder eb = new EmbedBuilder();
+				ThreadChannel tc = null;
+				if (cki.wtpThreads.get(msg.getChannel().getId()).getType().equals("pokémon")) {
+					tc = msg.getGuild().getThreadChannelById(msg.getChannel().getId());
+					eb.setTitle("pokémon trouvé").setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + String.format("%03d", Pokemon.getByRealName(cki.wtpThreads.get(msg.getChannel().getId()).getName()).getId()) + ".png");
+
+
+				} else if (cki.wtpThreads.get(msg.getChannel().getId()).getType().equals("champion")){
+					tc = msg.getGuild().getThreadChannelById(msg.getChannel().getId());
+					eb.setTitle("champion trouvé").setImage("https://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+cki.wtpThreads.get(msg.getChannel().getId()).getName()+"_0.jpg");
+					eb.setFooter("trouvé par " + msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
+				}
+				eb.setFooter("trouvé par " + msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
 				eb.setColor(Color.green);
 				sendresponse(msg, tc, eb);
-				wtp.save();
+				cki.save();
 			}
 			else if (msg.getContentRaw().equalsIgnoreCase("abandon"))
 			{
@@ -319,12 +334,12 @@ public class BotListener implements EventListener {
 					return;
 				}
 				ThreadChannel tc = msg.getGuild().getThreadChannelById(msg.getChannel().getId());
-				EmbedBuilder eb = new EmbedBuilder().setTitle("Partie abandonné").setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + String.format("%03d", Pokemon.getByRealName(wtp.wtpThreads.get(msg.getChannel().getId()).getName()).getId()) + ".png");
+				EmbedBuilder eb = new EmbedBuilder().setTitle("Partie abandonné").setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + String.format("%03d", Pokemon.getByRealName(cki.wtpThreads.get(msg.getChannel().getId()).getName()).getId()) + ".png");
 				eb.setFooter("abandonné par "+ msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
 				eb.setColor(new Color(255, 92, 243));
 				sendresponse(msg, tc, eb);
 				Message ed;
-				wtp.save();
+				cki.save();
 			}
 			else
 			{
@@ -623,9 +638,9 @@ public class BotListener implements EventListener {
 	}
 
 	private void sendresponse(Message msg, ThreadChannel tc, EmbedBuilder eb) {
-		Message ed = msg.getGuild().getTextChannelById(tc.getParentChannel().getId()).retrieveMessageById(wtp.wtpThreads.get(msg.getChannel().getId()).getMessage()).complete();
-		eb.setDescription(ed.getEmbeds().get(0).getDescription().replace("<ce pokémon>", wtp.wtpThreads.get(msg.getChannel().getId()).getName()) + "\n\nle pokémon était : " + wtp.wtpThreads.get(msg.getChannel().getId()).getName() + "\n\nNombre d'échec : " + wtp.wtpThreads.get(msg.getChannel().getId()).getAction() + "\nNombre d'indice utilisé : " + wtp.wtpThreads.get(msg.getChannel().getId()).getIndice());
-		wtp.wtpThreads.remove(msg.getChannel().getId());
+		Message ed = msg.getGuild().getTextChannelById(tc.getParentChannel().getId()).retrieveMessageById(cki.wtpThreads.get(msg.getChannel().getId()).getMessage()).complete();
+		eb.setDescription(ed.getEmbeds().get(0).getDescription().replace("<ce pokémon>", cki.wtpThreads.get(msg.getChannel().getId()).getName()) + "\n\nle pokémon était : " + cki.wtpThreads.get(msg.getChannel().getId()).getName() + "\n\nNombre d'échec : " + cki.wtpThreads.get(msg.getChannel().getId()).getAction() + "\nNombre d'indice utilisé : " + cki.wtpThreads.get(msg.getChannel().getId()).getIndice());
+		cki.wtpThreads.remove(msg.getChannel().getId());
 		msg.getChannel().delete().queue();
 		msg.getChannel().sendMessage(ed.getId()).queue();
 		ed.editMessageEmbeds(eb.build()).queue();

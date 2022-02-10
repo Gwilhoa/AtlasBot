@@ -30,10 +30,6 @@ import org.apache.commons.io.FilenameUtils;
 import static fr.cringebot.cringe.objects.Emotes.getEmote;
 
 public class memesEvent {
-	/**
-	 * fonction servant si quelqu'un réagit à un même
-	 * suite au modifications des memes elle est a modifier
-	 */
 	public static void addReaction(Message message, MessageReaction react) {
 		int u = 0;
 		int d = 0;
