@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/02/10 08:39:51 by                  ###   ########.fr       */
+/*   Updated: 2022/02/10 09:34:10 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,10 +280,10 @@ public class BotListener implements EventListener {
 			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
 			return;
 		}
-		if (cki.wtpThreads.containsKey(msg.getChannel().getId()) && cki.wtpThreads.get(msg.getChannel().getId()).getType().equals("pokémon"))
+		if (cki.wtpThreads.containsKey(msg.getChannel().getId()))
 		{
 			cki pok = cki.wtpThreads.get(msg.getChannel().getId());
-			if (msg.getContentRaw().equalsIgnoreCase("indice"))
+			if (msg.getContentRaw().equalsIgnoreCase("indice") && pok.getType().equals("pokemon"))
 			{
 				if (msg.getChannel().getName().equals("quel est ce pokemon ?"))
 				{
@@ -318,7 +318,7 @@ public class BotListener implements EventListener {
 
 				} else if (cki.wtpThreads.get(msg.getChannel().getId()).getType().equals("champion")){
 					tc = msg.getGuild().getThreadChannelById(msg.getChannel().getId());
-					eb.setTitle("champion trouvé").setImage("https://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+cki.wtpThreads.get(msg.getChannel().getId()).getName()+"_0.jpg");
+					eb.setTitle("champion trouvé").setImage("https://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+cki.wtpThreads.get(msg.getChannel().getId()).getName().replace(' ','\0')+"_0.jpg");
 					eb.setFooter("trouvé par " + msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
 				}
 				eb.setFooter("trouvé par " + msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
@@ -639,7 +639,7 @@ public class BotListener implements EventListener {
 
 	private void sendresponse(Message msg, ThreadChannel tc, EmbedBuilder eb) {
 		Message ed = msg.getGuild().getTextChannelById(tc.getParentChannel().getId()).retrieveMessageById(cki.wtpThreads.get(msg.getChannel().getId()).getMessage()).complete();
-		eb.setDescription(ed.getEmbeds().get(0).getDescription().replace("<ce pokémon>", cki.wtpThreads.get(msg.getChannel().getId()).getName()) + "\n\nle pokémon était : " + cki.wtpThreads.get(msg.getChannel().getId()).getName() + "\n\nNombre d'échec : " + cki.wtpThreads.get(msg.getChannel().getId()).getAction() + "\nNombre d'indice utilisé : " + cki.wtpThreads.get(msg.getChannel().getId()).getIndice());
+		eb.setDescription(ed.getEmbeds().get(0).getDescription().replace("<ce pokémon>", cki.wtpThreads.get(msg.getChannel().getId()).getName()).replace("<ce champion>", cki.wtpThreads.get(msg.getChannel().getId()).getName()) + "\n\nle "+ cki.wtpThreads.get(msg.getChannel().getId()).getType()+" était : " + cki.wtpThreads.get(msg.getChannel().getId()).getName() + "\n\nNombre d'échec : " + cki.wtpThreads.get(msg.getChannel().getId()).getAction() + "\nNombre d'indice utilisé : " + cki.wtpThreads.get(msg.getChannel().getId()).getIndice());
 		cki.wtpThreads.remove(msg.getChannel().getId());
 		msg.getChannel().delete().queue();
 		msg.getChannel().sendMessage(ed.getId()).queue();

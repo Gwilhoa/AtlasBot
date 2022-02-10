@@ -62,7 +62,7 @@ public class mainCommand {
             Message message = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
             msg.delete().queue();
             ThreadChannel tc = message.createThreadChannel("quel est ce champion ?").complete();
-            cki.wtpThreads.put(tc.getId(), new cki("chmapion",message.getId(), name));
+            cki.wtpThreads.put(tc.getId(), new cki("champion",message.getId(), name));
             cki.save();
         }).start();
     }
