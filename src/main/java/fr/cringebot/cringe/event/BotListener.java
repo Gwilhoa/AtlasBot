@@ -6,52 +6,21 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/02/10 09:34:10 by                  ###   ########.fr       */
+/*   Updated: 2022/02/11 16:12:42 by gchatain         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 package fr.cringebot.cringe.event;
 
-import static fr.cringebot.cringe.cki.mainCommand.wtcmain;
-import static fr.cringebot.cringe.cki.mainCommand.wtpmain;
-import static fr.cringebot.cringe.event.ReactionEvent.feur;
-import static fr.cringebot.cringe.event.ReactionEvent.hmm;
-import static fr.cringebot.cringe.event.ReactionEvent.nice;
-import static fr.cringebot.cringe.event.ReactionEvent.pressf;
-import static fr.cringebot.cringe.event.ReactionEvent.putain;
-import static fr.cringebot.cringe.event.ReactionEvent.rage;
-import static fr.cringebot.cringe.event.ReactionEvent.daronned;
-import static fr.cringebot.cringe.event.memesEvent.postmeme;
-import static fr.cringebot.cringe.objects.StringExtenders.containsIgnoreCase;
-import static fr.cringebot.cringe.objects.StringExtenders.startWithIgnoreCase;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
-
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.CommandMap;
-import fr.cringebot.cringe.objects.DetectorAttachment;
-import fr.cringebot.cringe.objects.Emotes;
-import fr.cringebot.cringe.objects.PollMessage;
-import fr.cringebot.cringe.objects.StringExtenders;
-import fr.cringebot.cringe.objects.activity;
-import fr.cringebot.cringe.objects.imgExtenders;
+import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.objects.lol.Champion;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
@@ -62,15 +31,33 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
+import net.dv8tion.jda.api.events.role.RoleCreateEvent;
+import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.List;
+import java.util.*;
+
+import static fr.cringebot.cringe.cki.mainCommand.wtcmain;
+import static fr.cringebot.cringe.cki.mainCommand.wtpmain;
+import static fr.cringebot.cringe.event.ReactionEvent.*;
+import static fr.cringebot.cringe.event.memesEvent.postmeme;
+import static fr.cringebot.cringe.objects.StringExtenders.containsIgnoreCase;
+import static fr.cringebot.cringe.objects.StringExtenders.startWithIgnoreCase;
 
 /**
  * capture tout les evenements du bot
@@ -104,7 +91,13 @@ public class BotListener implements EventListener {
 	 */
 	public void onEvent(GenericEvent event) {
 		System.out.println(event.getClass().getSimpleName());
-		if (event instanceof ReadyEvent) onEnable((ReadyEvent) event);
+		if (event instanceof ReadyEvent) {
+			try {
+				onEnable((ReadyEvent) event);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		if (event instanceof MessageReceivedEvent) {
 			try {
 				onMessage((MessageReceivedEvent) event);
@@ -116,6 +109,16 @@ public class BotListener implements EventListener {
 		else if (event instanceof MessageReactionAddEvent) onAddReact((MessageReactionAddEvent) event);
 		else if (event instanceof SelectMenuInteractionEvent) onSelectMenu((SelectMenuInteractionEvent) event);
 		else if (event instanceof GatewayPingEvent) onPing((GatewayPingEvent) event);
+		else if (event instanceof RoleCreateEvent) onCreateRole((RoleCreateEvent) event);
+		else if (event instanceof RoleDeleteEvent) onDeleteRole((RoleDeleteEvent) event);
+		else if (event instanceof MessageReactionRemoveEvent) onRemoveReact((MessageReactionRemoveEvent) event);
+		else if (event instanceof ShutdownEvent) {
+			try {
+				onShutdown((ShutdownEvent) event);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		else if (event instanceof MessageEmbedEvent) {
 			try {
 				onEmbed((MessageEmbedEvent) event);
@@ -125,13 +128,48 @@ public class BotListener implements EventListener {
 		}
 	}
 
+	private void onShutdown(ShutdownEvent event) throws IOException {
+		event.getJDA().getGuildById("382938797442334720").getTextChannelById("687244482739044370").sendFile(imgExtenders.getFile("shutdown.png")).queue();
+	}
+
+	private void onRemoveReact(MessageReactionRemoveEvent event) {
+		if (event.getChannel().getId().equals("853210283480055809")) {
+			for (MessageReact mr : MessageReact.message)
+				if (event.getMessageId().equals(mr.getId())) {
+					for (RoleReaction rr : mr.list) {
+						if (event.getReactionEmote().getAsReactionCode().equals(rr.getEmote())) {
+							event.getGuild().removeRoleFromMember(event.getMember(), event.getGuild().getRoleById(rr.getId())).queue();
+							return;
+						}
+					}
+				}
+		}
+	}
+
+	private void onDeleteRole(RoleDeleteEvent event) {
+		for (MessageReact mr : MessageReact.message)
+			for (RoleReaction rr : mr.list)
+				if (rr.getId().equals(event.getRole().getId())) {
+					mr.list.remove(rr);
+					mr.refresh(event.getGuild());
+				}
+	}
+
+	private void onCreateRole(RoleCreateEvent event) {
+		if (!event.getRole().getName().startsWith("©◊ß"))
+			event.getRole().delete().queue();
+		else
+			event.getRole().getManager().setName(event.getRole().getName().replace("©◊ß", "")).queue();
+	}
+
 	/**
 	 * evenement quand un Embed est posté
+	 *
 	 * @param event
 	 * @throws InterruptedException
 	 */
 	private void onEmbed(MessageEmbedEvent event) throws InterruptedException {
-		if (event.getChannel().getId().equals("461606547064356864")) {
+		if (event.getChannel().getId().equals("461606547064356864") && event.getChannel().retrieveMessageById(event.getMessageId()).getCheck().getAsBoolean()) {
 			Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
 			if (DetectorAttachment.isReddit(msg.getContentRaw()))
 				msg = memesEvent.repostReddit(msg);
@@ -159,17 +197,29 @@ public class BotListener implements EventListener {
 	}
 
 	private void onSelectMenu(SelectMenuInteractionEvent event) {
-		if (!event.getMessage().getEmbeds().isEmpty() && event.getMessage().getEmbeds().get(0).getAuthor().getName().equals("poll")) {
+		if (!event.getMessage().getEmbeds().isEmpty() && event.getMessage().getEmbeds().get(0).getAuthor() != null && event.getMessage().getEmbeds().get(0).getAuthor().getName().equals("poll")) {
 			PollMessage pm = PollMessage.pollMessage.get(event.getMessageId());
 			pm.newVote(event.getUser(), event.getSelectedOptions().get(0).getLabel());
 			event.getMessage().editMessageEmbeds(pm.getMessageEmbed(event.getGuild())).queue();
 			event.reply("ton vote a été enregistré \uD83D\uDC4D").setEphemeral(true).queue();
 		}
-		if (event.getComponent().getId().equals("cki"))
+		if (event.getComponent().getId().equals("cki")) {
 			if (event.getSelectedOptions().get(0).getLabel().equals("quel est ce pokémon"))
 				wtpmain(event.getMessage());
 			if (event.getSelectedOptions().get(0).getLabel().equals("quel est ce champion"))
 				wtcmain(event.getMessage());
+		}
+		if (event.getComponent().getId().equals("role")) {
+			String[] args = event.getMessage().getEmbeds().get(0).getDescription().split("\n");
+			if (!event.getSelectedOptions().get(0).equals("role generaux") || !event.getSelectedOptions().get(0).equals("lieux de vie"))
+				event.getGuild().modifyRolePositions().selectPosition(event.getGuild().getRoleById(event.getMessage().getEmbeds().get(0).getFooter().getText())).selectPosition(event.getGuild().getRoleById("734012661494317077").getPosition() + 1).queue();
+			for (MessageReact mr : MessageReact.message)
+				if (mr.getTitle().equals(event.getSelectedOptions().get(0).getLabel())) {
+					mr.addRole(new RoleReaction(args[0], event.getMessage().getEmbeds().get(0).getFooter().getText(), args[1]), event.getGuild());
+					MessageReact.save();
+				}
+			event.getMessage().delete().queue();
+		}
 	}
 
 	/**
@@ -177,16 +227,21 @@ public class BotListener implements EventListener {
 	 *
 	 * @param event
 	 */
-	private void onEnable(ReadyEvent event) {
+	private void onEnable(ReadyEvent event) throws IOException {
+		MessageReact.load();
+		PollMessage.load();
+		cki.load();
 		new Thread(() -> {
-			for (Member mem : event.getJDA().getGuildById("382938797442334720").getMembers())
-			{
-				event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734011696242360331")).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619"))).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
+			for (MessageReact mr : MessageReact.message)
+				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
+		}).start();
+		new Thread(() -> {
+			for (Member mem : event.getJDA().getGuildById("382938797442334720").getMembers()) {
+				if (mem.getRoles().get(0).getPosition() < mem.getGuild().getRoleById("734011696242360331").getPosition())
+					event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734011696242360331")).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619"))).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
 			}
 		}).start();
-		new Thread(() -> {
-		recupMeme(event.getJDA().getGuildById("382938797442334720"));
-		}).start();
+		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
 		Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
 		}.getType());
 
@@ -197,20 +252,17 @@ public class BotListener implements EventListener {
 		}.getType());
 
 		Activity act;
-		if (System.getenv().get("OS").equals("Windows_NT")) {
+		System.out.println(System.getenv());
+		if (System.getenv().get("USER").equals("guilheimchataing")) {
 			act = new activity("se faire retaper", null, Activity.ActivityType.PLAYING);
 			bot.getJda().getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
-		}
-		else
-		{
+		} else {
 			act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
-			bot.getJda().getGuildById("382938797442334720").getTextChannelById("687244482739044370").sendMessage("Mise a jour effectué le patchnote sera dans annonces bot\nsi il y est pas encore, il va pas tarder").queue();
+			bot.getJda().getGuildById("382938797442334720").getTextChannelById("687244482739044370").sendFile(imgExtenders.getFile("update.png")).queue();
 		}
 		bot.getJda().getPresence().setActivity(act);
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
-		PollMessage.load();
-		cki.load();
 	}
 
 	/**
@@ -265,6 +317,17 @@ public class BotListener implements EventListener {
 		if (event.getChannel().getId().equals("461606547064356864")) {
 			memesEvent.addReaction(event.getChannel().retrieveMessageById(event.getMessageId()).complete(), event.getReaction());
 		}
+		if (event.getChannel().getId().equals("853210283480055809")) {
+			for (MessageReact mr : MessageReact.message)
+				if (event.getMessageId().equals(mr.getId())) {
+					for (RoleReaction rr : mr.list) {
+						if (event.getReactionEmote().getAsReactionCode().equals(rr.getEmote())) {
+							event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById(rr.getId())).queue();
+							return;
+						}
+					}
+				}
+		}
 	}
 
 
@@ -276,6 +339,8 @@ public class BotListener implements EventListener {
 	private void onMessage(MessageReceivedEvent event) throws IOException, InterruptedException {
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		Message msg = event.getMessage();
+		if (msg.getMentionedMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())))
+			msg.getChannel().sendMessage("hé oh t'es qui a me ping, tu veux te battre ?\nfais un ping everyone pendant que t'y est").queue();
 		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {
 			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
 			return;

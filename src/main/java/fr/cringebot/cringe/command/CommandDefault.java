@@ -17,24 +17,19 @@ import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
-import fr.cringebot.cringe.objects.PollMessage;
-import fr.cringebot.cringe.objects.SelectOptionImpl;
-import fr.cringebot.cringe.objects.UserExtenders;
-import fr.cringebot.cringe.pokemon.objects.Pokemon;
+import fr.cringebot.cringe.objects.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import static fr.cringebot.cringe.cki.mainCommand.ckimain;
 
@@ -56,7 +51,8 @@ public class CommandDefault {
 	}
 
 	@Command(name = "arret", type = ExecutorType.CONSOLE)
-	private void stop() {
+	private void stop(JDA jda) throws IOException {
+		jda.getGuildById("382938797442334720").getTextChannelById("687244482739044370").sendFile(imgExtenders.getFile("shutdown.png")).queue();
 		botDiscord.setRunning(false);
 	}
 
@@ -100,9 +96,25 @@ public class CommandDefault {
 		msg.editMessageEmbeds(pm.getMessageEmbed(msg.getGuild())).queue();
 	}
 
+	@Command(name = "role", description = "permettre de creer un role", type = ExecutorType.USER)
+	private void role(Message msg) {
+		String[] args = msg.getContentRaw().split(" ");
+		if (args.length == 3) {
+			msg.addReaction(args[2]).queue();
+			Role r = msg.getGuild().createRole().setName("©◊ß" + args[1]).setMentionable(true).setColor(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255))).complete();
+			EmbedBuilder eb = new EmbedBuilder().setTitle("nouveau role").setDescription(r.getName().replace("©◊ß", "") + "\n" + args[2]).setFooter(r.getId());
+			ArrayList<SelectOption> options = new ArrayList<>();
+			for (MessageReact mr : MessageReact.message)
+				options.add(new SelectOptionImpl(mr.getTitle(), mr.getTitle()));
+			SelectMenuImpl selectionMenu = new SelectMenuImpl("role", "catégorie", 1, 1, false, options);
+			msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(selectionMenu).complete();
+		} else {
+			msg.getChannel().sendMessage("erreur argument >role <nom> <emote>").queue();
+		}
+	}
+
 	@Command(name = "cki", type = Command.ExecutorType.USER)
-	private void cki(Message msg)
-	{
+	private void cki(Message msg) {
 		ckimain(msg);
 	}
 }
