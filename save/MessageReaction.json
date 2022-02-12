@@ -1,0 +1,70 @@
+[
+  {
+    "Title": "role generaux",
+    "Id": "941717690479960135",
+    "list": [
+      {
+        "Name": "@gamer",
+        "Id": "941767472888049714",
+        "Emote": "🎮"
+      }
+    ]
+  },
+  {
+    "Title": "jeu Riot",
+    "Id": "941717692157685820",
+    "list": []
+  },
+  {
+    "Title": "jeu Blizzard",
+    "Id": "941717694607151105",
+    "list": [
+      {
+        "Name": "test",
+        "Id": "942057430601318460",
+        "Emote": "isdhnidsnfsd"
+      },
+      {
+        "Name": "set",
+        "Id": "942062832671916053",
+        "Emote": "truc"
+      }
+    ]
+  },
+  {
+    "Title": "jeu de combat",
+    "Id": "941717696893042728",
+    "list": []
+  },
+  {
+    "Title": "jeu de Survie/ exploration",
+    "Id": "941717699560607814",
+    "list": []
+  },
+  {
+    "Title": "jeux de stratégie",
+    "Id": "941717713213095946",
+    "list": [
+      {
+        "Name": "uh",
+        "Id": "942057667478835221",
+        "Emote": "odnd"
+      }
+    ]
+  },
+  {
+    "Title": "autres jeux",
+    "Id": "941717714483941446",
+    "list": []
+  },
+  {
+    "Title": "petits jeux",
+    "Id": "941717715532541993",
+    "list": []
+  },
+  {
+    "Title": "lieux de vie",
+    "Id": "941717717151535114",
+    "list": []
+  }
+]
