@@ -76,6 +76,16 @@ public class StringExtenders {
         }
         return c >= 5;
     }
+
+    private static String BetterLowCase(String str) {
+        return (str.replace('ï', 'i').replace('ô', 'o').replace('é', 'e').replace('è', 'e').replace('ç', 'c').replace('É', 'e'));
+    }
+
+    public static boolean BetterIgnoreCase(String str1, String str2){
+        str1 = BetterLowCase(str1);
+        str2 = BetterLowCase(str2);
+        return (str1.equalsIgnoreCase(str2));
+    }
 }
 
 
