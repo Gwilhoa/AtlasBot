@@ -136,8 +136,13 @@ public class Pokemon {
         return evolveTo.li;
     }
 
-    public String getType() {
-        return type;
+    public List<Type> getType() {
+        ArrayList<Type> types = new ArrayList<>();
+        for (String str : type.split(" "))
+        {
+            types.add(Type.Types.byName(str).getTpe());
+        }
+        return (types);
     }
 
     public Integer getAttackspe() {

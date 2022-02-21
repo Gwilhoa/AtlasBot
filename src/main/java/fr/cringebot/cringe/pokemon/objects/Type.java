@@ -6,12 +6,12 @@ import java.awt.*;
 
 public class Type {
 
-    public int id;
-    public String name;
-    public Color c;
-    public Integer[] fb;
-    public Integer[] ef;
-    public Integer[] n;
+    private final int id;
+    private final String name;
+    private final Color c;
+    private final Integer[] fb;
+    private final Integer[] ef;
+    private final Integer[] n;
 
     public Type(int id, String name, Color c, Integer[] fb, Integer[] ef, Integer[] n) {
         this.id = id;
@@ -20,6 +20,30 @@ public class Type {
         this.fb = fb;
         this.ef = ef;
         this.n = n;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Color getColor() {
+        return c;
+    }
+
+    public Integer[] getNotEffectiveId() {
+        return fb;
+    }
+
+    public Integer[] getEffectiveId() {
+        return ef;
+    }
+
+    public Integer[] getNeutralId() {
+        return n;
     }
 
     public enum Types {
@@ -43,7 +67,11 @@ public class Type {
         ROCHE(17, "rock", new Color(189, 165, 90), new Integer[]{0}, new Integer[]{0}, new Integer[]{0}),
         NORMAL(18, "normal", Color.LIGHT_GRAY, new Integer[]{0}, new Integer[]{0}, new Integer[]{0});
 
-        public Type tpe;
+        public Type getTpe() {
+            return tpe;
+        }
+
+        final Type tpe;
 
         Types(int id, String name, Color c, Integer[] fb, Integer[] ef, Integer[] n) {
             this.tpe = new Type(id, name, c, fb, ef, n);

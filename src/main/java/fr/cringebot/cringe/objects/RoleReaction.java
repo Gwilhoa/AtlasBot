@@ -46,7 +46,7 @@ public class RoleReaction {
         }
         for (Member mem : msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById(this.getId())))
         {
-            if (!userList.contains(mem.getUser()))
+            if (userList != null && !userList.contains(mem.getUser()))
                 msg.getGuild().removeRoleFromMember(mem, msg.getGuild().getRoleById(this.getId())).queue();
         }
     }

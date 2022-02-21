@@ -2,6 +2,7 @@ package fr.cringebot.cringe.pokemon;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 import fr.cringebot.cringe.pokemon.objects.Type;
@@ -43,7 +44,7 @@ public class Commands {
 	private void pokemon(Message msg) {
 		new Thread(() -> {
 			Pokemon po = Pokemon.getRandomPokemon();
-			Type t = Type.Types.byName(po.getType().split(" ")[new Random().nextInt(po.getType().split(" ").length)]).tpe;
+			List<Type> t = po.getType();
 			int level = new Random().nextInt(po.getLevels().get(1) - po.getLevels().get(0)) + po.getLevels().get(0);
 			boolean isShiney = new Random().nextInt(1000) > 995;
 			Message m = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setTitle("capture...").build()).complete();
@@ -71,7 +72,7 @@ public class Commands {
 				e.printStackTrace();
 			}
 
-			EmbedBuilder eb = new EmbedBuilder().setDescription(m.getMember().getAsMention() + " a attrapé " + po.getRealname() + " #" + po.getId() + (isShiney ? " shiney" : "") + " il est de niveau " + level ).setImage("http://play.pokemonshowdown.com/sprites/ani" + (isShiney ? "-shiny" : "") + "/" + po.getName() + ".gif").setColor(t.c).setFooter("rien n'est enregistré Version Beta 0.3.1", m.getMember().getAvatarUrl());
+			EmbedBuilder eb = new EmbedBuilder().setDescription(m.getMember().getAsMention() + " a attrapé " + po.getRealname() + " #" + po.getId() + (isShiney ? " shiney" : "") + " il est de niveau " + level ).setImage("http://play.pokemonshowdown.com/sprites/ani" + (isShiney ? "-shiny" : "") + "/" + po.getName() + ".gif").setColor(t.get(0).getColor()).setFooter("rien n'est enregistré Version Beta 0.3.1", m.getMember().getAvatarUrl());
 			m.editMessageEmbeds(eb.build()).queue();
 		}).start();
 	}

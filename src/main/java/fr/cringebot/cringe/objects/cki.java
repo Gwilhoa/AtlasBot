@@ -1,4 +1,4 @@
-package fr.cringebot.cringe.pokemon.objects;
+package fr.cringebot.cringe.objects;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -11,6 +11,7 @@ public class cki {
     private static final String file = "save/cki.json";
     private static final TypeToken<HashMap<String, cki>> typeToken = new TypeToken<HashMap<String, cki>>() {
     };
+    private String channel;
     private String type;
     private String Message;
     private String Name;
@@ -19,8 +20,9 @@ public class cki {
     public static HashMap<String, cki> wtpThreads = null;
 
 
-    public cki(String t, String message, String name)
+    public cki(String t, String message, String name, String channels)
     {
+        channel = channels;
         type = t;
         Message = message;
         Name = name;
@@ -91,5 +93,9 @@ public class cki {
             bw.close();
         } catch (IOException e) {
         }
+    }
+
+    public String getChannel() {
+        return channel;
     }
 }

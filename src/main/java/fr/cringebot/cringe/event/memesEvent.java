@@ -17,6 +17,7 @@ import fr.cringebot.cringe.objects.Emotes;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
+import org.apache.commons.io.FilenameUtils;
 
 import java.awt.*;
 import java.io.BufferedInputStream;
@@ -24,8 +25,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-
-import org.apache.commons.io.FilenameUtils;
 
 import static fr.cringebot.cringe.objects.Emotes.getEmote;
 
@@ -96,7 +95,7 @@ public class memesEvent {
 		return;
 		}
 	String name;
-	String content = null;
+		String content;
 	if (msg.getAttachments().isEmpty())
 	{
 		System.out.print(msg.getContentRaw().split(" ")[0]);
@@ -104,7 +103,7 @@ public class memesEvent {
 		name = msg.getContentRaw().split(" ")[0].split("/")[msg.getContentRaw().split("/").length - 1];
 		try (BufferedInputStream bis = new BufferedInputStream(new URL(msg.getContentRaw().split(" ")[0]).openStream());
 		FileOutputStream fos = new FileOutputStream(name)) {
-			byte data[] = new byte[1024];
+			byte[] data = new byte[1024];
 			int byteContent;
 			while ((byteContent = bis.read(data, 0, 1024)) != -1) {
 				fos.write(data, 0, byteContent);
@@ -133,9 +132,9 @@ public class memesEvent {
 	if (FilenameUtils.getExtension(f.getName()).equals("mp4") || FilenameUtils.getExtension(f.getName()).equals("mov") || FilenameUtils.getExtension(f.getName()).equals("webm"))
 	{
 		if (content == null)
-			msg = msg.getChannel().sendMessage("by > "+ name).addFile(f).complete();
+			msg = msg.getChannel().sendMessage("par > " + name).addFile(f).complete();
 		else
-			msg = msg.getChannel().sendMessage("by > "+ name + "\n" + content).addFile(f).complete();
+			msg = msg.getChannel().sendMessage("par > " + name + "\n" + content).addFile(f).complete();
 	}
 	else
 		msg = msg.getChannel().sendFile(f).setEmbeds(

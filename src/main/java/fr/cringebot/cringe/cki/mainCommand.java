@@ -3,7 +3,7 @@ package fr.cringebot.cringe.cki;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.lol.Champion;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
-import fr.cringebot.cringe.pokemon.objects.cki;
+import fr.cringebot.cringe.objects.cki;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.ThreadChannel;
@@ -20,8 +20,8 @@ public class mainCommand {
     public static void ckimain(Message msg)
     {
         ArrayList<SelectOption> options = new ArrayList<>();
-        options.add(new SelectOptionImpl("quel est ce pokémon", "quel est ce pokémon"));
-        options.add(new SelectOptionImpl("quel est ce champion", "quel est ce champion"));
+        options.add(new SelectOptionImpl("Quel est ce Pokémon", "quel est ce pokémon"));
+        options.add(new SelectOptionImpl("Quel est ce Champion", "quel est ce champion"));
         options.add(new SelectOptionImpl("Coming soon", "coming soon"));
         SelectMenuImpl selectionMenu = new SelectMenuImpl( "cki", "selectionnez un choix", 1, 1, false, options);
         msg.getChannel().sendMessage("choisis le type de ton jeu").setActionRow(selectionMenu).queue();
@@ -46,7 +46,7 @@ public class mainCommand {
             Message message = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
             msg.delete().queue();
             ThreadChannel tc = message.createThreadChannel("quel est ce pokemon ?").complete();
-            cki.wtpThreads.put(tc.getId(), new cki("pokemon",message.getId(), name));
+            cki.wtpThreads.put(tc.getId(), new cki("pokemon",message.getId(), name, msg.getChannel().getId()));
             cki.save();
         }).start();
     }
@@ -58,11 +58,11 @@ public class mainCommand {
             Document doc;
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("who's that champion");
-            eb.setDescription(c.getBlurb().replace(c.getName(), "<ce champion>"));
+            eb.setDescription(c.getBlurb().replace(c.getName(), "<ce champion>").replace("Sarah Fortune", "<ce champion>"));
             Message message = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
             msg.delete().queue();
             ThreadChannel tc = message.createThreadChannel("quel est ce champion ?").complete();
-            cki.wtpThreads.put(tc.getId(), new cki("champion",message.getId(), name));
+            cki.wtpThreads.put(tc.getId(), new cki("champion",message.getId(), name, msg.getChannel().getId()));
             cki.save();
         }).start();
     }
