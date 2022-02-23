@@ -25,6 +25,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import static fr.cringebot.cringe.objects.imgExtenders.getImage;
@@ -152,7 +153,7 @@ public class ReactionEvent {
             if (msg.getMentionedMembers().size() >= 1)
                 msg.getChannel().sendMessage(msg.getMentionedMembers().get(0).getAsMention() + "s'est fait daronné").queue();
     }
-    else if (args.length == 1)
+    else
         msg.getChannel().sendMessage("il s'est fait daronné").queue();
 }
 }

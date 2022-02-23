@@ -30,6 +30,11 @@ public class MusicCommand {
         }
     }
 
+    @Command(name="joue",type=ExecutorType.USER, description = "ajoute une musique a la playlist")
+    private void joue(Guild guild, TextChannel textChannel, User user, Message msg)
+    {
+        play(guild, textChannel, user, msg);
+    }
 
     @Command(name="play",type=ExecutorType.USER, description = "ajoute une musique a la playlist")
     private void play(Guild guild, TextChannel textChannel, User user, Message msg) {

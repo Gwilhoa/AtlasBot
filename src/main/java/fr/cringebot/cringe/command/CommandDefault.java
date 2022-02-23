@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,9 +51,11 @@ public class CommandDefault {
 		this.botDiscord = botDiscord;
 	}
 
-	@Command(name = "arret", type = ExecutorType.CONSOLE)
+	@Command(name = "stop", type = ExecutorType.CONSOLE)
 	private void stop(JDA jda) throws IOException {
-		jda.getGuildById("382938797442334720").getTextChannelById("687244482739044370").sendFile(imgExtenders.getFile("shutdown.png")).queue();
+		File f = imgExtenders.getFile("shutdown.png");
+		jda.getGuildById("382938797442334720").getTextChannelById("687244482739044370").sendFile(f).queue();
+		f.delete();
 		botDiscord.setRunning(false);
 	}
 

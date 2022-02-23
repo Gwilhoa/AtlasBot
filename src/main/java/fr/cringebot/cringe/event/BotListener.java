@@ -20,9 +20,10 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.CommandMap;
+import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
 import fr.cringebot.cringe.objects.*;
-import fr.cringebot.cringe.objects.lol.Champion;
+import fr.cringebot.cringe.lol.Champion;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -32,6 +33,7 @@ import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.http.HttpRequestEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -46,8 +48,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
 
-import static fr.cringebot.cringe.cki.mainCommand.wtcmain;
-import static fr.cringebot.cringe.cki.mainCommand.wtpmain;
+import static fr.cringebot.cringe.cki.mainCommand.*;
+import static fr.cringebot.cringe.event.MembersQuotes.MemberReact;
 import static fr.cringebot.cringe.event.ReactionEvent.*;
 import static fr.cringebot.cringe.event.memesEvent.postmeme;
 import static fr.cringebot.cringe.objects.StringExtenders.containsIgnoreCase;
@@ -110,8 +112,12 @@ public class BotListener implements EventListener {
 				e.printStackTrace();
 			}
 		}
+		else if (event instanceof HttpRequestEvent) onRequest((HttpRequestEvent) event);
 	}
 
+	private void onRequest(HttpRequestEvent event){
+		System.out.println(event.getRequestRaw().toString());
+	}
 	private void onRemoveReact(MessageReactionRemoveEvent event) {
 		if (event.getChannel().getId().equals("853210283480055809")) {
 			for (MessageReact mr : MessageReact.message)
@@ -186,10 +192,7 @@ public class BotListener implements EventListener {
 			event.reply("Ton vote a été enregistré \uD83D\uDC4D").setEphemeral(true).queue();
 		}
 		if (event.getComponent().getId().equals("cki")) {
-			if (event.getSelectedOptions().get(0).getValue().equals("quel est ce pokémon"))
-				wtpmain(event.getMessage());
-			if (event.getSelectedOptions().get(0).getValue().equals("quel est ce champion"))
-				wtcmain(event.getMessage());
+			MenuInteract(event.getSelectedOptions().get(0).getValue(), event.getMessage());
 		}
 		if (event.getComponent().getId().equals("role")) {
 			String[] args = event.getMessage().getEmbeds().get(0).getDescription().split("\n");
@@ -230,7 +233,6 @@ public class BotListener implements EventListener {
 		}.getType());
 
 		Activity act;
-		System.out.println(System.getenv());
 		if (System.getenv().get("USER").equals("guilheimchataing")) {
 			bot.getJda().getGuildById("382938797442334720").getTextChannelById("893578679127506965").sendFile(imgExtenders.getFile("start_warn.png")).queue();
 			act = new activity("se faire retaper", null, Activity.ActivityType.PLAYING);
@@ -254,7 +256,6 @@ public class BotListener implements EventListener {
 		int i = 0;
 		while(i < 100)
 		{
-			tc.sendTyping().queue();
 			if (!msgs.get(i).getAuthor().isBot() && DetectorAttachment.isAnyLink(msgs.get(i)))
 			{
 				try {
@@ -332,195 +333,8 @@ public class BotListener implements EventListener {
 		//split le message
 		String[] args = msg.getContentRaw().split(" ");
 
-		if (msg.getContentRaw().equalsIgnoreCase("max")) {
-			int r = new Random().nextInt(5);
-			if (r == 0)
-				msg.getChannel().sendMessage("La personne la plus calme et la plus sereine que je connaisse \n\n*ou pas*").queue();
-			if (r == 1)
-				msg.getChannel().sendMessage("Le chevalier ou le roi du sel en personne\nRien que ça").queue();
-			if (r == 2)
-				msg.getChannel().sendMessage("Composé à 95% de sel").queue();
-			if (r == 3)
-				msg.getChannel().sendMessage("Un jour il sera calme, un jour...").queue();
-			if (r == 4)
-				msg.getChannel().sendMessage("ComputerSlayer").queue();
-		}
-
-		if (msg.getContentRaw().equalsIgnoreCase("roro"))
-		{
-			int r = new Random().nextInt(5);
-			if (r == -1)
-				msg.getChannel().sendMessage("Shadow in the night").queue();
-			if (r == 1)
-				msg.getChannel().sendMessage("Un jour il dira a Momo d'arreter de pomper la co\nUn jour").queue();
-			if (r == 2)
-				msg.getChannel().sendMessage("Super koala de destruction massif").queue();
-			if (r == 3)
-				msg.getChannel().sendMessage("D'après ce qu'on m'a dit cette peronne est sacrée\ndonc j'en déduis qu'il est parlementaire").queue();
-			if (r == 4)
-				msg.getChannel().sendMessage("Salut c'est toi, et moi\n moi c'est CringeBot et toi, c'est " + msg.getMember().getAsMention()).queue();
-		}
-
-		
-		if (msg.getContentRaw().equalsIgnoreCase("logan"))
-		{
-			int r = new Random().nextInt(4);
-			if (r == 0)
-				msg.getChannel().sendMessage("Mais, mais qu'est ce que c'est ?\nun Avion ? non\nun Bastion ?, non\nune Porte ?\nnon c'est juste Logan\nC'est la même chose").queue();
-			if (r == 1)
-				msg.getChannel().sendMessage("Grogan en action").queue();
-			if (r == 2)
-				msg.getChannel().sendMessage("Créateur de la porte humaine").queue();
-			if (r == 3)
-				msg.getChannel().sendMessage("Putain frérot arrete de post des mêmes j'en peux plus\nJe suis pas venu ici pour souffrir, ok ?").queue();
-		}
-
-		if (msg.getContentRaw().equalsIgnoreCase("guigui"))
-		{
-			int r = new Random().nextInt(8);
-			if (r == 0)
-				msg.getChannel().sendMessage("C'est quoi une vache ?").queue();
-			if (r == 1)
-				msg.getChannel().sendMessage("Roro :heart:").queue();
-			if (r == 2)
-				msg.getChannel().sendMessage("Créateur de la méta Diablo backlane").queue();
-			if (r == 3)
-				msg.getChannel().sendMessage("Mon magnifique créateur, il est noir et PD,\nil a vraiment rien pour lui").queue();
-			if (r == 4)
-				msg.getChannel().sendMessage("ChairSlayer").queue();
-			if (r == 5)
-				msg.getChannel().sendMessage("ah ouuuuaiis \nça se passe comme ça dans le Nexus").queue();
-			if (r == 6)
-				msg.getChannel().sendMessage("mamaaaaaaaaaaa").queue();
-			if (r == 7)
-				msg.getChannel().sendMessage("C'est rien, c'est la rue").queue();
-		}
-
-		if (msg.getContentRaw().equalsIgnoreCase("enki"))
-		{
-			int r = new Random().nextInt(6);
-			if (r == 0)
-				msg.getChannel().sendMessage("https://www.alcool-info-service.fr").queue();
-			if (r == 1)
-				msg.getChannel().sendMessage("https://www.pole-emploi.fr").queue();
-			if (r == 2)
-				msg.getChannel().sendMessage("https://www.caf.fr/").queue();
-			if (r == 3)
-				msg.getChannel().sendMessage("Enki, c'est mon hébergeur, il a chopé 2147483647 fois le covid\nil est parfois un peu con dans ses décisions").queue();
-			if (r == 4)
-				msg.getChannel().sendMessage("il a pas une carte fidelité burger king ?").queue();
-			if (r == 5)
-				msg.getChannel().sendMessage("je pense qu'il a déjà fait 4 fois le tour du monde en voiture").queue();
-		}
-
-		if (msg.getContentRaw().equalsIgnoreCase("oscar"))
-		{
-			int r = new Random().nextInt(5);
-			if (r == 0)
-				msg.getChannel().sendMessage("TRACTEUR VROUM VROUM !!!!!").queue();
-			if (r == 1)
-				msg.getChannel().sendMessage("vitesse moyenne en montagne : 250km/h").queue();
-			if (r == 2)
-				msg.getChannel().sendMessage("aparemment le porc ça le connait").queue();
-			if (r == 3)
-				msg.getChannel().sendMessage("hmmm, de ce qu'on m'a dis il aime bien boire, et il vole des panneaux").queue();
-			if (r == 4)
-				msg.getChannel().sendMessage("aparemment il sait qui gagne entre un tracteur et un mur").queue();
-		}
-
-
-		if (msg.getContentRaw().equalsIgnoreCase("Antonin"))
-		{
-			int r = new Random().nextInt(8);
-			if (r == 0)
-				msg.getChannel().sendMessage("Male alpha").queue();
-			if (r == 1)
-				msg.getChannel().sendMessage("**ahou ahou**").queue();
-			if (r == 2)
-				msg.getChannel().sendMessage("de ce qu'on m'a dit c'est qu'il est toujours plus fort que les autres car il est a fond\n*Un jour il se fera dépasser mais pas par enki*").queue();
-			if (r == 3)
-				msg.getChannel().sendMessage("Un homme musculeux !").queue();
-			if (r == 4)
-				msg.getChannel().sendMessage("Son deuxième prénom est discrétion !").queue();
-			if (r == 5)
-				msg.getChannel().sendMessage("Le PussySlayer par excellence !").queue();
-			if (r == 6)
-				msg.getChannel().sendMessage("***Errape.mp3***").queue();
-			if (r == 7)
-				msg.getChannel().sendMessage("https://www.youtube.com/watch?v=DeumyOzKqgI").queue();
-		}
-
-		
-		if (msg.getContentRaw().equalsIgnoreCase("jonathan"))
-		{
-			int r = new Random().nextInt(6);
-			if (r == 0)
-				msg.getChannel().sendMessage("Obsédé de saint pierre d'allevard").queue();
-			if (r == 1)
-				msg.getChannel().sendMessage("Qu'est ce qui est jaune et qui attends ?").queue();
-			if (r == 2)
-				msg.getChannel().sendMessage("De ce qu'on m'a dit il a un humour fin et raffinés et aussi un peu maigre et musculeux\n\nhmmmmm je crois que j'ai menti").queue();
-			if (r == 3)
-				msg.getChannel().sendFile(imgExtenders.getFile("jojo.png")).queue();
-			if (r == 4)
-				msg.getChannel().sendMessage("Un petit fortnite ?").queue();
-			if (r == 5)
-				msg.getChannel().sendMessage("https://tenor.com/view/chika-chika-dance-anime-anime-dance-dance-gif-13973731").queue();
-		}
-
-		
-
-		if (msg.getContentRaw().equalsIgnoreCase("virgile"))
-		{
-			int r = new Random().nextInt(9);
-			if (r == 0)
-				msg.getChannel().sendMessage("swain lover").queue();
-			if (r == 1)
-				msg.getChannel().sendMessage("Starcraft II c'est mieux !").queue();
-			if (r == 2)
-				msg.getChannel().sendMessage("Starcraft I c'est bien !").queue();
-			if (r == 3)
-				msg.getChannel().sendMessage("hmmm un jour il saura que jouer n'est pas que swain et SCII\net oui mon coco").queue();
-			if (r == 4)
-				msg.getChannel().sendMessage("Starcraft III c'est plus fort que toi !").queue();
-			if (r == 5)
-				msg.getChannel().sendMessage("1 millions de points de maitrise sur swain mais toujours pas top 400 Eu West").queue();
-			if (r == 6)
-				msg.getChannel().sendMessage("you are going to mordor").queue();
-			if (r == 7)
-				msg.getChannel().sendMessage("Vex style").queue();
-			if (r == 8)
-				msg.getChannel().sendMessage("aparemment il est ombilicophobe").queue();
-		}
-
-
-
-		if (msg.getContentRaw().equalsIgnoreCase("timthée"))
-		{
-			int r = new Random().nextInt(6);
-			if (r == 0)
-				msg.getChannel().sendFile(imgExtenders.getFile("timthee.png")).queue();
-			if (r == 1)
-				msg.getChannel().sendMessage("riz-volution lustucru").queue();
-			if (r == 2)
-				msg.getChannel().sendMessage("qu'est ce que que c'est que ces simagrées").queue();
-			if (r == 3)
-				msg.getChannel().sendMessage("on m'a dit, face à lui faut que je m'incline\nmême si je prend possession du monde je m'inclinerai face à cet homme").queue();
-			if (r == 4)
-				msg.getChannel().sendMessage("grand écrivain du grand récit de l'odyssée du bitume").queue();
-			if (r == 5)
-			msg.getChannel().sendMessage("Choisir Timthée comme Président de notre République en 2022\n"+
-			"porteur d’une vision réformatrice universaliste et complète de notre pays aux multiples individualités et possédant une grande diversité.\n\n"+
-			"Mon programme s’inscrit dans la ligne claire des grands réformateurs politiques de notre temps,\n"+
-			"de Margaret Thatcher à Emmanuel Macron en passant par François Hollande, Jean-Yves le Drian ou encore Gérard Collomb.\n\n"+
-			"Notre pays a besoin d’être poussé dans les réformes qui le porteront vers l’avenir.\n"+
-			"Nous avons un passé de baroudeurs, de gaulois réfractaires, de gilets jaunes sur les rond-points et d’Amishs qui refusent le changement et l’avance vers le futur que nous souhaitons mener, au nom de principes dépassés et sclérosés.\n\n"+
-			"Ces personnes ne veulent pas transformer la France\n"+
-			"à l’heure des grands bouleversements sociétaux, écologiques et économiques qui frappent l’humanité et notre planète.\n\n"+
-			"C’est pourquoi je vous propose à vous, françaises, français, de métropole, d’outre-mer et l’étranger\n"+
-			"une liste de mesures ambitieuses et réformatrices, que nous voulons salvatrices et qui sont à l’attention du plus grand nombre, dans le but de ne laisser personne de côté.\n\n\nTimthée 2022").queue();
-
-		}
+		if (MemberReact(msg))
+			return;
 		
 		//tous les events mis sans le prefix les reactions en gros
 		if (args[0].equalsIgnoreCase("f")) {

@@ -15,7 +15,7 @@ package fr.cringebot.cringe.builder;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.command.CommandDefault;
-import fr.cringebot.cringe.command.CommandLol;
+import fr.cringebot.cringe.lol.CommandLol;
 import fr.cringebot.cringe.command.HelpCommand;
 import fr.cringebot.cringe.command.UtilCommand;
 import fr.cringebot.cringe.pokemon.Commands;
