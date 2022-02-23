@@ -85,6 +85,8 @@ public class AudioListener extends AudioEventAdapter {
     }
 
     public void nextTrack(TextChannel textChannel) {
+        player.getAudioPlayer().getPlayingTrack().stop();
+        current = null;
         if (tracks.isEmpty()) {
             textChannel.sendMessageEmbeds(new EmbedBuilder().setColor(Color.red).setTitle("fini !").setDescription("j'ai plus de musique a mettre,\n si vous avez rien a mettre moi je m'en vais").build()).queue();
             autoStop = new Thread(() -> {
@@ -104,6 +106,7 @@ public class AudioListener extends AudioEventAdapter {
                 textChannel.sendMessageEmbeds(eb.build()).queue();
             }
             player.getJda().getPresence().setActivity(new activity(this.current.getInfo().title, null, Activity.ActivityType.LISTENING));
+            player.getAudioPlayer().getPlayingTrack().stop();
             player.getAudioPlayer().startTrack(current, false);
         }
     }
@@ -111,7 +114,7 @@ public class AudioListener extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (this.loop) {
-            player.getPlayingTrack().setPosition(0);
+            player.startTrack(current, false);
             return;
         }
         current = null;
@@ -119,7 +122,7 @@ public class AudioListener extends AudioEventAdapter {
     }
 
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        current = track;
+        current = track.makeClone();
     }
 
     public void add(AudioTrack t) {

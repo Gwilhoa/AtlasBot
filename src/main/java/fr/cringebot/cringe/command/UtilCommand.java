@@ -33,19 +33,19 @@ public class UtilCommand {
         public UtilCommand(BotDiscord bot){
                 this.bot = bot;
         }
-        @Command(name = "weather", type = Command.ExecutorType.USER, description = "donne la météo")
-        private void weather(Guild guild, TextChannel textChannel, String[] args){
+        @Command(name = "meteo", type = Command.ExecutorType.USER, description = "donne la météo")
+        private void meteo(Guild guild, TextChannel textChannel, String[] args){
                 try {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        URLConnection connection = new URL("https://wttr.in/"+args[0]+"_1tqp_lang=fr.png").openConnection();
+                        URLConnection connection = new URL("https://wttr.in/"+args[0]+"_3tqp_lang=fr.png").openConnection();
                         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
                         BufferedImage im = ImageIO.read(connection.getInputStream());
-                        im = resize(im, 2064, 532, 0, 0, true);
-                        im = resize(im, 2064, 532, 0, 0, false);
+                        im = resize(im, 1032*2, 546*2, 0, 0, true);
+                        im = resize(im, 1032*2, 546*2, 0, 0, false);
                         ImageIO.write(im, "png", baos);
                         textChannel.sendFile(baos.toByteArray(), "meteo.png").queue();
                 } catch (IOException e) {
-                        e.printStackTrace();
+                        textChannel.sendMessage("météo introuvable").queue();
                 }
 
         }

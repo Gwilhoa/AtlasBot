@@ -85,7 +85,7 @@ public class MessageReact {
         Message msg = guild.getTextChannelById(channel).retrieveMessageById(this.Id).complete();
         StringBuilder sb = new StringBuilder();
         for (RoleReaction rr : this.list) {
-            rr.verif(guild.getTextChannelById(channel).retrieveMessageById(this.Id).complete());
+            rr.verif(msg);
             sb.append(rr.getName()).append(" ").append(rr.getEmote()).append('\n');
             msg.addReaction(rr.getEmote()).queue();
         }

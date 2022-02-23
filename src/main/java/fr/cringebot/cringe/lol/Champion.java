@@ -1,10 +1,9 @@
-package fr.cringebot.cringe.objects.lol;
+package fr.cringebot.cringe.lol;
 
 import java.util.*;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import fr.cringebot.cringe.pokemon.objects.Pokemon;
 
 public class Champion {
     public static HashMap<String, Champion> champions;

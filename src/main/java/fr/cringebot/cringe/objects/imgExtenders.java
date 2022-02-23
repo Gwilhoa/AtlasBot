@@ -92,8 +92,7 @@ public class imgExtenders {
         }
         bs.close();
         fos.close();
-        File f = new File(name);
-        return f;
+        return new File(name);
     }
     
     public static File getFile(URL url, String name, String directory) throws IOException {
