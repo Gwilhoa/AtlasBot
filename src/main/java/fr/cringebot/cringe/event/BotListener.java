@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/02/11 16:12:42 by gchatain         ###   ########lyon.fr   */
+/*   Updated: 2022/03/05 18:41:23 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.api.events.http.HttpRequestEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
@@ -83,6 +84,8 @@ public class BotListener implements EventListener {
 
 	@Override
 	public void onEvent(GenericEvent event) {
+		if (!event.getJDA().getStatus().isInit() && event.getJDA().getSelfUser().getId().equals("881962597526696038") && event.getJDA().getGuildById("382938797442334720").getMemberById("947868887498756126").getOnlineStatus().equals(OnlineStatus.ONLINE))
+			return;
 		System.out.println(event.getClass().getSimpleName());
 		if (event instanceof ReadyEvent) {
 			try {
@@ -105,6 +108,7 @@ public class BotListener implements EventListener {
 		else if (event instanceof RoleCreateEvent) onCreateRole((RoleCreateEvent) event);
 		else if (event instanceof RoleDeleteEvent) onDeleteRole((RoleDeleteEvent) event);
 		else if (event instanceof MessageReactionRemoveEvent) onRemoveReact((MessageReactionRemoveEvent) event);
+		else if (event instanceof GuildUpdateNameEvent) onChangeServerName((GuildUpdateNameEvent) event);
 		else if (event instanceof MessageEmbedEvent) {
 			try {
 				onEmbed((MessageEmbedEvent) event);
@@ -113,6 +117,11 @@ public class BotListener implements EventListener {
 			}
 		}
 		else if (event instanceof HttpRequestEvent) onRequest((HttpRequestEvent) event);
+	}
+
+	private void onChangeServerName(GuildUpdateNameEvent event) {
+		if (event.getGuild().getId().equals("382938797442334720"))
+			Request.sendRequest(Request.Type.SETSEASON, event.getNewName());
 	}
 
 	private void onRequest(HttpRequestEvent event){
@@ -159,7 +168,7 @@ public class BotListener implements EventListener {
 	 * @throws InterruptedException
 	 */
 	private void onEmbed(MessageEmbedEvent event) throws InterruptedException {
-		if (event.getChannel().getId().equals("461606547064356864") && event.getChannel().retrieveMessageById(event.getMessageId()).getCheck().getAsBoolean()) {
+		if (event.getChannel().getId().equals("461606547064356864")) {
 			Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
 			if (DetectorAttachment.isReddit(msg.getContentRaw()))
 				msg = memesEvent.repostReddit(msg);
@@ -211,18 +220,22 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onEnable(ReadyEvent event) throws IOException {
+		Request.sendRequest(Request.Type.SETSEASON, event.getJDA().getGuildById("382938797442334720").getName());
 		MessageReact.load();
 		PollMessage.load();
 		cki.load();
-		for (MessageReact mr : MessageReact.message)
-			mr.refresh(event.getJDA().getGuildById("382938797442334720"));
-		new Thread(() -> {
-			for (Member mem : event.getJDA().getGuildById("382938797442334720").getMembers()) {
-				if (mem.getRoles().get(0).getPosition() < mem.getGuild().getRoleById("734011696242360331").getPosition())
-					event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734011696242360331")).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619"))).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
-			}
-		}).start();
-		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
+		if (event.getJDA().getSelfUser().getId().equals("881962597526696038"))
+		{
+			for (MessageReact mr : MessageReact.message)
+				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
+			new Thread(() -> {
+				for (Member mem : event.getJDA().getGuildById("382938797442334720").getMembers()) {
+					if (mem.getRoles().get(0).getPosition() < mem.getGuild().getRoleById("734011696242360331").getPosition())
+						event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734011696242360331")).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619"))).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
+				}
+			}).start();
+			new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
+		}
 		Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
 		}.getType());
 
@@ -233,14 +246,7 @@ public class BotListener implements EventListener {
 		}.getType());
 
 		Activity act;
-		if (System.getenv().get("USER").equals("guilheimchataing")) {
-			bot.getJda().getGuildById("382938797442334720").getTextChannelById("893578679127506965").sendFile(imgExtenders.getFile("start_warn.png")).queue();
-			act = new activity("se faire retaper", null, Activity.ActivityType.PLAYING);
-			bot.getJda().getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
-		} else {
-			act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
-			bot.getJda().getGuildById("382938797442334720").getTextChannelById("893578679127506965").sendFile(imgExtenders.getFile("update.png")).queue();
-		}
+		act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
 		bot.getJda().getPresence().setActivity(act);
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
@@ -366,7 +372,7 @@ public class BotListener implements EventListener {
 			feur(msg);
 		}
 
-		if (containsIgnoreCase(msg.getContentRaw(), "societer"))
+		if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))
 			msg.getChannel().sendFile(imgExtenders.getFile("societer.png")).queue();
 		if (containsIgnoreCase(msg.getContentRaw(), "putain")) {
 			putain(msg);

@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/02/01 21:21:38 by                  ###   ########.fr       */
+/*   Updated: 2022/03/05 18:13:37 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,18 @@ import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -51,11 +55,9 @@ public class CommandDefault {
 		this.botDiscord = botDiscord;
 	}
 
-	@Command(name = "stop", type = ExecutorType.CONSOLE)
+	@Command(name = "-", type = ExecutorType.CONSOLE)
 	private void stop(JDA jda) throws IOException {
-		File f = imgExtenders.getFile("shutdown.png");
-		jda.getGuildById("382938797442334720").getTextChannelById("687244482739044370").sendFile(f).queue();
-		f.delete();
+		jda.getPresence().setStatus(OnlineStatus.OFFLINE);
 		botDiscord.setRunning(false);
 	}
 
@@ -119,5 +121,10 @@ public class CommandDefault {
 	@Command(name = "cki", type = Command.ExecutorType.USER)
 	private void cki(Message msg) {
 		ckimain(msg);
+	}
+
+	@Command(name = "test", type = Command.ExecutorType.USER)
+	private void test(Message msg) throws IOException {
+		msg.getChannel().sendMessage("sex").queue();
 	}
 }

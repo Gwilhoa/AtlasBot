@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2022/02/01 09:45:38 by gchatain         ###   ########.fr       */
+/*   Updated: 2022/03/05 18:53:35 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,12 +172,15 @@ public class memesEvent {
 	 * @return
 	 */
 	public static Message repostTwitter(Message msg) {
-		EmbedBuilder eb = new EmbedBuilder()
-				.setDescription(msg.getEmbeds().get(0).getDescription())
+		EmbedBuilder eb = new EmbedBuilder();
+		System.out.println(msg.getEmbeds().get(0).getImage().getUrl());
+			eb.setDescription(msg.getEmbeds().get(0).getDescription())
 				.setTitle(msg.getEmbeds().get(0).getAuthor().getName())
 				.setColor(msg.getEmbeds().get(0).getColor())
 				.setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl())
 				.setAuthor("twitter", msg.getEmbeds().get(0).getUrl(), msg.getEmbeds().get(0).getFooter().getIconUrl());
+			if (msg.getEmbeds().get(0).getImage() != null)
+				eb.setImage(msg.getEmbeds().get(0).getImage().getUrl());
 		return msg.getChannel().sendMessageEmbeds(eb.build()).complete();
 	}
 }
