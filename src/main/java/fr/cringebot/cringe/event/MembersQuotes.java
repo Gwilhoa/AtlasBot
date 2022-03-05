@@ -120,15 +120,11 @@ public class MembersQuotes {
      */
     static void Jojo(Message msg) throws IOException {
         int r = new Random().nextInt(jojo.length);
-        switch (r) {
-        case 3:
-        	msg.getChannel().sendFile(imgExtenders.getFile("jojo.png")).queue();
-        	break;
-        	
-        default:
-        	msg.getChannel().sendMessage(jojo[r]).queue();
-        	break;
-        }
+		if (r == 3) {
+			msg.getChannel().sendFile(imgExtenders.getFile("jojo.png")).queue();
+		} else {
+			msg.getChannel().sendMessage(jojo[r]).queue();
+		}
     }
 
     /*
@@ -136,15 +132,11 @@ public class MembersQuotes {
      */
     static void Roro(Message msg) {
         int r = new Random().nextInt(roro.length);
-        switch (r) {
-        case 4:
-        	msg.getChannel().sendMessage("Salut c'est toi, et moi\n moi c'est CringeBot et toi, c'est " + msg.getMember().getAsMention()).queue();
-        	break;
-        	
-        default:
-        	msg.getChannel().sendMessage(roro[r]).queue();
-        	break;
-        }
+		if (r == 4) {
+			msg.getChannel().sendMessage("Salut c'est toi, et moi\n moi c'est CringeBot et toi, c'est " + msg.getMember().getAsMention()).queue();
+		} else {
+			msg.getChannel().sendMessage(roro[r]).queue();
+		}
     }
     
     /*

@@ -5,7 +5,6 @@ import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import fr.cringebot.cringe.pokemon.objects.Type;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.ThreadChannel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -19,9 +18,7 @@ public class ckiListener {
         if (msg.getContentRaw().equalsIgnoreCase("indice"))
             IndiceListener(msg, object);
         else if (StringExtenders.BetterIgnoreCase(object.getName(), msg.getContentRaw()))
-        {
             found(msg, object);
-        }
         else if (msg.getContentRaw().equalsIgnoreCase("abandon"))
         {
             if (object.getAction() < 5)
@@ -29,7 +26,6 @@ public class ckiListener {
                 msg.getChannel().sendMessage("c'est trop tôt pour abandonner, continue !").queue();
                 return;
             }
-            ThreadChannel tc = msg.getGuild().getThreadChannelById(msg.getChannel().getId());
             EmbedBuilder eb = new EmbedBuilder().setTitle("Partie abandonné").setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + String.format("%03d", Pokemon.getByRealName(cki.wtpThreads.get(msg.getChannel().getId()).getName()).getId()) + ".png");
             eb.setFooter("Abandonné par "+ msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
             eb.setColor(new Color(255, 92, 243));
@@ -45,9 +41,9 @@ public class ckiListener {
 
     private void found(Message msg, cki object) {
         EmbedBuilder eb = new EmbedBuilder();
-        if (object.getType().equals("pokemon"))
+        if (object.getType().equals(cki.Type.POKEMON))
             eb.setTitle("Le pokémon à été trouvé !").setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + String.format("%03d", Pokemon.getByRealName(object.getName()).getId()) + ".png");
-        else if (object.getType().equals("champion"))
+        else if (object.getType().equals(cki.Type.LOL))
             eb.setTitle("Le champion de League of Legends à été trouvé").setImage("https://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+ object.getName().replace(' ','\0')+"_0.jpg");
         eb.setFooter("Trouvé par " + msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
         eb.setColor(Color.green);
@@ -56,7 +52,7 @@ public class ckiListener {
     }
 
     private void IndiceListener(Message msg, cki object){
-        if (object.getType().equals("pokemon"))
+        if (object.getType().equals(cki.Type.POKEMON))
             wtpIndice(msg, object);
         object.addIndice();
     }

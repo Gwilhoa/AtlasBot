@@ -14,12 +14,15 @@ package fr.cringebot.cringe.command;
 
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command;
+import fr.cringebot.cringe.objects.DetectorAttachment;
 import fr.cringebot.cringe.objects.activity;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,5 +51,16 @@ public class UtilCommand {
                         textChannel.sendMessage("météo introuvable").queue();
                 }
 
+        }
+        @Command(name = "addmusic", description = "ajoute/modifie une musique du blindtest", type = Command.ExecutorType.USER)
+        private void addmusic(Message msg){
+                String[] args = msg.getContentRaw().split(" ");
+                if (args.length == 2 && DetectorAttachment.isYoutube(args[1])) {
+                        EmbedBuilder eb = new EmbedBuilder().setTitle("Nouvelle music").setColor(new Color(138, 43, 226));
+
+                        msg.getChannel().sendMessage(args[1]).queue();
+                }
+                else
+                        msg.getChannel().sendMessage("nope").queue();
         }
 }

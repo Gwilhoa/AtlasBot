@@ -66,7 +66,7 @@ public class MusicCommand {
     @Command(name="skip",type=ExecutorType.USER, description = "musique suivanta")
     private void skip(Guild guild, TextChannel textChannel){
         if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isConnected()){
-            textChannel.sendMessage("Le player n'as pas de piste en cours.").queue();
+            textChannel.sendMessage("").queue();
             return;
         }
         manager.getPlayer(guild).skipTrack(textChannel);

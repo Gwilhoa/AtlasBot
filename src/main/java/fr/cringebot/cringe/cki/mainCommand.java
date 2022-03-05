@@ -20,8 +20,8 @@ public class mainCommand {
     public static void ckimain(Message msg)
     {
         ArrayList<SelectOption> options = new ArrayList<>();
-        options.add(new SelectOptionImpl("Quel est ce Pokémon", "pokemon"));
-        options.add(new SelectOptionImpl("Quel est ce Champion", "lol"));
+        for (cki.Type tpe: cki.Type.values())
+            options.add(new SelectOptionImpl("CKI édition "+tpe.name(), tpe.name()));
         options.add(new SelectOptionImpl("Aléatoire", "random"));
         SelectMenuImpl selectionMenu = new SelectMenuImpl( "cki", "selectionnez un choix", 1, 1, false, options);
         msg.getChannel().sendMessage("choisis le type de ton jeu").setActionRow(selectionMenu).queue();
@@ -32,9 +32,9 @@ public class mainCommand {
         int r = 0;
         if (selection.equals("random"))
             r = new Random().nextInt(2) + 1;
-        if ((r == 0 && selection.equals("pokemon")) || r == 1)
+        if ((r == 0 && selection.equals(cki.Type.POKEMON.name())) || r == 1)
             wtpmain(msg);
-        if ((r == 0 && selection.equals("lol")) || r == 2)
+        if ((r == 0 && selection.equals(cki.Type.LOL.name())) || r == 2)
             wtcmain(msg);
 
     }
@@ -56,7 +56,7 @@ public class mainCommand {
             Message message = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
             msg.delete().queue();
             ThreadChannel tc = message.createThreadChannel("Quel est ce pokémon ?").complete();
-            cki.wtpThreads.put(tc.getId(), new cki("pokemon",message.getId(), name, msg.getChannel().getId()));
+            cki.wtpThreads.put(tc.getId(), new cki(cki.Type.POKEMON,message.getId(), name, msg.getChannel().getId()));
             cki.save();
         }).start();
     }
@@ -71,7 +71,7 @@ public class mainCommand {
             Message message = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
             msg.delete().queue();
             ThreadChannel tc = message.createThreadChannel("Quel est ce champion ?").complete();
-            cki.wtpThreads.put(tc.getId(), new cki("champion",message.getId(), name, msg.getChannel().getId()));
+            cki.wtpThreads.put(tc.getId(), new cki(cki.Type.LOL,message.getId(), name, msg.getChannel().getId()));
             cki.save();
         }).start();
     }

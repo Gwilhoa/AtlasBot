@@ -22,7 +22,7 @@ public class StringExtenders {
      * @return si il contient
      */
     public static boolean containsIgnoreCase(String string, String search) {
-        return string.toLowerCase().contains(search.toLowerCase());
+        return BetterLowCase(string).contains(BetterLowCase(search));
     }
 
     /**

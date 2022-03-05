@@ -366,7 +366,7 @@ public class BotListener implements EventListener {
 			feur(msg);
 		}
 
-		if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))
+		if (containsIgnoreCase(msg.getContentRaw(), "societer"))
 			msg.getChannel().sendFile(imgExtenders.getFile("societer.png")).queue();
 		if (containsIgnoreCase(msg.getContentRaw(), "putain")) {
 			putain(msg);

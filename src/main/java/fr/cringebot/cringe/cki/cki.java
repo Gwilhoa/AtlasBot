@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 
 import static fr.cringebot.cringe.event.BotListener.gson;
 
@@ -12,7 +13,7 @@ public class cki {
     private static final TypeToken<HashMap<String, cki>> typeToken = new TypeToken<HashMap<String, cki>>() {
     };
     private String channel;
-    private String type;
+    private Type type;
     private String Message;
     private String Name;
     private Integer action;
@@ -20,7 +21,7 @@ public class cki {
     public static HashMap<String, cki> wtpThreads = null;
 
 
-    public cki(String t, String message, String name, String channels)
+    public cki(Type t, String message, String name, String channels)
     {
         channel = channels;
         type = t;
@@ -28,6 +29,16 @@ public class cki {
         Name = name;
         indice = 0;
         action = 0;
+    }
+
+    enum Type {
+        POKEMON("Pokémon"),
+        LOL("League of Legends");
+
+        Type(String name) {
+
+        }
+        Type tpe;
     }
 
     public String getMessage() {
@@ -48,7 +59,7 @@ public class cki {
         return Name;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
