@@ -23,7 +23,7 @@ public class Request {
     {
         try {
             BufferedReader br = new BufferedReader(new FileReader("save/secret.txt"));
-            URL url = new URL("https://play.timoreo.fr/app/"+tpe.getName());
+            URL url = new URL("https://bitume2000.fr/app/"+tpe.getName());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", br.readLine());

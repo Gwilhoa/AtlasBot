@@ -105,8 +105,22 @@ public class PollMessage {
         else
             eb.setColor(Color.red);
         StringBuilder sb = new StringBuilder();
-        for (String key : this.getArgs().keySet())
-            sb.append(key).append(" -> ").append(this.getArgs().get(key)).append("\n");
+        System.out.println(this.MemberVote.size());
+        for (String key : this.getArgs().keySet()) {
+            if (this.getArgs().get(key) == 0)
+                sb.append(key).append(" -> ").append(0).append("\n");
+            else
+            {
+                sb.append(key).append(" -> ").append((int)((this.getArgs().get(key).floatValue() / this.MemberVote.size()) * 100)).append('%').append("\n").append("||");
+                int i = 0;
+                while (i*5 < (int)((this.getArgs().get(key).floatValue() / this.MemberVote.size()) * 100))
+                {
+                    sb.append(" . ");
+                    i++;
+                }
+                sb.append("||\n");
+            }
+        }
         eb.setDescription(sb);
         eb.setFooter("un sondage posé par " + g.getMemberById(this.author).getUser().getName(), g.getMemberById(this.author).getUser().getEffectiveAvatarUrl());
         return eb.build();

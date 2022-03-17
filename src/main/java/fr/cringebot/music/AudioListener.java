@@ -117,6 +117,7 @@ public class AudioListener extends AudioEventAdapter {
             player.startTrack(current, false);
             return;
         }
+        System.out.println(endReason.name());
         current = null;
         if (endReason.mayStartNext) nextTrack(null);
     }

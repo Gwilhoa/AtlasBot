@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/05 18:13:37 by                  ###   ########.fr       */
+/*   Updated: 2022/03/11 17:38:23 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,11 @@ public class CommandDefault {
 	private void poll(Message msg) {
 		String message = msg.getContentRaw().substring(">poll ".length());
 		String[] args = message.substring(message.split("\n")[0].length() + 1).split("\n");
+		if (args.length < 1)
+		{
+			msg.getChannel().sendMessage("usage : >poll <titre>\n argument\nargument...").queue();
+			return;
+		}
 		String author = msg.getAuthor().getId();
 		msg.delete().queue();
 		ArrayList<SelectOption> options = new ArrayList<>();

@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/05 18:41:23 by                  ###   ########.fr       */
+/*   Updated: 2022/03/17 11:08:30 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.lol.Champion;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
-import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -34,6 +33,8 @@ import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.http.HttpRequestEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
@@ -84,8 +85,6 @@ public class BotListener implements EventListener {
 
 	@Override
 	public void onEvent(GenericEvent event) {
-		if (!event.getJDA().getStatus().isInit() && event.getJDA().getSelfUser().getId().equals("881962597526696038") && event.getJDA().getGuildById("382938797442334720").getMemberById("947868887498756126").getOnlineStatus().equals(OnlineStatus.ONLINE))
-			return;
 		System.out.println(event.getClass().getSimpleName());
 		if (event instanceof ReadyEvent) {
 			try {
@@ -109,6 +108,8 @@ public class BotListener implements EventListener {
 		else if (event instanceof RoleDeleteEvent) onDeleteRole((RoleDeleteEvent) event);
 		else if (event instanceof MessageReactionRemoveEvent) onRemoveReact((MessageReactionRemoveEvent) event);
 		else if (event instanceof GuildUpdateNameEvent) onChangeServerName((GuildUpdateNameEvent) event);
+		else if (event instanceof GuildVoiceJoinEvent) onConnect((GuildVoiceJoinEvent) event);
+		else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
 		else if (event instanceof MessageEmbedEvent) {
 			try {
 				onEmbed((MessageEmbedEvent) event);
@@ -117,6 +118,16 @@ public class BotListener implements EventListener {
 			}
 		}
 		else if (event instanceof HttpRequestEvent) onRequest((HttpRequestEvent) event);
+	}
+
+	private void onDisconnect(GuildVoiceLeaveEvent event) {
+		XP.disconnecting(event);
+		System.out.println(event.getMember().getUser().getName() + " s'est déconnecté");
+	}
+
+	private void onConnect(GuildVoiceJoinEvent event) {
+		XP.connecting(event);
+		System.out.println(event.getMember().getUser().getName() + " s'est connecté");
 	}
 
 	private void onChangeServerName(GuildUpdateNameEvent event) {
@@ -224,7 +235,9 @@ public class BotListener implements EventListener {
 		MessageReact.load();
 		PollMessage.load();
 		cki.load();
-		if (event.getJDA().getSelfUser().getId().equals("881962597526696038"))
+		XP.loadValue();
+		XP.load();
+		if (!System.getenv().get("OS").equals("Windows_NT"))
 		{
 			for (MessageReact mr : MessageReact.message)
 				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
@@ -338,6 +351,7 @@ public class BotListener implements EventListener {
 
 		//split le message
 		String[] args = msg.getContentRaw().split(" ");
+		XP.getXpByMessage(msg.getContentRaw(), msg.getMember());
 
 		if (MemberReact(msg))
 			return;
@@ -389,7 +403,13 @@ public class BotListener implements EventListener {
 				msg.getTextChannel().sendMessage("https://tenor.com/view/oh-no-cringe-cringe-oh-no-kimo-kimmo-gif-23168319").queue();
 		}
 		if (msg.getChannel().getId().equals("461606547064356864") && (DetectorAttachment.isAnyLink(msg)))
-			postmeme(msg);
+			new Thread(() -> {
+				try {
+					postmeme(msg);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}).start();
 
 		if (containsIgnoreCase(msg.getContentRaw(), "stonks")) {
 			if (new Random().nextInt(100) >= 95)

@@ -84,19 +84,17 @@ public class imgExtenders {
 
     public static File getFile(String name) throws IOException {
         BufferedInputStream bs = new BufferedInputStream(imgExtenders.class.getClassLoader().getResource(name).openStream());
-        FileOutputStream fos = new FileOutputStream(name);
-        byte[] data = new byte[1024];
-        int ByteContent;
-        while ((ByteContent = bs.read(data, 0, 1024)) != -1) {
-            fos.write(data, 0, ByteContent);
-        }
-        bs.close();
-        fos.close();
+        downloadFile(name, bs);
         return new File(name);
     }
     
     public static File getFile(URL url, String name, String directory) throws IOException {
         BufferedInputStream bs = new BufferedInputStream(url.openStream());
+        downloadFile(name, bs);
+        return new File(directory);
+    }
+
+    private static void downloadFile(String name, BufferedInputStream bs) throws IOException {
         FileOutputStream fos = new FileOutputStream(name);
         byte[] data = new byte[1024];
         int ByteContent;
@@ -105,7 +103,5 @@ public class imgExtenders {
         }
         bs.close();
         fos.close();
-        File f = new File(directory);
-        return f;
     }
 }

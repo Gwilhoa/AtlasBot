@@ -91,7 +91,6 @@ public class MessageReact {
         }
         EmbedBuilder eb = new EmbedBuilder().setTitle(this.Title).setColor(msg.getEmbeds().get(0).getColor());
         msg.editMessageEmbeds(eb.setDescription(sb.toString()).build()).queue();
-
     }
 }
 

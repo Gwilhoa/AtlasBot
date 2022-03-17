@@ -63,10 +63,10 @@ public class MusicCommand {
     }
 
 
-    @Command(name="skip",type=ExecutorType.USER, description = "musique suivanta")
+    @Command(name="skip",type=ExecutorType.USER, description = "musique suivante")
     private void skip(Guild guild, TextChannel textChannel){
         if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isConnected()){
-            textChannel.sendMessage("").queue();
+            textChannel.sendMessage("error").queue();
             return;
         }
         manager.getPlayer(guild).skipTrack(textChannel);
@@ -78,18 +78,19 @@ public class MusicCommand {
         MusicPlayer player = manager.getPlayer(tc.getGuild());
         Queue<AudioTrack> at = player.getListener().getTracks();
 
-        if ( at.isEmpty()){
-            tc.sendMessage("no music").queue();
-            return;
+        EmbedBuilder eb = new EmbedBuilder().setColor(Color.cyan).setTitle("les prochaines musique...");
+        if (at.isEmpty()){
+            eb.setDescription("Il n'y a pas de musique pour la suite");
         }
-        EmbedBuilder eb = new EmbedBuilder().setColor(Color.cyan).setTitle("les prochianes musique...");
-        int i = 0;
-        AudioTrack[] track = at.toArray(new AudioTrack[]{});
-        while (i < 10 && track[i] != null){
-            eb.appendDescription(track[i].getInfo().title +"\n");
-            i++;
+        else {
+            int i = 0;
+            AudioTrack[] track = at.toArray(new AudioTrack[]{});
+            while (i < 10 && track[i] != null) {
+                eb.appendDescription(track[i].getInfo().title + "\n");
+                i++;
+            }
         }
-        tc.sendMessageEmbeds(eb.build()).queue();
+        tc.sendMessage(player.getListener().getCurrent().getInfo().title).setEmbeds(eb.build()).queue();
     }
 
 
