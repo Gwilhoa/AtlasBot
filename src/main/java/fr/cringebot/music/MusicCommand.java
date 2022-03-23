@@ -18,11 +18,20 @@ public class MusicCommand {
     private final MusicManager manager = new MusicManager();
     @Command(name="volume",type = ExecutorType.USER, description = "changer le volume")
     private void volume(Guild guild, TextChannel textChannel, String[] args){
+        if (args[0].equalsIgnoreCase("reset"))
+            volume(guild, textChannel, 10);
+        else
+            volume(guild, textChannel, Integer.parseInt(args[0]));
+    }
+
+    private void volume(Guild guild, TextChannel textChannel, Integer vol){
+        vol = (vol/5);
         try {
             Field f = DefaultAudioPlayer.class.getDeclaredField("options");
             f.setAccessible(true);
-            ((AudioPlayerOptions) f.get(manager.getPlayer(guild).getAudioPlayer())).volumeLevel.set(Integer.parseInt(args[0]));
-            textChannel.sendMessage("mise du volume à " + args[0]).queue();
+            ((AudioPlayerOptions) f.get(manager.getPlayer(guild).getAudioPlayer())).volumeLevel.set(vol);
+            if (textChannel != null)
+                textChannel.sendMessage("mise du volume à " + vol*5).queue();
         } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
             textChannel.sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : volume 500").queue();
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -40,16 +49,6 @@ public class MusicCommand {
     private void play(Guild guild, TextChannel textChannel, User user, Message msg) {
 
         if(guild == null) return;
-
-        try {
-            Field f = DefaultAudioPlayer.class.getDeclaredField("options");
-            f.setAccessible(true);
-            ((AudioPlayerOptions) f.get(manager.getPlayer(guild).getAudioPlayer())).volumeLevel.set(100);
-        } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
-            textChannel.sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : volume 500").queue();
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace(); //ca peut arriver en cas de mise a jour de dépendances, mais ca devrait être bon sinon
-        }
         if (!guild.getAudioManager().isConnected()) {
             AudioChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
             if (voiceChannel == null) {
@@ -57,8 +56,8 @@ public class MusicCommand {
                 return;
             }
             guild.getAudioManager().openAudioConnection(voiceChannel);
+            volume(guild, null, 50);
         }
-
         manager.loadTrack(textChannel, msg.getContentRaw().replaceFirst(CommandMap.getTag(),"").replaceFirst("play ", ""));
     }
 
@@ -77,15 +76,16 @@ public class MusicCommand {
     private void queue(TextChannel tc){
         MusicPlayer player = manager.getPlayer(tc.getGuild());
         Queue<AudioTrack> at = player.getListener().getTracks();
+        AudioTrack[] track = at.toArray(new AudioTrack[]{});
 
         EmbedBuilder eb = new EmbedBuilder().setColor(Color.cyan).setTitle("les prochaines musique...");
         if (at.isEmpty()){
             eb.setDescription("Il n'y a pas de musique pour la suite");
         }
         else {
+            System.out.println(track.length);
             int i = 0;
-            AudioTrack[] track = at.toArray(new AudioTrack[]{});
-            while (i < 10 && track[i] != null) {
+            while (i < 10 && i < track.length) {
                 eb.appendDescription(track[i].getInfo().title + "\n");
                 i++;
             }
@@ -116,6 +116,10 @@ public class MusicCommand {
         textChannel.sendMessage("pas assez de morceau pour mélanger").queue();
     }
 
+    public static void stop(Guild guild)
+    {
+        new MusicManager().getPlayer(guild).getListener().stop();
+    }
     @Command(name = "stop",type = ExecutorType.USER, description = "arrete la musique")
     private void stop(Message msg, Guild guild){
         manager.getPlayer(guild).getListener().stop();

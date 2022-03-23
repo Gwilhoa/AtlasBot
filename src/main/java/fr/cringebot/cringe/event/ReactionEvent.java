@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2022/01/30 16:11:19 by gchatain         ###   ########.fr       */
+/*   Updated: 2022/03/23 12:37:58 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,11 @@ public class ReactionEvent {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void rip(Message msg,String avatarUrl) {
+        BufferedImage avatar = getImage(avatarUrl);
+
     }
 
     public static void daronned(Message msg)

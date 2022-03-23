@@ -25,7 +25,15 @@ public class AudioListener extends AudioEventAdapter {
     private boolean loop = false;
     private Queue<AudioTrack> tracks = new LinkedList<>();
     private AudioTrack current = null;
-    private Thread autoStop = null;
+    private final Thread autoStop = new Thread(() -> {
+        try {
+            sleep(60000);
+            if (current == null) {
+                this.stop();
+            }
+        } catch (InterruptedException ignored) {
+        }
+    });
 
 
     public AudioListener(MusicPlayer player) {
@@ -50,6 +58,8 @@ public class AudioListener extends AudioEventAdapter {
 
     public void stop() {
         this.clear();
+        if (this.loop)
+            this.nowLoop(null);
         current = null;
         player.getGuild().getAudioManager().closeAudioConnection();
         player.getJda().getPresence().setActivity(new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING));
@@ -70,10 +80,20 @@ public class AudioListener extends AudioEventAdapter {
     public void nowLoop(TextChannel tc) {
         EmbedBuilder eb = new EmbedBuilder();
         this.loop = !this.loop;
-        if (this.loop)
-            eb.setColor(Color.green).setDescription("la musique " + this.current.getInfo().title + " est désormais mis en boucle").setTitle("loop Activé");
+        if (this.loop) {
+            if (this.current != null)
+                eb.setColor(Color.green).setDescription("la musique " + this.current.getInfo().title + " est désormais mis en boucle").setTitle("loop Activé");
+            else
+                eb.setColor(Color.red).setDescription("mais tu veux loop quoi salope met une musique et on en reparle").setTitle("t'es une merde");
+        }
         else
-            eb.setColor(Color.red).setDescription("la playliste reprend son cours la prochaine musique est \n" + tracks.peek());
+        {
+            if (tracks.peek() == null)
+                eb.setColor(Color.red).setDescription("il n'y aura pas de musique suivante\n");
+            else
+                eb.setColor(Color.red).setDescription("la playlist reprend son cours la prochaine musique est :\n" + tracks.peek().getInfo().title);
+            eb.setTitle("loop désactivé");
+        }
         tc.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -85,20 +105,13 @@ public class AudioListener extends AudioEventAdapter {
     }
 
     public void nextTrack(TextChannel textChannel) {
-        player.getAudioPlayer().getPlayingTrack().stop();
         current = null;
+        if (this.loop)
+            nowLoop(textChannel);
         if (tracks.isEmpty()) {
+            player.getAudioPlayer().stopTrack();
             textChannel.sendMessageEmbeds(new EmbedBuilder().setColor(Color.red).setTitle("fini !").setDescription("j'ai plus de musique a mettre,\n si vous avez rien a mettre moi je m'en vais").build()).queue();
-            autoStop = new Thread(() -> {
-                try {
-                    sleep(60000);
-                    if (current == null) {
-                        this.stop();
-                    }
-                } catch (InterruptedException ignored) {
-                }
-            });
-            autoStop.start();
+            StopProcess();
         } else {
             current = tracks.poll();
             if (textChannel != null) {
@@ -106,9 +119,18 @@ public class AudioListener extends AudioEventAdapter {
                 textChannel.sendMessageEmbeds(eb.build()).queue();
             }
             player.getJda().getPresence().setActivity(new activity(this.current.getInfo().title, null, Activity.ActivityType.LISTENING));
-            player.getAudioPlayer().getPlayingTrack().stop();
             player.getAudioPlayer().startTrack(current, false);
         }
+    }
+
+    private void StopProcess() {
+        player.getJda().getPresence().setActivity(new activity(" plus rien", null, Activity.ActivityType.LISTENING));
+        autoStop.start();
+    }
+
+    public void isfinish()
+    {
+        StopProcess();
     }
 
     @Override
@@ -117,21 +139,22 @@ public class AudioListener extends AudioEventAdapter {
             player.startTrack(current, false);
             return;
         }
+        isfinish();
         System.out.println(endReason.name());
         current = null;
         if (endReason.mayStartNext) nextTrack(null);
     }
 
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
+        if (autoStop.isAlive())
+            autoStop.interrupt();
         current = track.makeClone();
     }
 
     public void add(AudioTrack t) {
+        if (autoStop.isAlive())
+            autoStop.interrupt();
         if (current == null || current.getState() == AudioTrackState.FINISHED || current.getPosition() == current.getDuration()) {
-            if (autoStop != null) {
-                autoStop.interrupt();
-                autoStop = null;
-            }
             player.getAudioPlayer().playTrack(t);
             player.getJda().getPresence().setActivity(new activity(this.current.getInfo().title, null, Activity.ActivityType.LISTENING));
         } else {

@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/17 11:08:30 by                  ###   ########.fr       */
+/*   Updated: 2022/03/23 13:28:15 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.lol.Champion;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
+import fr.cringebot.music.AudioListener;
+import fr.cringebot.music.MusicCommand;
+import fr.cringebot.music.MusicPlayer;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -121,6 +124,8 @@ public class BotListener implements EventListener {
 	}
 
 	private void onDisconnect(GuildVoiceLeaveEvent event) {
+		if (event.getMember().getUser().equals(event.getJDA().getSelfUser()))
+			MusicCommand.stop(event.getGuild());
 		XP.disconnecting(event);
 		System.out.println(event.getMember().getUser().getName() + " s'est déconnecté");
 	}
@@ -386,6 +391,9 @@ public class BotListener implements EventListener {
 			feur(msg);
 		}
 
+		if (msg.getContentRaw().equals("rip"))
+			rip(msg, msg.getMember().getUser().getAvatarUrl());
+
 		if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))
 			msg.getChannel().sendFile(imgExtenders.getFile("societer.png")).queue();
 		if (containsIgnoreCase(msg.getContentRaw(), "putain")) {
@@ -396,6 +404,13 @@ public class BotListener implements EventListener {
 			for (String split : msg.getContentRaw().split(" "))
 				if (StringExtenders.startWithIgnoreCase(split,"hmm"))
 					hmm(msg, split);
+		}
+
+		if (containsIgnoreCase(msg.getContentRaw(), "je lag"))
+		{
+			File f = imgExtenders.getFile("internet.png");
+			msg.getChannel().sendFile(f).queue();
+			f.delete();
 		}
 
 		if (containsIgnoreCase(msg.getContentRaw(), "cringe")) {
