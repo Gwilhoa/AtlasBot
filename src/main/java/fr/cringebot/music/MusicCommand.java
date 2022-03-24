@@ -19,7 +19,7 @@ public class MusicCommand {
     @Command(name="volume",type = ExecutorType.USER, description = "changer le volume")
     private void volume(Guild guild, TextChannel textChannel, String[] args){
         if (args[0].equalsIgnoreCase("reset"))
-            volume(guild, textChannel, 10);
+            volume(guild, textChannel, 50);
         else
             volume(guild, textChannel, Integer.parseInt(args[0]));
     }

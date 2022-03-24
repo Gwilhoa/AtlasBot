@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:49:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/23 16:15:23 by                  ###   ########.fr       */
+/*   Updated: 2022/03/23 20:09:54 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ public class HelpCommand {
         if(!user.hasPrivateChannel()) user.openPrivateChannel().complete();
         ((UserImpl)user).getPrivateChannel().sendMessageEmbeds(builder.build()).queue();
 
-        channel.sendMessage(user.getAsMention()+", veuillez regarder vos message privé.").queue();
+        channel.sendMessage(user.getAsMention()+", Tu veux rencontrer les messages d'aides les plus chauds de ta région ? Alors regarde tes DM dès maintenant. ❤️").queue();
 
     }
 

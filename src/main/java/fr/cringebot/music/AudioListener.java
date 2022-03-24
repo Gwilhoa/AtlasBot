@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,15 +26,6 @@ public class AudioListener extends AudioEventAdapter {
     private boolean loop = false;
     private Queue<AudioTrack> tracks = new LinkedList<>();
     private AudioTrack current = null;
-    private final Thread autoStop = new Thread(() -> {
-        try {
-            sleep(60000);
-            if (current == null) {
-                this.stop();
-            }
-        } catch (InterruptedException ignored) {
-        }
-    });
 
 
     public AudioListener(MusicPlayer player) {
@@ -67,13 +59,7 @@ public class AudioListener extends AudioEventAdapter {
 
     public void randomise() {
         if (!tracks.isEmpty() || (current != null && current.getState() != AudioTrackState.FINISHED && current.getPosition() != current.getDuration())) {
-            if (tracks2.isEmpty()) {
-                Collections.shuffle((List<?>) tracks);
-            } else {
-                tracks.clear();
-                Collections.shuffle((List<?>) tracks2);
-                tracks.addAll(tracks2);
-            }
+            Collections.shuffle((List<?>) tracks);
         }
     }
 
@@ -110,8 +96,17 @@ public class AudioListener extends AudioEventAdapter {
             nowLoop(textChannel);
         if (tracks.isEmpty()) {
             player.getAudioPlayer().stopTrack();
+            new Thread(() -> {
+                StopMusic();
+                try {
+                    sleep(60000);
+                    if (current == null) {
+                        this.stop();
+                    }
+                } catch (InterruptedException ignored) {
+                }
+            }).start();
             textChannel.sendMessageEmbeds(new EmbedBuilder().setColor(Color.red).setTitle("fini !").setDescription("j'ai plus de musique a mettre,\n si vous avez rien a mettre moi je m'en vais").build()).queue();
-            StopProcess();
         } else {
             current = tracks.poll();
             if (textChannel != null) {
@@ -123,15 +118,10 @@ public class AudioListener extends AudioEventAdapter {
         }
     }
 
-    private void StopProcess() {
+    private void StopMusic() {
         player.getJda().getPresence().setActivity(new activity(" plus rien", null, Activity.ActivityType.LISTENING));
-        autoStop.start();
     }
 
-    public void isfinish()
-    {
-        StopProcess();
-    }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
@@ -139,21 +129,25 @@ public class AudioListener extends AudioEventAdapter {
             player.startTrack(current, false);
             return;
         }
-        isfinish();
-        System.out.println(endReason.name());
         current = null;
+        new Thread(() -> {
+            StopMusic();
+            try {
+                sleep(60000);
+                if (current == null) {
+                    this.stop();
+                }
+            } catch (InterruptedException ignored) {
+            }
+        }).start();
         if (endReason.mayStartNext) nextTrack(null);
     }
 
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        if (autoStop.isAlive())
-            autoStop.interrupt();
         current = track.makeClone();
     }
 
     public void add(AudioTrack t) {
-        if (autoStop.isAlive())
-            autoStop.interrupt();
         if (current == null || current.getState() == AudioTrackState.FINISHED || current.getPosition() == current.getDuration()) {
             player.getAudioPlayer().playTrack(t);
             player.getJda().getPresence().setActivity(new activity(this.current.getInfo().title, null, Activity.ActivityType.LISTENING));
