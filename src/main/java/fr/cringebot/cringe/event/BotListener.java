@@ -236,13 +236,15 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onEnable(ReadyEvent event) throws IOException {
+		if (new File("save").mkdir())
+			System.out.println("création du directoryCentral");
 		Request.sendRequest(Request.Type.SETSEASON, event.getJDA().getGuildById("382938797442334720").getName());
-		MessageReact.load();
+		//MessageReact.load();
 		PollMessage.load();
 		cki.load();
 		XP.loadValue();
 		XP.load();
-		if (!System.getenv().get("OS").equals("Windows_NT"))
+		if (System.getenv().get("OS") != null && !System.getenv().get("OS").equals("Windows_NT"))
 		{
 			for (MessageReact mr : MessageReact.message)
 				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
@@ -254,6 +256,7 @@ public class BotListener implements EventListener {
 			}).start();
 			new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
 		}
+		//new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
 		Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
 		}.getType());
 
@@ -266,8 +269,6 @@ public class BotListener implements EventListener {
 		Activity act;
 		act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
 		bot.getJda().getPresence().setActivity(act);
-		if (new File("save").mkdir())
-			System.out.println("création du directoryCentral");
 	}
 
 	/**

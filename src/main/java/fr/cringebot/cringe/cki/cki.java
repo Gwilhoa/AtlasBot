@@ -12,10 +12,10 @@ public class cki {
     private static final String file = "save/cki.json";
     private static final TypeToken<HashMap<String, cki>> typeToken = new TypeToken<HashMap<String, cki>>() {
     };
-    private String channel;
-    private Type type;
-    private String Message;
-    private String Name;
+    private final String channel;
+    private final Type type;
+    private final String Message;
+    private final String Name;
     private Integer action;
     private Integer indice;
     public static HashMap<String, cki> wtpThreads = null;

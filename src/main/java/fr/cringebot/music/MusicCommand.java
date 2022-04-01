@@ -76,21 +76,26 @@ public class MusicCommand {
     private void queue(TextChannel tc){
         MusicPlayer player = manager.getPlayer(tc.getGuild());
         Queue<AudioTrack> at = player.getListener().getTracks();
-        AudioTrack[] track = at.toArray(new AudioTrack[]{});
-
         EmbedBuilder eb = new EmbedBuilder().setColor(Color.cyan).setTitle("les prochaines musique...");
-        if (at.isEmpty()){
-            eb.setDescription("Il n'y a pas de musique pour la suite");
+        if (at.isEmpty() && player.getListener().getCurrent() == null)
+        {
+            eb.setDescription("Offline");
         }
-        else {
-            System.out.println(track.length);
+        else if (at.isEmpty())
+        {
+            eb.setDescription("il n'y a pas de musique pour la suite");
+        } else {
+            AudioTrack[] track = at.toArray(new AudioTrack[]{});
             int i = 0;
             while (i < 10 && i < track.length) {
                 eb.appendDescription(track[i].getInfo().title + "\n");
                 i++;
             }
         }
-        tc.sendMessage(player.getListener().getCurrent().getInfo().title).setEmbeds(eb.build()).queue();
+        if (player.getListener().getCurrent() == null)
+            tc.sendMessage(player.getListener().getCurrent().getInfo().title).setEmbeds(eb.build()).queue();
+        else
+            tc.sendMessageEmbeds(eb.build()).queue();
     }
 
 

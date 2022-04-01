@@ -47,7 +47,7 @@ public class memesEvent {
 				String name = message.getEmbeds().get(0).getImage().getUrl().split(" ")[0].split("/")[message.getEmbeds().get(0).getImage().getUrl().split("/").length - 1];
 		try (BufferedInputStream bis = new BufferedInputStream(new URL(message.getEmbeds().get(0).getImage().getUrl()).openStream());
 		FileOutputStream fos = new FileOutputStream(name)){
-			byte data[] = new byte[1024];
+			byte[] data = new byte[1024];
 			int byteContent;
 			while ((byteContent = bis.read(data, 0, 1024)) != -1){
 					fos.write(data, 0, byteContent);
@@ -94,11 +94,10 @@ public class memesEvent {
 			}
 		return;
 		}
-	String name;
+		String name;
 		String content;
 	if (msg.getAttachments().isEmpty())
 	{
-		System.out.print(msg.getContentRaw().split(" ")[0]);
 		content = msg.getContentRaw().substring(msg.getContentRaw().split(" ")[0].length());
 		name = msg.getContentRaw().split(" ")[0].split("/")[msg.getContentRaw().split("/").length - 1];
 		try (BufferedInputStream bis = new BufferedInputStream(new URL(msg.getContentRaw().split(" ")[0]).openStream());
@@ -129,7 +128,16 @@ public class memesEvent {
 	String avatar = msg.getAuthor().getEffectiveAvatarUrl();
 	name = msg.getAuthor().getName();
 	msg.delete().and(msg.getChannel().sendTyping()).queue();
-	if (FilenameUtils.getExtension(f.getName()).equals("mp4") || FilenameUtils.getExtension(f.getName()).equals("mov") || FilenameUtils.getExtension(f.getName()).equals("webm"))
+	if (DetectorAttachment.isTenor(msg.getContentRaw()))
+		msg = msg.getChannel().sendMessageEmbeds(
+				new EmbedBuilder()
+						.setDescription(content)
+						.setImage(msg.getContentRaw())
+						.setFooter(name, avatar)
+						.setColor(Color.RED)
+						.build()
+		).complete();
+	else if (FilenameUtils.getExtension(f.getName()).equals("mp4") || FilenameUtils.getExtension(f.getName()).equals("mov") || FilenameUtils.getExtension(f.getName()).equals("webm"))
 	{
 		if (content == null)
 			msg = msg.getChannel().sendMessage("par > " + name).addFile(f).complete();

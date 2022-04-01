@@ -35,6 +35,6 @@ public @interface Command {
     ExecutorType type() default ExecutorType.ALL;
 
     enum ExecutorType{
-        ALL, USER, CONSOLE;
+        ALL, USER, CONSOLE
     }
 }
