@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/23 16:15:23 by                  ###   ########.fr       */
+/*   Updated: 2022/04/03 21:43:24 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,31 +78,39 @@ public class CommandDefault {
 				"> creer son compte le " + mem.getTimeCreated().getDayOfMonth() + "/" + mem.getTimeCreated().getMonthValue() + "/" + mem.getTimeCreated().getYear() + "\n" +
 				"> messages total : " + UserExtenders.getAllmsg(mem));
 		builder.setColor(Color.green);
+		channel.sendMessageEmbeds(builder.build()).queue();
 	}
 
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
 	private void poll(Message msg) {
-		String message = msg.getContentRaw().substring(">poll ".length());
-		String[] args = message.substring(message.split("\n")[0].length() + 1).split("\n");
-		if (args.length < 1)
+		int i = 1;
+		String message = msg.getContentRaw().substring(">poll".length());
+		String[] args = message.split("\n");
+		String name = message.split("\n")[0];
+		System.out.println(name);
+		if (args.length < 3 || name.equals(" ") || name.isEmpty())
 		{
-			msg.getChannel().sendMessage("usage : >poll <titre>\n argument\nargument...").queue();
+			msg.getChannel().sendMessage("usage : >poll <titre>\nargument\nargument...").queue();
 			return;
 		}
 		String author = msg.getAuthor().getId();
 		msg.delete().queue();
 		ArrayList<SelectOption> options = new ArrayList<>();
-		for (String arg : args) {
+		while (i < args.length)
+		{
+			System.out.println(args[i]);
 			for (SelectOption op : options)
-				if (op.getLabel().equals(arg)) {
-					msg.getChannel().sendMessage("sex").reference(msg).queue();
+				if (op.getLabel().equals(args[i])) {
+					msg.getChannel().sendMessage("pourquoi des arguments similaire, c'est cringe").reference(msg).queue();
 					return;
 				}
-			options.add(new SelectOptionImpl(arg, arg));
+			options.add(new SelectOptionImpl(args[i], args[i]));
+				i++;
 		}
+		args = message.substring(message.split("\n")[0].length() + 1).split("\n");
 		SelectMenuImpl selectionMenu = new SelectMenuImpl(message.split("\n")[0], "selectionnez un choix", 1, 1, false, options);
 		msg = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setDescription("chargement").build()).setActionRow(selectionMenu).complete();
-		PollMessage pm = new PollMessage(msg.getId(), Arrays.asList(args), author, msg.getGuild(), msg.getTextChannel().getId(), message.split("\n")[0]);
+		PollMessage pm = new PollMessage(msg.getId(), Arrays.asList(args), author, msg.getGuild(), msg.getTextChannel().getId(), name);
 		msg.editMessageEmbeds(pm.getMessageEmbed(msg.getGuild())).queue();
 	}
 

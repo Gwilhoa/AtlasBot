@@ -121,6 +121,7 @@ public class PollMessage {
                 sb.append("||\n");
             }
         }
+        sb.append("\n\nnombre de votants : ").append(this.MemberVote.size());
         eb.setDescription(sb);
         eb.setFooter("un sondage posé par " + g.getMemberById(this.author).getUser().getName(), g.getMemberById(this.author).getUser().getEffectiveAvatarUrl());
         return eb.build();

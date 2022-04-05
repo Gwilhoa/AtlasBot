@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/23 16:15:23 by                  ###   ########.fr       */
+/*   Updated: 2022/04/05 12:05:40 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,13 @@ public class BotListener implements EventListener {
 			}
 		} else if (event instanceof GuildMemberJoinEvent) onGuildMemberJoin((GuildMemberJoinEvent) event);
 		else if (event instanceof GuildMemberRemoveEvent) onGuildMemberLeave((GuildMemberRemoveEvent) event);
-		else if (event instanceof MessageReactionAddEvent) onAddReact((MessageReactionAddEvent) event);
+		else if (event instanceof MessageReactionAddEvent) {
+			try {
+				onAddReact((MessageReactionAddEvent) event);
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
 		else if (event instanceof SelectMenuInteractionEvent) onSelectMenu((SelectMenuInteractionEvent) event);
 		else if (event instanceof GatewayPingEvent) onPing((GatewayPingEvent) event);
 		else if (event instanceof RoleCreateEvent) onCreateRole((RoleCreateEvent) event);
@@ -185,14 +191,16 @@ public class BotListener implements EventListener {
 	 */
 	private void onEmbed(MessageEmbedEvent event) throws InterruptedException {
 		if (event.getChannel().getId().equals("461606547064356864")) {
+			Message ret;
 			Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
 			if (DetectorAttachment.isReddit(msg.getContentRaw()))
-				msg = memesEvent.repostReddit(msg);
+				ret = memesEvent.repostReddit(msg, null, msg.getTextChannel());
 			else if (DetectorAttachment.isTwitter(msg.getContentRaw()))
-				msg = memesEvent.repostTwitter(msg);
+				ret = memesEvent.repostTwitter(msg, null, msg.getTextChannel());
 			else
 				return;
-			msg.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).and(msg.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(msg.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
+			ret.addReaction(ret.getGuild().getEmoteById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
+			msg.delete().queue();
 		}
 	}
 
@@ -256,7 +264,7 @@ public class BotListener implements EventListener {
 			}).start();
 			new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
 		}
-		//new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
+		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
 		Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
 		}.getType());
 
@@ -286,7 +294,7 @@ public class BotListener implements EventListener {
 				try {
 					memesEvent.postmeme(msgs.get(i));
 					Thread.sleep(10000);
-				} catch (IOException | InterruptedException e) {
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
@@ -318,7 +326,7 @@ public class BotListener implements EventListener {
 	 * si une personne ajoute une réaction
 	 *
 	 */
-	private void onAddReact(MessageReactionAddEvent event) {
+	private void onAddReact(MessageReactionAddEvent event) throws NoSuchFieldException, IllegalAccessException {
 		if (event.getChannel().getId().equals("461606547064356864")) {
 			memesEvent.addReaction(event.getChannel().retrieveMessageById(event.getMessageId()).complete(), event.getReaction());
 		}
@@ -333,6 +341,7 @@ public class BotListener implements EventListener {
 					}
 				}
 		}
+		new MusicCommand().onAddReact(event);
 	}
 
 
@@ -418,13 +427,9 @@ public class BotListener implements EventListener {
 			if (!DetectorAttachment.isAnyLink(msg))
 				msg.getTextChannel().sendMessage("https://tenor.com/view/oh-no-cringe-cringe-oh-no-kimo-kimmo-gif-23168319").queue();
 		}
-		if (msg.getChannel().getId().equals("461606547064356864") && (DetectorAttachment.isAnyLink(msg)))
+		if (msg.getChannel().getId().equals("461606547064356864"))
 			new Thread(() -> {
-				try {
 					postmeme(msg);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}).start();
 
 		if (containsIgnoreCase(msg.getContentRaw(), "stonks")) {

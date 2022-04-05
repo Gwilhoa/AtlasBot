@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:09:51 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/23 16:15:23 by                  ###   ########.fr       */
+/*   Updated: 2022/04/03 16:53:18 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,8 @@ public final class CommandMap {
             execute(((SimpleCommand)object[0]), command, (String[])object[1], null);
         }catch(Exception exception){
             System.out.println("La methode "+((SimpleCommand)object[0]).getMethod().getName()+" n'est pas correctement initialisé.");
+            exception.printStackTrace();
+
         }
     }
 
@@ -135,6 +137,8 @@ public final class CommandMap {
             execute(((SimpleCommand)object[0]), command.toLowerCase(),(String[])object[1], message);
         }catch(Exception exception){
             System.out.println("La methode "+((SimpleCommand)object[0]).getMethod().getName()+" n'est pas correctement initialisé.");
+            exception.printStackTrace();
+            message.getChannel().sendMessage(message.getGuild().getMemberById("315431392789921793").getAsMention() +" sale batard, la commande "+((SimpleCommand)object[0]).getMethod().getName()+" est mal faites").queue();
         }
         return true;
     }

@@ -6,37 +6,75 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
+import fr.cringebot.cringe.objects.EmbedGenerator;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.hooks.EventListener;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MusicCommand {
 
     private final MusicManager manager = new MusicManager();
+
     @Command(name="volume",type = ExecutorType.USER, description = "changer le volume")
     private void volume(Guild guild, TextChannel textChannel, String[] args){
-        if (args[0].equalsIgnoreCase("reset"))
+        if (args.length == 0)
+            volume(guild, textChannel, -1);
+        else if (args[0].equalsIgnoreCase("reset"))
             volume(guild, textChannel, 50);
         else
             volume(guild, textChannel, Integer.parseInt(args[0]));
     }
 
-    private void volume(Guild guild, TextChannel textChannel, Integer vol){
-        vol = (vol/5);
-        try {
-            Field f = DefaultAudioPlayer.class.getDeclaredField("options");
-            f.setAccessible(true);
-            ((AudioPlayerOptions) f.get(manager.getPlayer(guild).getAudioPlayer())).volumeLevel.set(vol);
-            if (textChannel != null)
-                textChannel.sendMessage("mise du volume à " + vol*5).queue();
-        } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
-            textChannel.sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : volume 500").queue();
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace(); //ca peut arriver en cas de mise a jour de dépendances, mais ca devrait être bon sinon
+    private int volume(Guild guild, TextChannel textChannel, Integer vol){
+        MusicPlayer player = manager.getPlayer(guild);
+        if (player.getListener().getCurrent() == null && textChannel != null)
+        {
+            textChannel.sendMessageEmbeds(new EmbedBuilder().setDescription("not playing").setColor(Color.red).build()).queue();
+            return -1;
         }
+        Field f = null;
+        try {
+            f = DefaultAudioPlayer.class.getDeclaredField("options");
+            f.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        if (vol >= 0)
+        {
+            try {
+                    vol = (vol/5);
+                    System.out.println("test");
+                    ((AudioPlayerOptions) f.get(manager.getPlayer(guild).getAudioPlayer())).volumeLevel.set(vol);
+            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
+                textChannel.sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : volume 500").queue();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace(); //ca peut arriver en cas de mise a jour de dépendances, mais ca devrait être bon sinon
+            }
+        } else {
+            try {
+                vol = ((AudioPlayerOptions) f.get(manager.getPlayer(guild).getAudioPlayer())).volumeLevel.get();
+            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
+                textChannel.sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : volume 500").queue();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace(); //ca peut arriver en cas de mise a jour de dépendances, mais ca devrait être bon sinon
+            }
+        }
+        if (textChannel != null)
+        {
+            EmbedBuilder eb = getVolumeEmbed(vol*5);
+            Message ret = textChannel.sendMessageEmbeds(eb.build()).complete();
+            ret.addReaction("\uD83D\uDD3C").and(ret.addReaction("\uD83D\uDD3D")).queue();
+        }
+        System.out.println(vol*5);
+        return vol*5;
     }
 
     @Command(name="joue",type=ExecutorType.USER, description = "ajoute une musique a la playlist")
@@ -78,13 +116,10 @@ public class MusicCommand {
         Queue<AudioTrack> at = player.getListener().getTracks();
         EmbedBuilder eb = new EmbedBuilder().setColor(Color.cyan).setTitle("les prochaines musique...");
         if (at.isEmpty() && player.getListener().getCurrent() == null)
-        {
-            eb.setDescription("Offline");
-        }
+            eb.setDescription("Offline").setColor(Color.red);
         else if (at.isEmpty())
-        {
-            eb.setDescription("il n'y a pas de musique pour la suite");
-        } else {
+            eb.setDescription("il n'y a pas de musique pour la suite").setColor(Color.BLUE);
+        else {
             AudioTrack[] track = at.toArray(new AudioTrack[]{});
             int i = 0;
             while (i < 10 && i < track.length) {
@@ -92,7 +127,7 @@ public class MusicCommand {
                 i++;
             }
         }
-        if (player.getListener().getCurrent() == null)
+        if (player.getListener().getCurrent() != null)
             tc.sendMessage(player.getListener().getCurrent().getInfo().title).setEmbeds(eb.build()).queue();
         else
             tc.sendMessageEmbeds(eb.build()).queue();
@@ -138,5 +173,52 @@ public class MusicCommand {
     @Command(name = "loop", type = ExecutorType.USER,description = "met en boucle la première musique")
     private void loop(Message msg, Guild guild){
         manager.getPlayer(guild).getListener().nowLoop(msg.getTextChannel());
+    }
+
+    //--//
+
+    public EmbedBuilder getVolumeEmbed(Integer vol)
+    {
+        EmbedBuilder eb = new EmbedBuilder();
+        if (vol > 100)
+            eb.setColor(Color.ORANGE);
+        else
+            eb.setColor(Color.BLUE);
+        eb.setTitle("Volume");
+        int i = 0;
+        eb.setDescription("\n"+vol+"%\n\n");
+        if (vol > 10) {
+            eb.appendDescription("||");
+            while (i < vol) {
+                eb.appendDescription(" . ");
+                i = i + 10;
+            }
+            eb.appendDescription("||");
+        }
+        while (i < 100)
+        {
+            eb.appendDescription(" I ");
+            i = i + 10;
+        }
+        eb.appendDescription("|");
+        eb.setFooter("MusicManager");
+        return eb;
+    }
+
+    public void onAddReact(MessageReactionAddEvent event) {
+        if (event.getMember().getUser().isBot())
+            return;
+        Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
+        if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getFooter().getText().equals("MusicManager"))
+        {
+            if (msg.getEmbeds().get(0).getTitle().equals("Volume")) {
+                System.out.println(event.getReaction().getReactionEmote().getAsCodepoints());
+                if (event.getReaction().getReactionEmote().getAsCodepoints().equals("U+1f53c")) {
+                    int vol = Integer.parseInt(msg.getEmbeds().get(0).getDescription().replace("%", "").split("\n")[0]);
+                    vol = volume(msg.getGuild(), null, vol+10);
+                    msg.editMessageEmbeds(getVolumeEmbed(vol).build()).queue();
+                }
+            }
+        }
     }
 }
