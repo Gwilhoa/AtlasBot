@@ -14,8 +14,6 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 import java.util.Scanner;
 
-
-
 public class BotDiscord implements Runnable{
 
     private final JDA jda;

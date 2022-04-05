@@ -22,13 +22,11 @@ import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
-import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.lol.Champion;
+import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
-import fr.cringebot.music.AudioListener;
 import fr.cringebot.music.MusicCommand;
-import fr.cringebot.music.MusicPlayer;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -53,7 +51,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
 
-import static fr.cringebot.cringe.cki.mainCommand.*;
+import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 import static fr.cringebot.cringe.event.MembersQuotes.MemberReact;
 import static fr.cringebot.cringe.event.ReactionEvent.*;
 import static fr.cringebot.cringe.event.memesEvent.postmeme;
@@ -341,7 +339,7 @@ public class BotListener implements EventListener {
 					}
 				}
 		}
-		new MusicCommand().onAddReact(event);
+		MusicCommand.onAddReact(event);
 	}
 
 

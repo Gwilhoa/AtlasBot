@@ -6,25 +6,30 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
-import fr.cringebot.cringe.objects.EmbedGenerator;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.hooks.EventListener;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class MusicCommand {
 
-    private final MusicManager manager = new MusicManager();
+    public static final MusicCommand INSTANCE;
+    private static final MusicManager manager = new MusicManager();
 
-    @Command(name="volume",type = ExecutorType.USER, description = "changer le volume")
-    private void volume(Guild guild, TextChannel textChannel, String[] args){
+    static {
+        INSTANCE = new MusicCommand();
+    }
+
+    // Ceci stoppe les "guigui" qui font plein d'instances
+    private MusicCommand() {
+    }
+
+
+    @Command(name = "volume", type = ExecutorType.USER, description = "changer le volume")
+    private void volume(Guild guild, TextChannel textChannel, String[] args) {
         if (args.length == 0)
             volume(guild, textChannel, -1);
         else if (args[0].equalsIgnoreCase("reset"))
@@ -33,10 +38,9 @@ public class MusicCommand {
             volume(guild, textChannel, Integer.parseInt(args[0]));
     }
 
-    private int volume(Guild guild, TextChannel textChannel, Integer vol){
+    private static int volume(Guild guild, TextChannel textChannel, Integer vol) {
         MusicPlayer player = manager.getPlayer(guild);
-        if (player.getListener().getCurrent() == null && textChannel != null)
-        {
+        if (player.getListener().getCurrent() == null && textChannel != null) {
             textChannel.sendMessageEmbeds(new EmbedBuilder().setDescription("not playing").setColor(Color.red).build()).queue();
             return -1;
         }
@@ -177,8 +181,7 @@ public class MusicCommand {
 
     //--//
 
-    public EmbedBuilder getVolumeEmbed(Integer vol)
-    {
+    public static EmbedBuilder getVolumeEmbed(Integer vol) {
         EmbedBuilder eb = new EmbedBuilder();
         if (vol > 100)
             eb.setColor(Color.ORANGE);
@@ -186,7 +189,7 @@ public class MusicCommand {
             eb.setColor(Color.BLUE);
         eb.setTitle("Volume");
         int i = 0;
-        eb.setDescription("\n"+vol+"%\n\n");
+        eb.setDescription("\n" + vol + "%\n\n");
         if (vol > 10) {
             eb.appendDescription("||");
             while (i < vol) {
@@ -205,17 +208,16 @@ public class MusicCommand {
         return eb;
     }
 
-    public void onAddReact(MessageReactionAddEvent event) {
+    public static void onAddReact(MessageReactionAddEvent event) {
         if (event.getMember().getUser().isBot())
             return;
         Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
-        if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getFooter().getText().equals("MusicManager"))
-        {
+        if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getFooter().getText().equals("MusicManager")) {
             if (msg.getEmbeds().get(0).getTitle().equals("Volume")) {
                 System.out.println(event.getReaction().getReactionEmote().getAsCodepoints());
                 if (event.getReaction().getReactionEmote().getAsCodepoints().equals("U+1f53c")) {
                     int vol = Integer.parseInt(msg.getEmbeds().get(0).getDescription().replace("%", "").split("\n")[0]);
-                    vol = volume(msg.getGuild(), null, vol+10);
+                    vol = volume(msg.getGuild(), null, vol + 10);
                     msg.editMessageEmbeds(getVolumeEmbed(vol).build()).queue();
                 }
             }
