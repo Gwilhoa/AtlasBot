@@ -19,6 +19,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
 import fr.cringebot.BotDiscord;
+import fr.cringebot.cringe.Polls.PollListener;
+import fr.cringebot.cringe.Polls.PollMessage;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
@@ -36,7 +38,6 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.api.events.http.HttpRequestEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -73,58 +74,37 @@ public class BotListener implements EventListener {
 
 	public static Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(ArrayNumber.class,
 			(JsonDeserializer<ArrayNumber<Integer>>) (jsonElement, type, jsonDeserializationContext) -> {
-				if (!jsonElement.isJsonArray()) {
+				if (!jsonElement.isJsonArray())
 					return new ArrayNumber<>(jsonElement.getAsNumber().intValue());
-				}
 				ArrayNumber<Integer> n = new ArrayNumber<>();
 				JsonArray ar = jsonElement.getAsJsonArray();
-				for (int i = 0; i < ar.size(); i++) {
+				for (int i = 0; i < ar.size(); i++)
 					n.li.add(ar.get(i).getAsNumber().intValue());
-				}
 				return n;
 			}).create();
 
 	@Override
 	public void onEvent(GenericEvent event) {
 		System.out.println(event.getClass().getSimpleName());
-		if (event instanceof ReadyEvent) {
-			try {
-				onEnable((ReadyEvent) event);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		try {
+			if (event instanceof ReadyEvent) onEnable((ReadyEvent) event);
+			else if (event instanceof MessageReceivedEvent) onMessage((MessageReceivedEvent) event);
+			else if (event instanceof GuildMemberJoinEvent) onGuildMemberJoin((GuildMemberJoinEvent) event);
+			else if (event instanceof GuildMemberRemoveEvent) onGuildMemberLeave((GuildMemberRemoveEvent) event);
+			else if (event instanceof MessageReactionAddEvent) onAddReact((MessageReactionAddEvent) event);
+			else if (event instanceof SelectMenuInteractionEvent) onSelectMenu((SelectMenuInteractionEvent) event);
+			else if (event instanceof GatewayPingEvent) onPing((GatewayPingEvent) event);
+			else if (event instanceof RoleCreateEvent) onCreateRole((RoleCreateEvent) event);
+			else if (event instanceof RoleDeleteEvent) onDeleteRole((RoleDeleteEvent) event);
+			else if (event instanceof MessageReactionRemoveEvent) onRemoveReact((MessageReactionRemoveEvent) event);
+			else if (event instanceof GuildUpdateNameEvent) onChangeServerName((GuildUpdateNameEvent) event);
+			else if (event instanceof GuildVoiceJoinEvent) onConnect((GuildVoiceJoinEvent) event);
+			else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
+			else if (event instanceof MessageEmbedEvent) onEmbed((MessageEmbedEvent) event);
+		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException e) {
+			e.printStackTrace();
+			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
 		}
-		if (event instanceof MessageReceivedEvent) {
-			try {
-				onMessage((MessageReceivedEvent) event);
-			} catch (IOException | InterruptedException e) {
-				e.printStackTrace();
-			}
-		} else if (event instanceof GuildMemberJoinEvent) onGuildMemberJoin((GuildMemberJoinEvent) event);
-		else if (event instanceof GuildMemberRemoveEvent) onGuildMemberLeave((GuildMemberRemoveEvent) event);
-		else if (event instanceof MessageReactionAddEvent) {
-			try {
-				onAddReact((MessageReactionAddEvent) event);
-			} catch (NoSuchFieldException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
-		else if (event instanceof SelectMenuInteractionEvent) onSelectMenu((SelectMenuInteractionEvent) event);
-		else if (event instanceof GatewayPingEvent) onPing((GatewayPingEvent) event);
-		else if (event instanceof RoleCreateEvent) onCreateRole((RoleCreateEvent) event);
-		else if (event instanceof RoleDeleteEvent) onDeleteRole((RoleDeleteEvent) event);
-		else if (event instanceof MessageReactionRemoveEvent) onRemoveReact((MessageReactionRemoveEvent) event);
-		else if (event instanceof GuildUpdateNameEvent) onChangeServerName((GuildUpdateNameEvent) event);
-		else if (event instanceof GuildVoiceJoinEvent) onConnect((GuildVoiceJoinEvent) event);
-		else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
-		else if (event instanceof MessageEmbedEvent) {
-			try {
-				onEmbed((MessageEmbedEvent) event);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		else if (event instanceof HttpRequestEvent) onRequest((HttpRequestEvent) event);
 	}
 
 	private void onDisconnect(GuildVoiceLeaveEvent event) {
@@ -144,12 +124,9 @@ public class BotListener implements EventListener {
 			Request.sendRequest(Request.Type.SETSEASON, event.getNewName());
 	}
 
-	private void onRequest(HttpRequestEvent event){
-		System.out.println(event.getRequestRaw().toString());
-	}
 	private void onRemoveReact(MessageReactionRemoveEvent event) {
 		if (event.getChannel().getId().equals("853210283480055809")) {
-			for (MessageReact mr : MessageReact.message)
+			for (MessageReact mr : MessageReact.message) {
 				if (event.getMessageId().equals(mr.getId())) {
 					for (RoleReaction rr : mr.list) {
 						if (event.getReactionEmote().getAsReactionCode().equals(rr.getEmote())) {
@@ -158,6 +135,7 @@ public class BotListener implements EventListener {
 						}
 					}
 				}
+			}
 		}
 	}
 
@@ -185,9 +163,8 @@ public class BotListener implements EventListener {
 	 * evenement quand un Embed est posté
 	 *
 	 * @param event
-	 * @throws InterruptedException
 	 */
-	private void onEmbed(MessageEmbedEvent event) throws InterruptedException {
+	private void onEmbed(MessageEmbedEvent event) {
 		if (event.getChannel().getId().equals("461606547064356864")) {
 			Message ret;
 			Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
@@ -207,24 +184,16 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onPing(GatewayPingEvent event) {
-		long time = System.currentTimeMillis();
-		if (PollMessage.pollMessage == null)
-			return;
-		for (PollMessage pm : PollMessage.pollMessage.values())
-			if (pm.getTime() + 86400000 < time)
-				pm.unactive(event.getJDA());
+		PollListener.verifTimePoll(event.getJDA());
 	}
 
 	private void onSelectMenu(SelectMenuInteractionEvent event) {
 		if (!event.getMessage().getEmbeds().isEmpty() && event.getMessage().getEmbeds().get(0).getAuthor() != null && event.getMessage().getEmbeds().get(0).getAuthor().getName().equals("poll")) {
-			PollMessage pm = PollMessage.pollMessage.get(event.getMessageId());
-			pm.newVote(event.getUser(), event.getSelectedOptions().get(0).getLabel());
-			event.getMessage().editMessageEmbeds(pm.getMessageEmbed(event.getGuild())).queue();
+			PollListener.reactSelectMenu(event.getMessage(), event.getUser(), event.getSelectedOptions().get(0));
 			event.reply("Ton vote a été enregistré \uD83D\uDC4D").setEphemeral(true).queue();
 		}
-		if (event.getComponent().getId().equals("cki")) {
+		if (event.getComponent().getId().equals("cki"))
 			MenuInteract(event.getSelectedOptions().get(0).getValue(), event.getMessage());
-		}
 		if (event.getComponent().getId().equals("role")) {
 			String[] args = event.getMessage().getEmbeds().get(0).getDescription().split("\n");
 			for (MessageReact mr : MessageReact.message)
@@ -241,7 +210,7 @@ public class BotListener implements EventListener {
 	 *
 	 * @param event
 	 */
-	private void onEnable(ReadyEvent event) throws IOException {
+	private void onEnable(ReadyEvent event) {
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
 		Request.sendRequest(Request.Type.SETSEASON, event.getJDA().getGuildById("382938797442334720").getName());

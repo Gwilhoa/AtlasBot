@@ -1,4 +1,4 @@
-package fr.cringebot.cringe.objects;
+package fr.cringebot.cringe.Polls;
 
 
 import com.google.gson.reflect.TypeToken;
