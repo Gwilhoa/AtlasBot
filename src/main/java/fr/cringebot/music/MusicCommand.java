@@ -40,7 +40,7 @@ public class MusicCommand {
 
     private static int volume(Guild guild, TextChannel textChannel, Integer vol) {
         MusicPlayer player = manager.getPlayer(guild);
-        if (player.getListener().getCurrent() == null && textChannel != null) {
+        if (!guild.getAudioManager().isConnected() || player.getListener().getCurrent() == null && textChannel != null) {
             textChannel.sendMessageEmbeds(new EmbedBuilder().setDescription("not playing").setColor(Color.red).build()).queue();
             return -1;
         }
@@ -55,7 +55,6 @@ public class MusicCommand {
         {
             try {
                     vol = (vol/5);
-                    System.out.println("test");
                     ((AudioPlayerOptions) f.get(manager.getPlayer(guild).getAudioPlayer())).volumeLevel.set(vol);
             } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
                 textChannel.sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : volume 500").queue();
@@ -212,11 +211,19 @@ public class MusicCommand {
             return;
         Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
         if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getFooter().getText().equals("MusicManager")) {
-            if (msg.getEmbeds().get(0).getTitle().equals("Volume")) {
+            if (!event.getGuild().getAudioManager().isConnected()) {
+                msg.editMessageEmbeds(new EmbedBuilder().setDescription("not playing").setColor(Color.red).build()).complete().clearReactions().queue();
+            }
+            else if (msg.getEmbeds().get(0).getTitle().equals("Volume")) {
                 System.out.println(event.getReaction().getReactionEmote().getAsCodepoints());
                 if (event.getReaction().getReactionEmote().getAsCodepoints().equals("U+1f53c")) {
                     int vol = Integer.parseInt(msg.getEmbeds().get(0).getDescription().replace("%", "").split("\n")[0]);
                     vol = volume(msg.getGuild(), null, vol + 10);
+                    msg.editMessageEmbeds(getVolumeEmbed(vol).build()).queue();
+                }
+                if (event.getReaction().getReactionEmote().getAsCodepoints().equals("U+1f53d")) {
+                    int vol = Integer.parseInt(msg.getEmbeds().get(0).getDescription().replace("%", "").split("\n")[0]);
+                    vol = volume(msg.getGuild(), null, vol - 10);
                     msg.editMessageEmbeds(getVolumeEmbed(vol).build()).queue();
                 }
             }
