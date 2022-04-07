@@ -182,10 +182,12 @@ public class MusicCommand {
 
     public static EmbedBuilder getVolumeEmbed(Integer vol) {
         EmbedBuilder eb = new EmbedBuilder();
-        if (vol > 100)
+        if ((vol > 100)&&(vol < 199)
             eb.setColor(Color.ORANGE);
+        else if (vol > 200)
+            eb.setColor(Color.RED);
         else
-            eb.setColor(Color.BLUE);
+            eb.setColor(Color.GREEN);
         eb.setTitle("Volume");
         int i = 0;
         eb.setDescription("\n" + vol + "%\n\n");
