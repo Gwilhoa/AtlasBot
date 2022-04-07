@@ -51,7 +51,7 @@ public class MusicCommand {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
-        if (vol >= 0)
+        if ((vol >= 0)&&(vol <= 300))
         {
             try {
                     vol = (vol/5);
