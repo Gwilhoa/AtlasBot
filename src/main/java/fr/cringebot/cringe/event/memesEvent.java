@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/07 18:14:05 by                  ###   ########.fr       */
+/*   Updated: 2022/04/08 00:05:40 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,10 @@ public class memesEvent {
 				eb.setDescription(msg.getContentRaw().replace(link, " ça "));
 		}
 		eb.setAuthor("Reddit", link, "https://www.elementaryos-fr.org/wp-content/uploads/2019/08/logo-reddit.png");
-		eb.setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
+		if (msg.getEmbeds().get(0).getFooter() == null)
+			eb.setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
+		else
+			eb.setFooter(msg.getEmbeds().get(0).getFooter().getText(),msg.getEmbeds().get(0).getFooter().getIconUrl());
 		if (msg.getEmbeds().get(0).getThumbnail() != null)
 			eb.setImage(msg.getEmbeds().get(0).getThumbnail().getUrl());
 		else if (msg.getEmbeds().get(0).getImage() != null)
@@ -226,9 +229,12 @@ public class memesEvent {
 			eb.setDescription("> " + msg.getContentRaw().replace(link, "") + "\n\n" + msg.getEmbeds().get(0).getDescription());
 		else
 			eb.setDescription("> " + msg.getContentRaw().replace(link, "ça") + "\n\n" + msg.getEmbeds().get(0).getDescription());
+		if (msg.getEmbeds().get(0).getFooter() == null)
+			eb.setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
+		else
+			eb.setFooter(msg.getEmbeds().get(0).getFooter().getText(),msg.getEmbeds().get(0).getFooter().getIconUrl());
 		eb.setTitle(msg.getEmbeds().get(0).getAuthor().getName())
 				.setColor(msg.getEmbeds().get(0).getColor())
-				.setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl())
 				.setAuthor("Twitter", msg.getEmbeds().get(0).getUrl(), msg.getEmbeds().get(0).getFooter().getIconUrl());
 		if (msg.getEmbeds().get(0).getImage() != null)
 			eb.setImage(msg.getEmbeds().get(0).getImage().getUrl());
