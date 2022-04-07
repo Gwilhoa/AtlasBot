@@ -97,7 +97,7 @@ public class MusicCommand {
                 return;
             }
             guild.getAudioManager().openAudioConnection(voiceChannel);
-            //volume(guild, null, 50);
+            volume(guild, null, 50);
         }
         manager.loadTrack(textChannel, msg.getContentRaw().replaceFirst(CommandMap.getTag(),"").replaceFirst("play ", ""));
     }
