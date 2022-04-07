@@ -27,7 +27,7 @@ public class MembersQuotes {
         else if (msg.getContentRaw().equalsIgnoreCase("roro"))
             Roro(msg);
 	else if (msg.getContentRaw().equalsIgnoreCase("yann"))
-            Yann(msg);
+            quoteDefault(msg, yann);
         else return false;
         return true;
     }
@@ -117,9 +117,8 @@ public class MembersQuotes {
 
     static String[] yann =
 	{
-		"Premier conseiller connues",
-		"prend un grand plaisir a faire chier guigui",
-		""
+		"Premier conseiller connu",
+		"Prend un grand plaisir a faire chier guigui"
 	};
     
     
