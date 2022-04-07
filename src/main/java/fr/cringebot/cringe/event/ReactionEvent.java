@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/07 22:21:53 by                  ###   ########.fr       */
+/*   Updated: 2022/04/07 23:50:32 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,29 +35,31 @@ public class ReactionEvent {
 
     public static void sus(Message msg) {
         if (new Random().nextInt(100) < 95)
-            msg.getChannel().sendMessage(". 　　　*   。　　　　•　 　ﾟ　　。 　　. °  ,  *\n" +
+        {
+            msg.getChannel().sendMessage(". 　　　*   。　　　　•　 　ﾟ　　。 　　. °  ,  *　　　.　　　* 　　.　　　　　。　　 。\n" +
                     "\n" +
-                    "　　　.　　　* 　　.　　　　　。　　 。　. 　.  °  ,  *\n" +
+                    "　　　.　　　* 　　.　　　　　。　　 。　. 　.  °  ,  *   。　　　　•　 　ﾟ　　。 　　. \n" +
                     "\n" +
-                    ".　　 。　　　　　 ඞ 。 . 　　 • 　　   °　　•   °  . \n" +
+                    ".　　 。　　　　　 ඞ 。 . 　　 • 　　   °　　•   °  .　　　.　　　* 　　.　　　　　。　　 。 \n" +
                     "\n" +
-                    "　　ﾟ　　 " + msg.getMember().getAsMention() + " was not An Impostor.　 。　.\n" +
+                    "　　ﾟ　　 " + msg.getMember().getAsMention() + " was not An Impostor.　 。　.　　　* 　　.　　　　　。　　 。\n" +
                     "\n" +
-                    "　　'　　　 1 Impostor remains 　 　　。   . °  , \n" +
+                    "　　'　　　 1 Impostor remains 　 　　。   . °  , 　　　.　　　* 　　.　　　　　。　　 。\n" +
                     "\n" +
-                    "　　ﾟ　　　.　　　. ,　　　　.　 .   *  °  . °  ").queue();
+                    "　　ﾟ　　　.　　　. ,　　　　.　 .   *  °  . °  　　　.　　　* 　　.　　　　　。　　 。").queue();
+        }
         else
-            msg.getChannel().sendMessage(". 　　　*   。　　　　•　 　ﾟ　　。 　　. °  ,  *\n" +
+            msg.getChannel().sendMessage(". 　　　*   。　　　　•　 　ﾟ　　。 　　. °  ,  *　　　.　　　* 　　.　　　　　。　　 。\n" +
                     "\n" +
-                    "　　　.　　　* 　　.　　　　　。　　 。　. 　.  °  ,  *\n" +
+                    "　　　.　　　* 　　.　　　　　。　　 。　. 　.  °  ,  *   。　　　　•　 　ﾟ　　。 　　. \n" +
                     "\n" +
-                    ".　　 。　　　　　 ඞ 。 . 　　 • 　　   °　　•   °  . \n" +
+                    ".　　 。　　　　　 ඞ 。 . 　　 • 　　   °　　•   °  .　　　.　　　* 　　.　　　　　。　　 。 \n" +
                     "\n" +
-                    "　　ﾟ　　 " + msg.getMember().getAsMention() + " was the Impostor.　 。　.\n" +
+                    "　　ﾟ　　 " + msg.getMember().getAsMention() + " was the Impostor.　 。　.　　　* 　　.　　　　　。　　 。\n" +
                     "\n" +
-                    "　　'　　　*  ° .  *   。　　　 。　. 　. 。   . °  , \n" +
+                    "　　'　　　 　　　* 　　.　　　　　。　　 。 　 　　。   . °  , 　　　.　　　* 　　.　　　　　。　　 。\n" +
                     "\n" +
-                    "　　ﾟ　　　.　　　. ,　　　　.　 .   *  °  . °  ").queue();
+                    "　　ﾟ　　　.　　　. ,　　　　.　 .   *  °  . °  　　　.　　　* 　　.　　　　　。　　 。").queue();
     }
 
     /**
