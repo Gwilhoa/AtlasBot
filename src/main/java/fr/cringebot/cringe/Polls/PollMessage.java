@@ -5,8 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.io.*;
@@ -72,24 +72,25 @@ public class PollMessage {
      * quand un vote est ajouté
      * @param user
      * @param arg
-     * @return
      */
-    public boolean newVote(User user, String arg) {
+    public void newVote(Member user, String arg, boolean Double) {
+        int v = 1;
+        if (Double)
+            v = 2;
         PollMessage pm = pollMessage.get(this.messageId);
         if ( pm.MemberVote.get(user.getId()) == null || pm.MemberVote.get(user.getId()).isEmpty())
         {
             pm.MemberVote.put(user.getId(), arg);
-            pm.getArgs().put(arg, pm.getArgs().get(arg) + 1);
+            pm.getArgs().put(arg, pm.getArgs().get(arg) + v);
         }
         else
         {
             String temp = pm.MemberVote.get(user.getId());
             pm.MemberVote.put(user.getId(), arg);
-            pm.getArgs().put(arg, pm.getArgs().get(arg) + 1);
-            pm.getArgs().put(temp, pm.getArgs().get(temp) - 1);
+            pm.getArgs().put(arg, pm.getArgs().get(arg) + v);
+            pm.getArgs().put(temp, pm.getArgs().get(temp) - v);
         }
         this.save();
-        return true;
     }
 
     /**
@@ -105,15 +106,14 @@ public class PollMessage {
         else
             eb.setColor(Color.red);
         StringBuilder sb = new StringBuilder();
-        System.out.println(this.MemberVote.size());
         for (String key : this.getArgs().keySet()) {
             if (this.getArgs().get(key) == 0)
                 sb.append(key).append(" -> ").append(0).append("\n");
             else
             {
-                sb.append(key).append(" -> ").append((int)((this.getArgs().get(key).floatValue() / this.MemberVote.size()) * 100)).append('%').append("\n").append("||");
+                sb.append(key).append(" -> ").append((int) ((this.getArgs().get(key).floatValue() / this.getTotalPoint()) * 100)).append("% -- ").append(this.getArgs().get(key)).append(" points").append("\n").append("||");
                 int i = 0;
-                while (i*5 < (int)((this.getArgs().get(key).floatValue() / this.MemberVote.size()) * 100))
+                while (i * 5 < (int)((this.getArgs().get(key).floatValue() / (float)this.getTotalPoint()) * 100))
                 {
                     sb.append(" . ");
                     i++;
@@ -125,6 +125,14 @@ public class PollMessage {
         eb.setDescription(sb);
         eb.setFooter("un sondage posé par " + g.getMemberById(this.author).getUser().getName(), g.getMemberById(this.author).getUser().getEffectiveAvatarUrl());
         return eb.build();
+    }
+
+    public Integer getTotalPoint()
+    {
+        Integer ret = 0;
+        for (Integer nb : this.getArgs().values())
+            ret = ret + nb;
+        return (ret);
     }
 
     public String getMessageId() {

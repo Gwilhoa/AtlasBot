@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.Polls;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
@@ -13,9 +14,9 @@ public class PollListener {
      * @param Voter        la personne concerné
      * @param selectOption le choix qu'il a fait
      */
-    public static void reactSelectMenu(Message pollMessage, User Voter, SelectOption selectOption) {
+    public static void reactSelectMenu(Message pollMessage, Member Voter, SelectOption selectOption) {
         PollMessage pm = PollMessage.pollMessage.get(pollMessage.getId());
-        pm.newVote(Voter, selectOption.getLabel());
+        pm.newVote(Voter, selectOption.getLabel(), Voter.getRoles().contains(Voter.getGuild().getRoleById("961344855974486026")));
         pollMessage.editMessageEmbeds(pm.getMessageEmbed(pollMessage.getGuild())).queue();
     }
 

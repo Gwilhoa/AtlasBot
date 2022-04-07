@@ -89,8 +89,7 @@ public class MusicCommand {
 
     @Command(name="play",type=ExecutorType.USER, description = "ajoute une musique a la playlist")
     private void play(Guild guild, TextChannel textChannel, User user, Message msg) {
-
-        if(guild == null) return;
+        if (guild == null) return;
         if (!guild.getAudioManager().isConnected()) {
             AudioChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
             if (voiceChannel == null) {
@@ -98,7 +97,7 @@ public class MusicCommand {
                 return;
             }
             guild.getAudioManager().openAudioConnection(voiceChannel);
-            volume(guild, null, 50);
+            //volume(guild, null, 50);
         }
         manager.loadTrack(textChannel, msg.getContentRaw().replaceFirst(CommandMap.getTag(),"").replaceFirst("play ", ""));
     }

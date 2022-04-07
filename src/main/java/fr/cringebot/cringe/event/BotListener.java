@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/05 12:05:40 by                  ###   ########.fr       */
+/*   Updated: 2022/04/07 17:57:27 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ public class BotListener implements EventListener {
 
 	private void onSelectMenu(SelectMenuInteractionEvent event) {
 		if (!event.getMessage().getEmbeds().isEmpty() && event.getMessage().getEmbeds().get(0).getAuthor() != null && event.getMessage().getEmbeds().get(0).getAuthor().getName().equals("poll")) {
-			PollListener.reactSelectMenu(event.getMessage(), event.getUser(), event.getSelectedOptions().get(0));
+			PollListener.reactSelectMenu(event.getMessage(), event.getMember(), event.getSelectedOptions().get(0));
 			event.reply("Ton vote a été enregistré \uD83D\uDC4D").setEphemeral(true).queue();
 		}
 		if (event.getComponent().getId().equals("cki"))
@@ -214,24 +214,23 @@ public class BotListener implements EventListener {
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
 		Request.sendRequest(Request.Type.SETSEASON, event.getJDA().getGuildById("382938797442334720").getName());
-		//MessageReact.load();
+		MessageReact.load();
 		PollMessage.load();
 		cki.load();
 		XP.loadValue();
 		XP.load();
-		if (System.getenv().get("OS") != null && !System.getenv().get("OS").equals("Windows_NT"))
+		if (false)
 		{
 			for (MessageReact mr : MessageReact.message)
 				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
-			new Thread(() -> {
-				for (Member mem : event.getJDA().getGuildById("382938797442334720").getMembers()) {
-					if (mem.getRoles().get(0).getPosition() < mem.getGuild().getRoleById("734011696242360331").getPosition())
-						event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734011696242360331")).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619"))).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
-				}
-			}).start();
-			new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
-		}
+		new Thread(() -> {
+			for (Member mem : event.getJDA().getGuildById("382938797442334720").getMembers()) {
+				if (mem.getRoles().get(0).getPosition() < mem.getGuild().getRoleById("734011696242360331").getPosition())
+					event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734011696242360331")).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619"))).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
+			}
+		}).start();
 		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
+	}
 		Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
 		}.getType());
 
@@ -277,7 +276,7 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onGuildMemberJoin(GuildMemberJoinEvent event) {
-		event.getGuild().getTextChannelById("687244482739044370").sendMessage(event.getUser().getAsMention() + " a rejoint la Guild.").queue();
+		event.getGuild().getTextChannelById("947564791759777792").sendMessage(event.getUser().getAsMention() + " a rejoint la Guild.").queue();
 		event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("734011696242360331")).and(event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("634839000644845619"))).and(event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("734012661494317077"))).queue();
 	}
 
@@ -286,7 +285,7 @@ public class BotListener implements EventListener {
 	 *
 	 */
 	private void onGuildMemberLeave(GuildMemberRemoveEvent event) {
-		event.getGuild().getTextChannelById("687244482739044370").sendMessage(event.getUser().getAsMention() + " a quitté la Guild.").queue();
+		event.getGuild().getTextChannelById("947564791759777792").sendMessage(event.getUser().getAsMention() + " a quitté la Guild.").queue();
 	}
 
 	/**
@@ -320,6 +319,8 @@ public class BotListener implements EventListener {
 	private void onMessage(MessageReceivedEvent event) throws IOException, InterruptedException {
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		Message msg = event.getMessage();
+		if (msg.getChannel().getId().equals("947564791759777792"))
+			msg.createThreadChannel("Parlez ici bandes de shlags").queue();
 		if (msg.getMentionedMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())))
 			msg.getChannel().sendMessage("Hé oh t'es qui a me ping, tu veux te battre ?\nfais un ping everyone pendant que t'y est").queue();
 		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {

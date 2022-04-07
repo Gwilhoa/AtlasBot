@@ -21,7 +21,7 @@ public class PollMain {
         String name = args[0];
         args = message.substring(name.length() + 1).split("\n");
         String author = msg.getAuthor().getId();
-        if (args.length < 3 || name.equals(" ") || name.isEmpty()) {
+        if (args.length < 2 || name.equals(" ") || name.isEmpty()) {
             msg.getChannel().sendMessage("usage : >poll <titre>\nargument\nargument...").queue();
             return;
         }

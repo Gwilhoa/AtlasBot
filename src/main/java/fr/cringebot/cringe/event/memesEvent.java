@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/04 17:32:15 by                  ###   ########.fr       */
+/*   Updated: 2022/04/07 18:14:05 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ public class memesEvent {
 			} else if (message.getEmbeds().isEmpty()) {
 				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(message.getAttachments().get(0).downloadToFile().join()).queue();
 			} else {
-				if (message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("reddit"))
+				if (message.getEmbeds().get(0).getAuthor() != null && message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("reddit"))
 					repostReddit(message, null, message.getGuild().getTextChannelById("911549374696411156"));
-				else if (message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("twitter"))
+				else if (message.getEmbeds().get(0).getAuthor() != null &&message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("twitter"))
 					repostTwitter(message, null, message.getGuild().getTextChannelById("911549374696411156"));
 				else {
 					String name = message.getEmbeds().get(0).getImage().getUrl().split(" ")[0].split("/")[message.getEmbeds().get(0).getImage().getUrl().split("/").length - 1];
