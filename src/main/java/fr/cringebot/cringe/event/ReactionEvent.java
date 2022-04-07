@@ -6,14 +6,14 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/23 16:15:23 by                  ###   ########.fr       */
+/*   Updated: 2022/04/07 22:21:53 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 package fr.cringebot.cringe.event;
 
-import fr.cringebot.cringe.objects.MessageConsumer;
 import fr.cringebot.cringe.objects.DetectorAttachment;
+import fr.cringebot.cringe.objects.MessageConsumer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -25,15 +25,44 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
+import java.util.Random;
 
 import static fr.cringebot.cringe.objects.imgExtenders.getImage;
 import static fr.cringebot.cringe.objects.imgExtenders.resize;
 
 public class ReactionEvent {
+
+    public static void sus(Message msg) {
+        if (new Random().nextInt(100) < 95)
+            msg.getChannel().sendMessage(". 　　　*   。　　　　•　 　ﾟ　　。 　　. °  ,  *\n" +
+                    "\n" +
+                    "　　　.　　　* 　　.　　　　　。　　 。　. 　.  °  ,  *\n" +
+                    "\n" +
+                    ".　　 。　　　　　 ඞ 。 . 　　 • 　　   °　　•   °  . \n" +
+                    "\n" +
+                    "　　ﾟ　　 " + msg.getMember().getAsMention() + " was not An Impostor.　 。　.\n" +
+                    "\n" +
+                    "　　'　　　 1 Impostor remains 　 　　。   . °  , \n" +
+                    "\n" +
+                    "　　ﾟ　　　.　　　. ,　　　　.　 .   *  °  . °  ").queue();
+        else
+            msg.getChannel().sendMessage(". 　　　*   。　　　　•　 　ﾟ　　。 　　. °  ,  *\n" +
+                    "\n" +
+                    "　　　.　　　* 　　.　　　　　。　　 。　. 　.  °  ,  *\n" +
+                    "\n" +
+                    ".　　 。　　　　　 ඞ 。 . 　　 • 　　   °　　•   °  . \n" +
+                    "\n" +
+                    "　　ﾟ　　 " + msg.getMember().getAsMention() + " was the Impostor.　 。　.\n" +
+                    "\n" +
+                    "　　'　　　*  ° .  *   。　　　 。　. 　. 。   . °  , \n" +
+                    "\n" +
+                    "　　ﾟ　　　.　　　. ,　　　　.　 .   *  °  . °  ").queue();
+    }
+
     /**
      * quelqu'un veut rendre respect ? press f to respect
+     *
      * @param msg
      */
     public static void pressf(Message msg) {

@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/07 17:57:27 by                  ###   ########.fr       */
+/*   Updated: 2022/04/07 22:05:56 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,6 +343,9 @@ public class BotListener implements EventListener {
 		if (args[0].equalsIgnoreCase("f")) {
 			pressf(msg);
 		}
+
+		if (StringExtenders.containsWord(msg.getContentRaw(), "sus"))
+			sus(msg);
 
 		if (msg.getContentRaw().equalsIgnoreCase("ping"))
 		{

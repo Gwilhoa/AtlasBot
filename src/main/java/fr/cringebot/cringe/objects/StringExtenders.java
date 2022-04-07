@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:22:04 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/23 16:15:23 by                  ###   ########.fr       */
+/*   Updated: 2022/04/07 22:06:04 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,22 @@ package fr.cringebot.cringe.objects;
 
 
 public class StringExtenders {
+
+    /**
+     * sert à voir si un mot est contenu dans le string
+     *
+     * @return
+     */
+    public static boolean containsWord(String string, String search)
+    {
+        String[] words = string.split(" ");
+        for (String word : words)
+        {
+            if (BetterIgnoreCase(word, search))
+                return true;
+        }
+        return false;
+    }
     /**
      * sert à voir si String contient search en ignorant les majs
      *
