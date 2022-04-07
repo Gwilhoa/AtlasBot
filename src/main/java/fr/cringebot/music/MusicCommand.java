@@ -40,7 +40,7 @@ public class MusicCommand {
 
     private static int volume(Guild guild, TextChannel textChannel, Integer vol) {
         MusicPlayer player = manager.getPlayer(guild);
-        if (!guild.getAudioManager().isConnected() || player.getListener().getCurrent() == null && textChannel != null) {
+        if (player.getListener().getCurrent() == null && textChannel != null) {
             textChannel.sendMessageEmbeds(new EmbedBuilder().setDescription("not playing").setColor(Color.red).build()).queue();
             return -1;
         }
@@ -181,7 +181,7 @@ public class MusicCommand {
 
     public static EmbedBuilder getVolumeEmbed(Integer vol) {
         EmbedBuilder eb = new EmbedBuilder();
-        if ((vol > 100)&&(vol < 199)
+        if ((vol > 100)&&(vol < 199))
             eb.setColor(Color.ORANGE);
         else if (vol > 200)
             eb.setColor(Color.RED);
