@@ -26,6 +26,8 @@ public class MembersQuotes {
             Jojo(msg);
         else if (msg.getContentRaw().equalsIgnoreCase("roro"))
             Roro(msg);
+	else if (msg.getContentRaw().equalsIgnoreCase("yann"))
+            Yann(msg);
         else return false;
         return true;
     }
@@ -110,6 +112,13 @@ public class MembersQuotes {
 		"Un jour il dira a Momo d'arreter de pomper la co\nUn jour...",
 		"Super koala de destruction massif",
 		"D'après ce qu'on m'a dit cette peronne est sacrée\ndonc j'en déduis qu'il est parlementaire",
+		""
+	};
+
+    static String[] yann =
+	{
+		"Premier conseiller connues",
+		"prend un grand plaisir a faire chier guigui",
 		""
 	};
     
