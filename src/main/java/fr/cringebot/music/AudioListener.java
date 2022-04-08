@@ -26,6 +26,7 @@ public class AudioListener extends AudioEventAdapter {
     private boolean loop = false;
     private Queue<AudioTrack> tracks = new LinkedList<>();
     private AudioTrack current = null;
+    private AudioTrack actual = null;
 
 
     public AudioListener(MusicPlayer player) {
@@ -61,6 +62,10 @@ public class AudioListener extends AudioEventAdapter {
         if (!tracks.isEmpty() || (current != null && current.getState() != AudioTrackState.FINISHED && current.getPosition() != current.getDuration())) {
             Collections.shuffle((List<?>) tracks);
         }
+    }
+
+    public boolean isLoop() {
+        return loop;
     }
 
     public void nowLoop(TextChannel tc) {
@@ -126,7 +131,7 @@ public class AudioListener extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (this.loop) {
-            player.startTrack(current, false);
+            player.startTrack(actual, false);
             return;
         }
         current = null;
@@ -149,7 +154,8 @@ public class AudioListener extends AudioEventAdapter {
     }
 
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        current = track.makeClone();
+        current = track;
+        actual = track.makeClone();
     }
 
     public void add(AudioTrack t) {

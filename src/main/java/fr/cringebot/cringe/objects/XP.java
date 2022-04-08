@@ -20,7 +20,7 @@ public class XP {
     };
     public static HashMap<String, XP> list = new HashMap<>();
     public static HashMap<String, Long> time = new HashMap<>();
-    public static HashMap<Character, Long> value = new HashMap<Character, Long>();
+    public static HashMap<String, Long> value = new HashMap<String, Long>();
     private final String name;
     private Long vocal;
     private Long text;
@@ -39,7 +39,7 @@ public class XP {
         return (resultat);
     }
 
-    public static float getXpByChar(Character c)
+    public static float getXpByChar(String c)
     {
         addchar(c);
         return (((float)value.get(c)/(float)getTotalValue())-1) * -1;
@@ -49,12 +49,12 @@ public class XP {
     {
         float total = 0;
         for (char c : msg.toCharArray())
-            total = total + getXpByChar(c);
+            total = total + getXpByChar(c+"");
         XP xp = getXp(m);
         xp.addText((long)total);
     }
 
-    public static Long addchar(Character c)
+    public static Long addchar(String c)
     {
         if (!value.containsKey(c))
             value.put(c, 1L);

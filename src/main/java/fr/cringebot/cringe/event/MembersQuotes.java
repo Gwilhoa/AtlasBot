@@ -1,6 +1,5 @@
 package fr.cringebot.cringe.event;
 
-import fr.cringebot.cringe.objects.MessageReact;
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -9,28 +8,14 @@ import java.util.Random;
 
 public class MembersQuotes {
 	
-    public static boolean MemberReact(Message msg) throws IOException {
-        if (msg.getContentRaw().equalsIgnoreCase("max"))
-            quoteDefault(msg, max);
-        else if (msg.getContentRaw().equalsIgnoreCase("logan"))
-        	quoteDefault(msg, logan);
-        else if (msg.getContentRaw().equalsIgnoreCase("guigui"))
-        	quoteDefault(msg, guigui);
-        else if (msg.getContentRaw().equalsIgnoreCase("enki"))
-        	quoteDefault(msg, enki);
-        else if (msg.getContentRaw().equalsIgnoreCase("oscar"))
-        	quoteDefault(msg, oscar);
-        else if (msg.getContentRaw().equalsIgnoreCase("antonin"))
-        	quoteDefault(msg, anto);
-        else if (msg.getContentRaw().equalsIgnoreCase("jonathan"))
-            Jojo(msg);
-        else if (msg.getContentRaw().equalsIgnoreCase("roro"))
-            Roro(msg);
-	else if (msg.getContentRaw().equalsIgnoreCase("yann"))
-            quoteDefault(msg, yann);
-        else return false;
-        return true;
-    }
+    static String[] roro =
+			{
+					"Shadow in the night",
+					"Un jour il dira a Momo d'arreter de pomper la co\nUn jour...",
+					"Super koala de destruction massif",
+					"D'après ce qu'on m'a dit cette peronne est sacrée\ndonc j'en déduis qu'il est parlementaire",
+					"https://tenor.com/view/chika-chika-dance-anime-anime-dance-dance-gif-13973731"
+			};
     
 
     
@@ -101,19 +86,32 @@ public class MembersQuotes {
     	"De ce qu'on m'a dit il a un humour fin et raffinés et aussi un peu maigre et musculeux\n\nhmmmmm je crois que j'ai menti",
     	"",
     	"Un petit fortnite ?",
-    	"https://tenor.com/view/chika-chika-dance-anime-anime-dance-dance-gif-13973731",
     	"Top 1 du B2K sur doodle jump",
     	"créateur de la playlist qui tue sa mère"
     };
 
-    static String[] roro =
-	{
-		"Shadow in the night",
-		"Un jour il dira a Momo d'arreter de pomper la co\nUn jour...",
-		"Super koala de destruction massif",
-		"D'après ce qu'on m'a dit cette peronne est sacrée\ndonc j'en déduis qu'il est parlementaire",
-		""
-	};
+    public static boolean MemberReact(Message msg) throws IOException {
+        if (msg.getContentRaw().equalsIgnoreCase("max"))
+            quoteDefault(msg, max);
+        else if (msg.getContentRaw().equalsIgnoreCase("logan"))
+        	quoteDefault(msg, logan);
+        else if (msg.getContentRaw().equalsIgnoreCase("guigui"))
+        	quoteDefault(msg, guigui);
+        else if (msg.getContentRaw().equalsIgnoreCase("enki"))
+        	quoteDefault(msg, enki);
+        else if (msg.getContentRaw().equalsIgnoreCase("oscar"))
+        	quoteDefault(msg, oscar);
+        else if (msg.getContentRaw().equalsIgnoreCase("antonin"))
+        	quoteDefault(msg, anto);
+        else if (msg.getContentRaw().equalsIgnoreCase("jonathan"))
+            Jojo(msg);
+        else if (msg.getContentRaw().equalsIgnoreCase("roro"))
+			Roro(msg);
+		else if (msg.getContentRaw().equalsIgnoreCase("yann"))
+			quoteDefault(msg, yann);
+		else return false;
+        return true;
+    }
 
     static String[] yann =
 	{

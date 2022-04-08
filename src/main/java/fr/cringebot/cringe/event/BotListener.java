@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/07 22:05:56 by                  ###   ########.fr       */
+/*   Updated: 2022/04/08 10:50:22 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,8 +219,6 @@ public class BotListener implements EventListener {
 		cki.load();
 		XP.loadValue();
 		XP.load();
-		if (false)
-		{
 			for (MessageReact mr : MessageReact.message)
 				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
 		new Thread(() -> {
@@ -230,7 +228,6 @@ public class BotListener implements EventListener {
 			}
 		}).start();
 		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
-	}
 		Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
 		}.getType());
 

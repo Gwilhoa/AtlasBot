@@ -14,6 +14,9 @@ import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.Queue;
 
+import static fr.cringebot.cringe.objects.EmbedGenerator.getQueueEmbed;
+import static fr.cringebot.cringe.objects.EmbedGenerator.getVolumeEmbed;
+
 public class MusicCommand {
 
     public static final MusicCommand INSTANCE;
@@ -111,26 +114,19 @@ public class MusicCommand {
         manager.getPlayer(guild).skipTrack(textChannel);
     }
 
+    @Command(name="rewind", type = ExecutorType.USER, description = "retourne au début")
+    private void rewind(TextChannel tc)
+    {
+        tc.sendMessage("han han it's rewind time").queue();
+        manager.getPlayer(tc.getGuild()).getListener().getCurrent().setPosition(0);
+    }
 
     @Command(name="queue",type = ExecutorType.USER,description = "montre la liste en cours")
     private void queue(TextChannel tc){
         MusicPlayer player = manager.getPlayer(tc.getGuild());
-        Queue<AudioTrack> at = player.getListener().getTracks();
-        EmbedBuilder eb = new EmbedBuilder().setColor(Color.cyan).setTitle("les prochaines musique...");
-        if (at.isEmpty() && player.getListener().getCurrent() == null)
-            eb.setDescription("Offline").setColor(Color.red);
-        else if (at.isEmpty())
-            eb.setDescription("il n'y a pas de musique pour la suite").setColor(Color.BLUE);
-        else {
-            AudioTrack[] track = at.toArray(new AudioTrack[]{});
-            int i = 0;
-            while (i < 10 && i < track.length) {
-                eb.appendDescription(track[i].getInfo().title + "\n");
-                i++;
-            }
-        }
+        EmbedBuilder eb = getQueueEmbed(player);
         if (player.getListener().getCurrent() != null)
-            tc.sendMessage(player.getListener().getCurrent().getInfo().title).setEmbeds(eb.build()).queue();
+            tc.sendMessage("actuellement : " + player.getListener().getCurrent().getInfo().title).setEmbeds(eb.build()).queue();
         else
             tc.sendMessageEmbeds(eb.build()).queue();
     }
@@ -177,37 +173,6 @@ public class MusicCommand {
         manager.getPlayer(guild).getListener().nowLoop(msg.getTextChannel());
     }
 
-    //--//
-
-    public static EmbedBuilder getVolumeEmbed(Integer vol) {
-        EmbedBuilder eb = new EmbedBuilder();
-        if ((vol >= 100)&&(vol < 199))
-            eb.setColor(Color.ORANGE);
-        else if (vol >= 200)
-            eb.setColor(Color.RED);
-        else
-            eb.setColor(Color.GREEN);
-        eb.setTitle("Volume");
-        int i = 0;
-        eb.setDescription("\n" + vol + "%\n\n");
-        if (vol > 10) {
-            eb.appendDescription("||");
-            while (i < vol) {
-                eb.appendDescription(" . ");
-                i = i + 10;
-            }
-            eb.appendDescription("||");
-        }
-        while (i < 100)
-        {
-            eb.appendDescription(" I ");
-            i = i + 10;
-        }
-        eb.appendDescription("|");
-        eb.setFooter("MusicManager");
-        return eb;
-    }
-
     public static void onAddReact(MessageReactionAddEvent event) {
         if (event.getMember().getUser().isBot())
             return;
@@ -222,12 +187,12 @@ public class MusicCommand {
                     int vol = Integer.parseInt(msg.getEmbeds().get(0).getDescription().replace("%", "").split("\n")[0]);
                     vol = volume(msg.getGuild(), null, vol + 10);
                     msg.editMessageEmbeds(getVolumeEmbed(vol).build()).queue();
-                }
-                if (event.getReaction().getReactionEmote().getAsCodepoints().equals("U+1f53d")) {
+                } else if (event.getReaction().getReactionEmote().getAsCodepoints().equals("U+1f53d")) {
                     int vol = Integer.parseInt(msg.getEmbeds().get(0).getDescription().replace("%", "").split("\n")[0]);
                     vol = volume(msg.getGuild(), null, vol - 10);
                     msg.editMessageEmbeds(getVolumeEmbed(vol).build()).queue();
                 }
+                event.getReaction().removeReaction(event.getUser()).queue();
             }
         }
     }
