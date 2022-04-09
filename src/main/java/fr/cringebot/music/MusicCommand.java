@@ -86,11 +86,17 @@ public class MusicCommand {
     @Command(name="joue",type=ExecutorType.USER, description = "ajoute une musique a la playlist")
     private void joue(Guild guild, TextChannel textChannel, User user, Message msg)
     {
-        play(guild, textChannel, user, msg);
+        play(guild, textChannel, user, msg, false);
     }
 
     @Command(name="play",type=ExecutorType.USER, description = "ajoute une musique a la playlist")
-    private void play(Guild guild, TextChannel textChannel, User user, Message msg) {
+    private void play(Guild guild, TextChannel textChannel, User user, Message msg)
+    {
+        play(guild, textChannel, user, msg, false);
+    }
+
+
+    private void play(Guild guild, TextChannel textChannel, User user, Message msg, boolean random) {
         if (guild == null) return;
         if (!guild.getAudioManager().isConnected()) {
             AudioChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
@@ -101,7 +107,7 @@ public class MusicCommand {
             guild.getAudioManager().openAudioConnection(voiceChannel);
             volume(guild, null, 50);
         }
-        manager.loadTrack(textChannel, msg.getContentRaw().replaceFirst(CommandMap.getTag(),"").replaceFirst("play ", ""));
+        manager.loadTrack(textChannel, msg.getContentRaw().replaceFirst(CommandMap.getTag(),"").replaceFirst("play ", "").replaceFirst("random ", ""), random);
     }
 
 
@@ -145,13 +151,16 @@ public class MusicCommand {
         textChannel.sendMessage("La liste d'attente à été vidé.").queue();
     }
     @Command(name = "random", type = ExecutorType.USER, description = "mélange les futurs musique")
-    private void random(TextChannel textChannel){
-        if (manager.getPlayer(textChannel.getGuild()).getListener().getTracks().size() > 1) {
+    private void random(TextChannel textChannel, Message msg, Guild guild){
+        if (msg.getContentRaw().split(" ").length > 1) {
+            play(guild, textChannel, msg.getMember().getUser(), msg, true);
+        }
+        else if (manager.getPlayer(textChannel.getGuild()).getListener().getTracks().size() > 1) {
             manager.getPlayer(textChannel.getGuild()).getListener().randomise();
             textChannel.sendMessage("playlist mélangé").queue();
-            return;
         }
-        textChannel.sendMessage("pas assez de morceau pour mélanger").queue();
+        else
+            textChannel.sendMessage("pas assez de morceau pour mélanger").queue();
     }
 
     public static void stop(Guild guild)

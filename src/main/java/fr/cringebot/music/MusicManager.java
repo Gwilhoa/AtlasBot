@@ -12,9 +12,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class MusicManager {
@@ -35,7 +34,7 @@ public class MusicManager {
         return players.get(guild.getId());
     }
 
-    public void loadTrack(final TextChannel channel, final String source){
+    public void loadTrack(final TextChannel channel, final String source, boolean random){
         MusicPlayer player = getPlayer(channel.getGuild());
 
         channel.getGuild().getAudioManager().setSendingHandler(player.getAudioHandler());
@@ -55,8 +54,10 @@ public class MusicManager {
                     } else {
                         EmbedBuilder eb = new EmbedBuilder().setColor(Color.red).setTitle("ajout de playlist").setDescription("ajout de " + playlist.getName());
                         channel.sendMessageEmbeds(eb.build()).queue();
-                        final List<AudioTrack> tracks = playlist.getTracks();
-                        for (final AudioTrack track : tracks) {
+                        List<AudioTrack> tracks = playlist.getTracks();
+                        if (random)
+                            Collections.shuffle(tracks);
+                        for (AudioTrack track : tracks) {
                             player.getListener().add(track);
                         }
                     }

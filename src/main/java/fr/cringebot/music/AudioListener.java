@@ -91,7 +91,7 @@ public class AudioListener extends AudioEventAdapter {
     public void nowplaying(TextChannel tc, String source, MusicManager mn) {
         Queue<AudioTrack> t = this.tracks;
         this.clear();
-        mn.loadTrack(tc, source);
+        mn.loadTrack(tc, source, false);
         this.tracks = t;
     }
 
