@@ -89,10 +89,13 @@ public class AudioListener extends AudioEventAdapter {
     }
 
     public void nowplaying(TextChannel tc, String source, MusicManager mn) {
-        Queue<AudioTrack> t = this.tracks;
+        Queue<AudioTrack> temp = new LinkedList<>();
+        temp.add(actual);
+        temp.addAll(this.tracks);
         this.clear();
+        this.nextTrack(null);
         mn.loadTrack(tc, source, false);
-        this.tracks = t;
+        this.tracks = temp;
     }
 
     public void nextTrack(TextChannel textChannel) {
@@ -111,6 +114,7 @@ public class AudioListener extends AudioEventAdapter {
                 } catch (InterruptedException ignored) {
                 }
             }).start();
+            if (textChannel != null)
             textChannel.sendMessageEmbeds(new EmbedBuilder().setColor(Color.red).setTitle("fini !").setDescription("j'ai plus de musique a mettre,\n si vous avez rien a mettre moi je m'en vais").build()).queue();
         } else {
             current = tracks.poll();

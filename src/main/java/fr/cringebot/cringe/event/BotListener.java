@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/08 10:50:22 by                  ###   ########.fr       */
+/*   Updated: 2022/04/14 18:03:20 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ import com.google.gson.reflect.TypeToken;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.Polls.PollListener;
 import fr.cringebot.cringe.Polls.PollMessage;
+import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.CommandMap;
+import fr.cringebot.cringe.builder.SimpleCommand;
 import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
 import fr.cringebot.cringe.lol.Champion;
@@ -29,6 +31,7 @@ import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import fr.cringebot.music.MusicCommand;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -46,6 +49,8 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.events.role.RoleCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -101,10 +106,15 @@ public class BotListener implements EventListener {
 			else if (event instanceof GuildVoiceJoinEvent) onConnect((GuildVoiceJoinEvent) event);
 			else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
 			else if (event instanceof MessageEmbedEvent) onEmbed((MessageEmbedEvent) event);
+			else if (event instanceof SlashCommandInteraction) onSlashCommand((SlashCommandInteraction) event);
 		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException e) {
 			e.printStackTrace();
 			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
 		}
+	}
+
+	private void onSlashCommand(SlashCommandInteraction event) {
+		event.reply("en attente d'update de JDA").setEphemeral(true).queue();
 	}
 
 	private void onDisconnect(GuildVoiceLeaveEvent event) {
@@ -219,6 +229,7 @@ public class BotListener implements EventListener {
 		cki.load();
 		XP.loadValue();
 		XP.load();
+		/*
 			for (MessageReact mr : MessageReact.message)
 				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
 		new Thread(() -> {
@@ -227,7 +238,7 @@ public class BotListener implements EventListener {
 					event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734011696242360331")).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619"))).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
 			}
 		}).start();
-		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
+		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();*/
 		Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
 		}.getType());
 
@@ -457,6 +468,10 @@ public class BotListener implements EventListener {
 
 	}
 
+	/**
+	 *
+	 * @param <E>
+	 */
 	public static class ArrayNumber<E extends Number> {
 		public ArrayList<E> li = new ArrayList<>();
 

@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:07:13 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/23 16:15:23 by                  ###   ########.fr       */
+/*   Updated: 2022/04/15 09:33:29 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -86,6 +87,10 @@ public class imgExtenders {
         BufferedInputStream bs = new BufferedInputStream(imgExtenders.class.getClassLoader().getResource(name).openStream());
         downloadFile(name, bs);
         return new File(name);
+    }
+
+    public static File getFile(String url, String name, String directory) throws IOException {
+        return getFile(new URL(url), name, directory);
     }
     
     public static File getFile(URL url, String name, String directory) throws IOException {

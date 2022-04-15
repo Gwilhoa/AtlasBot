@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:50:04 by gchatain          #+#    #+#             */
-/*   Updated: 2022/03/23 16:15:23 by                  ###   ########.fr       */
+/*   Updated: 2022/04/09 13:51:13 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,13 @@ public class UtilCommand {
                 this.bot = bot;
         }
         @Command(name = "meteo", type = Command.ExecutorType.USER, description = "donne la météo")
-        private void meteo(Guild guild, TextChannel textChannel, String[] args){
+        private void meteo(Guild guild, TextChannel textChannel, Message msg){
+                String ville = "shrek";
+                if (msg.getContentRaw().split(" ").length != 1)
+                        ville = msg.getContentRaw().split(" ")[1];
                 try {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        URLConnection connection = new URL("https://wttr.in/"+args[0]+"_3tqp_lang=fr.png").openConnection();
+                        URLConnection connection = new URL("https://wttr.in/"+ville+"_3tqp_lang=fr.png").openConnection();
                         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
                         BufferedImage im = ImageIO.read(connection.getInputStream());
                         im = resize(im, 1032*2, 546*2, 0, 0, true);

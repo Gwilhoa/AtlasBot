@@ -123,8 +123,13 @@ public class MusicCommand {
     @Command(name="rewind", type = ExecutorType.USER, description = "retourne au début")
     private void rewind(TextChannel tc)
     {
-        tc.sendMessage("han han it's rewind time").queue();
+        if (manager.getPlayer(tc.getGuild()).getListener().getCurrent() == null)
+        {
+            tc.sendMessage("bah non tu peux pas rewind le vide").queue();
+            return;
+        }
         manager.getPlayer(tc.getGuild()).getListener().getCurrent().setPosition(0);
+        tc.sendMessage("han han it's rewind time").queue();
     }
 
     @Command(name="queue",type = ExecutorType.USER,description = "montre la liste en cours")
@@ -165,15 +170,19 @@ public class MusicCommand {
 
     public static void stop(Guild guild)
     {
-        new MusicManager().getPlayer(guild).getListener().stop();
+        manager.getPlayer(guild).getListener().stop();
     }
     @Command(name = "stop",type = ExecutorType.USER, description = "arrete la musique")
     private void stop(Message msg, Guild guild){
         manager.getPlayer(guild).getListener().stop();
     }
-
-    @Command(name = "nowplaying", type = ExecutorType.USER, description = "néttoie la playlist pour mettre la prochaine musique")
-    private void np(Message msg, Guild guild){
+    @Command(name = "np", type = ExecutorType.USER, description = "passe une musique en priorité et met l'autre après")
+    private void np(Message msg, Guild guild)
+    {
+        nowplaying(msg,guild);
+    }
+    @Command(name = "nowplaying", type = ExecutorType.USER, description = "passe une musique en priorité et met l'autre après")
+    private void nowplaying(Message msg, Guild guild){
         manager.getPlayer(guild).getListener().nowplaying(msg.getTextChannel(), msg.getContentRaw().replaceFirst(CommandMap.getTag(),"").replaceFirst("nowplaying ", ""),manager);
     }
 

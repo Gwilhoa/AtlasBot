@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/03 21:43:24 by                  ###   ########.fr       */
+/*   Updated: 2022/04/15 11:54:38 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,11 @@ import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.MessageReact;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.UserExtenders;
+import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -31,8 +33,13 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.Arc2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -123,6 +130,23 @@ public class CommandDefault {
 
 	@Command(name = "test", type = Command.ExecutorType.USER)
 	private void test(Message msg) throws IOException {
-		msg.getChannel().sendMessage("sex").queue();
+		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
+		{
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			BufferedImage bi = imgExtenders.getImage(new URL(msg.getAuthor().getEffectiveAvatarUrl()));
+			bi = imgExtenders.resize(bi, 64, 64, 0, 0, true);
+			Graphics2D g =  bi.createGraphics();
+			BasicStroke bs = new BasicStroke(6, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+			Arc2D.Float arc2 = new Arc2D.Float(Arc2D.OPEN);
+			arc2.setAngleStart(90);
+			arc2.setFrameFromCenter(new Point(32, 32), new Point(0, 0));
+			arc2.setAngleExtent(360);
+			g.setStroke(bs);
+			g.setColor(new Color(0xFF000000));
+			g.draw(arc2);
+			ImageIO.write(bi,"png",baos);
+			msg.getChannel().sendFile(baos.toByteArray(),"pp.png").queue();
+		}
 	}
 }
