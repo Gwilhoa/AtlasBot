@@ -2,6 +2,12 @@ package fr.cringebot.cringe.event;
 
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;
+import net.rithms.riot.api.ApiConfig;
+import net.rithms.riot.api.RiotApi;
+import net.rithms.riot.api.RiotApiException;
+import net.rithms.riot.constant.Platform;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.Random;
@@ -13,12 +19,40 @@ public class MembersQuotes {
 					"Shadow in the night",
 					"Un jour il dira a Momo d'arreter de pomper la co\nUn jour...",
 					"Super koala de destruction massif",
-					"D'après ce qu'on m'a dit cette peronne est sacrée\ndonc j'en déduis qu'il est parlementaire",
+					"D'après ce qu'on m'a dit cette personne est sacrée\ndonc j'en déduis qu'il est parlementaire",
+					"",
 					"https://tenor.com/view/chika-chika-dance-anime-anime-dance-dance-gif-13973731"
 			};
-    
 
-    
+
+	static String[] noke =
+			{
+					"Ce qui est sur c'est qu'il est direct",
+					"Il est un peu énervé sur les bords",
+					"Je bois pas pour me bourrer la gueule\njuste pour etre assez con",
+					"Friendzoned by momo",
+					"ne jamais le laisser seul, sinon il va se battre"
+			};
+
+	static String[] virgile =
+			{
+					"OTP Swain askip il a déja avoué que c'etait broken",
+					"Direction le mordor",
+					"la vodka c'est pas pour lui",
+					"il se pourrait que parfois il touche de l'herbe\ncelle de la faille de l'invocateur",
+					"il veut faire des croisades contre les roux (sans rancunes oscar)",
+					"roi des galipettes",
+					"non on nage pas sous les tables,\nc'est pas fait pour ça",
+					""
+			};
+	static String[] jhuna =
+			{
+					"en recherche de sugar daddy",
+					"uwu",
+					"jure il est bizarre",
+					"https://images-ext-1.discordapp.net/external/CgwlejaODq9TVO3rXKvmeT-ALd448sPrM8pZXaoGX7I/%3Fsize%3D96%26quality%3Dlossless/https/cdn.discordapp.com/emojis/588193027030253581.gif"
+			};
+
     static String[] max =
 	{
 		"Mais, mais qu'est ce que c'est ?\nun Avion ? non\nun Bastion ?, non\nune Porte ?\nnon c'est juste Logan\nC'est la même chose",
@@ -84,12 +118,20 @@ public class MembersQuotes {
     	"Obsédé de saint pierre d'allevard",
     	"Qu'est ce qui est jaune et qui attends ?",
     	"De ce qu'on m'a dit il a un humour fin et raffinés et aussi un peu maigre et musculeux\n\nhmmmmm je crois que j'ai menti",
-    	"",
+			"",
     	"Un petit fortnite ?",
     	"Top 1 du B2K sur doodle jump",
     	"créateur de la playlist qui tue sa mère"
     };
 
+	static String[] jules =
+			{
+					"207 édition 64\t™",
+					"",
+					"",
+					"des montages de qualités, ça c'est sur",
+					"qu'est ce que poutine fait au collet d'allevard ?"
+			};
     public static boolean MemberReact(Message msg) throws IOException {
         if (msg.getContentRaw().equalsIgnoreCase("max"))
             quoteDefault(msg, max);
@@ -109,6 +151,14 @@ public class MembersQuotes {
 			Roro(msg);
 		else if (msg.getContentRaw().equalsIgnoreCase("yann"))
 			quoteDefault(msg, yann);
+		else if (msg.getContentRaw().equalsIgnoreCase("jules"))
+			Jules(msg);
+		else if (msg.getContentRaw().equalsIgnoreCase("noke"))
+			quoteDefault(msg, noke);
+		else if (msg.getContentRaw().equalsIgnoreCase("jhuna"))
+			quoteDefault(msg, jhuna);
+		else if (msg.getContentRaw().equalsIgnoreCase("virgile"))
+			Virgile(msg);
 		else return false;
         return true;
     }
@@ -121,10 +171,18 @@ public class MembersQuotes {
     
     
 
-    /*
-     * Action spécifique pour Jonathan pour le choix 3.
-     */
+	static void Virgile(Message msg) throws IOException {
+		int r = new Random().nextInt(virgile.length);
+		if (r == 7) {
+			Document doc = Jsoup.connect("https://www.leagueofgraphs.com/fr/summoner/euw/Celtigare#championsData-all-queues").get();
+			msg.getChannel().sendMessage("cette saison il a fait : " + doc.select("#graphDD8").text()+ " games").queue();
+		} else {
+			msg.getChannel().sendMessage(virgile[r]).queue();
+		}
+	}
+
     static void Jojo(Message msg) throws IOException {
+
         int r = new Random().nextInt(jojo.length);
 		if (r == 3) {
 			msg.getChannel().sendFile(imgExtenders.getFile("jojo.png")).queue();
@@ -132,6 +190,17 @@ public class MembersQuotes {
 			msg.getChannel().sendMessage(jojo[r]).queue();
 		}
     }
+	static void Jules(Message msg) throws IOException {
+		int r = new Random().nextInt(jules.length);
+		if (r == 1) {
+			msg.getChannel().sendFile(imgExtenders.getFile("jules_1.jpg")).queue();
+		} if (r == 2){
+			msg.getChannel().sendFile(imgExtenders.getFile("jules_2.jpeg")).queue();
+		}
+		else {
+			msg.getChannel().sendMessage(jules[r]).queue();
+		}
+	}
 
     /*
      * Action spécifique pour Robin pour le choix 4.

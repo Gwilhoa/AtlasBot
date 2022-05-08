@@ -6,12 +6,14 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:22:04 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/07 22:06:04 by                  ###   ########.fr       */
+/*   Updated: 2022/05/07 17:16:44 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 package fr.cringebot.cringe.objects;
 
+
+import java.util.Locale;
 
 public class StringExtenders {
 
@@ -38,7 +40,7 @@ public class StringExtenders {
      * @return si il contient
      */
     public static boolean containsIgnoreCase(String string, String search) {
-        return BetterLowCase(string).contains(BetterLowCase(search));
+        return BetterLowCase(string).toLowerCase(Locale.ROOT).contains(BetterLowCase(search).toLowerCase(Locale.ROOT));
     }
 
     /**
@@ -62,7 +64,7 @@ public class StringExtenders {
     public static int firstsearch(String string, String search) {
         int i = 0;
         int j = 0;
-        while (string.charAt(i) != 0) {
+        while (i < string.length()) {
             if (string.charAt(i) == search.charAt(j))
                 j++;
             else

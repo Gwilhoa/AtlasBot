@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/14 18:03:20 by                  ###   ########.fr       */
+/*   Updated: 2022/05/07 19:49:09 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 import static fr.cringebot.cringe.event.MembersQuotes.MemberReact;
 import static fr.cringebot.cringe.event.ReactionEvent.*;
 import static fr.cringebot.cringe.event.memesEvent.postmeme;
-import static fr.cringebot.cringe.objects.StringExtenders.containsIgnoreCase;
-import static fr.cringebot.cringe.objects.StringExtenders.startWithIgnoreCase;
+import static fr.cringebot.cringe.objects.Emotes.getEmote;
+import static fr.cringebot.cringe.objects.StringExtenders.*;
 
 /**
  * capture tout les evenements du bot
@@ -229,7 +229,6 @@ public class BotListener implements EventListener {
 		cki.load();
 		XP.loadValue();
 		XP.load();
-		/*
 			for (MessageReact mr : MessageReact.message)
 				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
 		new Thread(() -> {
@@ -238,7 +237,7 @@ public class BotListener implements EventListener {
 					event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734011696242360331")).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619"))).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
 			}
 		}).start();
-		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();*/
+		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
 		Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
 		}.getType());
 
@@ -301,6 +300,38 @@ public class BotListener implements EventListener {
 	 *
 	 */
 	private void onAddReact(MessageReactionAddEvent event) throws NoSuchFieldException, IllegalAccessException {
+		if (event.getReaction().getReactionEmote().getAsReactionCode().equals("⬆️")) {
+			Message msg = event.retrieveMessage().complete();
+			int u = 0;
+			for (MessageReaction reaction : msg.getReactions()) {
+				if (reaction.getReactionEmote().getAsReactionCode().equals("⬆️"))
+					u = reaction.getCount() - 1;
+			}
+			if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("ratio") && u >= 2) {
+				msg.editMessage("Turbo ratio").queue();
+			}
+			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("Turbo ratio") && u >= 4) {
+					msg.editMessage("Super ratio").queue();
+			}
+			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("Super ratio") && u >= 6) {
+					msg.editMessage("Hyper ratio").queue();
+			}
+			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("Hyper ratio") && u >= 8) {
+					msg.editMessage("Méga ratio").queue();
+			}
+			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("Méga ratio") && u >= 11) {
+					msg.editMessage("Giga ratio").queue();
+			}
+			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("Giga ratio") && u >= 14) {
+					msg.editMessage("RATIO ÉPIQUE").queue();
+			}
+			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("RATIO ÉPIQUE") && u >= 17) {
+					msg.editMessage("RATIO MYTHIQUE").queue();
+			}
+			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("RATIO MYTHIQUE") && u >= 20) {
+					msg.editMessage("**RATIO LÉGENDAIRE**").queue();
+			}
+		}
 		if (event.getChannel().getId().equals("461606547064356864")) {
 			memesEvent.addReaction(event.getChannel().retrieveMessageById(event.getMessageId()).complete(), event.getReaction());
 		}
@@ -350,6 +381,32 @@ public class BotListener implements EventListener {
 		//tous les events mis sans le prefix les reactions en gros
 		if (args[0].equalsIgnoreCase("f")) {
 			pressf(msg);
+		}
+
+		if (containsIgnoreCase(msg.getContentRaw(), "je suis"))
+		{
+			int i = firstsearch(msg.getContentRaw().toLowerCase(Locale.ROOT), "je suis");
+			String str = msg.getContentRaw().substring(i + 2);
+			str = str.replace("@everyone", "tout le monde");
+			if (!msg.getMentionedMembers().isEmpty())
+			{
+				for (Role mentionned : msg.getMentionedRoles())
+				{
+					str =str.replace(mentionned.getAsMention(), mentionned.getName());
+				}
+			}
+			msg.getChannel().sendMessage("Bonjour "+ str+". Moi c'est " + bot.getJda().getSelfUser().getName()).queue();
+		}
+
+		if (msg.getContentRaw().equalsIgnoreCase("ratio") )
+		{
+			Message rep;
+			if (msg.getReferencedMessage() != null)
+				rep = msg.getChannel().sendMessage("Ratio").reference(msg.getReferencedMessage()).complete();
+			else
+				rep = msg.getChannel().sendMessage("Ratio").complete();
+			rep.addReaction("⬆️").queue();
+			msg.delete().queue();
 		}
 
 		if (StringExtenders.containsWord(msg.getContentRaw(), "sus"))
