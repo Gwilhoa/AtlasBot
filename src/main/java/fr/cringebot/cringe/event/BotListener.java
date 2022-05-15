@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/07 19:49:09 by                  ###   ########.fr       */
+/*   Updated: 2022/05/14 21:28:49 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,19 @@ import com.google.gson.reflect.TypeToken;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.Polls.PollListener;
 import fr.cringebot.cringe.Polls.PollMessage;
-import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.CommandMap;
-import fr.cringebot.cringe.builder.SimpleCommand;
 import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
 import fr.cringebot.cringe.lol.Champion;
 import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
+import fr.cringebot.cringe.reactionsrole.MessageReact;
+import fr.cringebot.cringe.reactionsrole.RoleReaction;
+import fr.cringebot.cringe.siterequest.Request;
+import fr.cringebot.cringe.waifus.waifu;
+import fr.cringebot.cringe.xp.XP;
 import fr.cringebot.music.MusicCommand;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -50,18 +52,18 @@ import net.dv8tion.jda.api.events.role.RoleCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 import static fr.cringebot.cringe.event.MembersQuotes.MemberReact;
+import static fr.cringebot.cringe.event.MenuInteract.onSelectMenu;
 import static fr.cringebot.cringe.event.ReactionEvent.*;
 import static fr.cringebot.cringe.event.memesEvent.postmeme;
-import static fr.cringebot.cringe.objects.Emotes.getEmote;
 import static fr.cringebot.cringe.objects.StringExtenders.*;
 
 /**
@@ -107,7 +109,7 @@ public class BotListener implements EventListener {
 			else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
 			else if (event instanceof MessageEmbedEvent) onEmbed((MessageEmbedEvent) event);
 			else if (event instanceof SlashCommandInteraction) onSlashCommand((SlashCommandInteraction) event);
-		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException e) {
+		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException | ExecutionException e) {
 			e.printStackTrace();
 			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
 		}
@@ -197,24 +199,6 @@ public class BotListener implements EventListener {
 		PollListener.verifTimePoll(event.getJDA());
 	}
 
-	private void onSelectMenu(SelectMenuInteractionEvent event) {
-		if (!event.getMessage().getEmbeds().isEmpty() && event.getMessage().getEmbeds().get(0).getAuthor() != null && event.getMessage().getEmbeds().get(0).getAuthor().getName().equals("poll")) {
-			PollListener.reactSelectMenu(event.getMessage(), event.getMember(), event.getSelectedOptions().get(0));
-			event.reply("Ton vote a été enregistré \uD83D\uDC4D").setEphemeral(true).queue();
-		}
-		if (event.getComponent().getId().equals("cki"))
-			MenuInteract(event.getSelectedOptions().get(0).getValue(), event.getMessage());
-		if (event.getComponent().getId().equals("role")) {
-			String[] args = event.getMessage().getEmbeds().get(0).getDescription().split("\n");
-			for (MessageReact mr : MessageReact.message)
-				if (mr.getTitle().equals(event.getSelectedOptions().get(0).getLabel())) {
-					mr.addRole(new RoleReaction(args[0], event.getMessage().getEmbeds().get(0).getFooter().getText(), args[1]), event.getGuild());
-					MessageReact.save();
-				}
-			event.getMessage().delete().queue();
-		}
-	}
-
 	/**
 	 * au lancement
 	 *
@@ -223,12 +207,13 @@ public class BotListener implements EventListener {
 	private void onEnable(ReadyEvent event) {
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
+		if (new File("save/waifu").mkdir())
+			System.out.println("création du directory waifu");
 		Request.sendRequest(Request.Type.SETSEASON, event.getJDA().getGuildById("382938797442334720").getName());
 		MessageReact.load();
 		PollMessage.load();
 		cki.load();
-		XP.loadValue();
-		XP.load();
+		waifu.load();
 			for (MessageReact mr : MessageReact.message)
 				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
 		new Thread(() -> {
@@ -247,6 +232,8 @@ public class BotListener implements EventListener {
 		Attacks.capa = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("attacks.json"))), new TypeToken<Collection<Attacks>>() {
 		}.getType());
 
+		XP.loadValue();
+		XP.load();
 		Activity act;
 		act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
 		bot.getJda().getPresence().setActivity(act);
@@ -300,37 +287,30 @@ public class BotListener implements EventListener {
 	 *
 	 */
 	private void onAddReact(MessageReactionAddEvent event) throws NoSuchFieldException, IllegalAccessException {
-		if (event.getReaction().getReactionEmote().getAsReactionCode().equals("⬆️")) {
+		if (event.getReaction().getReactionEmote().getAsReactionCode().equals("⬆️") ) {
 			Message msg = event.retrieveMessage().complete();
 			int u = 0;
 			for (MessageReaction reaction : msg.getReactions()) {
 				if (reaction.getReactionEmote().getAsReactionCode().equals("⬆️"))
 					u = reaction.getCount() - 1;
 			}
-			if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("ratio") && u >= 2) {
+			if (msg.getAuthor().equals(event.getJDA().getSelfUser()))
+			if (msg.getContentRaw().equalsIgnoreCase("ratio") && u >= 2)
 				msg.editMessage("Turbo ratio").queue();
-			}
-			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("Turbo ratio") && u >= 4) {
+			else if (msg.getContentRaw().equalsIgnoreCase("Turbo ratio") && u >= 4)
 					msg.editMessage("Super ratio").queue();
-			}
-			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("Super ratio") && u >= 6) {
+			else if (msg.getContentRaw().equalsIgnoreCase("Super ratio") && u >= 6)
 					msg.editMessage("Hyper ratio").queue();
-			}
-			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("Hyper ratio") && u >= 8) {
+			else if (msg.getContentRaw().equalsIgnoreCase("Hyper ratio") && u >= 8)
 					msg.editMessage("Méga ratio").queue();
-			}
-			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("Méga ratio") && u >= 11) {
+			else if (msg.getContentRaw().equalsIgnoreCase("Méga ratio") && u >= 11)
 					msg.editMessage("Giga ratio").queue();
-			}
-			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("Giga ratio") && u >= 14) {
+			else if (msg.getContentRaw().equalsIgnoreCase("Giga ratio") && u >= 14)
 					msg.editMessage("RATIO ÉPIQUE").queue();
-			}
-			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("RATIO ÉPIQUE") && u >= 17) {
+			else if (msg.getContentRaw().equalsIgnoreCase("RATIO ÉPIQUE") && u >= 17)
 					msg.editMessage("RATIO MYTHIQUE").queue();
-			}
-			else if (msg.getAuthor().equals(event.getJDA().getSelfUser()) && msg.getContentRaw().equalsIgnoreCase("RATIO MYTHIQUE") && u >= 20) {
+			else
 					msg.editMessage("**RATIO LÉGENDAIRE**").queue();
-			}
 		}
 		if (event.getChannel().getId().equals("461606547064356864")) {
 			memesEvent.addReaction(event.getChannel().retrieveMessageById(event.getMessageId()).complete(), event.getReaction());
@@ -360,7 +340,7 @@ public class BotListener implements EventListener {
 		Message msg = event.getMessage();
 		if (msg.getChannel().getId().equals("947564791759777792"))
 			msg.createThreadChannel("Parlez ici bandes de shlags").queue();
-		if (msg.getMentionedMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())))
+		if (msg.getMentionedMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())) && msg.getReferencedMessage() == null)
 			msg.getChannel().sendMessage("Hé oh t'es qui a me ping, tu veux te battre ?\nfais un ping everyone pendant que t'y est").queue();
 		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {
 			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
@@ -371,7 +351,6 @@ public class BotListener implements EventListener {
 		}
 
 
-		//split le message
 		String[] args = msg.getContentRaw().split(" ");
 		XP.getXpByMessage(msg.getContentRaw(), msg.getMember());
 
@@ -383,30 +362,28 @@ public class BotListener implements EventListener {
 			pressf(msg);
 		}
 
+		if (msg.getContentRaw().equalsIgnoreCase("meme") && msg.getReferencedMessage() != null)
+		{
+			memesEvent.postmeme(msg.getReferencedMessage());
+			msg.delete().queue();
+		}
 		if (containsIgnoreCase(msg.getContentRaw(), "je suis"))
 		{
 			int i = firstsearch(msg.getContentRaw().toLowerCase(Locale.ROOT), "je suis");
 			String str = msg.getContentRaw().substring(i + 2);
 			str = str.replace("@everyone", "tout le monde");
-			if (!msg.getMentionedMembers().isEmpty())
-			{
-				for (Role mentionned : msg.getMentionedRoles())
-				{
-					str =str.replace(mentionned.getAsMention(), mentionned.getName());
-				}
-			}
-			msg.getChannel().sendMessage("Bonjour "+ str+". Moi c'est " + bot.getJda().getSelfUser().getName()).queue();
+			if (new Random().nextInt(2) == 0 &&  msg.getGuild().getMember(bot.getJda().getSelfUser()) != null)
+				msg.getChannel().sendMessage("Bonjour "+ str+". Moi c'est " + msg.getGuild().getMember(bot.getJda().getSelfUser()).getEffectiveName()).queue();
+			else
+				msg.getChannel().sendMessage("Bonjour "+ str+". Moi c'est " + bot.getJda().getSelfUser().getName()).queue();
 		}
 
 		if (msg.getContentRaw().equalsIgnoreCase("ratio") )
 		{
-			Message rep;
-			if (msg.getReferencedMessage() != null)
-				rep = msg.getChannel().sendMessage("Ratio").reference(msg.getReferencedMessage()).complete();
-			else
-				rep = msg.getChannel().sendMessage("Ratio").complete();
-			rep.addReaction("⬆️").queue();
-			msg.delete().queue();
+			if (msg.getReferencedMessage() != null) {
+				msg.getChannel().sendMessage("Ratio").reference(msg.getReferencedMessage()).complete().addReaction("⬆️").queue();
+				msg.delete().queue();
+			}
 		}
 
 		if (StringExtenders.containsWord(msg.getContentRaw(), "sus"))
@@ -416,10 +393,6 @@ public class BotListener implements EventListener {
 		{
 			long time = System.currentTimeMillis();
 			msg.getChannel().sendMessage("pong").complete().editMessageFormat("Pong: %d ms", System.currentTimeMillis() - time).queue();
-		}
-
-		if (startWithIgnoreCase(msg.getContentRaw(),"AAA") && containsIgnoreCase(msg.getContentRaw(), "AHH")){
-			rage(msg);
 		}
 
 		if (containsIgnoreCase(msg.getContentRaw(), "nice")) {

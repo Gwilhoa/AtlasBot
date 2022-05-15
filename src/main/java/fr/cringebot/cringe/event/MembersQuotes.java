@@ -29,27 +29,27 @@ public class MembersQuotes {
 			{
 					"Ce qui est sur c'est qu'il est direct",
 					"Il est un peu énervé sur les bords",
-					"Je bois pas pour me bourrer la gueule\njuste pour etre assez con",
+					"Je bois pas pour me bourrer la gueule\nJuste pour etre assez con",
 					"Friendzoned by momo",
-					"ne jamais le laisser seul, sinon il va se battre"
+					"Ne jamais le laisser seul, sinon il va se battre"
 			};
 
 	static String[] virgile =
 			{
 					"OTP Swain askip il a déja avoué que c'etait broken",
 					"Direction le mordor",
-					"la vodka c'est pas pour lui",
-					"il se pourrait que parfois il touche de l'herbe\ncelle de la faille de l'invocateur",
-					"il veut faire des croisades contre les roux (sans rancunes oscar)",
-					"roi des galipettes",
-					"non on nage pas sous les tables,\nc'est pas fait pour ça",
+					"La vodka c'est pas pour lui",
+					"Il se pourrait que parfois il touche de l'herbe\ncelle de la faille de l'invocateur",
+					"Il veut faire des croisades contre les roux (sans rancunes oscar)",
+					"Roi des galipettes",
+					"Non, on nage pas sous les tables,\nc'est pas fait pour ça",
 					""
 			};
 	static String[] jhuna =
 			{
-					"en recherche de sugar daddy",
+					"En recherche de sugar daddy",
 					"uwu",
-					"jure il est bizarre",
+					"Jure il est bizarre",
 					"https://images-ext-1.discordapp.net/external/CgwlejaODq9TVO3rXKvmeT-ALd448sPrM8pZXaoGX7I/%3Fsize%3D96%26quality%3Dlossless/https/cdn.discordapp.com/emojis/588193027030253581.gif"
 			};
 
@@ -121,7 +121,7 @@ public class MembersQuotes {
 			"",
     	"Un petit fortnite ?",
     	"Top 1 du B2K sur doodle jump",
-    	"créateur de la playlist qui tue sa mère"
+    	"Créateur de la playlist qui tue sa mère"
     };
 
 	static String[] jules =
@@ -175,7 +175,7 @@ public class MembersQuotes {
 		int r = new Random().nextInt(virgile.length);
 		if (r == 7) {
 			Document doc = Jsoup.connect("https://www.leagueofgraphs.com/fr/summoner/euw/Celtigare#championsData-all-queues").get();
-			msg.getChannel().sendMessage("cette saison il a fait : " + doc.select("#graphDD8").text()+ " games").queue();
+			msg.getChannel().sendMessage("Cette saison il a fait : " + doc.select("#graphDD8").text()+ " games en normal").queue();
 		} else {
 			msg.getChannel().sendMessage(virgile[r]).queue();
 		}

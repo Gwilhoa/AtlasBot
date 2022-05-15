@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/15 11:54:38 by                  ###   ########.fr       */
+/*   Updated: 2022/05/14 21:07:31 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,9 @@ import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
-import fr.cringebot.cringe.objects.MessageReact;
-import fr.cringebot.cringe.objects.SelectOptionImpl;
-import fr.cringebot.cringe.objects.UserExtenders;
-import fr.cringebot.cringe.objects.imgExtenders;
+import fr.cringebot.cringe.objects.*;
+import fr.cringebot.cringe.reactionsrole.MessageReact;
+import fr.cringebot.cringe.waifus.WaifuCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -42,6 +41,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.cringe.cki.mainCommand.ckimain;
 
@@ -121,6 +121,11 @@ public class CommandDefault {
 		} else {
 			msg.getChannel().sendMessage("erreur argument >role <nom> <emote>").queue();
 		}
+	}
+
+	@Command(name = "addwaifu", description = "permettre d'initier une nouvelle waifu", type = ExecutorType.USER)
+	private void addwaifu(Message msg) throws ExecutionException, InterruptedException {
+		WaifuCommand.addwaifu(msg);
 	}
 
 	@Command(name = "cki", type = Command.ExecutorType.USER)

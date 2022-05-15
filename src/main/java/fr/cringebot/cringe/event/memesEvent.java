@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/08 00:05:40 by                  ###   ########.fr       */
+/*   Updated: 2022/05/14 21:14:35 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 import static fr.cringebot.cringe.objects.Emotes.getEmote;
 
@@ -47,7 +48,9 @@ public class memesEvent {
 			if (DetectorAttachment.isYoutube(message.getContentRaw()) || DetectorAttachment.isTenor(message.getContentRaw())) {
 				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).queue();
 			} else if (message.getEmbeds().isEmpty()) {
-				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(message.getAttachments().get(0).downloadToFile().join()).queue();
+				File f = message.getAttachments().get(0).downloadToFile().join();
+				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(f).queue();
+				f.delete();
 			} else {
 				if (message.getEmbeds().get(0).getAuthor() != null && message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("reddit"))
 					repostReddit(message, null, message.getGuild().getTextChannelById("911549374696411156"));
@@ -96,34 +99,28 @@ public class memesEvent {
 	}
 
 	public static void processmeme(Message msg) throws IOException {
-		String[] args = msg.getContentRaw().split(" ");
+		String channel = "461606547064356864";
+		String[] args = msg.getContentRaw().split("\\s");
 		Message ret = null;
 		String Content = null;
 		String ext = null;
 		File f = null;
 		int i = 0;
 		if (DetectorAttachment.isYoutube(msg.getContentRaw()) || DetectorAttachment.isTenor(msg.getContentRaw())) {
-			ret = msg.getChannel().sendMessage(msg.getContentRaw()).complete();
+			ret = msg.getGuild().getTextChannelById(channel).sendMessage(msg.getContentRaw()).complete();
 			ret.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
 			msg.delete().queue();
 			return;
 		}
 		for (String mot : args) {
 			if (DetectorAttachment.isTwitter(mot)) {
-				ret = repostTwitter(msg, mot, msg.getTextChannel());
-				if (ret == null)
-					return;
-				ret.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
-				msg.delete().queue();
+				ret = repostTwitter(msg, mot, msg.getGuild().getTextChannelById(channel));
+				ret(msg, ret);
 				return;
 			}
 			if (DetectorAttachment.isReddit(mot)) {
-				ret = repostReddit(msg, mot, msg.getTextChannel());
-				if (ret == null)
-					return;
-				ret.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
-				msg.delete().queue();
-				return;
+				ret = repostReddit(msg, mot, msg.getGuild().getTextChannelById(channel));
+				ret(msg, ret);
 			}
 		}
 		if (ret == null) {
@@ -153,9 +150,9 @@ public class memesEvent {
 		}
 		if (ext.equals("mp4") || ext.equals("mov") || ext.equals("webm")) {
 			if (Content == null)
-				ret = msg.getChannel().sendMessage("> " + msg.getMember().getUser().getName()).addFile(f).complete();
+				ret = msg.getGuild().getTextChannelById(channel).sendMessage("> " + msg.getMember().getUser().getName()).addFile(f).complete();
 			else
-				ret = msg.getChannel().sendMessage("> " + msg.getMember().getUser().getName() + "\n\n" + Content).addFile(f).complete();
+				ret = msg.getGuild().getTextChannelById(channel).sendMessage("> " + msg.getMember().getUser().getName() + "\n\n" + Content).addFile(f).complete();
 		} else {
 			EmbedBuilder eb = new EmbedBuilder()
 					.setImage("attachment://" + f.getName())
@@ -163,12 +160,20 @@ public class memesEvent {
 					.setColor(new Color(138, 43, 226));
 			if (Content != null)
 				eb.setDescription(Content);
-			ret = msg.getChannel().sendFile(f).setEmbeds(eb.build()).complete();
+			ret = msg.getGuild().getTextChannelById(channel).sendFile(f).setEmbeds(eb.build()).complete();
 		}
 		if (ret != null)
 			ret.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
 		msg.delete().queue();
 		f.delete();
+	}
+
+	private static void ret(Message msg, Message ret) {
+		if (ret == null)
+			return;
+		ret.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
+		msg.delete().queue();
+		return;
 	}
 
 	/**
@@ -238,7 +243,6 @@ public class memesEvent {
 				.setAuthor("Twitter", msg.getEmbeds().get(0).getUrl(), msg.getEmbeds().get(0).getFooter().getIconUrl());
 		if (msg.getEmbeds().get(0).getImage() != null)
 			eb.setImage(msg.getEmbeds().get(0).getImage().getUrl());
-		msg.delete().queue();
 		return channel.sendMessageEmbeds(eb.build()).complete();
 	}
 }

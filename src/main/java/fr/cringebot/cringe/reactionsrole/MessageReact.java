@@ -1,4 +1,4 @@
-package fr.cringebot.cringe.objects;
+package fr.cringebot.cringe.reactionsrole;
 
 import com.google.gson.reflect.TypeToken;
 import net.dv8tion.jda.api.EmbedBuilder;

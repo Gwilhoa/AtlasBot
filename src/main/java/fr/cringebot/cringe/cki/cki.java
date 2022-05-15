@@ -33,10 +33,15 @@ public class cki {
 
     enum Type {
         POKEMON("Pokémon"),
-        LOL("League of Legends");
+        LOL("champion");
 
+        private final String name;
         Type(String name) {
+            this.name = name;
+        }
 
+        public String getName() {
+            return name;
         }
         Type tpe;
     }

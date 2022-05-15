@@ -1,4 +1,4 @@
-package fr.cringebot.cringe.objects;
+package fr.cringebot.cringe.xp;
 
 import com.google.gson.reflect.TypeToken;
 import net.dv8tion.jda.api.entities.Member;
@@ -52,16 +52,15 @@ public class XP {
             total = total + getXpByChar(c+"");
         XP xp = getXp(m);
         xp.addText((long)total);
+        XP.saveValue();
     }
 
-    public static Long addchar(String c)
+    public static void addchar(String c)
     {
         if (!value.containsKey(c))
             value.put(c, 1L);
         else
             value.put(c, value.get(c)+1L);
-        XP.saveValue();
-        return  (value.get(c));
     }
 
     public static void stopTime(Member m)

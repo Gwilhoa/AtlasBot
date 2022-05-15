@@ -2,7 +2,6 @@ package fr.cringebot.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerOptions;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayer;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
@@ -12,10 +11,9 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 import java.awt.*;
 import java.lang.reflect.Field;
-import java.util.Queue;
 
-import static fr.cringebot.cringe.objects.EmbedGenerator.getQueueEmbed;
-import static fr.cringebot.cringe.objects.EmbedGenerator.getVolumeEmbed;
+import static fr.cringebot.music.EmbedGenerator.getQueueEmbed;
+import static fr.cringebot.music.EmbedGenerator.getVolumeEmbed;
 
 public class MusicCommand {
 

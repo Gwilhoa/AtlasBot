@@ -97,7 +97,7 @@ public class ckiListener {
 
     private void sendresponse(Message msg, EmbedBuilder eb) {
         Message ed = msg.getGuild().getTextChannelById(cki.wtpThreads.get(msg.getChannel().getId()).getChannel()).retrieveMessageById(cki.wtpThreads.get(msg.getChannel().getId()).getMessage()).complete();
-        eb.setDescription(ed.getEmbeds().get(0).getDescription().replace("<ce pokémon>", cki.wtpThreads.get(msg.getChannel().getId()).getName()).replace("<ce champion>", cki.wtpThreads.get(msg.getChannel().getId()).getName()) + "\n\nle " + cki.wtpThreads.get(msg.getChannel().getId()).getType() + " était : " + cki.wtpThreads.get(msg.getChannel().getId()).getName() + "\n\nNombre d'échec : " + cki.wtpThreads.get(msg.getChannel().getId()).getAction() + "\nNombre d'indice utilisé : " + cki.wtpThreads.get(msg.getChannel().getId()).getIndice());
+        eb.setDescription(ed.getEmbeds().get(0).getDescription().replace("<ce pokémon>", cki.wtpThreads.get(msg.getChannel().getId()).getName()).replace("<ce champion>", cki.wtpThreads.get(msg.getChannel().getId()).getName()) + "\n\nle " + cki.wtpThreads.get(msg.getChannel().getId()).getType().getName() + " était : " + cki.wtpThreads.get(msg.getChannel().getId()).getName() + "\n\nNombre d'échec : " + cki.wtpThreads.get(msg.getChannel().getId()).getAction() + "\nNombre d'indice utilisé : " + cki.wtpThreads.get(msg.getChannel().getId()).getIndice());
         cki.wtpThreads.remove(msg.getChannel().getId());
         msg.getChannel().delete().queue();
         ed.editMessageEmbeds(eb.build()).queue();

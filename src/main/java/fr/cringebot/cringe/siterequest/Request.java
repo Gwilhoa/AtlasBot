@@ -1,4 +1,4 @@
-package fr.cringebot.cringe.objects;
+package fr.cringebot.cringe.siterequest;
 
 import java.io.*;
 import java.net.HttpURLConnection;

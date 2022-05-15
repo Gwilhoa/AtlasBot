@@ -1,4 +1,4 @@
-package fr.cringebot.cringe.objects;
+package fr.cringebot.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.cringebot.music.MusicPlayer;

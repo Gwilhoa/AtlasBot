@@ -28,6 +28,7 @@ import java.lang.reflect.Parameter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -52,7 +53,7 @@ public final class CommandMap {
 
     /**
      * initialisation de l'enregistrement de commande
-     * @param botDiscord
+     * @param botDiscord cringebot
      */
     public CommandMap(BotDiscord botDiscord) {
         this.botDiscord = botDiscord;
@@ -69,7 +70,7 @@ public final class CommandMap {
 
     /**
      * sert a récuperer toutes les commandes
-     * @return
+     * @return tag command
      */
     public Collection<SimpleCommand> getCommands(){
         return commands.values();
@@ -86,7 +87,7 @@ public final class CommandMap {
     /**
      * va chercher dans chaque fonctions si il est régie par la méthode @Command
      * va mettre dans la variable commands le nom de la commande 
-     * @param object
+     * @param object class
      */
     public void registerCommand(Object object){
         for(Method method : object.getClass().getDeclaredMethods()){
@@ -125,22 +126,20 @@ public final class CommandMap {
      * si c'est le cas, elle va etre executee avec le message de l'utilisateur
      * @param command name
      * @param message (objet retenue par discord comme les messages sur discord)
-     * @return true si la fonction a bien fonctionné que l'utilisation de la commande qu'elle est fonctionnée ou pas
      */
-    public boolean commandUser(String command, Message message){
+    public void commandUser(String command, Message message){
         Object[] object = getCommand(command);
-        if(object[0] == null || ((SimpleCommand)object[0]).getExecutorType() == ExecutorType.CONSOLE) return false;
+        if(object[0] == null || ((SimpleCommand)object[0]).getExecutorType() == ExecutorType.CONSOLE) return;
 
         message.getGuild();
 
         try{
             execute(((SimpleCommand)object[0]), command.toLowerCase(),(String[])object[1], message);
-        }catch(Exception exception){
-            System.out.println("La methode "+((SimpleCommand)object[0]).getMethod().getName()+" n'est pas correctement initialisé.");
+        }catch(Exception exception) {
+            System.out.println("La methode " + ((SimpleCommand) object[0]).getMethod().getName() + " n'est pas correctement initialisé.");
             exception.printStackTrace();
-            message.getChannel().sendMessage(message.getGuild().getMemberById("315431392789921793").getAsMention() +" sale batard, la commande "+((SimpleCommand)object[0]).getMethod().getName()+" est mal faites").queue();
+                message.getChannel().sendMessage(Objects.requireNonNull(message.getGuild().getMemberById("315431392789921793")).getAsMention() + " sale batard, la commande " + ((SimpleCommand) object[0]).getMethod().getName() + " est mal faites").queue();
         }
-        return true;
     }
 
     /**
@@ -151,7 +150,7 @@ public final class CommandMap {
     private Object[] getCommand(String command){
         String[] commandSplit = command.split(" ");
         String[] args = new String[commandSplit.length-1];
-        for(int i = 1; i < commandSplit.length; i++) args[i-1] = commandSplit[i];
+        System.arraycopy(commandSplit, 1, args, 0, commandSplit.length - 1);
         SimpleCommand simpleCommand = commands.get(commandSplit[0]);
         return new Object[]{simpleCommand, args};
     }
@@ -162,7 +161,6 @@ public final class CommandMap {
      * @param command le nom de la commande
      * @param args les arguments
      * @param message messages d'utilisateur
-     * @throws Exception
      */
     private void execute(SimpleCommand simpleCommand, String command, String[] args, Message message) throws Exception{
         Parameter[] parameters = simpleCommand.getMethod().getParameters();

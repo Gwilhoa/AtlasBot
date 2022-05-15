@@ -24,14 +24,6 @@ public final class SimpleCommand {
     private final Object object;
     private final Method method;
 
-    /**
-     * sert a enregistré une commande avec ses paramètres
-     * @param name
-     * @param description
-     * @param executorType
-     * @param object
-     * @param method
-     */
     public SimpleCommand(String name, String description, ExecutorType executorType, Object object, Method method) {
         super();
         this.name = name;
