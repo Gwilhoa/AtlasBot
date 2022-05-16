@@ -232,8 +232,6 @@ public class BotListener implements EventListener {
 		Attacks.capa = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("attacks.json"))), new TypeToken<Collection<Attacks>>() {
 		}.getType());
 
-		XP.loadValue();
-		XP.load();
 		Activity act;
 		act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
 		bot.getJda().getPresence().setActivity(act);

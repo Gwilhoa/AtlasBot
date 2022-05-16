@@ -23,6 +23,7 @@ public class waifu {
 	private String owner;
 	private final String type;
 	private final Integer id;
+	private final String origin;
 
 	public String getType() {
 		return type;
@@ -36,7 +37,7 @@ public class waifu {
 		B2K
 	}
 
-	public waifu(Message.Attachment f, String name, String description, String type)
+	public waifu(Message.Attachment f, String name, String description, String type, String origin)
 	{
 		this.description = description;
 		this.name = name;
@@ -44,9 +45,14 @@ public class waifu {
 		this.type = type;
 		this.id = waifuList.size();
 		this.profile = "save/waifu/waifu_"+this.id +".png";
+		this.origin = origin;
 		f.downloadToFile(this.profile);
 		waifuList.put(this.id, this);
 		save();
+	}
+
+	public static ArrayList<waifu> getAllWaifu(){
+		return new ArrayList<>(waifuList.values());
 	}
 
 	public static ArrayList<waifu> getWaifubyName(String name){
@@ -66,12 +72,12 @@ public class waifu {
 
 	public EmbedBuilder EmbedWaifu(Guild guild) {
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setImage("attachment://" + this.profile);
-		eb.setDescription("nom : " + this.name +"\n\ndescription :\n"+this.description);
+		eb.setImage("attachment://" + this.profile.split("/")[this.profile.split("/").length - 1]);
+		eb.setDescription("nom : " + this.name +" de "+ this.origin +"\nid : "+this.id+"\ndescription :\n"+this.description);
 		if (this.owner == null)
 			eb.setFooter("disponible");
 		else
-			eb.setFooter("appartient à "+ guild.getMemberById(this.owner).getEffectiveName(), guild.getMemberById(this.owner).getAvatarUrl());
+			eb.setFooter("appartient à "+ guild.getMemberById(this.owner).getEffectiveName(), guild.getMemberById(this.owner).getUser().getAvatarUrl());
 		return eb;
 	}
 
@@ -97,6 +103,10 @@ public class waifu {
 
 	public Integer getId() {
 		return id;
+	}
+
+	public String getOrigin() {
+		return origin;
 	}
 
 	private void save() {

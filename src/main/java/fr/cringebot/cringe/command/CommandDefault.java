@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/14 21:07:31 by                  ###   ########.fr       */
+/*   Updated: 2022/05/15 18:20:28 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,10 +128,18 @@ public class CommandDefault {
 		WaifuCommand.addwaifu(msg);
 	}
 
+	@Command(name = "infowaifu", description = "tout savoir sur la waifu", type = ExecutorType.USER)
+	private void infowaifu(Message msg) {
+		WaifuCommand.infowaifu(msg);
+	}
+
 	@Command(name = "cki", type = Command.ExecutorType.USER)
 	private void cki(Message msg) {
 		ckimain(msg);
 	}
+
+	@Command(name = "listwaifu", description = "listes des waifus disponible", type = ExecutorType.USER)
+	private void listwaifu(Message msg) { WaifuCommand.listwaifu(msg);}
 
 	@Command(name = "test", type = Command.ExecutorType.USER)
 	private void test(Message msg) throws IOException {

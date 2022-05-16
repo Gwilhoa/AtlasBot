@@ -2,10 +2,6 @@ package fr.cringebot.cringe.event;
 
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;
-import net.rithms.riot.api.ApiConfig;
-import net.rithms.riot.api.RiotApi;
-import net.rithms.riot.api.RiotApiException;
-import net.rithms.riot.constant.Platform;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -55,20 +51,20 @@ public class MembersQuotes {
 
     static String[] max =
 	{
-		"Mais, mais qu'est ce que c'est ?\nun Avion ? non\nun Bastion ?, non\nune Porte ?\nnon c'est juste Logan\nC'est la même chose",
-		"Le chevalier ou le roi du sel en personne\nRien que ça",
-		"Composé à 95% de sel",
-		"Un jour il sera calme, un jour...",
-		"ComputerSlayer"
+			"La personne la plus calme et la plus sereine que je connaisse \n\n*ou pas*",
+			"Le chevalier ou le roi du sel en personne\nRien que ça",
+			"Composé à 95% de sel",
+			"Un jour il sera calme, un jour...",
+			"ComputerSlayer"
 	};
     
     static String[] logan =
-	{
-		"La personne la plus calme et la plus sereine que je connaisse \n\n*ou pas*",
-		"Grogan en action",
-		"Créateur de la porte humaine",
-		"Putain frérot arrete de post des mêmes j'en peux plus\nJe suis pas venu ici pour souffrir, ok ?"
-	};
+			{
+					"Mais, mais qu'est ce que c'est ?\nun Avion ? non\nun Bastion ?, non\nune Porte ?\nnon c'est juste Logan\nC'est la même chose",
+					"Grogan en action",
+					"Créateur de la porte humaine",
+					"Putain frérot arrete de post des mêmes j'en peux plus\nJe suis pas venu ici pour souffrir, ok ?"
+			};
     
     static String[] guigui =
 	{
@@ -114,15 +110,16 @@ public class MembersQuotes {
 	};
     
     static String[] jojo =
-    {
-    	"Obsédé de saint pierre d'allevard",
-    	"Qu'est ce qui est jaune et qui attends ?",
-    	"De ce qu'on m'a dit il a un humour fin et raffinés et aussi un peu maigre et musculeux\n\nhmmmmm je crois que j'ai menti",
-			"",
-    	"Un petit fortnite ?",
-    	"Top 1 du B2K sur doodle jump",
-    	"Créateur de la playlist qui tue sa mère"
-    };
+			{
+					"Obsédé de saint pierre d'allevard",
+					"Qu'est ce qui est jaune et qui attends ?",
+					"De ce qu'on m'a dit il a un humour fin et raffinés et aussi un peu maigre et musculeux\n\nhmmmmm je crois que j'ai menti",
+					"",
+					"Un petit fortnite ?",
+					"Top 1 du B2K sur doodle jump",
+					"Créateur de la playlist qui tue sa mère",
+					"god of chicken"
+			};
 
 	static String[] jules =
 			{
@@ -164,10 +161,11 @@ public class MembersQuotes {
     }
 
     static String[] yann =
-	{
-		"Premier conseiller connu",
-		"Prend un grand plaisir a faire chier guigui"
-	};
+			{
+					"Premier conseiller connu",
+					"Prend un grand plaisir a faire chier guigui",
+					"un homme bon a marrier"
+			};
     
     
 
