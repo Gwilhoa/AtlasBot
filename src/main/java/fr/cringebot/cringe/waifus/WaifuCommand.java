@@ -25,8 +25,10 @@ public class WaifuCommand {
 			infowaifu(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setdescription"))
 			setDescription(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setdescription"))
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("delete"))
 			delwaifu(msg);
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setname"))
+			setName(msg);
 
 	}
 
