@@ -123,23 +123,12 @@ public class CommandDefault {
 		}
 	}
 
-	@Command(name = "addwaifu", description = "permettre d'initier une nouvelle waifu", type = ExecutorType.USER)
-	private void addwaifu(Message msg) throws ExecutionException, InterruptedException {
-		WaifuCommand.addwaifu(msg);
+	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
+	private void waifu(Message msg) throws ExecutionException, InterruptedException {
+		WaifuCommand.CommandMain(msg);
 	}
 
-	@Command(name = "infowaifu", description = "tout savoir sur la waifu", type = ExecutorType.USER)
-	private void infowaifu(Message msg) {
-		WaifuCommand.infowaifu(msg);
-	}
 
-	@Command(name = "cki", type = Command.ExecutorType.USER)
-	private void cki(Message msg) {
-		ckimain(msg);
-	}
-
-	@Command(name = "listwaifu", description = "listes des waifus disponible", type = ExecutorType.USER)
-	private void listwaifu(Message msg) { WaifuCommand.listwaifu(msg);}
 
 	@Command(name = "test", type = Command.ExecutorType.USER)
 	private void test(Message msg) throws IOException {

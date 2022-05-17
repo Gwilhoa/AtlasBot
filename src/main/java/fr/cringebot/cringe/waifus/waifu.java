@@ -18,12 +18,12 @@ public class waifu {
 	};
 	private static HashMap<Integer, waifu> waifuList = new HashMap<>();
 	private final String profile;
-	private final String name;
-	private final String description;
+	private String name;
+	private String description;
 	private String owner;
-	private final String type;
-	private final Integer id;
-	private final String origin;
+	private String type;
+	private Integer id;
+	private String origin;
 
 	public String getType() {
 		return type;
@@ -34,21 +34,37 @@ public class waifu {
 		JEUX_VIDEO,
 		FILM,
 		ANIME,
-		B2K
+		B2K,
+		SERIE,
+		IRL,
+		AUTRES
 	}
 
 	public waifu(Message.Attachment f, String name, String description, String type, String origin)
 	{
+		int	i = 0;
 		this.description = description;
 		this.name = name;
 		this.owner = null;
 		this.type = type;
-		this.id = waifuList.size();
+		while (i < waifuList.size())
+		{
+			if (waifuList.get(i) == null) {
+				this.id = i;
+				break;
+			}
+			this.id = waifuList.size();
+		}
 		this.profile = "save/waifu/waifu_"+this.id +".png";
 		this.origin = origin;
 		f.downloadToFile(this.profile);
 		waifuList.put(this.id, this);
 		save();
+	}
+
+	public void delwaifu()
+	{
+		waifuList.remove(this.id);
 	}
 
 	public static ArrayList<waifu> getAllWaifu(){
@@ -68,6 +84,26 @@ public class waifu {
 		if (list.isEmpty())
 			return null;
 		return list;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+		save();
+	}
+
+	public void setName(String name) {
+		this.name = name;
+		save();
+	}
+
+	public static waifu getWaifuById(Integer id)
+	{
+		for (waifu waifu : waifuList.values())
+		{
+			if (waifu.getId().equals(id))
+				return waifu;
+		}
+		return null;
 	}
 
 	public EmbedBuilder EmbedWaifu(Guild guild) {
@@ -108,6 +144,8 @@ public class waifu {
 	public String getOrigin() {
 		return origin;
 	}
+
+
 
 	private void save() {
 		if (!new File(file).exists()) {
