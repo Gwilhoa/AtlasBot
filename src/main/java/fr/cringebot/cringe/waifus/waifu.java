@@ -43,6 +43,7 @@ public class waifu {
 	public waifu(Message.Attachment f, String name, String description, String type, String origin)
 	{
 		int	i = 0;
+		this.id = -1;
 		this.description = description;
 		this.name = name;
 		this.owner = null;
@@ -53,9 +54,10 @@ public class waifu {
 				this.id = i;
 				break;
 			}
-			this.id = waifuList.size();
 			i++;
 		}
+		if (this.id == -1)
+			this.id = waifuList.size();
 		this.profile = "save/waifu/waifu_"+this.id +".png";
 		this.origin = origin;
 		f.downloadToFile(this.profile);
