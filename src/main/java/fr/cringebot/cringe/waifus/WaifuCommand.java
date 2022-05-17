@@ -107,6 +107,7 @@ public class WaifuCommand {
 		}
 		String id = msg.getContentRaw().split("\n")[0];
 		waifu w = waifu.getWaifuById(Integer.parseInt(id.substring(">waifu setname ".length())));
+		System.out.println(w);
 		w.setName(msg.getContentRaw().substring(id.length()));
 	}
 }
