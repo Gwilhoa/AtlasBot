@@ -68,6 +68,7 @@ public class waifu {
 	public void delwaifu()
 	{
 		waifuList.remove(this.id);
+		save();
 	}
 
 	public static ArrayList<waifu> getAllWaifu(){
