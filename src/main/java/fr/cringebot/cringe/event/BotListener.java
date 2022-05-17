@@ -34,6 +34,7 @@ import fr.cringebot.cringe.siterequest.Request;
 import fr.cringebot.cringe.waifus.waifu;
 import fr.cringebot.cringe.xp.XP;
 import fr.cringebot.music.MusicCommand;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -205,6 +206,9 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onEnable(ReadyEvent event) {
+		Activity act;
+		act = new activity("Analyse en cours", null, Activity.ActivityType.LISTENING);
+		bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
 		if (new File("save/waifu").mkdir())
@@ -232,9 +236,8 @@ public class BotListener implements EventListener {
 		Attacks.capa = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("attacks.json"))), new TypeToken<Collection<Attacks>>() {
 		}.getType());
 
-		Activity act;
 		act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
-		bot.getJda().getPresence().setActivity(act);
+		bot.getJda().getPresence().setPresence(OnlineStatus.ONLINE, act);
 	}
 
 	/**
