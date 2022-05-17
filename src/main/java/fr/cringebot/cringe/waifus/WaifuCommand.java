@@ -50,7 +50,7 @@ public class WaifuCommand {
 	}
 	public static void infowaifu(Message msg)
 	{
-		ArrayList<waifu> w = waifu.getWaifubyName(msg.getContentRaw().substring(">waifu info".length()));
+		ArrayList<waifu> w = waifu.getWaifubyName(msg.getContentRaw().substring(">waifu info ".length()));
 		if (w != null) {
 			msg.getChannel().sendMessageEmbeds(w.get(0).EmbedWaifu(msg.getGuild()).build()).addFile(w.get(0).getProfile()).queue();
 			int	i = 1;
