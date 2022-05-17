@@ -54,6 +54,7 @@ public class waifu {
 				break;
 			}
 			this.id = waifuList.size();
+			i++;
 		}
 		this.profile = "save/waifu/waifu_"+this.id +".png";
 		this.origin = origin;
