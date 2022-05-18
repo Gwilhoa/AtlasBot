@@ -65,7 +65,14 @@ public class WaifuCommand {
 			}
 		}
 		else
-			msg.getChannel().sendMessage("je ne connais aucune waifu a ce nom").queue();
+		{
+			waifu wid = waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
+			if (wid != null)
+				msg.getChannel().sendMessageEmbeds(wid.EmbedWaifu(msg.getGuild()).build()).addFile(wid.getProfile()).queue();
+			else {
+				msg.getChannel().sendMessage("je ne connais pas de waifu à ce nom ou cet").queue();
+			}
+		}
 	}
 
 	public static void listwaifu(TextChannel tc) {
@@ -85,9 +92,15 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage("non").queue();
 			return;
 		}
-		String id = msg.getContentRaw().split("\n")[0];
-		waifu w = waifu.getWaifuById(Integer.parseInt(id.substring(">waifu setdescription ".length())));
-		w.setDescription(msg.getContentRaw().substring(id.length() + 1));
+		String id = msg.getContentRaw().split(" ")[2];
+		waifu w = waifu.getWaifuById(Integer.parseInt(id));
+		if (w == null) {
+			msg.getChannel().sendMessage("id non défini").queue();
+			return;
+		}
+		String name = msg.getContentRaw().substring(">waifu setdescription  ".length() + id.length());
+		w.setDescription(name);
+		msg.addReaction("\uD83D\uDC4C").queue();
 	}
 
 	public static void delwaifu(Message msg)
@@ -98,7 +111,12 @@ public class WaifuCommand {
 		}
 		String id = msg.getContentRaw().split("\n")[0];
 		waifu w = waifu.getWaifuById(Integer.parseInt(id.substring(">waifu delete ".length())));
+		if (w == null) {
+			msg.getChannel().sendMessage("id non défini").queue();
+			return;
+		}
 		w.delwaifu();
+		msg.addReaction("\uD83D\uDC4C").queue();
 	}
 
 	public static void setName(Message msg)
@@ -107,8 +125,14 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage("non").queue();
 			return;
 		}
-		String id = msg.getContentRaw().split("\n")[0];
-		waifu w = waifu.getWaifuById(Integer.parseInt(id.substring(">waifu setname ".length())));
-		w.setName(msg.getContentRaw().substring(id.length() + 1));
+		String id = msg.getContentRaw().split(" ")[2];
+		waifu w = waifu.getWaifuById(Integer.parseInt(id));
+		if (w == null) {
+			msg.getChannel().sendMessage("id non défini").queue();
+			return;
+		}
+		String name = msg.getContentRaw().substring(">waifu setname  ".length() + id.length());
+		w.setName(name);
+		msg.addReaction("\uD83D\uDC4C").queue();
 	}
 }

@@ -24,6 +24,7 @@ public class waifu {
 	private String type;
 	private Integer id;
 	private String origin;
+	private ArrayList<String> nickname;
 
 	public String getType() {
 		return type;
@@ -48,6 +49,7 @@ public class waifu {
 		this.name = name;
 		this.owner = null;
 		this.type = type;
+		this.nickname = null;
 		while (i < waifuList.size())
 		{
 			if (waifuList.get(i) == null) {
