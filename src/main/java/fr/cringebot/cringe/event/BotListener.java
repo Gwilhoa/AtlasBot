@@ -207,7 +207,7 @@ public class BotListener implements EventListener {
 	 */
 	private void onEnable(ReadyEvent event) {
 		Activity act;
-		act = new activity("Analyse en cours", null, Activity.ActivityType.LISTENING);
+		act = new activity("Analyse en cours", null, Activity.ActivityType.WATCHING);
 		bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
@@ -296,21 +296,21 @@ public class BotListener implements EventListener {
 					u = reaction.getCount() - 1;
 			}
 			if (msg.getAuthor().equals(event.getJDA().getSelfUser()))
-			if (msg.getContentRaw().equalsIgnoreCase("ratio") && u >= 2)
+			if (msg.getContentRaw().equalsIgnoreCase("ratio") && u <= 2)
 				msg.editMessage("Turbo ratio").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("Turbo ratio") && u >= 4)
+			else if (msg.getContentRaw().equalsIgnoreCase("Turbo ratio") && u <= 4)
 					msg.editMessage("Super ratio").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("Super ratio") && u >= 6)
+			else if (msg.getContentRaw().equalsIgnoreCase("Super ratio") && u <= 6)
 					msg.editMessage("Hyper ratio").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("Hyper ratio") && u >= 8)
+			else if (msg.getContentRaw().equalsIgnoreCase("Hyper ratio") && u <= 8)
 					msg.editMessage("Méga ratio").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("Méga ratio") && u >= 11)
+			else if (msg.getContentRaw().equalsIgnoreCase("Méga ratio") && u <= 11)
 					msg.editMessage("Giga ratio").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("Giga ratio") && u >= 14)
+			else if (msg.getContentRaw().equalsIgnoreCase("Giga ratio") && u <= 14)
 					msg.editMessage("RATIO ÉPIQUE").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("RATIO ÉPIQUE") && u >= 17)
+			else if (msg.getContentRaw().equalsIgnoreCase("RATIO ÉPIQUE") && u <= 17)
 					msg.editMessage("RATIO MYTHIQUE").queue();
-			else
+			else if (msg.getContentRaw().equalsIgnoreCase("RATIO MYTHIQUE") && u <= 20)
 					msg.editMessage("**RATIO LÉGENDAIRE**").queue();
 		}
 		if (event.getChannel().getId().equals("461606547064356864")) {
