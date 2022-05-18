@@ -128,7 +128,10 @@ public class CommandDefault {
 		WaifuCommand.CommandMain(msg);
 	}
 
-
+	@Command(name = "cki", description = "mais qui est-il !", type = ExecutorType.USER)
+	private void cki(Message msg){
+		ckimain(msg);
+	}
 
 	@Command(name = "test", type = Command.ExecutorType.USER)
 	private void test(Message msg) throws IOException {
