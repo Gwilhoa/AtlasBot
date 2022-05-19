@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/15 18:20:28 by                  ###   ########.fr       */
+/*   Updated: 2022/05/19 10:27:32 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@ import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.waifus.WaifuCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.Permission;
+import fr.cringebot.cringe.waifus.waifu;
+import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -40,6 +38,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
@@ -123,6 +123,18 @@ public class CommandDefault {
 		}
 	}
 
+	@Command(name = "harem", description = "la listes des waifus", type = ExecutorType.USER)
+	private void harem(Message msg){
+		ArrayList<waifu> waifus = waifu.getAllWaifu();
+		waifus.removeIf(w -> w.getOwner() != null && !w.getOwner().equals(msg.getMember().getId()));
+		StringBuilder sb = new StringBuilder().append("waifus de "+msg.getMember().getEffectiveName()+"\n\n");
+		for (waifu w : waifus)
+			sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
+		MessageBuilder mb = new MessageBuilder().append(sb);
+		Queue<Message> ml = mb.buildAll();
+		while (!ml.isEmpty())
+			msg.getChannel().sendMessage(ml.poll()).queue();
+	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException {
 		WaifuCommand.CommandMain(msg);

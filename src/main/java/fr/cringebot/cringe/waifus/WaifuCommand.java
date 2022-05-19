@@ -3,6 +3,7 @@ package fr.cringebot.cringe.waifus;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
@@ -10,13 +11,19 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.cringe.waifus.waifu.getAllWaifu;
 
 public class WaifuCommand {
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
+		if (msg.getContentRaw().split(" ").length == 1) {
+			newWaifu(msg);
+			return;
+		}
 		if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add"))
 			addwaifu(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list"))
@@ -29,7 +36,29 @@ public class WaifuCommand {
 			delwaifu(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setname"))
 			setName(msg);
+		else
+			newWaifu(msg);
 
+	}
+
+	private static void newWaifu(Message msg) {
+		if (waifu.timeleft(msg.getMember().getId()) < 0){
+			long t = waifu.timeleft(msg.getMember().getId());
+			long th = (10800000 - t) / 3600000;
+			long tmin = (10800000 - th * 3600000 - t) / 60000;
+			long ts = (10800000 - th * 3600000 - tmin * 60000 - t) / 1000;
+			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle waifu").queue();
+			return;
+
+		}
+		waifu.setTime(msg.getMember().getId());
+		waifu w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
+		w.setOwner(msg.getMember().getId());
+		EmbedBuilder eb = w.EmbedWaifu(msg.getGuild());
+		eb.setTitle("Nouvelle waifu !");
+		eb.setDescription("ta nouvelle waifu est " + w.getName() + " de " + w.getOrigin());
+		eb.setFooter("félicitation !!");
+		msg.getChannel().sendMessageEmbeds(eb.build()).addFile(w.getProfile()).queue();
 	}
 
 	public static void addwaifu(Message msg) throws ExecutionException, InterruptedException {

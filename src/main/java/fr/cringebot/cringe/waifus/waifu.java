@@ -17,6 +17,7 @@ public class waifu {
 	private static final TypeToken<HashMap<Integer, waifu>> token = new TypeToken<HashMap<Integer, waifu>>() {
 	};
 	private static HashMap<Integer, waifu> waifuList = new HashMap<>();
+	private final static HashMap<String, Long> timer = new HashMap<>();
 	private final String profile;
 	private String name;
 	private String description;
@@ -77,6 +78,11 @@ public class waifu {
 		return new ArrayList<>(waifuList.values());
 	}
 
+	public static ArrayList<waifu> getAvailableWaifu() {
+		ArrayList<waifu> waifus = getAllWaifu();
+		waifus.removeIf(w -> w.getOwner() != null);
+		return waifus;
+	}
 	public static ArrayList<waifu> getWaifubyName(String name){
 		ArrayList<waifu> list = new ArrayList<>();
 		if (!waifuList.isEmpty())
@@ -141,6 +147,7 @@ public class waifu {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+		save();
 	}
 
 	public Integer getId() {
@@ -186,5 +193,15 @@ public class waifu {
 		}
 		if (waifuList == null)
 			waifuList = new HashMap<>();
+	}
+
+	public static void setTime(String id)
+	{
+		timer.put(id, System.currentTimeMillis());
+	}
+	public static Long timeleft(String id){
+		if (timer.get(id) == null)
+			return (1L);
+		return ( System.currentTimeMillis() - (timer.get(id) + 21600000L));
 	}
 }
