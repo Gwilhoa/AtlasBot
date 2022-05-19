@@ -95,7 +95,14 @@ public class WaifuCommand {
 		}
 		else
 		{
-			waifu wid = waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
+			waifu wid;
+			try {
+				wid = waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
+			}
+			catch (NumberFormatException e){
+				msg.getChannel().sendMessage("je ne connais pas de waifu à ce nom ou cet").queue();
+				return;
+			}
 			if (wid != null)
 				msg.getChannel().sendMessageEmbeds(wid.EmbedWaifu(msg.getGuild()).build()).addFile(wid.getProfile()).queue();
 			else {
