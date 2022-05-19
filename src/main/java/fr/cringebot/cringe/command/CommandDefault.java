@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/19 10:47:35 by                  ###   ########.fr       */
+/*   Updated: 2022/05/19 11:18:18 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ public class CommandDefault {
 		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(msg.getMember().getId()));
 		if (waifus.isEmpty())
 		{
-			msg.getChannel().sendMessage("tu as pas de waifus fais >waifu pour en avoir une").queue();
+			msg.getChannel().sendMessage("\uD83D\uDE2D tu n'as pas de waifus, fait >waifu pour en avoir une !").queue();
 			return;
 		}
 		StringBuilder sb = new StringBuilder().append("waifus de "+msg.getMember().getEffectiveName()+"\n\n");
