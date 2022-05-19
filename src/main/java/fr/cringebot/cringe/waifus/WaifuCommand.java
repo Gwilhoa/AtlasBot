@@ -89,7 +89,7 @@ public class WaifuCommand {
 			int	i = 1;
 			while (i < w.size())
 			{
-				msg.getChannel().sendMessageEmbeds(w.get(i).EmbedWaifu(msg.getGuild()).build()).addFile(w.get(0).getProfile()).queue();
+				msg.getChannel().sendMessageEmbeds(w.get(i).EmbedWaifu(msg.getGuild()).build()).addFile(w.get(i).getProfile()).queue();
 				i++;
 			}
 		}
@@ -100,13 +100,13 @@ public class WaifuCommand {
 				wid = waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
 			}
 			catch (NumberFormatException e){
-				msg.getChannel().sendMessage("je ne connais pas de waifu à ce nom ou cet").queue();
+				msg.getChannel().sendMessage("je ne connais pas de waifu à ce nom ou cet id").queue();
 				return;
 			}
 			if (wid != null)
 				msg.getChannel().sendMessageEmbeds(wid.EmbedWaifu(msg.getGuild()).build()).addFile(wid.getProfile()).queue();
 			else {
-				msg.getChannel().sendMessage("je ne connais pas de waifu à ce nom ou cet").queue();
+				msg.getChannel().sendMessage("je ne connais pas de waifu à ce nom ou cet id").queue();
 			}
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/19 10:28:11 by                  ###   ########.fr       */
+/*   Updated: 2022/05/19 10:45:28 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,13 @@ public class CommandDefault {
 	private void harem(Message msg){
 		ArrayList<waifu> waifus = waifu.getAllWaifu();
 		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(msg.getMember().getId()));
+		if (waifus.isEmpty())
+		{
+			msg.getChannel().sendMessage("tu as pas de waifus fais >waifu pour en avoir une").queue();
+		}
 		StringBuilder sb = new StringBuilder().append("waifus de "+msg.getMember().getEffectiveName()+"\n\n");
 		for (waifu w : waifus)
-			sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
+			sb.append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
 		MessageBuilder mb = new MessageBuilder().append(sb);
 		Queue<Message> ml = mb.buildAll();
 		while (!ml.isEmpty())

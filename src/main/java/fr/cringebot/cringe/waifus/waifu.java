@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.waifus;
 
 import com.google.gson.reflect.TypeToken;
+import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -89,7 +90,7 @@ public class waifu {
 		{
 			for (waifu waifu : waifuList.values())
 			{
-				if (waifu.getName().equalsIgnoreCase(name))
+				if (StringExtenders.startWithIgnoreCase(waifu.getName(),name))
 					list.add(waifu);
 			}
 		}
