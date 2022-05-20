@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/14 21:28:49 by                  ###   ########.fr       */
+/*   Updated: 2022/05/20 21:40:36 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.reactionsrole.RoleReaction;
 import fr.cringebot.cringe.siterequest.Request;
+import fr.cringebot.cringe.waifus.WaifuCommand;
 import fr.cringebot.cringe.waifus.waifu;
 import fr.cringebot.cringe.xp.XP;
 import fr.cringebot.music.MusicCommand;
@@ -288,7 +289,24 @@ public class BotListener implements EventListener {
 	 *
 	 */
 	private void onAddReact(MessageReactionAddEvent event) throws NoSuchFieldException, IllegalAccessException {
-		if (event.getReaction().getReactionEmote().getAsReactionCode().equals("⬆️") ) {
+		if (event.getJDA().getSelfUser().equals(event.getMember().getUser()))
+			return;
+
+		if (event.getReaction().getReactionEmote().getAsReactionCode().equals("◀️")) {
+			Message msg = event.retrieveMessage().complete();
+			if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().equals("Listes des waifus")){
+				WaifuCommand.listwaifu(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())-1);
+				event.getReaction().removeReaction(event.getUser()).queue();
+			}
+		}
+		else if (event.getReaction().getReactionEmote().getAsReactionCode().equals("▶️")) {
+			Message msg = event.retrieveMessage().complete();
+			if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().equals("Listes des waifus")){
+				WaifuCommand.listwaifu(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())+1);
+				event.getReaction().removeReaction(event.getUser()).queue();
+			}
+		}
+		else if (event.getReaction().getReactionEmote().getAsReactionCode().equals("⬆️") ) {
 			Message msg = event.retrieveMessage().complete();
 			int u = 0;
 			for (MessageReaction reaction : msg.getReactions()) {

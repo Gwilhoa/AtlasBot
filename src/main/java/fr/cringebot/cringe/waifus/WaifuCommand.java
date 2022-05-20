@@ -26,8 +26,11 @@ public class WaifuCommand {
 		}
 		if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add"))
 			addwaifu(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list"))
-			listwaifu(msg.getTextChannel());
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")){
+			Message ls = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setTitle("Listes des waifus").setDescription("chargement...").build()).complete();
+			ls.addReaction("◀️").and(ls.addReaction("▶️")).queue();
+			listwaifu(ls);
+		}
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info"))
 			infowaifu(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setdescription"))
@@ -111,15 +114,31 @@ public class WaifuCommand {
 		}
 	}
 
-	public static void listwaifu(TextChannel tc) {
+	public static void listwaifu(Message msg){
+		listwaifu(msg, 0);
+	}
+	public static void listwaifu(Message tc, Integer f) {
 		ArrayList<waifu> waifus = waifu.getAllWaifu();
-		StringBuilder sb = new StringBuilder().append("listes des waifus\n\n");
-		for (waifu w : waifus)
-			sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
-		MessageBuilder mb = new MessageBuilder().append(sb);
-		Queue<Message> ml = mb.buildAll();
-		while (!ml.isEmpty())
-			tc.sendMessage(ml.poll()).queue();
+		waifu w;
+		EmbedBuilder eb = new EmbedBuilder();
+		int	i = f*10;
+		if (i > waifus.size() || i < 0)
+			return;
+		eb.setFooter(f.toString()).setTitle("Listes des waifus");
+		StringBuilder sb = new StringBuilder();
+		while (i < (f*10)+10)
+		{
+			if (i < waifus.size()) {
+				w = waifus.get(i);
+				if (w.getOwner() == null)
+					sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
+				else
+					sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append(" __").append(tc.getGuild().getMemberById(w.getOwner()).getEffectiveName()).append("__\n");
+			}
+			i++;
+		}
+		eb.setDescription(sb);
+		tc.editMessageEmbeds(eb.build()).queue();
 	}
 
 	public static void setDescription(Message msg)
