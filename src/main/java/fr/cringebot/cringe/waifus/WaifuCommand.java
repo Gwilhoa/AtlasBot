@@ -76,7 +76,7 @@ public class WaifuCommand {
 		if (msg.getMember().getId().equals("315431392789921793") && waifus.isEmpty())
 			w = getWaifuById(4);
 		else if (msg.getMember().getId().equals("392339318888333323") && waifus.isEmpty())
-			w = getWaifuById(81);
+			w = getWaifuById(59);
 		else if (msg.getMember().getId().equals("371249604177428481") && waifus.isEmpty())
 			w = getWaifuById(33);
 		else if (msg.getMember().getId().equals("779435257094864947") && waifus.isEmpty())
