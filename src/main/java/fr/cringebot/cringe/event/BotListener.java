@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/20 21:40:36 by                  ###   ########.fr       */
+/*   Updated: 2022/05/21 12:29:16 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,12 +124,10 @@ public class BotListener implements EventListener {
 	private void onDisconnect(GuildVoiceLeaveEvent event) {
 		if (event.getMember().getUser().equals(event.getJDA().getSelfUser()))
 			MusicCommand.stop(event.getGuild());
-		XP.disconnecting(event);
 		System.out.println(event.getMember().getUser().getName() + " s'est déconnecté");
 	}
 
 	private void onConnect(GuildVoiceJoinEvent event) {
-		XP.connecting(event);
 		System.out.println(event.getMember().getUser().getName() + " s'est connecté");
 	}
 
@@ -239,6 +237,14 @@ public class BotListener implements EventListener {
 
 		act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
 		bot.getJda().getPresence().setPresence(OnlineStatus.ONLINE, act);
+		new Thread(() -> {
+			try {
+				while (true)
+					XP.startloop();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 
 	/**
@@ -357,6 +363,7 @@ public class BotListener implements EventListener {
 	private void onMessage(MessageReceivedEvent event) throws IOException, InterruptedException {
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		Message msg = event.getMessage();
+		XP.addmsg();
 		if (msg.getChannel().getId().equals("947564791759777792"))
 			msg.createThreadChannel("Parlez ici bandes de shlags").queue();
 		if (msg.getMentionedMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())) && msg.getReferencedMessage() == null)
@@ -371,7 +378,6 @@ public class BotListener implements EventListener {
 
 
 		String[] args = msg.getContentRaw().split(" ");
-		XP.getXpByMessage(msg.getContentRaw(), msg.getMember());
 
 		if (MemberReact(msg))
 			return;

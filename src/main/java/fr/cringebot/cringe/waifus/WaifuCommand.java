@@ -39,9 +39,22 @@ public class WaifuCommand {
 			delwaifu(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setname"))
 			setName(msg);
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset"))
+			reset(msg);
 		else
 			newWaifu(msg);
 
+	}
+
+	private static void reset(Message msg) {
+		if (!msg.getMember().getId().equals("315431392789921793"))
+		{
+			msg.getChannel().sendMessage("https://tenor.com/view/fanta-pas-toi-qui-d%C3%A9cide-serious-selfie-gif-13900956").queue();
+			return;
+		}
+		ArrayList<waifu> waifus = waifu.getAllWaifu();
+		for (waifu w : waifus)
+			w.setOwner(null);
 	}
 
 	private static void newWaifu(Message msg) {
@@ -54,8 +67,15 @@ public class WaifuCommand {
 			return;
 
 		}
+
 		waifu.setTime(msg.getMember().getId());
-		waifu w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
+		ArrayList<waifu> waifus = getAllWaifu();
+		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(msg.getMember().getId()));
+		waifu w;
+		if (msg.getMember().getId().equals("315431392789921793") && waifus.isEmpty())
+			w = waifu.getWaifuById(4);
+		else
+			w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
 		w.setOwner(msg.getMember().getId());
 		EmbedBuilder eb = w.EmbedWaifu(msg.getGuild());
 		eb.setTitle("Nouvelle waifu !");
