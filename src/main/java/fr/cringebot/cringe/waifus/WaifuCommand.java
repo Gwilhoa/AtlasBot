@@ -17,6 +17,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.cringe.waifus.waifu.getAllWaifu;
+import static fr.cringebot.cringe.waifus.waifu.getWaifuById;
 
 public class WaifuCommand {
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
@@ -73,7 +74,15 @@ public class WaifuCommand {
 		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(msg.getMember().getId()));
 		waifu w;
 		if (msg.getMember().getId().equals("315431392789921793") && waifus.isEmpty())
-			w = waifu.getWaifuById(4);
+			w = getWaifuById(4);
+		else if (msg.getMember().getId().equals("392339318888333323") && waifus.isEmpty())
+			w = getWaifuById(81);
+		else if (msg.getMember().getId().equals("371249604177428481") && waifus.isEmpty())
+			w = getWaifuById(33);
+		else if (msg.getMember().getId().equals("779435257094864947") && waifus.isEmpty())
+			w = getWaifuById(224);
+		else if (msg.getMember().getId().equals("335074908998598673") && waifus.isEmpty())
+			w = getWaifuById(289);
 		else
 			w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
 		w.setOwner(msg.getMember().getId());
