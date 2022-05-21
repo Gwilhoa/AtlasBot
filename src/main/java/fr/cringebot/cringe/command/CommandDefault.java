@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/19 11:18:53 by                  ###   ########.fr       */
+/*   Updated: 2022/05/21 18:42:50 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,12 @@ public class CommandDefault {
 
 	@Command(name = "harem", description = "la listes des waifus", type = ExecutorType.USER)
 	private void harem(Message msg){
+		String id = msg.getMember().getId();
+		if (!msg.getMentionedMembers().isEmpty())
+			id = msg.getMentionedMembers().get(0).getId();
 		ArrayList<waifu> waifus = waifu.getAllWaifu();
-		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(msg.getMember().getId()));
+		String finalId = id;
+		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(finalId));
 		if (waifus.isEmpty())
 		{
 			msg.getChannel().sendMessage("\uD83D\uDE2D tu n'as pas de waifus, fais >waifu pour en avoir une !").queue();
