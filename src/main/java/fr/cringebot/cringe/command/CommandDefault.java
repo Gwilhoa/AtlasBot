@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/21 18:42:50 by                  ###   ########.fr       */
+/*   Updated: 2022/05/21 18:45:34 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ public class CommandDefault {
 			msg.getChannel().sendMessage("\uD83D\uDE2D tu n'as pas de waifus, fais >waifu pour en avoir une !").queue();
 			return;
 		}
-		StringBuilder sb = new StringBuilder().append("waifus de "+msg.getMember().getEffectiveName()+"\n\n");
+		StringBuilder sb = new StringBuilder().append("waifus de "+msg.getGuild().getMemberById(id).getEffectiveName()+"\n\n");
 		for (waifu w : waifus)
 			sb.append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
 		MessageBuilder mb = new MessageBuilder().append(sb);
