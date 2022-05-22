@@ -69,6 +69,10 @@ public class waifu {
 		save();
 	}
 
+	public void setFile(Message.Attachment f){
+		f.downloadToFile(this.profile);
+	}
+
 	public void delwaifu()
 	{
 		waifuList.remove(this.id);

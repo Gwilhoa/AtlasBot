@@ -42,9 +42,30 @@ public class WaifuCommand {
 			setName(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset"))
 			reset(msg);
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage"))
+			setImage(msg);
 		else
 			newWaifu(msg);
 
+	}
+
+	private static void setImage(Message msg) {
+		if (!msg.getChannel().getId().equals("975087822618910800")) {
+			msg.getChannel().sendMessage("non").queue();
+			return;
+		}
+		String id = msg.getContentRaw().split(" ")[2];
+		waifu w = waifu.getWaifuById(Integer.parseInt(id));
+		if (w == null) {
+			msg.getChannel().sendMessage("id non défini").queue();
+			return;
+		}
+		if (msg.getAttachments().isEmpty()){
+			msg.getChannel().sendMessage("t'es une merde").queue();
+			return;
+		}
+		w.setFile(msg.getAttachments().get(0));
+		msg.addReaction("\uD83D\uDC4C").queue();
 	}
 
 	private static void reset(Message msg) {
