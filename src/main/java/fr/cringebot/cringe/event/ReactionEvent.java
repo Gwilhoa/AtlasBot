@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2022/04/07 23:50:32 by                  ###   ########.fr       */
+/*   Updated: 2022/05/25 18:05:40 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ public class ReactionEvent {
                         return;
                     }
                 }
-                if (msg.getMentionedMembers().size() >= 1) {
-                    msg.getChannel().sendMessage("tu as rendu respect à " + msg.getMentionedMembers().get(0).getAsMention()).queue();
+                if (msg.getMentions().getMembers().size() >= 1) {
+                    msg.getChannel().sendMessage("tu as rendu respect à " + msg.getMentions().getMembers().get(0).getAsMention()).queue();
                 } else {
                     msg.getChannel().sendMessage("tu as rendu respect à " + msg.getContentDisplay().substring(2)).queue();
                 }
@@ -186,8 +186,8 @@ public class ReactionEvent {
                     return;
                 }
             }
-            if (msg.getMentionedMembers().size() >= 1)
-                msg.getChannel().sendMessage(msg.getMentionedMembers().get(0).getAsMention() + "s'est fait daronné").queue();
+            if (msg.getMentions().getMembers().size() >= 1)
+                msg.getChannel().sendMessage(msg.getMentions().getMembers().get(0).getAsMention() + "s'est fait daronné").queue();
     }
     else
         msg.getChannel().sendMessage("il s'est fait daronné").queue();

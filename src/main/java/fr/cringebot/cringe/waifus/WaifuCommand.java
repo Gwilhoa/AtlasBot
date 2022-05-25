@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.waifus;
 
 import fr.cringebot.cringe.objects.SelectOptionImpl;
+import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -28,7 +29,10 @@ public class WaifuCommand {
 		if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add"))
 			addwaifu(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")){
-			Message ls = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setTitle("Listes des waifus").setDescription("chargement...").build()).complete();
+			EmbedBuilder eb = new EmbedBuilder().setTitle("Listes des waifus").setDescription("chargement...");
+			if (msg.getContentRaw().split(" ").length > 2)
+				eb.setAuthor(msg.getContentRaw().substring(">waifu list ".length()));
+			Message ls = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
 			ls.addReaction("◀️").and(ls.addReaction("▶️")).queue();
 			listwaifu(ls);
 		}
@@ -170,11 +174,18 @@ public class WaifuCommand {
 	public static void listwaifu(Message tc, Integer f) {
 		ArrayList<waifu> waifus = waifu.getAllWaifu();
 		waifu w;
+		String search = null;
+		if (tc.getEmbeds().get(0).getAuthor() != null)
+			search = tc.getEmbeds().get(0).getAuthor().getName();
 		EmbedBuilder eb = new EmbedBuilder();
+		if (search != null)
+			eb.setAuthor(search);
+		String finalSearch = search;
+		waifus.removeIf(wai -> StringExtenders.startWithIgnoreCase(wai.getOrigin(), finalSearch));
 		int	i = f*10;
 		if (i > waifus.size() || i < 0)
 			return;
-		eb.setFooter(f.toString()).setTitle("Listes des waifus");
+		eb.setFooter(f.toString()).setTitle(tc.getEmbeds().get(0).getTitle());
 		StringBuilder sb = new StringBuilder();
 		while (i < (f*10)+10)
 		{

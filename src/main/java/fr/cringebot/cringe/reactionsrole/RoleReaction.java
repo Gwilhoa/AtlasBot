@@ -40,7 +40,7 @@ public class RoleReaction {
                 userList = mr.retrieveUsers().complete();
                 for (User user : userList)
                     if ( msg.getGuild().getMemberById(user.getId()) != null && !msg.getGuild().getMemberById(user.getId()).getRoles().contains(msg.getGuild().getRoleById(this.getId())))
-                        msg.getGuild().addRoleToMember(user.getId(),msg.getGuild().getRoleById(this.getId())).queue();
+                        msg.getGuild().addRoleToMember(user,msg.getGuild().getRoleById(this.getId())).queue();
                     break;
             }
         }

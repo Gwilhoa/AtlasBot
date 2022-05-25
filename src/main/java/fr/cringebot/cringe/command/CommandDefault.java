@@ -82,8 +82,8 @@ public class CommandDefault {
 	@Command(name = "info", description = "information sur un joueur", type = ExecutorType.USER)
 	private void info(MessageChannel channel, Message msg) {
 		Member mem = msg.getMember();
-		if (msg.getMentionedMembers().size() != 0) {
-			mem = msg.getMentionedMembers().get(0);
+		if (msg.getMentions().getMembers().size() != 0) {
+			mem = msg.getMentions().getMembers().get(0);
 		}
 		EmbedBuilder builder = new EmbedBuilder()
 				.setAuthor(mem.getUser().getName(), null, mem.getUser().getAvatarUrl() + "?size=256")
@@ -126,8 +126,8 @@ public class CommandDefault {
 	@Command(name = "harem", description = "la listes des waifus", type = ExecutorType.USER)
 	private void harem(Message msg){
 		String id = msg.getMember().getId();
-		if (!msg.getMentionedMembers().isEmpty())
-			id = msg.getMentionedMembers().get(0).getId();
+		if (!msg.getMentions().getMembers().isEmpty())
+			id = msg.getMentions().getMembers().get(0).getId();
 		ArrayList<waifu> waifus = waifu.getAllWaifu();
 		String finalId = id;
 		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(finalId));
