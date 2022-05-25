@@ -34,6 +34,7 @@ public class waifu {
 
 	public void setOrigin(String name) {
 		this.origin = name;
+		save();
 	}
 
 	public enum Type

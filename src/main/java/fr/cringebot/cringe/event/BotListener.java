@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/21 12:29:16 by                  ###   ########.fr       */
+/*   Updated: 2022/05/25 19:58:15 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -111,10 +112,23 @@ public class BotListener implements EventListener {
 			else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
 			else if (event instanceof MessageEmbedEvent) onEmbed((MessageEmbedEvent) event);
 			else if (event instanceof SlashCommandInteraction) onSlashCommand((SlashCommandInteraction) event);
+			else if (event instanceof ButtonInteractionEvent) onButton((ButtonInteractionEvent) event);
 		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException | ExecutionException e) {
 			e.printStackTrace();
 			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
 		}
+	}
+
+	private void onButton(ButtonInteractionEvent event) {
+		if (event.getButton().getId().startsWith("waifutrade") && event.getMember().getId().equals(event.getChannel().retrieveMessageById(event.getMessageId()).complete().getEmbeds().get(0).getFooter().getText())) {
+			if (event.getButton().getLabel().equals("non"))
+				event.getChannel().retrieveMessageById(event.getMessageId()).complete().delete().queue();
+			else {
+
+			}
+		}
+		else
+			event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
 	}
 
 	private void onSlashCommand(SlashCommandInteraction event) {

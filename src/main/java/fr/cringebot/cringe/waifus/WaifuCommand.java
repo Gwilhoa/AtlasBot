@@ -3,25 +3,25 @@ package fr.cringebot.cringe.waifus;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.interactions.components.ActionComponent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.cringe.waifus.waifu.getAllWaifu;
-import static fr.cringebot.cringe.waifus.waifu.getWaifuById;
 
 public class WaifuCommand {
+	private static Message msg;
+
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
 		if (msg.getContentRaw().split(" ").length == 1) {
 			newWaifu(msg);
@@ -59,12 +59,23 @@ public class WaifuCommand {
 	}
 
 	private static void trade(Message msg) {
-		Member trader = msg.getMember();
-		Member recepter = msg.getMentions().getMembers().get(0);
+		String id = msg.getContentRaw().split(" ")[2];
+		String id2 = msg.getContentRaw().split(" ")[3];
+		waifu w1 = waifu.getWaifuById(Integer.parseInt(id));
+		waifu w2 = waifu.getWaifuById(Integer.parseInt(id2));
+		if (w1.getOwner() == null || !w1.getOwner().equals(msg.getMember().getId()))
+			msg.getChannel().sendMessage("tu n'es pas le propriétaire de "+ w1.getName());
+		else if (w2.getOwner() == null)
+			msg.getChannel().sendMessage("cette waifu appartient à personne").queue();
+
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle("Demande d'échange");
-		eb.setDescription(trader.getAsMention() + " demande un échange à "+ recepter.getAsMention()+"\nAcceptez vous ?");
-		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(Button.primary("trade","oui")).setActionRow(Button.secondary("trade1","non")).queue();
+		eb.setDescription(msg.getChannel().getAsMention() + " demande " + w2.getName() + " contre " + w1.getName());
+		eb.setFooter(w2.getOwner());
+		ArrayList<ActionRow> bttn = new ArrayList<>();
+		bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui")));
+		bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non")));
+		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRows(bttn).queue();
 	}
 
 	private static void setImage(Message msg) {
