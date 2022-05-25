@@ -32,6 +32,10 @@ public class waifu {
 		return type;
 	}
 
+	public void setOrigin(String name) {
+		this.origin = name;
+	}
+
 	public enum Type
 	{
 		JEUX_VIDEO,

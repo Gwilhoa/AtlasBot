@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
@@ -48,9 +49,22 @@ public class WaifuCommand {
 			reset(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage"))
 			setImage(msg);
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setorigin"))
+			setOrigin(msg);
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("trade"))
+			trade(msg);
 		else
 			newWaifu(msg);
 
+	}
+
+	private static void trade(Message msg) {
+		Member trader = msg.getMember();
+		Member recepter = msg.getMentions().getMembers().get(0);
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setTitle("Demande d'échange");
+		eb.setDescription(trader.getAsMention() + " demande un échange à "+ recepter.getAsMention()+"\nAcceptez vous ?");
+		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(Button.primary("trade","oui")).setActionRow(Button.primary("trade1","non")).queue();
 	}
 
 	private static void setImage(Message msg) {
@@ -98,18 +112,7 @@ public class WaifuCommand {
 		ArrayList<waifu> waifus = getAllWaifu();
 		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(msg.getMember().getId()));
 		waifu w;
-		if (msg.getMember().getId().equals("315431392789921793") && waifus.isEmpty())
-			w = getWaifuById(4);
-		else if (msg.getMember().getId().equals("392339318888333323") && waifus.isEmpty())
-			w = getWaifuById(59);
-		else if (msg.getMember().getId().equals("371249604177428481") && waifus.isEmpty())
-			w = getWaifuById(33);
-		else if (msg.getMember().getId().equals("779435257094864947") && waifus.isEmpty())
-			w = getWaifuById(224);
-		else if (msg.getMember().getId().equals("335074908998598673") && waifus.isEmpty())
-			w = getWaifuById(289);
-		else
-			w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
+		w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
 		w.setOwner(msg.getMember().getId());
 		EmbedBuilder eb = w.EmbedWaifu(msg.getGuild());
 		eb.setTitle("Nouvelle waifu !");
@@ -217,6 +220,23 @@ public class WaifuCommand {
 		}
 		String name = msg.getContentRaw().substring(">waifu setdescription  ".length() + id.length());
 		w.setDescription(name);
+		msg.addReaction("\uD83D\uDC4C").queue();
+	}
+
+	public static void setOrigin(Message msg)
+	{
+		if (!msg.getChannel().getId().equals("975087822618910800")) {
+			msg.getChannel().sendMessage("non").queue();
+			return;
+		}
+		String id = msg.getContentRaw().split(" ")[2];
+		waifu w = waifu.getWaifuById(Integer.parseInt(id));
+		if (w == null) {
+			msg.getChannel().sendMessage("id non défini").queue();
+			return;
+		}
+		String name = msg.getContentRaw().substring(">waifu setOrigin  ".length() + id.length());
+		w.setOrigin(name);
 		msg.addReaction("\uD83D\uDC4C").queue();
 	}
 
