@@ -181,7 +181,7 @@ public class WaifuCommand {
 		if (search != null) {
 			eb.setAuthor(search);
 			String finalSearch = search;
-			waifus.removeIf(wai -> !StringExtenders.startWithIgnoreCase(finalSearch, wai.getOrigin()));
+			waifus.removeIf(wai -> !StringExtenders.startWithIgnoreCase(wai.getOrigin(), finalSearch));
 		}
 		int	i = f*10;
 		if (i > waifus.size() || i < 0)
