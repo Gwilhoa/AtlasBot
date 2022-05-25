@@ -64,18 +64,20 @@ public class WaifuCommand {
 		waifu w1 = waifu.getWaifuById(Integer.parseInt(id));
 		waifu w2 = waifu.getWaifuById(Integer.parseInt(id2));
 		if (w1.getOwner() == null || !w1.getOwner().equals(msg.getMember().getId()))
-			msg.getChannel().sendMessage("tu n'es pas le propriétaire de "+ w1.getName());
+			msg.getChannel().sendMessage("tu n'es pas le propriétaire de "+ w1.getName()).queue();
 		else if (w2.getOwner() == null)
 			msg.getChannel().sendMessage("cette waifu appartient à personne").queue();
-
-		EmbedBuilder eb = new EmbedBuilder();
-		eb.setTitle("Demande d'échange");
-		eb.setDescription(msg.getChannel().getAsMention() + " demande " + w2.getName() + " contre " + w1.getName());
-		eb.setFooter(w2.getOwner());
-		ArrayList<ActionRow> bttn = new ArrayList<>();
-		bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui")));
-		bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non")));
-		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRows(bttn).queue();
+		else {
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setAuthor(id + " " + id2);
+			eb.setTitle("Demande d'échange");
+			eb.setDescription(msg.getMember().getAsMention() + " demande " + w2.getName() + " contre " + w1.getName() + "\n");
+			eb.setFooter(w2.getOwner());
+			ArrayList<ActionRow> bttn = new ArrayList<>();
+			bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui")));
+			bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non")));
+			msg.getChannel().sendMessage(msg.getGuild().getMemberById(w2.getOwner()).getAsMention()).setEmbeds(eb.build()).setActionRows(bttn).queue();
+		}
 	}
 
 	private static void setImage(Message msg) {

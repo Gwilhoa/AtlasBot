@@ -84,6 +84,15 @@ public class waifu {
 		save();
 	}
 
+	public static void trade(Integer w1, Integer w2) {
+		waifu w01 = getWaifuById(w1);
+		waifu w02 = getWaifuById(w2);
+		String temp = w02.getOwner();
+		w02.setOwner(w01.getOwner());
+		w01.setOwner(temp);
+		save();
+	}
+
 	public static ArrayList<waifu> getAllWaifu(){
 		return new ArrayList<>(waifuList.values());
 	}
@@ -170,7 +179,7 @@ public class waifu {
 
 
 
-	private void save() {
+	private static void save() {
 		if (!new File(file).exists()) {
 			try {
 				new File(file).createNewFile();

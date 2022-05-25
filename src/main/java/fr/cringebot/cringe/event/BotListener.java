@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/25 19:58:15 by                  ###   ########.fr       */
+/*   Updated: 2022/05/25 20:01:34 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,15 @@ public class BotListener implements EventListener {
 	}
 
 	private void onButton(ButtonInteractionEvent event) {
-		if (event.getButton().getId().startsWith("waifutrade") && event.getMember().getId().equals(event.getChannel().retrieveMessageById(event.getMessageId()).complete().getEmbeds().get(0).getFooter().getText())) {
-			if (event.getButton().getLabel().equals("non"))
-				event.getChannel().retrieveMessageById(event.getMessageId()).complete().delete().queue();
+		Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
+		if (event.getButton().getId().startsWith("waifutrade") && event.getMember().getId().equals(msg.getEmbeds().get(0).getFooter().getText())) {
+			if (event.getButton().getLabel().equals("non")) {
+				msg.delete().queue();
+				event.getChannel().sendMessage("l'échange a été refusée").queue();
+			}
 			else {
-
+				waifu.trade(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0]), Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1]));
+				event.getChannel().sendMessage("l'échange a été éfectué avec succès").queue();
 			}
 		}
 		else
