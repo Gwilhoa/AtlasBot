@@ -178,10 +178,11 @@ public class WaifuCommand {
 		if (tc.getEmbeds().get(0).getAuthor() != null)
 			search = tc.getEmbeds().get(0).getAuthor().getName();
 		EmbedBuilder eb = new EmbedBuilder();
-		if (search != null)
+		if (search != null) {
 			eb.setAuthor(search);
-		String finalSearch = search;
-		waifus.removeIf(wai -> StringExtenders.startWithIgnoreCase(wai.getOrigin(), finalSearch));
+			String finalSearch = search;
+			waifus.removeIf(wai -> !StringExtenders.startWithIgnoreCase(finalSearch, wai.getOrigin()));
+		}
 		int	i = f*10;
 		if (i > waifus.size() || i < 0)
 			return;
