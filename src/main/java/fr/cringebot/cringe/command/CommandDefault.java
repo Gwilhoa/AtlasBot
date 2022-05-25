@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/21 18:45:34 by                  ###   ########.fr       */
+/*   Updated: 2022/05/25 18:09:01 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ public class CommandDefault {
 		}
 		StringBuilder sb = new StringBuilder().append("waifus de "+msg.getGuild().getMemberById(id).getEffectiveName()+"\n\n");
 		for (waifu w : waifus)
-			sb.append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
+			sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
 		MessageBuilder mb = new MessageBuilder().append(sb);
 		Queue<Message> ml = mb.buildAll();
 		while (!ml.isEmpty())
