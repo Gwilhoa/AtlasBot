@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/25 20:01:34 by                  ###   ########.fr       */
+/*   Updated: 2022/05/25 20:29:23 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,8 @@ public class BotListener implements EventListener {
 			}
 			else {
 				waifu.trade(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0]), Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1]));
-				event.getChannel().sendMessage("l'échange a été éfectué avec succès").queue();
+				event.getChannel().sendMessage("l'échange a été éffectué avec succès").queue();
+				msg.delete().queue();
 			}
 		}
 		else
