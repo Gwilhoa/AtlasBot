@@ -64,7 +64,7 @@ public class WaifuCommand {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle("Demande d'échange");
 		eb.setDescription(trader.getAsMention() + " demande un échange à "+ recepter.getAsMention()+"\nAcceptez vous ?");
-		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(Button.primary("trade","oui")).setActionRow(Button.primary("trade1","non")).queue();
+		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(Button.primary("trade","oui")).setActionRow(Button.secondary("trade1","non")).queue();
 	}
 
 	private static void setImage(Message msg) {
