@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Role;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static fr.cringebot.cringe.event.BotListener.gson;
 
@@ -18,8 +19,9 @@ public class Squads {
 	private static HashMap<String, Squads> squadsHashMap = new HashMap<>();
 	private final String name;
 	private final HashMap<String, SquadMember> MemberList;
-	private final Long total;
+	private Long total;
 	private final String roleid;
+	private String bestid;
 
 	public Squads(String name, Guild guild) {
 		this.name = name;
@@ -36,6 +38,51 @@ public class Squads {
 
 	public static ArrayList<Squads> getAllSquads() {
 		return new ArrayList<>(squadsHashMap.values());
+	}
+
+	public static void updateSquads() {
+		List<Squads> squads = getAllSquads();
+		for (Squads squad : squads) {
+			long value = 0L;
+			String bestId = null;
+			long max = 0;
+			for (SquadMember sm : squad.MemberList.values()) {
+				if (bestId == null || max < sm.getPoints()){
+					bestId = sm.getId();
+					max = sm.getPoints();
+				}
+				value = value + sm.getPoints();
+			}
+			squad.bestid = bestId;
+			squad.total = value;
+		}
+		save();
+	}
+
+	public String getBestid() {
+		return bestid;
+	}
+
+	public static void addPoints(Member m, Long i){
+		addPoints(m.getId(), i);
+	}
+
+	public static void addPoints(String id, Long i){
+		Squads squad = getSquadByMember(id);
+		if (squad == null) {
+			System.out.println("error " + id);
+			return;
+		}
+		squad.getStatMember(id).addPoint(i);
+	}
+
+	public static void removePoints(String id, Long i){
+		Squads squad = getSquadByMember(id);
+		if (squad == null) {
+			System.out.println("error " + id);
+			return;
+		}
+		squad.getStatMember(id).removepoint(i);
 	}
 
 	public static Squads getSquadByMember(String id) {
@@ -81,6 +128,7 @@ public class Squads {
 			bw.close();
 		} catch (IOException e) {
 		}
+		updateSquads();
 	}
 
 	public static void load() {
@@ -99,6 +147,7 @@ public class Squads {
 		}
 		if (squadsHashMap == null)
 			squadsHashMap = new HashMap<>();
+		updateSquads();
 	}
 
 	public String getName() {

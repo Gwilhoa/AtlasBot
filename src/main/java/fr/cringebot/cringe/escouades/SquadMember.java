@@ -10,11 +10,11 @@ public class SquadMember {
 		this.points = 0L;
 	}
 
-	public void addPoint(Integer nb) {
+	public void addPoint(Long nb) {
 		this.points = this.points + nb;
 	}
 
-	public void removepoint(Integer nb) {
+	public void removepoint(Long nb) {
 		this.points = this.points - nb;
 	}
 

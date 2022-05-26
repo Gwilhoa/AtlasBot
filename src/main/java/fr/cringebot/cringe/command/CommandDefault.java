@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 00:18:20 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 00:24:11 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,9 @@ public class CommandDefault {
 	private void top(Message msg){
 		List<Squads> squads = Squads.getAllSquads();
 		StringBuilder sb = new StringBuilder();
-		sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append("\n");
-		sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append("\n");
-		sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append("\n");
+		sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()));
+		sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()));
+		sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()));
 
 		EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
 		eb.setDescription(sb);
