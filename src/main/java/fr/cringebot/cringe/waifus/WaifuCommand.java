@@ -36,7 +36,8 @@ public class WaifuCommand {
 			Message ls = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
 			ls.addReaction("◀️").and(ls.addReaction("▶️")).queue();
 			listwaifu(ls);
-		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info"))
+		}
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info"))
 			infowaifu(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setdescription"))
 			setDescription(msg);
@@ -118,7 +119,6 @@ public class WaifuCommand {
 			long ts = (10800000 - th * 3600000 - tmin * 60000 - t) / 1000;
 			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle waifu").queue();
 			return;
-
 		}
 
 		waifu.setTime(msg.getMember().getId());
@@ -280,7 +280,7 @@ public class WaifuCommand {
 		waifu w = waifu.getWaifuById(Integer.parseInt(id));
 		if (w.getOwner() == null)
 			msg.getChannel().sendMessage(w.getName() + " n'appartient a personne").queue();
-		else if (w.getOwner() != msg.getMember().getId())
+		else if (!w.getOwner().equals(msg.getMember().getId()))
 			msg.getChannel().sendMessage("tu n'est pas le propriétaire de " + w.getName()).queue();
 		else {
 			w.setOwner(null);
