@@ -23,13 +23,15 @@ public class Squads {
 	private final String roleid;
 	private String bestid;
 
-	public Squads(String name, Guild guild) {
-		this.name = name;
+	public Squads(Role r) {
+		this.name = r.getName();
 		this.MemberList = new HashMap<>();
 		this.total = 0L;
-		this.roleid = guild.createRole().setName("©◊ß" + name).complete().getId();
+		this.roleid = r.getId();
 		squadsHashMap.put(roleid, this);
 		save();
+		for ( Member m : r.getGuild().getMembersWithRoles(r))
+			this.addMember(m);
 	}
 
 	public static Squads getSquadByMember(Member m){

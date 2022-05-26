@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 00:24:11 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 01:24:00 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,9 @@ public class CommandDefault {
 	private void test(Message msg) throws IOException {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 		{
-			msg.getChannel().sendMessage("no").queue();
+			new Squads(msg.getGuild().getRoleById("979455621638262784"));
+			new Squads(msg.getGuild().getRoleById("979455622145773589"));
+			new Squads(msg.getGuild().getRoleById("979455623295041578"));
 		}
 	}
 }
