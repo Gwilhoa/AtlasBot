@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/25 18:09:01 by                  ###   ########.fr       */
+/*   Updated: 2022/05/26 20:18:29 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
+import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.waifus.WaifuCommand;
@@ -38,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Random;
@@ -136,7 +138,7 @@ public class CommandDefault {
 			msg.getChannel().sendMessage("\uD83D\uDE2D tu n'as pas de waifus, fais >waifu pour en avoir une !").queue();
 			return;
 		}
-		StringBuilder sb = new StringBuilder().append("waifus de "+msg.getGuild().getMemberById(id).getEffectiveName()+"\n\n");
+		StringBuilder sb = new StringBuilder().append("waifus de ").append(msg.getGuild().getMemberById(id).getEffectiveName()).append("\n\n");
 		for (waifu w : waifus)
 			sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
 		MessageBuilder mb = new MessageBuilder().append(sb);
@@ -158,21 +160,41 @@ public class CommandDefault {
 	private void test(Message msg) throws IOException {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 		{
+			new Squads("Cyan", msg.getGuild());
+			new Squads("Magenta", msg.getGuild());
+			new Squads("Jaune", msg.getGuild());
 
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			BufferedImage bi = imgExtenders.getImage(new URL(msg.getAuthor().getEffectiveAvatarUrl()));
-			bi = imgExtenders.resize(bi, 64, 64, 0, 0, true);
-			Graphics2D g =  bi.createGraphics();
-			BasicStroke bs = new BasicStroke(6, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-			Arc2D.Float arc2 = new Arc2D.Float(Arc2D.OPEN);
-			arc2.setAngleStart(90);
-			arc2.setFrameFromCenter(new Point(32, 32), new Point(0, 0));
-			arc2.setAngleExtent(360);
-			g.setStroke(bs);
-			g.setColor(new Color(0xFF000000));
-			g.draw(arc2);
-			ImageIO.write(bi,"png",baos);
-			msg.getChannel().sendFile(baos.toByteArray(),"pp.png").queue();
+			List<Member> M1 = msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById("680431143283458077"));
+			List<Member> M2 = msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById("849925828069687296"));
+			List<Member> M3 = msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById("634839000644845619"));
+			List<Squads> squads = Squads.getAllSquads();
+			int	i = 0;
+			while (!M1.isEmpty())
+			{
+
+				squads.get(i).addMember(M1.remove(new Random().nextInt(M1.size() - 1)));
+				i++;
+				if (i == 3)
+					i = 0;
+			}
+			i = 0;
+			while (!M2.isEmpty())
+			{
+
+				squads.get(i).addMember(M2.remove(new Random().nextInt(M2.size() - 1)));
+				i++;
+				if (i == 3)
+					i = 0;
+			}
+			i = 0;
+			while (!M3.isEmpty())
+			{
+
+				squads.get(i).addMember(M3.remove(new Random().nextInt(M3.size() - 1)));
+				i++;
+				if (i == 3)
+					i = 0;
+			}
 		}
 	}
 }

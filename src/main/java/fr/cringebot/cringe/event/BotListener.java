@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/25 20:29:23 by                  ###   ########.fr       */
+/*   Updated: 2022/05/26 20:02:37 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ import fr.cringebot.cringe.Polls.PollMessage;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
+import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.lol.Champion;
 import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
@@ -232,6 +233,7 @@ public class BotListener implements EventListener {
 		if (new File("save/waifu").mkdir())
 			System.out.println("création du directory waifu");
 		Request.sendRequest(Request.Type.SETSEASON, event.getJDA().getGuildById("382938797442334720").getName());
+		Squads.load();
 		MessageReact.load();
 		PollMessage.load();
 		cki.load();
