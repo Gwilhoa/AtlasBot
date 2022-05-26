@@ -26,11 +26,14 @@ public class Commands {
 			Document doc;
 			EmbedBuilder eb = new EmbedBuilder();
 			try {
+				Pokemon po = Pokemon.getByRealName(str);
+				List<Type> t = po.getType();
 				doc = Jsoup.connect("https://www.pokemon.com/fr/pokedex/" + str).get();
 				eb.setTitle(str);
 				str = doc.select("body.fr.fluid.custom-form-elements:nth-child(2) div.container:nth-child(5) section.section.pokedex-pokemon-details:nth-child(3) div.column-6.push-7:nth-child(2) div.pokedex-pokemon-details-right div.version-descriptions.active:nth-child(1) > p.version-y").text();
 				eb.setDescription(str);
 				eb.setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + doc.selectXpath("//body[1]/div[4]/section[1]/div[2]/div[1]/span[1]").text().substring(3) + ".png");
+				eb.setColor(t.get(0).getColor());
 			} catch (IOException e) {
 				eb.setTitle(msg.getContentRaw().split(" ")[1]);
 				eb.setDescription("ce pokemon existe pas");
