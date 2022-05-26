@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/26 20:43:24 by                  ###   ########.fr       */
+/*   Updated: 2022/05/26 20:56:06 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,43 +160,7 @@ public class CommandDefault {
 	private void test(Message msg) throws IOException {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 		{
-			new Squads("Cyan", msg.getGuild());
-			new Squads("Magenta", msg.getGuild());
-			new Squads("Jaune", msg.getGuild());
-
-			List<Member> M1 = msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById("680431143283458077"));
-			List<Member> M2 = msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById("849925828069687296"));
-			List<Member> M3 = msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById("634839000644845619"));
-			List<Squads> squads = Squads.getAllSquads();
-			int	i = 0;
-			while (M1.size() > 1)
-			{
-				squads.get(i).addMember(M1.remove(new Random().nextInt(M1.size() - 1)));
-				i++;
-				if (i == 3)
-					i = 0;
-			}
-			squads.get(i).addMember(M1.remove(0));
-			i = 0;
-			while (M2.size() > 1)
-			{
-
-				squads.get(i).addMember(M2.remove(new Random().nextInt(M2.size() - 1)));
-				i++;
-				if (i == 3)
-					i = 0;
-			}
-			squads.get(i).addMember(M2.remove(0));
-			i = 0;
-			while (M3.size() > 1)
-			{
-
-				squads.get(i).addMember(M3.remove(new Random().nextInt(M3.size() - 1)));
-				i++;
-				if (i == 3)
-					i = 0;
-			}
-			squads.get(i).addMember(M3.remove(0));
+			msg.getChannel().sendMessage("no").queue();
 		}
 	}
 }
