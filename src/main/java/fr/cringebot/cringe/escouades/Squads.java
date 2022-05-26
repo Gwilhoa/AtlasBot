@@ -102,4 +102,11 @@ public class Squads {
 			squadsHashMap = new HashMap<>();
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/26 20:02:37 by                  ###   ########.fr       */
+/*   Updated: 2022/05/26 20:06:32 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ import fr.cringebot.cringe.Polls.PollMessage;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
+import fr.cringebot.cringe.command.CommandDefault;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.lol.Champion;
 import fr.cringebot.cringe.objects.*;
@@ -63,6 +64,7 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static fr.cringebot.BotDiscord.isMaintenance;
 import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 import static fr.cringebot.cringe.event.MembersQuotes.MemberReact;
 import static fr.cringebot.cringe.event.MenuInteract.onSelectMenu;
@@ -256,16 +258,16 @@ public class BotListener implements EventListener {
 		Attacks.capa = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("attacks.json"))), new TypeToken<Collection<Attacks>>() {
 		}.getType());
 
-		act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
-		bot.getJda().getPresence().setPresence(OnlineStatus.ONLINE, act);
-		new Thread(() -> {
-			try {
-				while (true)
-					XP.startloop();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}).start();
+		if (isMaintenance) {
+			act = new activity(", je suis en maintenance", null, Activity.ActivityType.LISTENING);
+			bot.getJda().getPresence().setPresence(OnlineStatus.ONLINE, act);
+
+		}
+		else {
+			act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
+			bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);
+		}
+
 	}
 
 	/**

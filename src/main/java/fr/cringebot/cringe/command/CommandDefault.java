@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/26 20:56:06 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 00:03:04 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
+import static fr.cringebot.BotDiscord.isMaintenance;
 import static fr.cringebot.cringe.cki.mainCommand.ckimain;
 
 /**
@@ -53,7 +54,6 @@ import static fr.cringebot.cringe.cki.mainCommand.ckimain;
 public class CommandDefault {
 
 	private final BotDiscord botDiscord;
-
 	/**
 	 * intialisation de l'objet
 	 *
@@ -98,6 +98,19 @@ public class CommandDefault {
 						"> messages total : " + UserExtenders.getAllmsg(mem))
 				.setColor(mem.getColor());
 		channel.sendMessageEmbeds(builder.build()).queue();
+	}
+
+	@Command(name = "top", description = "regarder le classement des escouades")
+	private void top(Message msg){
+		List<Squads> squads = Squads.getAllSquads();
+		StringBuilder sb = new StringBuilder();
+		sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append("\n");
+		sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append("\n");
+		sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append("\n");
+
+		EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
+		eb.setDescription(sb);
+		msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 	}
 
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
@@ -148,6 +161,10 @@ public class CommandDefault {
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException {
+		if (isMaintenance) {
+			msg.getChannel().sendMessage("le bot est actuellement en maintenance").queue();
+			return;
+		}
 		WaifuCommand.CommandMain(msg);
 	}
 

@@ -23,6 +23,7 @@ public class WaifuCommand {
 	private static Message msg;
 
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
+
 		if (msg.getContentRaw().split(" ").length == 1) {
 			newWaifu(msg);
 			return;
