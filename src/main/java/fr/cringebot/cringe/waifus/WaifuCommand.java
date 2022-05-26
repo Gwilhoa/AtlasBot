@@ -3,18 +3,14 @@ package fr.cringebot.cringe.waifus;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.interactions.components.ActionComponent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
-import net.dv8tion.jda.api.interactions.components.text.TextInput;
-import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.cringe.waifus.waifu.getAllWaifu;

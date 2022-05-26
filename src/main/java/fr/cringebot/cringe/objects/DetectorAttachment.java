@@ -1,5 +1,8 @@
 package fr.cringebot.cringe.objects;
 
+import net.dv8tion.jda.api.entities.Message;
+
+import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -8,10 +11,6 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
-
-import net.dv8tion.jda.api.entities.Message;
 
 
 public class DetectorAttachment {

@@ -4,7 +4,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 
 import static fr.cringebot.cringe.event.BotListener.gson;
 

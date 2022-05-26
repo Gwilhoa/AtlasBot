@@ -1,18 +1,9 @@
 package fr.cringebot.cringe.xp;
 
-import com.google.gson.reflect.TypeToken;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
-
-import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static fr.cringebot.cringe.event.BotListener.gson;
 
 public class XP {
-    private static ArrayList<Integer> freqmsg = new ArrayList<>();
+    private static final ArrayList<Integer> freqmsg = new ArrayList<>();
     private static Integer nbmsg = 0;
     private static Long starttime;
 

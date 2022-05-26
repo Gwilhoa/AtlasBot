@@ -1,18 +1,17 @@
 package fr.cringebot.cringe.pokemon;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.List;
-import java.util.Random;
-
+import fr.cringebot.cringe.builder.Command;
+import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import fr.cringebot.cringe.pokemon.objects.Type;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import fr.cringebot.cringe.builder.Command;
-import fr.cringebot.cringe.pokemon.objects.Pokemon;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
+import java.awt.*;
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
 
 public class Commands {
 	@Command(name = "pokedex", type = Command.ExecutorType.USER)

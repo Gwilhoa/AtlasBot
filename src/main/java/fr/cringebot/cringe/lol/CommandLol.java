@@ -1,7 +1,6 @@
 package fr.cringebot.cringe.lol;
 
 import fr.cringebot.cringe.builder.Command;
-import fr.cringebot.cringe.lol.Champion;
 import net.dv8tion.jda.api.entities.Message;
 import net.rithms.riot.api.ApiConfig;
 import net.rithms.riot.api.RiotApi;

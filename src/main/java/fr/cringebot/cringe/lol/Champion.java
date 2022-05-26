@@ -1,9 +1,12 @@
 package fr.cringebot.cringe.lol;
 
-import java.util.*;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 public class Champion {
     public static HashMap<String, Champion> champions;

@@ -16,7 +16,6 @@ import fr.cringebot.cringe.objects.DetectorAttachment;
 import fr.cringebot.cringe.objects.Emotes;
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -28,7 +27,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.regex.Pattern;
 
 import static fr.cringebot.cringe.objects.Emotes.getEmote;
 

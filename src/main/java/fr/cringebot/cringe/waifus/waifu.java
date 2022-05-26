@@ -5,7 +5,6 @@ import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -23,10 +22,10 @@ public class waifu {
 	private String name;
 	private String description;
 	private String owner;
-	private String type;
+	private final String type;
 	private Integer id;
 	private String origin;
-	private ArrayList<String> nickname;
+	private final ArrayList<String> nickname;
 
 	public String getType() {
 		return type;

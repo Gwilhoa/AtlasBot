@@ -1,7 +1,6 @@
 package fr.cringebot.cringe.escouades;
 
 import com.google.gson.reflect.TypeToken;
-import fr.cringebot.cringe.waifus.waifu;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -17,10 +16,10 @@ public class Squads {
 	private static final TypeToken<HashMap<String, Squads>> token = new TypeToken<HashMap<String, Squads>>() {
 	};
 	private static HashMap<String, Squads> squadsHashMap = new HashMap<>();
-	private String name;
-	private HashMap<String, SquadMember> MemberList;
-	private Long total;
-	private String roleid;
+	private final String name;
+	private final HashMap<String, SquadMember> MemberList;
+	private final Long total;
+	private final String roleid;
 
 	public Squads(String name, Guild guild) {
 		this.name = name;

@@ -1,7 +1,7 @@
 package fr.cringebot.cringe.cki;
 
-import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.lol.Champion;
+import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;

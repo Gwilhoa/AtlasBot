@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 00:03:04 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 00:18:20 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.escouades.Squads;
-import fr.cringebot.cringe.objects.*;
+import fr.cringebot.cringe.objects.SelectOptionImpl;
+import fr.cringebot.cringe.objects.UserExtenders;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.waifus.WaifuCommand;
 import fr.cringebot.cringe.waifus.waifu;
@@ -31,16 +32,10 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.Arc2D;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;

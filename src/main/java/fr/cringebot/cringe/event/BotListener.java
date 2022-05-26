@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/26 20:06:32 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 00:18:20 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ import fr.cringebot.cringe.Polls.PollMessage;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
-import fr.cringebot.cringe.command.CommandDefault;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.lol.Champion;
 import fr.cringebot.cringe.objects.*;
@@ -65,7 +64,6 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.BotDiscord.isMaintenance;
-import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 import static fr.cringebot.cringe.event.MembersQuotes.MemberReact;
 import static fr.cringebot.cringe.event.MenuInteract.onSelectMenu;
 import static fr.cringebot.cringe.event.ReactionEvent.*;

@@ -3,7 +3,6 @@ package fr.cringebot.cringe.Polls;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 
 public class PollListener {

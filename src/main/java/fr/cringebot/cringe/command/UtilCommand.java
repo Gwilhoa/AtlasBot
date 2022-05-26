@@ -14,10 +14,9 @@ package fr.cringebot.cringe.command;
 
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command;
-import fr.cringebot.cringe.objects.activity;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
