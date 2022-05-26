@@ -56,7 +56,6 @@ public class Squads {
 			squad.bestid = bestId;
 			squad.total = value;
 		}
-		save();
 	}
 
 	public String getBestid() {
@@ -114,6 +113,7 @@ public class Squads {
 		this.MemberList.put(id, new SquadMember(id));
 	}
 	private static void save() {
+		updateSquads();
 		if (!new File(file).exists()) {
 			try {
 				new File(file).createNewFile();
@@ -128,7 +128,6 @@ public class Squads {
 			bw.close();
 		} catch (IOException e) {
 		}
-		updateSquads();
 	}
 
 	public static void load() {
