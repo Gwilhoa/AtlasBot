@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 22:23:31 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 23:46:34 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
@@ -114,10 +115,21 @@ public class BotListener implements EventListener {
 			else if (event instanceof MessageEmbedEvent) onEmbed((MessageEmbedEvent) event);
 			else if (event instanceof SlashCommandInteraction) onSlashCommand((SlashCommandInteraction) event);
 			else if (event instanceof ButtonInteractionEvent) onButton((ButtonInteractionEvent) event);
+			else if (event instanceof GuildVoiceMoveEvent) onMove((GuildVoiceMoveEvent) event);
 		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException | ExecutionException e) {
 			e.printStackTrace();
 			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
 		}
+	}
+
+	private void onMove(GuildVoiceMoveEvent event) {
+		if (XP.isVoiceXp(event.getChannelLeft()))
+			for (Member mb : event.getChannelJoined().getMembers())
+				XP.end(mb);
+		if (XP.isVoiceXp(event.getChannelJoined()))
+			for (Member mb : event.getChannelJoined().getMembers())
+				XP.start(mb);
+			else XP.end(event.getMember());
 	}
 
 	private void onButton(ButtonInteractionEvent event) {
@@ -145,11 +157,17 @@ public class BotListener implements EventListener {
 		if (event.getMember().getUser().equals(event.getJDA().getSelfUser()))
 			MusicCommand.stop(event.getGuild());
 		XP.end(event.getMember());
+		if (XP.isVoiceXp(event.getChannelLeft()))
+			for (Member mb : event.getChannelJoined().getMembers())
+				XP.end(mb);
 		System.out.println(event.getMember().getUser().getName() + " s'est déconnecté");
 	}
 
 	private void onConnect(GuildVoiceJoinEvent event) {
 		System.out.println(event.getMember().getUser().getName() + " s'est connecté");
+		if (XP.isVoiceXp(event.getChannelJoined()))
+			for (Member mb : event.getChannelJoined().getMembers())
+				XP.start(mb);
 		XP.start(event.getMember());
 	}
 

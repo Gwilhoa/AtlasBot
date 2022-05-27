@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public class BotDiscord implements Runnable{
 
-    public static final Boolean isMaintenance = true;
+    public static final Boolean isMaintenance = false;
     private final JDA jda;
     private final CommandMap commandMap = new CommandMap(this);
     private final Scanner scanner = new Scanner(System.in);
