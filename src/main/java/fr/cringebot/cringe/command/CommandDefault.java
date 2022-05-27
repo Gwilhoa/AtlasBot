@@ -99,9 +99,9 @@ public class CommandDefault {
 	private void top(Message msg){
 		List<Squads> squads = Squads.getAllSquads();
 		StringBuilder sb = new StringBuilder();
-		sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention());
-		sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention());
-		sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention());
+		sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append("\n");
+		sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
+		sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention());
 
 		EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
 		eb.setDescription(sb);
@@ -160,10 +160,7 @@ public class CommandDefault {
 			msg.getChannel().sendMessage("le bot est actuellement en maintenance").queue();
 			return;
 		}
-		if (msg.getMember().getId().equals("420655502276558848"))
-			WaifuCommand.CommandMain(msg);
-		else
-			msg.getChannel().sendMessage("aparemment j'ai un probleme, je suis actuellement en train d'etre examiné").queue();
+		WaifuCommand.CommandMain(msg);
 	}
 
 	@Command(name = "cki", description = "mais qui est-il !", type = ExecutorType.USER)
@@ -175,9 +172,12 @@ public class CommandDefault {
 	private void test(Message msg) throws IOException {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 		{
-			new Squads(msg.getGuild().getRoleById("979455621638262784"));
-			new Squads(msg.getGuild().getRoleById("979455622145773589"));
-			new Squads(msg.getGuild().getRoleById("979455623295041578"));
+			ArrayList<waifu> waifus = waifu.getAllWaifu();
+			for (waifu waifu : waifus)
+			{
+				if (waifu.getOwner().equals("420655502276558848"))
+					waifu.setOwner(null);
+			}
 		}
 	}
 }
