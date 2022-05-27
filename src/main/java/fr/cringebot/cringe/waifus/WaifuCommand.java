@@ -108,15 +108,15 @@ public class WaifuCommand {
 	}
 
 	private static void newWaifu(Message msg) {
-		if (waifu.timeleft(msg.getMember().getId()) < 0){
-			long t = waifu.timeleft(msg.getMember().getId());
-			long th = (10800000 - t) / 3600000;
-			long tmin = (10800000 - th * 3600000 - t) / 60000;
-			long ts = (10800000 - th * 3600000 - tmin * 60000 - t) / 1000;
-			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle waifu").queue();
-			return;
-
-		}
+//		if (waifu.timeleft(msg.getMember().getId()) < 0){
+//			long t = waifu.timeleft(msg.getMember().getId());
+//			long th = (10800000 - t) / 3600000;
+//			long tmin = (10800000 - th * 3600000 - t) / 60000;
+//			long ts = (10800000 - th * 3600000 - tmin * 60000 - t) / 1000;
+//			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle waifu").queue();
+//			return;
+//
+//		}
 
 		waifu.setTime(msg.getMember().getId());
 		ArrayList<waifu> waifus = getAllWaifu();
