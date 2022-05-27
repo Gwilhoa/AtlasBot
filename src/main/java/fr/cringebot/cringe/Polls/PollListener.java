@@ -15,7 +15,7 @@ public class PollListener {
      */
     public static void reactSelectMenu(Message pollMessage, Member Voter, SelectOption selectOption) {
         PollMessage pm = PollMessage.pollMessage.get(pollMessage.getId());
-        pm.newVote(Voter, selectOption.getLabel(), Voter.getRoles().contains(Voter.getGuild().getRoleById("961344855974486026")));
+        pm.newVote(Voter, selectOption.getLabel());
         pollMessage.editMessageEmbeds(pm.getMessageEmbed(pollMessage.getGuild())).queue();
     }
 
