@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 22:52:18 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 22:54:42 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ public class CommandDefault {
 			mb = msg.getMentions().getMembers().get(0);
 		}
 		Long p = Squads.getSquadByMember(mb).getStatMember(mb).getPoints();
-		msg.getChannel().sendMessage("classement de "+ mb + "\n" + p.toString()).queue();
+		msg.getChannel().sendMessage("classement de "+ mb.getAsMention() + "\n" + p.toString()).queue();
 	}
 
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)

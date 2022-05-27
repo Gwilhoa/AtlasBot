@@ -25,8 +25,9 @@ public class XP {
         if (vocalTime.get(id) == null)
             return;
         Long time = System.currentTimeMillis() - vocalTime.get(id);
+        System.out.println("tps en millis : "+ time);
         time = calcul(time);
-        System.out.println(id + "+"+ time);
+        System.out.println("pts gagné : "+ time);
         Squads.addPoints(id, time);
     }
 

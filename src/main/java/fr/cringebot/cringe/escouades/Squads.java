@@ -75,6 +75,7 @@ public class Squads {
 			return;
 		}
 		squad.getStatMember(id).addPoint(i);
+		save();
 	}
 
 	public static void removePoints(String id, Long i){
@@ -84,6 +85,7 @@ public class Squads {
 			return;
 		}
 		squad.getStatMember(id).removepoint(i);
+		save();
 	}
 
 	public static Squads getSquadByMember(String id) {
