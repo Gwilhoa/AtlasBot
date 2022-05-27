@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 00:18:20 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 22:23:31 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,11 +144,13 @@ public class BotListener implements EventListener {
 	private void onDisconnect(GuildVoiceLeaveEvent event) {
 		if (event.getMember().getUser().equals(event.getJDA().getSelfUser()))
 			MusicCommand.stop(event.getGuild());
+		XP.end(event.getMember());
 		System.out.println(event.getMember().getUser().getName() + " s'est déconnecté");
 	}
 
 	private void onConnect(GuildVoiceJoinEvent event) {
 		System.out.println(event.getMember().getUser().getName() + " s'est connecté");
+		XP.start(event.getMember());
 	}
 
 	private void onChangeServerName(GuildUpdateNameEvent event) {
@@ -384,7 +386,6 @@ public class BotListener implements EventListener {
 	private void onMessage(MessageReceivedEvent event) throws IOException, InterruptedException {
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		Message msg = event.getMessage();
-		XP.addmsg();
 		if (msg.getChannel().getId().equals("947564791759777792"))
 			msg.createThreadChannel("Parlez ici bandes de shlags").queue();
 		if (msg.getMentions().getMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())) && msg.getReferencedMessage() == null)

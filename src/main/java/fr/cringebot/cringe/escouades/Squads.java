@@ -64,6 +64,12 @@ public class Squads {
 		return bestid;
 	}
 
+	public void ResetPoint() {
+		for (SquadMember sm : this.MemberList.values())
+			sm.resetPoint();
+		save();
+	}
+
 	public static void addPoints(Member m, Long i){
 		addPoints(m.getId(), i);
 	}
@@ -75,6 +81,7 @@ public class Squads {
 			return;
 		}
 		squad.getStatMember(id).addPoint(i);
+		save();
 	}
 
 	public static void removePoints(String id, Long i){
@@ -84,6 +91,7 @@ public class Squads {
 			return;
 		}
 		squad.getStatMember(id).removepoint(i);
+		save();
 	}
 
 	public static Squads getSquadByMember(String id) {

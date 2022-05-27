@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 01:24:00 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 23:02:16 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
+import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.UserExtenders;
@@ -99,13 +100,24 @@ public class CommandDefault {
 	private void top(Message msg){
 		List<Squads> squads = Squads.getAllSquads();
 		StringBuilder sb = new StringBuilder();
-		sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()));
-		sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()));
-		sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()));
+		sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append("\n");
+		sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
+		sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention());
 
 		EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
 		eb.setDescription(sb);
 		msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+	}
+
+	@Command(name = "rank", description = "rang")
+	private void rank(Message msg){
+		Member mb;
+		mb = msg.getMember();
+		if (!msg.getMentions().getMembers().isEmpty()) {
+			mb = msg.getMentions().getMembers().get(0);
+		}
+		Long p = Squads.getSquadByMember(mb).getStatMember(mb).getPoints();
+		msg.getChannel().sendMessage("classement de "+ mb.getAsMention() + "\n" + p.toString()).queue();
 	}
 
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
@@ -172,9 +184,9 @@ public class CommandDefault {
 	private void test(Message msg) throws IOException {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 		{
-			new Squads(msg.getGuild().getRoleById("979455621638262784"));
-			new Squads(msg.getGuild().getRoleById("979455622145773589"));
-			new Squads(msg.getGuild().getRoleById("979455623295041578"));
+			List<Squads> squads = Squads.getAllSquads();
+			for (Squads squad : squads)
+				squad.ResetPoint();
 		}
 	}
 }
