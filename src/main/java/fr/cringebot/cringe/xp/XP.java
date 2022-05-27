@@ -33,6 +33,6 @@ public class XP {
 
     private static Long calcul(Long time){
         double d = Math.pow(time, 2)/ 500000000;
-        return Double.doubleToLongBits(d);
+        return Math.round(d);
     }
 }

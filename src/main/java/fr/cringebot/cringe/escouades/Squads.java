@@ -64,6 +64,12 @@ public class Squads {
 		return bestid;
 	}
 
+	public void ResetPoint() {
+		for (SquadMember sm : this.MemberList.values())
+			sm.resetPoint();
+		save();
+	}
+
 	public static void addPoints(Member m, Long i){
 		addPoints(m.getId(), i);
 	}

@@ -14,6 +14,10 @@ public class SquadMember {
 		this.points = this.points + nb;
 	}
 
+	public void resetPoint()
+	{
+		this.points = 0L;
+	}
 	public void removepoint(Long nb) {
 		this.points = this.points - nb;
 	}

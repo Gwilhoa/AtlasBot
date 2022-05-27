@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 22:54:42 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 23:02:16 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
+import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.UserExtenders;
@@ -183,9 +184,9 @@ public class CommandDefault {
 	private void test(Message msg) throws IOException {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 		{
-			new Squads(msg.getGuild().getRoleById("979455621638262784"));
-			new Squads(msg.getGuild().getRoleById("979455622145773589"));
-			new Squads(msg.getGuild().getRoleById("979455623295041578"));
+			List<Squads> squads = Squads.getAllSquads();
+			for (Squads squad : squads)
+				squad.ResetPoint();
 		}
 	}
 }
