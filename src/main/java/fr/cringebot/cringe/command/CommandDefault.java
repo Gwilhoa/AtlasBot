@@ -108,6 +108,17 @@ public class CommandDefault {
 		msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 	}
 
+	@Command(name = "rank", description = "rang")
+	private void rank(Message msg){
+		Member mb;
+		mb = msg.getMember();
+		if (!msg.getMentions().getMembers().isEmpty()) {
+			mb = msg.getMentions().getMembers().get(0);
+		}
+		Long p = Squads.getSquadByMember(mb).getStatMember(mb).getPoints();
+		msg.getChannel().sendMessage("classement de "+ mb + "\n" + p.toString()).queue();
+	}
+
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
 	private void poll(Message msg) {
 		PollMain.PollMain(msg);
