@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 23:46:34 by                  ###   ########.fr       */
+/*   Updated: 2022/05/27 23:52:52 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ public class BotListener implements EventListener {
 			MusicCommand.stop(event.getGuild());
 		XP.end(event.getMember());
 		if (XP.isVoiceXp(event.getChannelLeft()))
-			for (Member mb : event.getChannelJoined().getMembers())
+			for (Member mb : event.getChannelLeft().getMembers())
 				XP.end(mb);
 		System.out.println(event.getMember().getUser().getName() + " s'est déconnecté");
 	}
