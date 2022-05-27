@@ -50,6 +50,8 @@ public class WaifuCommand {
 			setOrigin(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("trade"))
 			trade(msg);
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("release"))
+			release(msg);
 		else
 			newWaifu(msg);
 
@@ -282,4 +284,19 @@ public class WaifuCommand {
 		w.setName(name);
 		msg.addReaction("\uD83D\uDC4C").queue();
 	}
+
+	private static void release(Message msg) {
+		String id = msg.getContentRaw().split(" ")[2];
+		waifu w = waifu.getWaifuById(Integer.parseInt(id));
+		if (w.getOwner() == null)
+			msg.getChannel().sendMessage(w.getName() + " n'appartient a personne").queue();
+		else if (w.getOwner() != msg.getMember().getId())
+			msg.getChannel().sendMessage("tu n'est pas le propriétaire de " + w.getName()).queue();
+		else {
+			w.setOwner(null);
+			msg.getChannel().sendMessage(w.getName() + " a été relâcher").queue();
+		}
+	}
 }
+
+
