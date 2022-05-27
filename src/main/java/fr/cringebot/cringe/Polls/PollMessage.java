@@ -73,10 +73,8 @@ public class PollMessage {
      * @param user
      * @param arg
      */
-    public void newVote(Member user, String arg, boolean Double) {
-        int v = 1;
-        if (Double)
-            v = 2;
+    public void newVote(Member user, String arg) {
+        int v = 1;  /*nombre de voie par vote*/
         PollMessage pm = pollMessage.get(this.messageId);
         if ( pm.MemberVote.get(user.getId()) == null || pm.MemberVote.get(user.getId()).isEmpty())
         {
