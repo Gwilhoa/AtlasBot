@@ -175,7 +175,7 @@ public class CommandDefault {
 			ArrayList<waifu> waifus = waifu.getAllWaifu();
 			for (waifu waifu : waifus)
 			{
-				if (waifu.getOwner().equals("420655502276558848"))
+				if (waifu.getOwner() != null && waifu.getOwner().equals("420655502276558848"))
 					waifu.setOwner(null);
 			}
 		}
