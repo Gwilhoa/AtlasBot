@@ -100,9 +100,36 @@ public class CommandDefault {
 	private void top(Message msg){
 		List<Squads> squads = Squads.getAllSquads();
 		StringBuilder sb = new StringBuilder();
-		sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append("\n");
-		sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
-		sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention());
+		if ((squads.get(0).getTotal() >= squads.get(1).getTotal()) && (squads.get(1).getTotal() >= squads.get(2).getTotal())) { // guild 0 > 1 > 2
+			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append(" avec ").append(Squads.getSquadByMember(msg.getGuild().getMemberById(squads.get(0).getBestid())).getStatMember(msg.getGuild().getMemberById(squads.get(0).getBestid())).getPoints()).append("\n");
+			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention());
+		}
+		else if ((squads.get(0).getTotal() >= squads.get(2).getTotal()) && (squads.get(2).getTotal() >= squads.get(1).getTotal())) {  // guild 0 > 2 > 1
+			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention());
+		}
+		else if ((squads.get(1).getTotal() >= squads.get(0).getTotal()) && (squads.get(0).getTotal() >= squads.get(2).getTotal())) {  // guild 1 > 0 > 2
+			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention());
+		}
+		else if ((squads.get(1).getTotal() >= squads.get(2).getTotal()) && (squads.get(2).getTotal() >= squads.get(0).getTotal())) {  // guild 1 > 2 > 0
+			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention());
+		}
+		else if ((squads.get(2).getTotal() >= squads.get(0).getTotal()) && (squads.get(0).getTotal() >= squads.get(1).getTotal())) {  // guild 2 > 0 > 1
+			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention());
+		}
+		else {  // guild 2 > 1 > 0
+			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
+			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention());
+		}
 
 		EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
 		eb.setDescription(sb);
