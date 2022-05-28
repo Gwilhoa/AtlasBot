@@ -96,40 +96,37 @@ public class CommandDefault {
 		channel.sendMessageEmbeds(builder.build()).queue();
 	}
 
+	/**
+	 * Donne le classement des escoudes
+	 * en fonction de leurs point respectif
+	 *
+	 * @param msg	message de l'envoyeur
+	 */
 	@Command(name = "top", description = "regarder le classement des escouades")
 	private void top(Message msg){
 		List<Squads> squads = Squads.getAllSquads();
 		StringBuilder sb = new StringBuilder();
-		if ((squads.get(0).getTotal() >= squads.get(1).getTotal()) && (squads.get(1).getTotal() >= squads.get(2).getTotal())) { // guild 0 > 1 > 2
-			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append(" avec ").append(Squads.getSquadByMember(msg.getGuild().getMemberById(squads.get(0).getBestid())).getStatMember(msg.getGuild().getMemberById(squads.get(0).getBestid())).getPoints()).append("\n");
-			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention());
-		}
-		else if ((squads.get(0).getTotal() >= squads.get(2).getTotal()) && (squads.get(2).getTotal() >= squads.get(1).getTotal())) {  // guild 0 > 2 > 1
-			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention());
-		}
-		else if ((squads.get(1).getTotal() >= squads.get(0).getTotal()) && (squads.get(0).getTotal() >= squads.get(2).getTotal())) {  // guild 1 > 0 > 2
-			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention());
-		}
-		else if ((squads.get(1).getTotal() >= squads.get(2).getTotal()) && (squads.get(2).getTotal() >= squads.get(0).getTotal())) {  // guild 1 > 2 > 0
-			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention());
-		}
-		else if ((squads.get(2).getTotal() >= squads.get(0).getTotal()) && (squads.get(0).getTotal() >= squads.get(1).getTotal())) {  // guild 2 > 0 > 1
-			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention());
-		}
-		else {  // guild 2 > 1 > 0
-			sb.append(squads.get(2).getName()).append(" ").append(squads.get(2).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(1).getName()).append(" ").append(squads.get(1).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention()).append("\n");
-			sb.append(squads.get(0).getName()).append(" ").append(squads.get(0).getTotal()).append(" meilleur : ").append(msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention());
-		}
+
+		// a b c sont des string pour pour faciliter l'assemblage du message en fonction du classement
+		String a = squads.get(0).getName() + " " + squads.get(0).getTotal() + " meilleur : " + msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention();
+		a = a + " avec " + squads.get(0).getStatMember(msg.getGuild().getMemberById(squads.get(0).getBestid())).getPoints() + " pts\n";
+		String b = squads.get(1).getName() + " " + squads.get(1).getTotal() + " meilleur : " + msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention();
+		b = b + " avec " + squads.get(1).getStatMember(msg.getGuild().getMemberById(squads.get(0).getBestid())).getPoints() + " pts\n";
+		String c = squads.get(2).getName() + " " + squads.get(2).getTotal() + " meilleur : " + msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention();
+		c = c + " avec " + squads.get(2).getStatMember(msg.getGuild().getMemberById(squads.get(2).getBestid())).getPoints() + " pts\n";
+
+		if ((squads.get(0).getTotal() >= squads.get(1).getTotal()) && (squads.get(1).getTotal() >= squads.get(2).getTotal())) // guild 0 > 1 > 2
+			sb.append(a).append(b).append(c);
+		else if ((squads.get(0).getTotal() >= squads.get(2).getTotal()) && (squads.get(2).getTotal() >= squads.get(1).getTotal())) // guild 0 > 2 > 1
+			sb.append(a).append(c).append(b);
+		else if ((squads.get(1).getTotal() >= squads.get(0).getTotal()) && (squads.get(0).getTotal() >= squads.get(2).getTotal())) // guild 1 > 0 > 2
+			sb.append(b).append(a).append(c);
+		else if ((squads.get(1).getTotal() >= squads.get(2).getTotal()) && (squads.get(2).getTotal() >= squads.get(0).getTotal())) // guild 1 > 2 > 0
+			sb.append(b).append(c).append(a);
+		else if ((squads.get(2).getTotal() >= squads.get(0).getTotal()) && (squads.get(0).getTotal() >= squads.get(1).getTotal()))  // guild 2 > 0 > 1
+			sb.append(c).append(a).append(b);
+		else  // guild 2 > 1 > 0
+			sb.append(c).append(b).append(a);
 
 		EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
 		eb.setDescription(sb);
