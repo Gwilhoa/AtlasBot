@@ -4,6 +4,7 @@ import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
@@ -126,7 +127,8 @@ public class WaifuCommand {
 		waifu w;
 		w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
 		w.setOwner(msg.getMember().getId());
-		EmbedBuilder eb = w.EmbedWaifu(msg.getGuild());
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setImage("attachment://"+w.getProfile().getName());
 		eb.setTitle("Nouvelle waifu !");
 		eb.setDescription("ta nouvelle waifu est " + w.getName() + " de " + w.getOrigin());
 		eb.setFooter("félicitation !!");
@@ -153,15 +155,28 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 		}
 	}
+	private static void sendEmbedInfo(waifu w, TextChannel tc) {
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setAuthor(w.getOrigin());
+		eb.setTitle("Information : " + w.getName());
+		eb.setImage("attachment://"+w.getProfile().getName());
+		if (w.getOwner() != null)
+			eb.setFooter("appartient à "+ tc.getGuild().getMemberById(w.getOwner()).getEffectiveName(), tc.getGuild().getMemberById(w.getOwner()).getUser().getAvatarUrl());
+		else
+			eb.setFooter("disponible");
+		eb.setDescription(w.getDescription());
+		tc.sendMessageEmbeds(eb.build()).addFile(w.getProfile()).queue();
+	}
+
 	public static void infowaifu(Message msg)
 	{
 		ArrayList<waifu> w = waifu.getWaifubyName(msg.getContentRaw().substring(">waifu info ".length()));
 		if (w != null) {
-			msg.getChannel().sendMessageEmbeds(w.get(0).EmbedWaifu(msg.getGuild()).build()).addFile(w.get(0).getProfile()).queue();
+			sendEmbedInfo(w.get(0), msg.getTextChannel());
 			int	i = 1;
 			while (i < w.size())
 			{
-				msg.getChannel().sendMessageEmbeds(w.get(i).EmbedWaifu(msg.getGuild()).build()).addFile(w.get(i).getProfile()).queue();
+				sendEmbedInfo(w.get(i), msg.getTextChannel());
 				i++;
 			}
 		}
@@ -176,7 +191,7 @@ public class WaifuCommand {
 				return;
 			}
 			if (wid != null)
-				msg.getChannel().sendMessageEmbeds(wid.EmbedWaifu(msg.getGuild()).build()).addFile(wid.getProfile()).queue();
+				sendEmbedInfo(wid, msg.getTextChannel());
 			else {
 				msg.getChannel().sendMessage("je ne connais pas de waifu à ce nom ou cet id").queue();
 			}
@@ -286,11 +301,16 @@ public class WaifuCommand {
 	}
 
 	private static void release(Message msg) {
+		if (true)
+		{
+			msg.getChannel().sendMessage("tu ne peux pas relacher de waifu pour le moment").queue();
+			return;
+		}
 		String id = msg.getContentRaw().split(" ")[2];
 		waifu w = waifu.getWaifuById(Integer.parseInt(id));
 		if (w.getOwner() == null)
 			msg.getChannel().sendMessage(w.getName() + " n'appartient a personne").queue();
-		else if (w.getOwner() != msg.getMember().getId())
+		else if (w.getOwner().equals(msg.getMember().getId()))
 			msg.getChannel().sendMessage("tu n'est pas le propriétaire de " + w.getName()).queue();
 		else {
 			w.setOwner(null);
