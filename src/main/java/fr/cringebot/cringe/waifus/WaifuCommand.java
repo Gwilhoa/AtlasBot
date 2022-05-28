@@ -120,10 +120,7 @@ public class WaifuCommand {
 			return;
 
 		}
-
 		waifu.setTime(msg.getMember().getId());
-		ArrayList<waifu> waifus = getAllWaifu();
-		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(msg.getMember().getId()));
 		waifu w;
 		w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
 		w.setOwner(msg.getMember().getId());
@@ -172,13 +169,8 @@ public class WaifuCommand {
 	{
 		ArrayList<waifu> w = waifu.getWaifubyName(msg.getContentRaw().substring(">waifu info ".length()));
 		if (w != null) {
-			sendEmbedInfo(w.get(0), msg.getTextChannel());
-			int	i = 1;
-			while (i < w.size())
-			{
-				sendEmbedInfo(w.get(i), msg.getTextChannel());
-				i++;
-			}
+			for (waifu waif : w)
+				sendEmbedInfo(waif, msg.getTextChannel());
 		}
 		else
 		{
@@ -310,7 +302,7 @@ public class WaifuCommand {
 		waifu w = waifu.getWaifuById(Integer.parseInt(id));
 		if (w.getOwner() == null)
 			msg.getChannel().sendMessage(w.getName() + " n'appartient a personne").queue();
-		else if (w.getOwner().equals(msg.getMember().getId()))
+		else if (!w.getOwner().equals(msg.getMember().getId()))
 			msg.getChannel().sendMessage("tu n'est pas le propriétaire de " + w.getName()).queue();
 		else {
 			w.setOwner(null);
