@@ -137,8 +137,8 @@ public class waifu {
 	}
 
 
-	public File getProfile() {
-		return new File(profile);
+	public String getProfile() {
+		return profile;
 	}
 
 	public String getName() {

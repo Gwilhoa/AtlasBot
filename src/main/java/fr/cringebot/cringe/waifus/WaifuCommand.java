@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -128,13 +129,14 @@ public class WaifuCommand {
 		waifu.setTime(msg.getMember().getId());
 		waifu w;
 		w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
+		File f = new File(w.getProfile());
 		w.setOwner(msg.getMember().getId());
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setImage("attachment://"+w.getProfile().getName());
+		eb.setImage("attachment://"+f.getName());
 		eb.setTitle("Nouvelle waifu !");
 		eb.setDescription("ta nouvelle waifu est " + w.getName() + " de " + w.getOrigin());
 		eb.setFooter("félicitation !!");
-		msg.getChannel().sendMessageEmbeds(eb.build()).addFile(w.getProfile()).queue();
+		msg.getChannel().sendMessageEmbeds(eb.build()).addFile(f).queue();
 	}
 
 	public static void addwaifu(Message msg) throws ExecutionException, InterruptedException {
@@ -159,15 +161,16 @@ public class WaifuCommand {
 	}
 	private static void sendEmbedInfo(waifu w, TextChannel tc) {
 		EmbedBuilder eb = new EmbedBuilder();
+		File f = new File(w.getProfile());
 		eb.setAuthor(w.getOrigin());
-		eb.setTitle("Information : " + w.getName());
-		eb.setImage("attachment://"+w.getProfile().getName());
+		eb.setTitle("Information : " + w.getName() + "\nIdentifiant : " + w.getId());
+		eb.setImage("attachment://"+f.getName());
 		if (w.getOwner() != null)
 			eb.setFooter("appartient à "+ tc.getGuild().getMemberById(w.getOwner()).getEffectiveName(), tc.getGuild().getMemberById(w.getOwner()).getUser().getAvatarUrl());
 		else
 			eb.setFooter("disponible");
 		eb.setDescription(w.getDescription());
-		tc.sendMessageEmbeds(eb.build()).addFile(w.getProfile()).queue();
+		tc.sendMessageEmbeds(eb.build()).addFile(f).queue();
 	}
 
 	public static void infowaifu(Message msg)
