@@ -136,16 +136,6 @@ public class waifu {
 		return null;
 	}
 
-	public EmbedBuilder EmbedWaifu(Guild guild) {
-		EmbedBuilder eb = new EmbedBuilder();
-		eb.setImage("attachment://" + this.profile.split("/")[this.profile.split("/").length - 1]);
-		eb.setDescription("nom : " + this.name +" de "+ this.origin +"\nid : "+this.id+"\ndescription :\n"+this.description);
-		if (this.owner == null)
-			eb.setFooter("disponible");
-		else
-			eb.setFooter("appartient à "+ guild.getMemberById(this.owner).getEffectiveName(), guild.getMemberById(this.owner).getUser().getAvatarUrl());
-		return eb;
-	}
 
 	public File getProfile() {
 		return new File(profile);
