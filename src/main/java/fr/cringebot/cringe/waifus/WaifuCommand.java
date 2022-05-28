@@ -159,9 +159,11 @@ public class WaifuCommand {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setAuthor(w.getOrigin());
 		eb.setTitle("Information : " + w.getName());
-		eb.setImage("attachement://"+w.getProfile().getName());
+		eb.setImage("Attachment://"+w.getProfile().getName());
 		if (w.getOwner() != null)
 			eb.setFooter("appartient à "+ tc.getGuild().getMemberById(w.getOwner()).getEffectiveName(), tc.getGuild().getMemberById(w.getOwner()).getAvatarUrl());
+		else
+			eb.setFooter("disponible");
 		eb.setDescription(w.getDescription());
 		tc.sendMessageEmbeds(eb.build()).addFile(w.getProfile()).queue();
 	}
