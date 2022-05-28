@@ -128,7 +128,7 @@ public class WaifuCommand {
 		w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
 		w.setOwner(msg.getMember().getId());
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setImage("Attachment://"+w.getProfile().getName());
+		eb.setImage("attachment://"+w.getProfile().getName());
 		eb.setTitle("Nouvelle waifu !");
 		eb.setDescription("ta nouvelle waifu est " + w.getName() + " de " + w.getOrigin());
 		eb.setFooter("félicitation !!");
@@ -159,9 +159,9 @@ public class WaifuCommand {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setAuthor(w.getOrigin());
 		eb.setTitle("Information : " + w.getName());
-		eb.setImage("Attachment://"+w.getProfile().getName());
+		eb.setImage("attachment://"+w.getProfile().getName());
 		if (w.getOwner() != null)
-			eb.setFooter("appartient à "+ tc.getGuild().getMemberById(w.getOwner()).getEffectiveName(), tc.getGuild().getMemberById(w.getOwner()).getAvatarUrl());
+			eb.setFooter("appartient à "+ tc.getGuild().getMemberById(w.getOwner()).getEffectiveName(), tc.getGuild().getMemberById(w.getOwner()).getUser().getAvatarUrl());
 		else
 			eb.setFooter("disponible");
 		eb.setDescription(w.getDescription());
