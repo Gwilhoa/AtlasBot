@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
+import static fr.cringebot.BotDiscord.isMaintenance;
 import static fr.cringebot.cringe.waifus.waifu.getAllWaifu;
 
 public class WaifuCommand {
@@ -111,6 +112,10 @@ public class WaifuCommand {
 	}
 
 	private static void newWaifu(Message msg) {
+		if (isMaintenance) {
+			msg.getChannel().sendMessage("le bot est actuellement en maintenance").queue();
+			return;
+		}
 		if (waifu.timeleft(msg.getMember().getId()) < 0){
 			long t = waifu.timeleft(msg.getMember().getId());
 			long th = (10800000 - t) / 3600000;

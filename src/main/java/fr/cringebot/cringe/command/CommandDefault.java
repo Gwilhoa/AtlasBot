@@ -192,10 +192,6 @@ public class CommandDefault {
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException {
-		if (isMaintenance) {
-			msg.getChannel().sendMessage("le bot est actuellement en maintenance").queue();
-			return;
-		}
 		WaifuCommand.CommandMain(msg);
 	}
 
