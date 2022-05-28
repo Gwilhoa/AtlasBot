@@ -14,6 +14,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static fr.cringebot.BotDiscord.isMaintenance;
 import static fr.cringebot.cringe.waifus.waifu.getAllWaifu;
@@ -177,8 +180,9 @@ public class WaifuCommand {
 	{
 		ArrayList<waifu> w = waifu.getWaifubyName(msg.getContentRaw().substring(">waifu info ".length()));
 		if (w != null) {
-			for (waifu waif : w)
+			for (waifu waif : w) {
 				sendEmbedInfo(waif, msg.getTextChannel());
+			}
 		}
 		else
 		{
