@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 23:02:16 by                  ###   ########.fr       */
+/*   Updated: 2022/05/28 19:51:15 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ public class CommandDefault {
 		String a = squads.get(0).getName() + " " + squads.get(0).getTotal() + " meilleur : " + msg.getGuild().getMemberById(squads.get(0).getBestid()).getAsMention();
 		a = a + " avec " + squads.get(0).getStatMember(msg.getGuild().getMemberById(squads.get(0).getBestid())).getPoints() + " pts\n";
 		String b = squads.get(1).getName() + " " + squads.get(1).getTotal() + " meilleur : " + msg.getGuild().getMemberById(squads.get(1).getBestid()).getAsMention();
-		b = b + " avec " + squads.get(1).getStatMember(msg.getGuild().getMemberById(squads.get(0).getBestid())).getPoints() + " pts\n";
+		b = b + " avec " + squads.get(1).getStatMember(msg.getGuild().getMemberById(squads.get(1).getBestid())).getPoints() + " pts\n";
 		String c = squads.get(2).getName() + " " + squads.get(2).getTotal() + " meilleur : " + msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention();
 		c = c + " avec " + squads.get(2).getStatMember(msg.getGuild().getMemberById(squads.get(2).getBestid())).getPoints() + " pts\n";
 
