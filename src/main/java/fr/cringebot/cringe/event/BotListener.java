@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/29 21:40:46 by                  ###   ########.fr       */
+/*   Updated: 2022/05/29 21:43:29 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -402,7 +402,11 @@ public class BotListener implements EventListener {
 	 *
 	 */
 	private void onMessage(MessageReceivedEvent event) throws IOException, InterruptedException {
-		if (event.getAuthor().equals(event.getJDA().getSelfUser()) || !event.getGuild().equals("382938797442334720")) return;
+		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
+		if (!event.getGuild().equals("382938797442334720")){
+			event.getChannel().sendMessage("bah non").queue();
+			return;
+		}
 		Message msg = event.getMessage();
 		if (msg.getChannel().getId().equals("947564791759777792"))
 			msg.createThreadChannel("Parlez ici bandes de shlags").queue();
