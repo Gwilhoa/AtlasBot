@@ -115,20 +115,33 @@ public class CommandDefault {
 		String c = squads.get(2).getName() + " " + squads.get(2).getTotal() + " meilleur : " + msg.getGuild().getMemberById(squads.get(2).getBestid()).getAsMention();
 		c = c + " avec " + squads.get(2).getStatMember(msg.getGuild().getMemberById(squads.get(2).getBestid())).getPoints() + " pts\n";
 
-		if ((squads.get(0).getTotal() >= squads.get(1).getTotal()) && (squads.get(1).getTotal() >= squads.get(2).getTotal())) // guild 0 > 1 > 2
-			sb.append(a).append(b).append(c);
-		else if ((squads.get(0).getTotal() >= squads.get(2).getTotal()) && (squads.get(2).getTotal() >= squads.get(1).getTotal())) // guild 0 > 2 > 1
-			sb.append(a).append(c).append(b);
-		else if ((squads.get(1).getTotal() >= squads.get(0).getTotal()) && (squads.get(0).getTotal() >= squads.get(2).getTotal())) // guild 1 > 0 > 2
-			sb.append(b).append(a).append(c);
-		else if ((squads.get(1).getTotal() >= squads.get(2).getTotal()) && (squads.get(2).getTotal() >= squads.get(0).getTotal())) // guild 1 > 2 > 0
-			sb.append(b).append(c).append(a);
-		else if ((squads.get(2).getTotal() >= squads.get(0).getTotal()) && (squads.get(0).getTotal() >= squads.get(1).getTotal()))  // guild 2 > 0 > 1
-			sb.append(c).append(a).append(b);
-		else  // guild 2 > 1 > 0
-			sb.append(c).append(b).append(a);
-
 		EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
+		if ((squads.get(0).getTotal() >= squads.get(1).getTotal()) && (squads.get(1).getTotal() >= squads.get(2).getTotal())) // guild 0 > 1 > 2
+		{
+			sb.append(a).append(b).append(c);
+			eb.setColor(squads.get(0).getSquadRole(msg.getGuild()).getColor());
+		}
+		else if ((squads.get(0).getTotal() >= squads.get(2).getTotal()) && (squads.get(2).getTotal() >= squads.get(1).getTotal())) {// guild 0 > 2 > 1
+			sb.append(a).append(c).append(b);
+			eb.setColor(squads.get(0).getSquadRole(msg.getGuild()).getColor());
+		}
+		else if ((squads.get(1).getTotal() >= squads.get(0).getTotal()) && (squads.get(0).getTotal() >= squads.get(2).getTotal())) {// guild 1 > 0 > 2
+			sb.append(b).append(a).append(c);
+			eb.setColor(squads.get(1).getSquadRole(msg.getGuild()).getColor());
+		}
+		else if ((squads.get(1).getTotal() >= squads.get(2).getTotal()) && (squads.get(2).getTotal() >= squads.get(0).getTotal())) { // guild 1 > 2 > 0
+			sb.append(b).append(c).append(a);
+			eb.setColor(squads.get(1).getSquadRole(msg.getGuild()).getColor());
+		}
+		else if ((squads.get(2).getTotal() >= squads.get(0).getTotal()) && (squads.get(0).getTotal() >= squads.get(1).getTotal())) { // guild 2 > 0 > 1
+			sb.append(c).append(a).append(b);
+			eb.setColor(squads.get(2).getSquadRole(msg.getGuild()).getColor());
+		}
+		else  // guild 2 > 1 > 0
+		{
+			sb.append(c).append(b).append(a);
+			eb.setColor(squads.get(2).getSquadRole(msg.getGuild()).getColor());
+		}
 		eb.setDescription(sb);
 		msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 	}

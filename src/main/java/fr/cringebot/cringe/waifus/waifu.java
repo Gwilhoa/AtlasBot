@@ -25,7 +25,7 @@ public class waifu {
 	private final String type;
 	private Integer id;
 	private String origin;
-	private final ArrayList<String> nickname;
+	private ArrayList<String> nickname;
 
 	public String getType() {
 		return type;

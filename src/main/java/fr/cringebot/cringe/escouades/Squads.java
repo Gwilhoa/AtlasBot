@@ -84,6 +84,11 @@ public class Squads {
 		save();
 	}
 
+	public Role getSquadRole(Guild g)
+	{
+		return g.getRoleById(this.roleid);
+	}
+
 	public static void removePoints(String id, Long i){
 		Squads squad = getSquadByMember(id);
 		if (squad == null) {

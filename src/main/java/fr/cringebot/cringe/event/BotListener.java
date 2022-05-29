@@ -157,7 +157,7 @@ public class BotListener implements EventListener {
 		if (event.getMember().getUser().equals(event.getJDA().getSelfUser()))
 			MusicCommand.stop(event.getGuild());
 		XP.end(event.getMember());
-		if (XP.isVoiceXp(event.getChannelLeft()))
+		if (!XP.isVoiceXp(event.getChannelLeft()))
 			for (Member mb : event.getChannelLeft().getMembers())
 				XP.end(mb);
 		System.out.println(event.getMember().getUser().getName() + " s'est déconnecté");

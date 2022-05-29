@@ -178,10 +178,13 @@ public class WaifuCommand {
 
 	public static void infowaifu(Message msg)
 	{
+		Lock l = new ReentrantLock();
 		ArrayList<waifu> w = waifu.getWaifubyName(msg.getContentRaw().substring(">waifu info ".length()));
 		if (w != null) {
 			for (waifu waif : w) {
+				l.lock();
 				sendEmbedInfo(waif, msg.getTextChannel());
+				l.unlock();
 			}
 		}
 		else
