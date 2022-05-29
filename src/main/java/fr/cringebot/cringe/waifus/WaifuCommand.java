@@ -116,7 +116,7 @@ public class WaifuCommand {
 			w.setOwner(null);
 	}
 
-	private static void newWaifu(Message msg) {
+	private static void newWaifu(Message msg) throws InterruptedException {
 		if (isMaintenance) {
 			msg.getChannel().sendMessage("le bot est actuellement en maintenance").queue();
 			return;
@@ -142,6 +142,7 @@ public class WaifuCommand {
 		eb.setFooter("félicitation !!");
 		waifuLock.lock();
 		msg.getChannel().sendMessageEmbeds(eb.build()).addFile(f).queue();
+		Thread.sleep(100);
 		waifuLock.unlock();
 	}
 
