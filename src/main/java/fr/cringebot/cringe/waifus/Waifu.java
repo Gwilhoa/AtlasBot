@@ -64,7 +64,7 @@ public class Waifu {
 		}
 		if (this.id == -1)
 			this.id = waifuList.size();
-		this.profile = "save/Waifu/waifu_"+this.id +".png";
+		this.profile = "save/waifu/waifu_"+this.id +".png";
 		this.origin = origin;
 		f.downloadToFile(this.profile);
 		waifuList.put(this.id, this);

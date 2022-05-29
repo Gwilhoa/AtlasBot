@@ -191,7 +191,7 @@ public class CommandListener {
 		while (!ml.isEmpty())
 			msg.getChannel().sendMessage(ml.poll()).queue();
 	}
-	@Command(name = "Waifu", description = "instance des waifus", type = ExecutorType.USER)
+	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException {
 		WaifuCommand.CommandMain(msg);
 	}

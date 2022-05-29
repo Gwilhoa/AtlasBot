@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/29 21:59:43 by                  ###   ########.fr       */
+/*   Updated: 2022/05/29 22:09:46 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,7 +250,7 @@ public class BotListener implements EventListener {
 		bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
-		if (new File("save/Waifu").mkdir())
+		if (new File("save/waifu").mkdir())
 			System.out.println("création du directory Waifu");
 		Request.sendRequest(Request.Type.SETSEASON, event.getJDA().getGuildById("382938797442334720").getName());
 		Squads.load();
@@ -403,10 +403,7 @@ public class BotListener implements EventListener {
 	 */
 	private void onMessage(MessageReceivedEvent event) throws IOException, InterruptedException {
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
-		if (!event.getGuild().getId().equals("382938797442334720")){
-			event.getChannel().sendMessage("bah non").queue();
-			return;
-		}
+		if (!event.getGuild().getId().equals("382938797442334720")) return;
 		Message msg = event.getMessage();
 		if (msg.getChannel().getId().equals("947564791759777792"))
 			msg.createThreadChannel("Parlez ici bandes de shlags").queue();
