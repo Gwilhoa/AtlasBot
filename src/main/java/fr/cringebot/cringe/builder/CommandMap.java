@@ -14,7 +14,7 @@ package fr.cringebot.cringe.builder;
 
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
-import fr.cringebot.cringe.command.CommandDefault;
+import fr.cringebot.cringe.command.CommandListener;
 import fr.cringebot.cringe.command.HelpCommand;
 import fr.cringebot.cringe.command.UtilCommand;
 import fr.cringebot.cringe.lol.CommandLol;
@@ -55,7 +55,7 @@ public final class CommandMap {
 	 */
 	public CommandMap(BotDiscord botDiscord) {
 		this.botDiscord = botDiscord;
-		registerCommands(new CommandDefault(botDiscord, this), new HelpCommand(this), MusicCommand.INSTANCE, new UtilCommand(this.botDiscord), new Commands(), new CommandLol());
+		registerCommands(new CommandListener(botDiscord, this), new HelpCommand(this), MusicCommand.INSTANCE, new UtilCommand(this.botDiscord), new Commands(), new CommandLol());
 	}
 
 	/**

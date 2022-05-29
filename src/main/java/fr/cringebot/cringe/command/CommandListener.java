@@ -1,14 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   CommandDefault.java                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/05 12:46:08 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/28 19:51:15 by                  ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 package fr.cringebot.cringe.command;
 
@@ -18,13 +8,12 @@ import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
-import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.UserExtenders;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
+import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
-import fr.cringebot.cringe.waifus.waifu;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -41,13 +30,12 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
-import static fr.cringebot.BotDiscord.isMaintenance;
 import static fr.cringebot.cringe.cki.mainCommand.ckimain;
 
 /**
  * fichier de commandes de base
  */
-public class CommandDefault {
+public class CommandListener {
 
 	private final BotDiscord botDiscord;
 	/**
@@ -56,7 +44,7 @@ public class CommandDefault {
 	 * @param botDiscord
 	 * @param commandMap
 	 */
-	public CommandDefault(BotDiscord botDiscord, CommandMap commandMap) {
+	public CommandListener(BotDiscord botDiscord, CommandMap commandMap) {
 		this.botDiscord = botDiscord;
 	}
 
@@ -187,23 +175,23 @@ public class CommandDefault {
 		String id = msg.getMember().getId();
 		if (!msg.getMentions().getMembers().isEmpty())
 			id = msg.getMentions().getMembers().get(0).getId();
-		ArrayList<waifu> waifus = waifu.getAllWaifu();
+		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
 		String finalId = id;
 		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(finalId));
 		if (waifus.isEmpty())
 		{
-			msg.getChannel().sendMessage("\uD83D\uDE2D tu n'as pas de waifus, fais >waifu pour en avoir une !").queue();
+			msg.getChannel().sendMessage("\uD83D\uDE2D tu n'as pas de waifus, fais >Waifu pour en avoir une !").queue();
 			return;
 		}
 		StringBuilder sb = new StringBuilder().append("waifus de ").append(msg.getGuild().getMemberById(id).getEffectiveName()).append("\n\n");
-		for (waifu w : waifus)
+		for (Waifu w : waifus)
 			sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
 		MessageBuilder mb = new MessageBuilder().append(sb);
 		Queue<Message> ml = mb.buildAll();
 		while (!ml.isEmpty())
 			msg.getChannel().sendMessage(ml.poll()).queue();
 	}
-	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
+	@Command(name = "Waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException {
 		WaifuCommand.CommandMain(msg);
 	}
@@ -217,9 +205,8 @@ public class CommandDefault {
 	private void test(Message msg) throws IOException {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 		{
-			List<Squads> squads = Squads.getAllSquads();
-			for (Squads squad : squads)
-				squad.ResetPoint();
+			Waifu.getWaifuById(258).setOwner(null);
+			Waifu.getWaifuById(420).setOwner(null);
 		}
 	}
 }
