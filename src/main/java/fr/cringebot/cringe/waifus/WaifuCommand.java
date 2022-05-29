@@ -23,6 +23,7 @@ import static fr.cringebot.cringe.waifus.waifu.getAllWaifu;
 
 public class WaifuCommand {
 	private static Message msg;
+	public static Lock waifuLock = new ReentrantLock();
 
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
 
@@ -139,26 +140,25 @@ public class WaifuCommand {
 		eb.setTitle("Nouvelle waifu !");
 		eb.setDescription("ta nouvelle waifu est " + w.getName() + " de " + w.getOrigin());
 		eb.setFooter("félicitation !!");
+		waifuLock.lock();
 		msg.getChannel().sendMessageEmbeds(eb.build()).addFile(f).queue();
+		waifuLock.unlock();
 	}
 
-	public static void addwaifu(Message msg) throws ExecutionException, InterruptedException {
+public static void addwaifu(Message msg) throws ExecutionException, InterruptedException {
 		if (!msg.getChannel().getId().equals("975087822618910800")) {
 			msg.getChannel().sendMessage("non").queue();
 			return;
 		}
 		String[] args = msg.getContentRaw().split("\n");
-		if (!msg.getAttachments().isEmpty() && msg.getAttachments().size() == 1)
-		{
-			ArrayList<SelectOption> options = new ArrayList<>();
-			for (waifu.Type tpe: waifu.Type.values())
-				options.add(new SelectOptionImpl("Catégorie : "+tpe.name(), tpe.name()));
-			options.add(new SelectOptionImpl("Annuler", "stop"));
-			SelectMenuImpl selectionMenu = new SelectMenuImpl( "waifu", "selectionnez un choix", 1, 1, false, options);
-			msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setTitle(args[0].substring(">waifu add".length())).setFooter(args[1]).setDescription(msg.getContentRaw().substring(args[0].length() + args[1].length()+ 1)).build()).addFile(msg.getAttachments().get(0).downloadToFile().get()).setActionRow(selectionMenu).queue();
-		}
-		else
-		{
+		if (!msg.getAttachments().isEmpty() && msg.getAttachments().size() == 1) {
+		ArrayList<SelectOption> options = new ArrayList<>();
+		for (waifu.Type tpe : waifu.Type.values())
+			options.add(new SelectOptionImpl("Catégorie : " + tpe.name(), tpe.name()));
+		options.add(new SelectOptionImpl("Annuler", "stop"));
+		SelectMenuImpl selectionMenu = new SelectMenuImpl("waifu", "selectionnez un choix", 1, 1, false, options);
+		msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setTitle(args[0].substring(">waifu add".length())).setFooter(args[1]).setDescription(msg.getContentRaw().substring(args[0].length() + args[1].length() + 1)).build()).addFile(msg.getAttachments().get(0).downloadToFile().get()).setActionRow(selectionMenu).queue();
+		} else {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 		}
 	}
@@ -178,13 +178,12 @@ public class WaifuCommand {
 
 	public static void infowaifu(Message msg)
 	{
-		Lock l = new ReentrantLock();
 		ArrayList<waifu> w = waifu.getWaifubyName(msg.getContentRaw().substring(">waifu info ".length()));
 		if (w != null) {
 			for (waifu waif : w) {
-				l.lock();
+				waifuLock.lock();
 				sendEmbedInfo(waif, msg.getTextChannel());
-				l.unlock();
+				waifuLock.unlock();
 			}
 		}
 		else
