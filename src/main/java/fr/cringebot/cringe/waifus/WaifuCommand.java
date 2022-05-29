@@ -173,7 +173,9 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 		else
 			eb.setFooter("disponible");
 		eb.setDescription(w.getDescription());
-		tc.sendMessageEmbeds(eb.build()).addFile(f).queue();
+		waifuLock.lock();
+		tc.sendMessageEmbeds(eb.build()).addFile(f).complete();
+		waifuLock.unlock();
 	}
 
 	public static void infowaifu(Message msg)
@@ -181,9 +183,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 		ArrayList<waifu> w = waifu.getWaifubyName(msg.getContentRaw().substring(">waifu info ".length()));
 		if (w != null) {
 			for (waifu waif : w) {
-				waifuLock.lock();
 				sendEmbedInfo(waif, msg.getTextChannel());
-				waifuLock.unlock();
 			}
 		}
 		else
