@@ -205,8 +205,9 @@ public class CommandListener {
 	private void test(Message msg) throws IOException {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 		{
-			Waifu.getWaifuById(258).setOwner(null);
-			Waifu.getWaifuById(420).setOwner(null);
+			ArrayList<Squads> squads = Squads.getAllSquads();
+			for (Squads squad : squads)
+				squad.ResetPoint();
 		}
 	}
 }
