@@ -8,9 +8,10 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -140,7 +141,15 @@ public class WaifuCommand {
 		eb.setFooter("félicitation !!");
 		waifuLock.lock();
 		Thread.sleep(100);
-		msg.getChannel().sendMessageEmbeds(eb.build()).addFile(f).queue();
+		MessageAction toSend = msg.getChannel().sendMessageEmbeds(eb.build());
+		try(DataInputStream str = new DataInputStream(new FileInputStream(f))){
+			byte[] bytes = new byte[(int) f.length()];
+			str.readFully(bytes);
+			toSend.addFile(bytes, f.getName()).complete();
+		} catch (IOException e) {
+			//Wrap et remonter
+			throw new RuntimeException(e);
+		}
 		waifuLock.unlock();
 	}
 
@@ -174,7 +183,15 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 		eb.setDescription(w.getDescription());
 		waifuLock.lock();
 		Thread.sleep(100);
-		tc.sendMessageEmbeds(eb.build()).addFile(f).complete();
+		MessageAction toSend = tc.sendMessageEmbeds(eb.build());
+		try(DataInputStream str = new DataInputStream(new FileInputStream(f))){
+			byte[] bytes = new byte[(int) f.length()];
+			str.readFully(bytes);
+			toSend.addFile(bytes, f.getName()).complete();
+		} catch (IOException e) {
+			//Wrap et remonter
+			throw new RuntimeException(e);
+		}
 		waifuLock.unlock();
 	}
 
