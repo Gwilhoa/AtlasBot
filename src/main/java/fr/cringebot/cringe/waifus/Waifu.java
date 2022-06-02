@@ -107,6 +107,8 @@ public class Waifu {
 			{
 				if (StringExtenders.startWithIgnoreCase(waifu.getName(),name))
 					list.add(waifu);
+				else
+					System.out.println(waifu.id);
 			}
 		}
 		if (list.isEmpty())
