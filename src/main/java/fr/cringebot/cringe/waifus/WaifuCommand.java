@@ -159,13 +159,26 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			return;
 		}
 		String[] args = msg.getContentRaw().split("\n");
+		if (args[0].split(" ").length <= 2) {
+			msg.getChannel().sendMessage("SOMBRE MERDE").queue();
+			return;
+		}
 		if (!msg.getAttachments().isEmpty() && msg.getAttachments().size() == 1) {
 		ArrayList<SelectOption> options = new ArrayList<>();
 		for (Waifu.Type tpe : Waifu.Type.values())
 			options.add(new SelectOptionImpl("Catégorie : " + tpe.name(), tpe.name()));
 		options.add(new SelectOptionImpl("Annuler", "stop"));
 		SelectMenuImpl selectionMenu = new SelectMenuImpl("Waifu", "selectionnez un choix", 1, 1, false, options);
-		msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setTitle(args[0].substring(">Waifu add".length())).setFooter(args[1]).setDescription(msg.getContentRaw().substring(args[0].length() + args[1].length() + 1)).build()).addFile(msg.getAttachments().get(0).downloadToFile().get()).setActionRow(selectionMenu).queue();
+			MessageAction toSend = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setTitle(args[0].substring(">Waifu add".length())).setFooter(args[1]).setDescription(msg.getContentRaw().substring(args[0].length() + args[1].length() + 1)).build());
+			File f = new File(msg.getAttachments().get(0).downloadToFile().get().getName());
+			try(DataInputStream str = new DataInputStream(new FileInputStream(f))){
+				byte[] bytes = new byte[(int) f.length()];
+				str.readFully(bytes);
+				toSend.addFile(bytes, f.getName()).complete();
+			} catch (IOException e) {
+				//Wrap et remonter
+				throw new RuntimeException(e);
+			}
 		} else {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 		}
