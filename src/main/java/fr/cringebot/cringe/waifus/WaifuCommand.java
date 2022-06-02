@@ -174,7 +174,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			try(DataInputStream str = new DataInputStream(new FileInputStream(f))){
 				byte[] bytes = new byte[(int) f.length()];
 				str.readFully(bytes);
-				toSend.addFile(bytes, f.getName()).complete();
+				toSend.addFile(bytes, f.getName()).setActionRow(selectionMenu).complete();
 			} catch (IOException e) {
 				//Wrap et remonter
 				throw new RuntimeException(e);
