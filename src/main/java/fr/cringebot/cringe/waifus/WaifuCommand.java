@@ -157,6 +157,7 @@ public class WaifuCommand {
 			throw new RuntimeException(e);
 		}
 		waifuLock.unlock();
+		Squads.addPoints(msg.getMember(), 50L);
 	}
 
 public static void addwaifu(Message msg) throws ExecutionException, InterruptedException {
@@ -195,8 +196,10 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 		eb.setAuthor(w.getOrigin());
 		eb.setTitle("Information : " + w.getName() + "\nIdentifiant : " + w.getId());
 		eb.setImage("attachment://"+f.getName());
-		if (w.getOwner() != null)
-			eb.setFooter("appartient à "+ tc.getGuild().getMemberById(w.getOwner()).getEffectiveName(), tc.getGuild().getMemberById(w.getOwner()).getUser().getAvatarUrl());
+		if (w.getOwner() != null) {
+			eb.setFooter("appartient à " + tc.getGuild().getMemberById(w.getOwner()).getEffectiveName(), tc.getGuild().getMemberById(w.getOwner()).getUser().getAvatarUrl());
+			eb.setColor(Squads.getSquadByMember(w.getOwner()).getSquadRole(tc.getGuild()).getColor());
+		}
 		else
 			eb.setFooter("disponible");
 		eb.setDescription(w.getDescription());
@@ -347,11 +350,6 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 	}
 
 	private static void release(Message msg) {
-		if (true)
-		{
-			msg.getChannel().sendMessage("tu ne peux pas relacher de Waifu pour le moment").queue();
-			return;
-		}
 		String id = msg.getContentRaw().split(" ")[2];
 		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w.getOwner() == null)
@@ -360,7 +358,8 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			msg.getChannel().sendMessage("tu n'est pas le propriétaire de " + w.getName()).queue();
 		else {
 			w.setOwner(null);
-			msg.getChannel().sendMessage(w.getName() + " a été relâcher").queue();
+			msg.getChannel().sendMessage(w.getName() + " a été relâché").queue();
+			Squads.removePoints(msg.getMember().getId(), 500L);
 		}
 	}
 }

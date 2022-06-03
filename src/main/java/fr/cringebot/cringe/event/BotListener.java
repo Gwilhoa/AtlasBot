@@ -34,6 +34,7 @@ import fr.cringebot.cringe.reactionsrole.RoleReaction;
 import fr.cringebot.cringe.siterequest.Request;
 import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
+import fr.cringebot.cringe.xp.TextuelXp;
 import fr.cringebot.cringe.xp.XP;
 import fr.cringebot.music.MusicCommand;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -237,6 +238,7 @@ public class BotListener implements EventListener {
 	 */
 	private void onPing(GatewayPingEvent event) {
 		PollListener.verifTimePoll(event.getJDA());
+		TextuelXp.verif();
 	}
 
 	/**
@@ -405,6 +407,7 @@ public class BotListener implements EventListener {
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		if (!event.getGuild().getId().equals("382938797442334720")) return;
 		Message msg = event.getMessage();
+		TextuelXp.addmsg(event.getMember());
 		if (msg.getChannel().getId().equals("947564791759777792"))
 			msg.createThreadChannel("Parlez ici bandes de shlags").queue();
 		if (msg.getMentions().getMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())) && msg.getReferencedMessage() == null)
