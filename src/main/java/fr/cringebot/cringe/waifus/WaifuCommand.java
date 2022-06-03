@@ -274,7 +274,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			i++;
 		}
 		if (combo != null)
-			eb.setColor(Squads.getSquadByMember(combo).getSquadRole(msg.getGuild()).getColor());
+			eb.setColor(Squads.getSquadByMember(combo).getSquadRole(tc.getGuild()).getColor());
 		eb.setDescription(sb);
 		tc.editMessageEmbeds(eb.build()).queue();
 	}

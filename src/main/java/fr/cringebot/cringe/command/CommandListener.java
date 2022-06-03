@@ -219,8 +219,5 @@ public class CommandListener {
 			for (Waifu w : waifus)
 				w.setOwner(null);
 		}
-		Squads.getSquadByMember("509750171010334743").removeMember("509750171010334743");
-		List<Member> r = msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById("979455623295041578"));
-		msg.getChannel().sendMessage("nouveau magenta : " + r.remove(new Random().nextInt(r.size() - 1)).getAsMention() + " et " + r.remove(new Random().nextInt(r.size() - 1)).getAsMention() + "nouveau cyan : " + r.remove(new Random().nextInt(r.size() - 1)).getAsMention()).queue();
 	}
 }
