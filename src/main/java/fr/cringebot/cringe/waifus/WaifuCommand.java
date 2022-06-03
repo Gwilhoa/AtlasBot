@@ -1,5 +1,7 @@
 package fr.cringebot.cringe.waifus;
 
+import fr.cringebot.BotDiscord;
+import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -120,7 +122,11 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage("le bot est actuellement en maintenance").queue();
 			return;
 		}
-		if (Waifu.timeleft(msg.getMember().getId()) < 0){
+		else if (msg.getMember().getRoles().contains(msg.getGuild().getRoleById(BotDiscord.SecondaryRoleId))){
+			msg.getChannel().sendMessage("Tu es un compte secondaire et mo, j'aime pas les comptes secondaires").queue();
+			return;
+		}
+		else if (Waifu.timeleft(msg.getMember().getId()) < 0){
 			long t = Waifu.timeleft(msg.getMember().getId());
 			long th = (10800000 - t) / 3600000;
 			long tmin = (10800000 - th * 3600000 - t) / 60000;
@@ -253,10 +259,13 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			return;
 		eb.setFooter(f.toString()).setTitle(tc.getEmbeds().get(0).getTitle());
 		StringBuilder sb = new StringBuilder();
+		String combo = waifus.get(i).getOwner();
 		while (i < (f*10)+10)
 		{
 			if (i < waifus.size()) {
 				w = waifus.get(i);
+				if (w.getOwner() == null || !w.getOwner().equals(combo))
+					combo = null;
 				if (w.getOwner() == null)
 					sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
 				else
@@ -264,6 +273,8 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			}
 			i++;
 		}
+		if (combo != null)
+			eb.setColor(Squads.getSquadByMember(combo).getSquadRole(msg.getGuild()).getColor());
 		eb.setDescription(sb);
 		tc.editMessageEmbeds(eb.build()).queue();
 	}

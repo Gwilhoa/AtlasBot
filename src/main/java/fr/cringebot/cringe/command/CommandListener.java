@@ -201,13 +201,26 @@ public class CommandListener {
 		ckimain(msg);
 	}
 
-	@Command(name = "test", type = Command.ExecutorType.USER)
-	private void test(Message msg) throws IOException {
-		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
+	@Command(name = "reset", type = Command.ExecutorType.USER)
+	private void reset(Message msg) throws IOException {
+		if (msg.getMember().getId().equals("315431392789921793"))
 		{
 			ArrayList<Squads> squads = Squads.getAllSquads();
 			for (Squads squad : squads)
 				squad.ResetPoint();
 		}
+	}
+
+	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
+	private void test(Message msg) {
+		for (Member m : msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById(BotDiscord.SecondaryRoleId))){
+			ArrayList<Waifu> waifus = Waifu.getAllWaifu();
+			waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(m.getId()));
+			for (Waifu w : waifus)
+				w.setOwner(null);
+		}
+		Squads.getSquadByMember("509750171010334743").removeMember("509750171010334743");
+		List<Member> r = msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById("979455623295041578"));
+		msg.getChannel().sendMessage("nouveau magenta : " + r.remove(new Random().nextInt(r.size() - 1)).getAsMention() + " et " + r.remove(new Random().nextInt(r.size() - 1)).getAsMention() + "nouveau cyan : " + r.remove(new Random().nextInt(r.size() - 1)).getAsMention()).queue();
 	}
 }
