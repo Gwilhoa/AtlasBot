@@ -45,4 +45,13 @@ public class TextuelXp {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "TextuelXp{" +
+                "nbmsg=" + nbmsg +
+                ", starttime=" + (starttime - System.currentTimeMillis()) +
+                ", id='" + id + '\'' +
+                '}';
+    }
 }
