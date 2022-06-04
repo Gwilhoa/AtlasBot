@@ -21,7 +21,9 @@ public class TextuelXp {
     }
 
     private Long calcul() {
-        return Math.round(-100 *Math.exp(Math.round((this.nbmsg-20)/2)) -100);
+        double bite = (this.nbmsg-20)/2;
+        System.out.println("double : "+ bite);
+        return Math.round(-100*Math.exp(bite) + 100);
     }
 
     public static void addmsg(Member m){
