@@ -143,7 +143,7 @@ public class BotListener implements EventListener {
 				bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
 				bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
 				msg.editMessageComponents(bttn).queue();
-				event.getChannel().sendMessage("l'échange a été refusé").reference(event.getMessage());
+				event.getChannel().sendMessage("l'échange a été refusé").reference(event.getMessage()).queue();
 			}
 			else {
 				Waifu.trade(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0]), Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1]));
@@ -151,7 +151,7 @@ public class BotListener implements EventListener {
 				bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
 				bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
 				msg.editMessageComponents(bttn).queue();
-				event.getChannel().sendMessage("l'échange a été accepté").reference(event.getMessage());
+				event.getChannel().sendMessage("l'échange a été accepté").reference(event.getMessage()).queue();
 			}
 		}
 		else
