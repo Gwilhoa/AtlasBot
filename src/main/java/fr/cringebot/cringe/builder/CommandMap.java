@@ -14,7 +14,7 @@ package fr.cringebot.cringe.builder;
 
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
-import fr.cringebot.cringe.command.CommandDefault;
+import fr.cringebot.cringe.command.CommandListener;
 import fr.cringebot.cringe.command.HelpCommand;
 import fr.cringebot.cringe.command.UtilCommand;
 import fr.cringebot.cringe.lol.CommandLol;
@@ -25,10 +25,7 @@ import net.dv8tion.jda.api.entities.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 
 /**
@@ -58,7 +55,7 @@ public final class CommandMap {
 	 */
 	public CommandMap(BotDiscord botDiscord) {
 		this.botDiscord = botDiscord;
-		registerCommands(new CommandDefault(botDiscord, this), new HelpCommand(this), MusicCommand.INSTANCE, new UtilCommand(this.botDiscord), new Commands(), new CommandLol());
+		registerCommands(new CommandListener(botDiscord, this), new HelpCommand(this), MusicCommand.INSTANCE, new UtilCommand(this.botDiscord), new Commands(), new CommandLol());
 	}
 
 	/**
@@ -158,7 +155,7 @@ public final class CommandMap {
 		String[] commandSplit = command.split(" ");
 		String[] args = new String[commandSplit.length - 1];
 		System.arraycopy(commandSplit, 1, args, 0, commandSplit.length - 1);
-		SimpleCommand simpleCommand = commands.get(commandSplit[0]);
+		SimpleCommand simpleCommand = commands.get(commandSplit[0].toLowerCase(Locale.ROOT));
 		return new Object[]{simpleCommand, args};
 	}
 
