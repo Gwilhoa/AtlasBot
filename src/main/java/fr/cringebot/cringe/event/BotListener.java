@@ -58,6 +58,8 @@ import net.dv8tion.jda.api.events.role.RoleCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -137,13 +139,19 @@ public class BotListener implements EventListener {
 		Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
 		if (event.getButton().getId().startsWith("waifutrade") && event.getMember().getId().equals(msg.getEmbeds().get(0).getFooter().getText())) {
 			if (event.getButton().getLabel().equals("non")) {
-				msg.delete().queue();
-				event.getChannel().sendMessage("l'échange a été refusée").queue();
+				ArrayList<ActionRow> bttn = new ArrayList<>();
+				bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
+				bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
+				msg.editMessageComponents(bttn).queue();
+				event.getChannel().sendMessage("l'échange a été refusé").reference(event.getMessage());
 			}
 			else {
 				Waifu.trade(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0]), Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1]));
-				event.getChannel().sendMessage("l'échange a été éffectué avec succès").queue();
-				msg.delete().queue();
+				ArrayList<ActionRow> bttn = new ArrayList<>();
+				bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
+				bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
+				msg.editMessageComponents(bttn).queue();
+				event.getChannel().sendMessage("l'échange a été accepté").reference(event.getMessage());
 			}
 		}
 		else

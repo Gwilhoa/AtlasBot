@@ -144,7 +144,8 @@ public class WaifuCommand {
 		eb.setImage("attachment://"+f.getName());
 		eb.setTitle("Nouvelle Waifu !");
 		eb.setDescription("ta nouvelle Waifu est " + w.getName() + " de " + w.getOrigin());
-		eb.setFooter("félicitation !!");
+		eb.setFooter("id : " + w.getId());
+		eb.setColor(Squads.getSquadByMember(w.getOwner()).getSquadRole(msg.getGuild()).getColor());
 		waifuLock.lock();
 		Thread.sleep(100);
 		MessageAction toSend = msg.getChannel().sendMessageEmbeds(eb.build());
@@ -258,6 +259,11 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			waifus.removeIf(wai -> !StringExtenders.startWithIgnoreCase(wai.getOrigin(), finalSearch));
 		}
 		int	i = f*10;
+		if (waifus.isEmpty())
+		{
+			tc.editMessageEmbeds(eb.setDescription("aucune waifu sous cette origine").build()).queue();
+			return;
+		}
 		if (i > waifus.size() || i < 0)
 			return;
 		eb.setFooter(f.toString()).setTitle(tc.getEmbeds().get(0).getTitle());
