@@ -24,10 +24,11 @@ public class TextuelXp {
     }
 
     public static void addmsg(Member m){
-        if (!timer.containsKey(m.getId())){
-            new TextuelXp(m.getId()) ;
+        if (!timer.containsKey(m.getId()))
+            new TextuelXp(m.getId());
         timer.get(m.getId()).addmsg();
-        }
+        System.out.println(timer.get(m.getId()));
+        System.out.println(timer.get(m.getId()).calcul());
     }
 
     private void addmsg(){
