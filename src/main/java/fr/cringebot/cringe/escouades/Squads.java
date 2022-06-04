@@ -80,7 +80,8 @@ public class Squads {
 			System.out.println("error " + id);
 			return;
 		}
-		squad.getStatMember(id).addPoint(i);
+		long cal = Math.round( i * Squads.equilibrage(id) );
+		squad.getStatMember(id).addPoint(cal);
 		save();
 	}
 
@@ -170,5 +171,44 @@ public class Squads {
 
 	public Long getTotal() {
 		return total;
+	}
+
+	public static float equilibrage(String id) // id correspond a l'id de l'expediteut du msg
+	{
+		List<Squads> squads = Squads.getAllSquads();
+		Squads squad = getSquadByMember(id);
+
+		ArrayList<Long> pts_squads = new ArrayList<>(); // pts_squad est une liste qui
+		pts_squads.add(squads.get(0).getTotal());       // stock les points de chaque
+		pts_squads.add(squads.get(1).getTotal());       // escouade en position 0/1/2
+		pts_squads.add(squads.get(2).getTotal());
+
+		float r = 1;
+
+		if(squads.get(0).getName() == squad.getName()) {
+			r = calcule(pts_squads,0);
+		}
+		else if(squads.get(1).getName() == squad.getName()) {
+			r = calcule(pts_squads,1);
+		}
+		else if(squads.get(2).getName() == squad.getName()) {
+			r = calcule(pts_squads,2);
+		}
+		return r;
+	}
+
+	private static float calcule(ArrayList L, Integer n) //fonction de calcule pour l'equilibrage
+	{
+		float cal = 0;
+
+		for(int i = 0; i <= 3 ; i++) {
+
+			long b = (long) L.get(n);
+			long c = (long) L.get(i);
+
+			if (1 != (b / c))
+				cal += (b / c);
+		}
+		return 2/cal;
 	}
 }

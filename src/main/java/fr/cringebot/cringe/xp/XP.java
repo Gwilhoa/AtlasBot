@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class XP {
@@ -34,9 +33,9 @@ public class XP {
         Long time = System.currentTimeMillis() - vocalTime.get(id);
         vocalTime.remove(id);
         System.out.println("tps en millis : "+ time);
-        time = calcul(time);
-        System.out.println("pts gagné : "+ time);
-        Squads.addPoints(id, time);
+        long pts = calcul(time);
+        System.out.println("pts gagné : "+ pts);
+        Squads.addPoints(id, pts);
     }
 
     private static Long calcul(Long time){
