@@ -21,7 +21,7 @@ public class TextuelXp {
     }
 
     private Long calcul() {
-        return Math.round(-100 *Math.exp(((this.nbmsg-20)/2)) -100);
+        return Math.round(-100 *Math.exp(Math.round((this.nbmsg-20)/2)) -100);
     }
 
     public static void addmsg(Member m){
