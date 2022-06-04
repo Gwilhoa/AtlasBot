@@ -350,6 +350,11 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 	}
 
 	private static void release(Message msg) {
+		if (true)
+		{
+			msg.getChannel().sendMessage("tu ne peux pas relacher de waifu pour le moment  (PS de yann : FUCK)").queue();
+			return;
+		}
 		String id = msg.getContentRaw().split(" ")[2];
 		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w.getOwner() == null)
