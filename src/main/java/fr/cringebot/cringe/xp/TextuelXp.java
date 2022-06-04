@@ -17,6 +17,7 @@ public class TextuelXp {
         this.nbmsg = 0;
         this.starttime = System.currentTimeMillis();
         timer.put(id, this);
+        this.id = id;
     }
 
     private Long calcul() {
