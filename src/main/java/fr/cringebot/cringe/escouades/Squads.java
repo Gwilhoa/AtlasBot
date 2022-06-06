@@ -70,11 +70,11 @@ public class Squads {
 		save();
 	}
 
-	public static void addPoints(Member m, Long i){
+	public static void addPoints(Member m, Long i){  //fonction pour ajouter des points a quelqu'un
 		addPoints(m.getId(), i);
 	}
 
-	public static void addPoints(String id, Long i){
+	public static void addPoints(String id, Long i){  //fonction pour ajouter des points a quelqu'un
 		Squads squad = getSquadByMember(id);
 		if (squad == null) {
 			System.out.println("error " + id);
@@ -82,6 +82,20 @@ public class Squads {
 		}
 		long cal = Math.round( i * Squads.equilibrage(id) );
 		squad.getStatMember(id).addPoint(cal);
+		save();
+	}
+
+	public static void addPointsFlate(Member m, Long i){  //fonction pour ajouter des points a quelqu'un en ignorant le bonus / malus
+		addPointsFlate(m.getId(), i);
+	}
+
+	public static void addPointsFlate(String id, Long i){  //fonction pour ajouter des points a quelqu'un en ignorant le bonus / malus
+		Squads squad = getSquadByMember(id);
+		if (squad == null) {
+			System.out.println("error " + id);
+			return;
+		}
+		squad.getStatMember(id).addPoint( (long) Math.round(i));
 		save();
 	}
 
