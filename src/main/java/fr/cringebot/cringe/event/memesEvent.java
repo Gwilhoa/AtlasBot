@@ -12,6 +12,7 @@
 
 package fr.cringebot.cringe.event;
 
+import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.DetectorAttachment;
 import fr.cringebot.cringe.objects.Emotes;
 import fr.cringebot.cringe.objects.imgExtenders;
@@ -46,7 +47,7 @@ public class memesEvent {
 			if (DetectorAttachment.isYoutube(message.getContentRaw()) || DetectorAttachment.isTenor(message.getContentRaw())) {
 				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).queue();
 			} else if (message.getEmbeds().isEmpty()) {
-				File f = message.getAttachments().get(0).downloadToFile().join();
+				File f = message.getAttachments().get(0).getProxy().downloadToFile(new File(message.getAttachments().get(0).getFileName())).join();
 				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(f).queue();
 				f.delete();
 			} else {
@@ -123,7 +124,7 @@ public class memesEvent {
 		}
 		if (ret == null) {
 			if (!msg.getAttachments().isEmpty()) {
-				f = msg.getAttachments().get(0).downloadToFile().join();
+				f = msg.getAttachments().get(0).getProxy().downloadToFile(new File(msg.getAttachments().get(0).getFileName())).join();
 				Content = msg.getContentRaw();
 			} else {
 				for (String mot : args) {
@@ -155,7 +156,7 @@ public class memesEvent {
 			EmbedBuilder eb = new EmbedBuilder()
 					.setImage("attachment://" + f.getName())
 					.setFooter(msg.getAuthor().getName(), msg.getAuthor().getAvatarUrl())
-					.setColor(new Color(138, 43, 226));
+					.setColor(Squads.getSquadByMember(msg.getMember()).getSquadRole(msg.getGuild()).getColor());
 			if (Content != null)
 				eb.setDescription(Content);
 			ret = msg.getGuild().getTextChannelById(channel).sendFile(f).setEmbeds(eb.build()).complete();
