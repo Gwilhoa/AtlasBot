@@ -64,6 +64,14 @@ public class Squads {
 		return bestid;
 	}
 
+	public void removeMember(Member m) {
+		removeMember(m.getId());
+	}
+
+	public void removeMember(String id) {
+		this.MemberList.remove(id);
+	}
+
 	public void ResetPoint() {
 		for (SquadMember sm : this.MemberList.values())
 			sm.resetPoint();

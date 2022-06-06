@@ -16,7 +16,8 @@ import java.util.Scanner;
 
 public class BotDiscord implements Runnable{
 
-    public static final Boolean isMaintenance = true;
+    public final static String SecondaryRoleId = "502575765179858945";
+    public static final Boolean isMaintenance = false;
     private final JDA jda;
     private final CommandMap commandMap = new CommandMap(this);
     private final Scanner scanner = new Scanner(System.in);

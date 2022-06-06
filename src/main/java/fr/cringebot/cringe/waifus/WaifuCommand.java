@@ -1,5 +1,7 @@
 package fr.cringebot.cringe.waifus;
 
+import fr.cringebot.BotDiscord;
+import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -8,18 +10,17 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static fr.cringebot.BotDiscord.isMaintenance;
-import static fr.cringebot.cringe.waifus.waifu.getAllWaifu;
 
 public class WaifuCommand {
 	private static Message msg;
@@ -36,7 +37,7 @@ public class WaifuCommand {
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")){
 			EmbedBuilder eb = new EmbedBuilder().setTitle("Listes des waifus").setDescription("chargement...");
 			if (msg.getContentRaw().split(" ").length > 2)
-				eb.setAuthor(msg.getContentRaw().substring(">waifu list ".length()));
+				eb.setAuthor(msg.getContentRaw().substring(">Waifu list ".length()));
 			Message ls = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
 			ls.addReaction("◀️").and(ls.addReaction("▶️")).queue();
 			listwaifu(ls);
@@ -67,12 +68,12 @@ public class WaifuCommand {
 	private static void trade(Message msg) {
 		String id = msg.getContentRaw().split(" ")[2];
 		String id2 = msg.getContentRaw().split(" ")[3];
-		waifu w1 = waifu.getWaifuById(Integer.parseInt(id));
-		waifu w2 = waifu.getWaifuById(Integer.parseInt(id2));
+		Waifu w1 = Waifu.getWaifuById(Integer.parseInt(id));
+		Waifu w2 = Waifu.getWaifuById(Integer.parseInt(id2));
 		if (w1.getOwner() == null || !w1.getOwner().equals(msg.getMember().getId()))
 			msg.getChannel().sendMessage("tu n'es pas le propriétaire de "+ w1.getName()).queue();
 		else if (w2.getOwner() == null)
-			msg.getChannel().sendMessage("cette waifu appartient à personne").queue();
+			msg.getChannel().sendMessage("cette Waifu appartient à personne").queue();
 		else {
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setAuthor(id + " " + id2);
@@ -92,7 +93,7 @@ public class WaifuCommand {
 			return;
 		}
 		String id = msg.getContentRaw().split(" ")[2];
-		waifu w = waifu.getWaifuById(Integer.parseInt(id));
+		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w == null) {
 			msg.getChannel().sendMessage("id non défini").queue();
 			return;
@@ -111,38 +112,53 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage("https://tenor.com/view/fanta-pas-toi-qui-d%C3%A9cide-serious-selfie-gif-13900956").queue();
 			return;
 		}
-		ArrayList<waifu> waifus = waifu.getAllWaifu();
-		for (waifu w : waifus)
+		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
+		for (Waifu w : waifus)
 			w.setOwner(null);
 	}
 
-	private static void newWaifu(Message msg) {
+	private static void newWaifu(Message msg) throws InterruptedException {
 		if (isMaintenance) {
 			msg.getChannel().sendMessage("le bot est actuellement en maintenance").queue();
 			return;
 		}
-		if (waifu.timeleft(msg.getMember().getId()) < 0){
-			long t = waifu.timeleft(msg.getMember().getId());
+		else if (msg.getMember().getRoles().contains(msg.getGuild().getRoleById(BotDiscord.SecondaryRoleId))){
+			msg.getChannel().sendMessage("Tu es un compte secondaire et mo, j'aime pas les comptes secondaires").queue();
+			return;
+		}
+		else if (Waifu.timeleft(msg.getMember().getId()) < 0){
+			long t = Waifu.timeleft(msg.getMember().getId());
 			long th = (10800000 - t) / 3600000;
 			long tmin = (10800000 - th * 3600000 - t) / 60000;
 			long ts = (10800000 - th * 3600000 - tmin * 60000 - t) / 1000;
-			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle waifu").queue();
+			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle Waifu").queue();
 			return;
 
 		}
-		waifu.setTime(msg.getMember().getId());
-		waifu w;
-		w = waifu.getAvailableWaifu().get(new Random().nextInt(waifu.getAvailableWaifu().size() - 1));
+		Waifu.setTime(msg.getMember().getId());
+		Waifu w;
+		w = Waifu.getAvailableWaifu().get(new Random().nextInt(Waifu.getAvailableWaifu().size() - 1));
 		File f = new File(w.getProfile());
 		w.setOwner(msg.getMember().getId());
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setImage("attachment://"+f.getName());
-		eb.setTitle("Nouvelle waifu !");
-		eb.setDescription("ta nouvelle waifu est " + w.getName() + " de " + w.getOrigin());
-		eb.setFooter("félicitation !!");
+		eb.setTitle("Nouvelle Waifu !");
+		eb.setDescription("ta nouvelle Waifu est " + w.getName() + " de " + w.getOrigin());
+		eb.setFooter("id : " + w.getId());
+		eb.setColor(Squads.getSquadByMember(w.getOwner()).getSquadRole(msg.getGuild()).getColor());
 		waifuLock.lock();
-		msg.getChannel().sendMessageEmbeds(eb.build()).addFile(f).queue();
+		Thread.sleep(100);
+		MessageAction toSend = msg.getChannel().sendMessageEmbeds(eb.build());
+		try(DataInputStream str = new DataInputStream(new FileInputStream(f))){
+			byte[] bytes = new byte[(int) f.length()];
+			str.readFully(bytes);
+			toSend.addFile(bytes, f.getName()).complete();
+		} catch (IOException e) {
+			//Wrap et remonter
+			throw new RuntimeException(e);
+		}
 		waifuLock.unlock();
+		Squads.addPoints(msg.getMember(), 50L);
 	}
 
 public static void addwaifu(Message msg) throws ExecutionException, InterruptedException {
@@ -151,55 +167,78 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			return;
 		}
 		String[] args = msg.getContentRaw().split("\n");
+		if (args[0].split(" ").length <= 2) {
+			msg.getChannel().sendMessage("SOMBRE MERDE").queue();
+			return;
+		}
 		if (!msg.getAttachments().isEmpty() && msg.getAttachments().size() == 1) {
 		ArrayList<SelectOption> options = new ArrayList<>();
-		for (waifu.Type tpe : waifu.Type.values())
+		for (Waifu.Type tpe : Waifu.Type.values())
 			options.add(new SelectOptionImpl("Catégorie : " + tpe.name(), tpe.name()));
 		options.add(new SelectOptionImpl("Annuler", "stop"));
-		SelectMenuImpl selectionMenu = new SelectMenuImpl("waifu", "selectionnez un choix", 1, 1, false, options);
-		msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setTitle(args[0].substring(">waifu add".length())).setFooter(args[1]).setDescription(msg.getContentRaw().substring(args[0].length() + args[1].length() + 1)).build()).addFile(msg.getAttachments().get(0).downloadToFile().get()).setActionRow(selectionMenu).queue();
+		SelectMenuImpl selectionMenu = new SelectMenuImpl("Waifu", "selectionnez un choix", 1, 1, false, options);
+			MessageAction toSend = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setTitle(args[0].substring(">Waifu add".length())).setFooter(args[1]).setDescription(msg.getContentRaw().substring(args[0].length() + args[1].length() + 1)).build());
+			File f = new File(msg.getAttachments().get(0).downloadToFile().get().getName());
+			try(DataInputStream str = new DataInputStream(new FileInputStream(f))){
+				byte[] bytes = new byte[(int) f.length()];
+				str.readFully(bytes);
+				toSend.addFile(bytes, f.getName()).setActionRow(selectionMenu).complete();
+			} catch (IOException e) {
+				//Wrap et remonter
+				throw new RuntimeException(e);
+			}
 		} else {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 		}
 	}
-	private static void sendEmbedInfo(waifu w, TextChannel tc) {
+	private static void sendEmbedInfo(Waifu w, TextChannel tc) throws InterruptedException {
 		EmbedBuilder eb = new EmbedBuilder();
 		File f = new File(w.getProfile());
 		eb.setAuthor(w.getOrigin());
 		eb.setTitle("Information : " + w.getName() + "\nIdentifiant : " + w.getId());
 		eb.setImage("attachment://"+f.getName());
-		if (w.getOwner() != null)
-			eb.setFooter("appartient à "+ tc.getGuild().getMemberById(w.getOwner()).getEffectiveName(), tc.getGuild().getMemberById(w.getOwner()).getUser().getAvatarUrl());
+		if (w.getOwner() != null) {
+			eb.setFooter("appartient à " + tc.getGuild().getMemberById(w.getOwner()).getEffectiveName(), tc.getGuild().getMemberById(w.getOwner()).getUser().getAvatarUrl());
+			eb.setColor(Squads.getSquadByMember(w.getOwner()).getSquadRole(tc.getGuild()).getColor());
+		}
 		else
 			eb.setFooter("disponible");
 		eb.setDescription(w.getDescription());
-		tc.sendMessageEmbeds(eb.build()).addFile(f).queue();
+		waifuLock.lock();
+		Thread.sleep(100);
+		MessageAction toSend = tc.sendMessageEmbeds(eb.build());
+		try(DataInputStream str = new DataInputStream(new FileInputStream(f))){
+			byte[] bytes = new byte[(int) f.length()];
+			str.readFully(bytes);
+			toSend.addFile(bytes, f.getName()).complete();
+		} catch (IOException e) {
+			//Wrap et remonter
+			throw new RuntimeException(e);
+		}
+		waifuLock.unlock();
 	}
 
-	public static void infowaifu(Message msg)
-	{
-		ArrayList<waifu> w = waifu.getWaifubyName(msg.getContentRaw().substring(">waifu info ".length()));
+	public static void infowaifu(Message msg) throws InterruptedException {
+		ArrayList<Waifu> w = Waifu.getWaifubyName(msg.getContentRaw().substring(">Waifu info ".length()));
 		if (w != null) {
-			for (waifu waif : w) {
-				waifuLock.lock();
+			for (Waifu waif : w) {
 				sendEmbedInfo(waif, msg.getTextChannel());
-				waifuLock.unlock();
 			}
 		}
 		else
 		{
-			waifu wid;
+			Waifu wid;
 			try {
-				wid = waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
+				wid = Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
 			}
 			catch (NumberFormatException e){
-				msg.getChannel().sendMessage("je ne connais pas de waifu à ce nom ou cet id").queue();
+				msg.getChannel().sendMessage("je ne connais pas de Waifu à ce nom ou cet id").queue();
 				return;
 			}
 			if (wid != null)
 				sendEmbedInfo(wid, msg.getTextChannel());
 			else {
-				msg.getChannel().sendMessage("je ne connais pas de waifu à ce nom ou cet id").queue();
+				msg.getChannel().sendMessage("je ne connais pas de Waifu à ce nom ou cet id").queue();
 			}
 		}
 	}
@@ -208,8 +247,8 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 		listwaifu(msg, 0);
 	}
 	public static void listwaifu(Message tc, Integer f) {
-		ArrayList<waifu> waifus = waifu.getAllWaifu();
-		waifu w;
+		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
+		Waifu w;
 		String search = null;
 		if (tc.getEmbeds().get(0).getAuthor() != null)
 			search = tc.getEmbeds().get(0).getAuthor().getName();
@@ -220,14 +259,22 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			waifus.removeIf(wai -> !StringExtenders.startWithIgnoreCase(wai.getOrigin(), finalSearch));
 		}
 		int	i = f*10;
+		if (waifus.isEmpty())
+		{
+			tc.editMessageEmbeds(eb.setDescription("aucune waifu sous cette origine").build()).queue();
+			return;
+		}
 		if (i > waifus.size() || i < 0)
 			return;
 		eb.setFooter(f.toString()).setTitle(tc.getEmbeds().get(0).getTitle());
 		StringBuilder sb = new StringBuilder();
+		String combo = waifus.get(i).getOwner();
 		while (i < (f*10)+10)
 		{
 			if (i < waifus.size()) {
 				w = waifus.get(i);
+				if (w.getOwner() == null || !w.getOwner().equals(combo))
+					combo = null;
 				if (w.getOwner() == null)
 					sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
 				else
@@ -235,6 +282,8 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			}
 			i++;
 		}
+		if (combo != null)
+			eb.setColor(Squads.getSquadByMember(combo).getSquadRole(tc.getGuild()).getColor());
 		eb.setDescription(sb);
 		tc.editMessageEmbeds(eb.build()).queue();
 	}
@@ -246,12 +295,12 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			return;
 		}
 		String id = msg.getContentRaw().split(" ")[2];
-		waifu w = waifu.getWaifuById(Integer.parseInt(id));
+		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w == null) {
 			msg.getChannel().sendMessage("id non défini").queue();
 			return;
 		}
-		String name = msg.getContentRaw().substring(">waifu setdescription  ".length() + id.length());
+		String name = msg.getContentRaw().substring(">Waifu setdescription  ".length() + id.length());
 		w.setDescription(name);
 		msg.addReaction("\uD83D\uDC4C").queue();
 	}
@@ -263,12 +312,12 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			return;
 		}
 		String id = msg.getContentRaw().split(" ")[2];
-		waifu w = waifu.getWaifuById(Integer.parseInt(id));
+		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w == null) {
 			msg.getChannel().sendMessage("id non défini").queue();
 			return;
 		}
-		String name = msg.getContentRaw().substring(">waifu setOrigin  ".length() + id.length());
+		String name = msg.getContentRaw().substring(">Waifu setOrigin  ".length() + id.length());
 		w.setOrigin(name);
 		msg.addReaction("\uD83D\uDC4C").queue();
 	}
@@ -280,7 +329,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			return;
 		}
 		String id = msg.getContentRaw().split("\n")[0];
-		waifu w = waifu.getWaifuById(Integer.parseInt(id.substring(">waifu delete ".length())));
+		Waifu w = Waifu.getWaifuById(Integer.parseInt(id.substring(">Waifu delete ".length())));
 		if (w == null) {
 			msg.getChannel().sendMessage("id non défini").queue();
 			return;
@@ -296,31 +345,33 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			return;
 		}
 		String id = msg.getContentRaw().split(" ")[2];
-		waifu w = waifu.getWaifuById(Integer.parseInt(id));
+		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w == null) {
 			msg.getChannel().sendMessage("id non défini").queue();
 			return;
 		}
-		String name = msg.getContentRaw().substring(">waifu setname  ".length() + id.length());
+		String name = msg.getContentRaw().substring(">Waifu setname  ".length() + id.length());
 		w.setName(name);
 		msg.addReaction("\uD83D\uDC4C").queue();
 	}
 
 	private static void release(Message msg) {
+
 		if (true)
 		{
 			msg.getChannel().sendMessage("tu ne peux pas relacher de waifu pour le moment  (PS de yann : FUCK)").queue();
 			return;
 		}
 		String id = msg.getContentRaw().split(" ")[2];
-		waifu w = waifu.getWaifuById(Integer.parseInt(id));
+		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w.getOwner() == null)
 			msg.getChannel().sendMessage(w.getName() + " n'appartient a personne").queue();
 		else if (!w.getOwner().equals(msg.getMember().getId()))
 			msg.getChannel().sendMessage("tu n'est pas le propriétaire de " + w.getName()).queue();
 		else {
 			w.setOwner(null);
-			msg.getChannel().sendMessage(w.getName() + " a été relâcher").queue();
+			msg.getChannel().sendMessage(w.getName() + " a été relâché").queue();
+			Squads.removePoints(msg.getMember().getId(), 500L);
 		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/27 23:52:52 by                  ###   ########.fr       */
+/*   Updated: 2022/05/29 22:09:46 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.reactionsrole.RoleReaction;
 import fr.cringebot.cringe.siterequest.Request;
+import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
-import fr.cringebot.cringe.waifus.waifu;
+import fr.cringebot.cringe.xp.TextuelXp;
 import fr.cringebot.cringe.xp.XP;
 import fr.cringebot.music.MusicCommand;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -57,6 +58,8 @@ import net.dv8tion.jda.api.events.role.RoleCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -136,13 +139,19 @@ public class BotListener implements EventListener {
 		Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
 		if (event.getButton().getId().startsWith("waifutrade") && event.getMember().getId().equals(msg.getEmbeds().get(0).getFooter().getText())) {
 			if (event.getButton().getLabel().equals("non")) {
-				msg.delete().queue();
-				event.getChannel().sendMessage("l'échange a été refusée").queue();
+				ArrayList<ActionRow> bttn = new ArrayList<>();
+				bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
+				bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
+				msg.editMessageComponents(bttn).queue();
+				event.getChannel().sendMessage("l'échange a été refusé").reference(event.getMessage()).queue();
 			}
 			else {
-				waifu.trade(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0]), Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1]));
-				event.getChannel().sendMessage("l'échange a été éffectué avec succès").queue();
-				msg.delete().queue();
+				Waifu.trade(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0]), Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1]));
+				ArrayList<ActionRow> bttn = new ArrayList<>();
+				bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
+				bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
+				msg.editMessageComponents(bttn).queue();
+				event.getChannel().sendMessage("l'échange a été accepté").reference(event.getMessage()).queue();
 			}
 		}
 		else
@@ -237,6 +246,7 @@ public class BotListener implements EventListener {
 	 */
 	private void onPing(GatewayPingEvent event) {
 		PollListener.verifTimePoll(event.getJDA());
+		TextuelXp.verif();
 	}
 
 	/**
@@ -251,13 +261,13 @@ public class BotListener implements EventListener {
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
 		if (new File("save/waifu").mkdir())
-			System.out.println("création du directory waifu");
+			System.out.println("création du directory Waifu");
 		Request.sendRequest(Request.Type.SETSEASON, event.getJDA().getGuildById("382938797442334720").getName());
 		Squads.load();
 		MessageReact.load();
 		PollMessage.load();
 		cki.load();
-		waifu.load();
+		Waifu.load();
 			for (MessageReact mr : MessageReact.message)
 				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
 		new Thread(() -> {
@@ -403,7 +413,9 @@ public class BotListener implements EventListener {
 	 */
 	private void onMessage(MessageReceivedEvent event) throws IOException, InterruptedException {
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
+		if (!event.getGuild().getId().equals("382938797442334720")) return;
 		Message msg = event.getMessage();
+		TextuelXp.addmsg(event.getMember());
 		if (msg.getChannel().getId().equals("947564791759777792"))
 			msg.createThreadChannel("Parlez ici bandes de shlags").queue();
 		if (msg.getMentions().getMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())) && msg.getReferencedMessage() == null)

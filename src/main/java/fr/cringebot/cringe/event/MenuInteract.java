@@ -1,9 +1,10 @@
 package fr.cringebot.cringe.event;
 
 import fr.cringebot.cringe.Polls.PollListener;
+import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.reactionsrole.RoleReaction;
-import fr.cringebot.cringe.waifus.waifu;
+import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 
 import java.util.concurrent.ExecutionException;
@@ -16,8 +17,11 @@ public class MenuInteract {
 			PollListener.reactSelectMenu(event.getMessage(), event.getMember(), event.getSelectedOptions().get(0));
 			event.reply("Ton vote a été enregistré \uD83D\uDC4D").setEphemeral(true).queue();
 		}
-		if (event.getComponent().getId().equals("waifu")) {
-			new waifu(event.getMessage().getAttachments().get(0), event.getMessage().getEmbeds().get(0).getTitle(), event.getMessage().getEmbeds().get(0).getDescription(), event.getSelectedOptions().get(0).getLabel(), event.getMessage().getEmbeds().get(0).getFooter().getText());
+		if (event.getComponent().getId().equals("Waifu")) {
+			if (event.getSelectedOptions().get(0).getValue().equals("stop"))
+				event.getMessage().delete().queue();
+			new Waifu(event.getMessage().getAttachments().get(0), event.getMessage().getEmbeds().get(0).getTitle(), event.getMessage().getEmbeds().get(0).getDescription(), event.getSelectedOptions().get(0).getLabel(), event.getMessage().getEmbeds().get(0).getFooter().getText());
+			Squads.addPoints(event.getMember(), 1000L);
 			event.getMessage().delete().queue();
 		}
 		if (event.getComponent().getId().equals("cki"))

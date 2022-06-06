@@ -1,5 +1,6 @@
 package fr.cringebot.cringe.xp;
 
+import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.escouades.Squads;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Member;
@@ -11,7 +12,13 @@ public class XP {
     private static final HashMap<String, Long> vocalTime = new HashMap<>();
 
     public static Boolean isVoiceXp(AudioChannel vc){
-        return (vc.getMembers().size() >= 2 || !vc.getId().equals("979859652848283748"));
+        int i = 0;
+        for (Member m : vc.getMembers())
+        {
+            if (!m.getRoles().contains(vc.getGuild().getRoleById(BotDiscord.SecondaryRoleId)) && !m.getRoles().contains(vc.getGuild().getRoleById("502530450279890945")))
+                i++;
+        }
+        return (i >= 2 || !vc.getId().equals("979859652848283748"));
     }
 
 

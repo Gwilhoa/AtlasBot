@@ -2,8 +2,6 @@ package fr.cringebot.cringe.waifus;
 
 import com.google.gson.reflect.TypeToken;
 import fr.cringebot.cringe.objects.StringExtenders;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.io.*;
@@ -12,11 +10,11 @@ import java.util.HashMap;
 
 import static fr.cringebot.cringe.event.BotListener.gson;
 
-public class waifu {
+public class Waifu {
 	private static final String file = "save/waifus.json";
-	private static final TypeToken<HashMap<Integer, waifu>> token = new TypeToken<HashMap<Integer, waifu>>() {
+	private static final TypeToken<HashMap<Integer, Waifu>> token = new TypeToken<HashMap<Integer, Waifu>>() {
 	};
-	private static HashMap<Integer, waifu> waifuList = new HashMap<>();
+	private static HashMap<Integer, Waifu> waifuList = new HashMap<>();
 	private final static HashMap<String, Long> timer = new HashMap<>();
 	private final String profile;
 	private String name;
@@ -47,7 +45,7 @@ public class waifu {
 		AUTRES
 	}
 
-	public waifu(Message.Attachment f, String name, String description, String type, String origin)
+	public Waifu(Message.Attachment f, String name, String description, String type, String origin)
 	{
 		int	i = 0;
 		this.id = -1;
@@ -84,31 +82,33 @@ public class waifu {
 	}
 
 	public static void trade(Integer w1, Integer w2) {
-		waifu w01 = getWaifuById(w1);
-		waifu w02 = getWaifuById(w2);
+		Waifu w01 = getWaifuById(w1);
+		Waifu w02 = getWaifuById(w2);
 		String temp = w02.getOwner();
 		w02.setOwner(w01.getOwner());
 		w01.setOwner(temp);
 		save();
 	}
 
-	public static ArrayList<waifu> getAllWaifu(){
+	public static ArrayList<Waifu> getAllWaifu(){
 		return new ArrayList<>(waifuList.values());
 	}
 
-	public static ArrayList<waifu> getAvailableWaifu() {
-		ArrayList<waifu> waifus = getAllWaifu();
+	public static ArrayList<Waifu> getAvailableWaifu() {
+		ArrayList<Waifu> waifus = getAllWaifu();
 		waifus.removeIf(w -> w.getOwner() != null);
 		return waifus;
 	}
-	public static ArrayList<waifu> getWaifubyName(String name){
-		ArrayList<waifu> list = new ArrayList<>();
+	public static ArrayList<Waifu> getWaifubyName(String name){
+		ArrayList<Waifu> list = new ArrayList<>();
 		if (!waifuList.isEmpty())
 		{
-			for (waifu waifu : waifuList.values())
+			for (Waifu waifu : waifuList.values())
 			{
-				if (StringExtenders.startWithIgnoreCase(waifu.getName(),name))
+				if (waifu.getName() == null || StringExtenders.startWithIgnoreCase(waifu.getName(),name))
 					list.add(waifu);
+				else
+					System.out.println(waifu.id);
 			}
 		}
 		if (list.isEmpty())
@@ -126,9 +126,9 @@ public class waifu {
 		save();
 	}
 
-	public static waifu getWaifuById(Integer id)
+	public static Waifu getWaifuById(Integer id)
 	{
-		for (waifu waifu : waifuList.values())
+		for (Waifu waifu : waifuList.values())
 		{
 			if (waifu.getId().equals(id))
 				return waifu;

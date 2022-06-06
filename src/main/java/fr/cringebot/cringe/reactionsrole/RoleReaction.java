@@ -34,9 +34,11 @@ public class RoleReaction {
         return Id;
     }
 
-    public void verif(Message msg)
+    public int verif(Message msg)
     {
         List<User> userList = null;
+        if (msg.getGuild().getRoleById(this.getId()) == null)
+            return -1;
         this.setName(msg.getGuild().getRoleById(this.getId()).getName());
         for (MessageReaction mr : msg.getReactions()) {
             if (mr.getReactionEmote().getAsReactionCode().equals(this.getEmote())) {
@@ -52,5 +54,6 @@ public class RoleReaction {
             if (userList != null && !userList.contains(mem.getUser()))
                 msg.getGuild().removeRoleFromMember(mem, msg.getGuild().getRoleById(this.getId())).queue();
         }
+        return 0;
     }
 }
