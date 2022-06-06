@@ -39,7 +39,7 @@ public class XP {
     }
 
     private static Long calcul(Long time){
-        double d = Math.pow(time, 2)/ 12960000000L;
+        double d = time/ 3600;
         return Math.round(d);
     }
 }
