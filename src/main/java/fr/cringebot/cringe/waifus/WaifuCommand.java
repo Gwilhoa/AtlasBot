@@ -244,6 +244,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			EmbedBuilder eb = new EmbedBuilder().setTitle("coming soon");
 			eb.setDescription("Yann est en train d'écrire\nça devrait pas tarder à arriver");
 			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+			return;
 		}
 		ArrayList<Waifu> w = Waifu.getWaifubyName(msg.getContentRaw().substring(">Waifu info ".length()));
 		if (w != null) {
