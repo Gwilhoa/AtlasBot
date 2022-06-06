@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -66,20 +67,40 @@ public class WaifuCommand {
 	}
 
 	private static void trade(Message msg) {
+		if (msg.getContentRaw().split(" ").length != 3){
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setColor(Color.red);
+			eb.setTitle("Demande d'échange");
+			eb.setDescription("mauvais format : \n>waifu trade TA_WAIFU_ID SA_WAIFU_ID");
+		}
 		String id = msg.getContentRaw().split(" ")[2];
 		String id2 = msg.getContentRaw().split(" ")[3];
 		Waifu w1 = Waifu.getWaifuById(Integer.parseInt(id));
 		Waifu w2 = Waifu.getWaifuById(Integer.parseInt(id2));
+		EmbedBuilder eb = null;
 		if (w1.getOwner() == null || !w1.getOwner().equals(msg.getMember().getId()))
-			msg.getChannel().sendMessage("tu n'es pas le propriétaire de "+ w1.getName()).queue();
+		{
+			eb = new EmbedBuilder();
+			eb.setColor(Color.red);
+			eb.setTitle("Demande d'échange");
+			eb.setDescription("tu n'es pas le propriétaire de cette waifu");
+		}
 		else if (w2.getOwner() == null)
-			msg.getChannel().sendMessage("cette Waifu appartient à personne").queue();
+		{
+			eb = new EmbedBuilder();
+			eb.setColor(Color.red);
+			eb.setTitle("Demande d'échange");
+			eb.setDescription("cette waifu est à personne, cherche par toi meme");
+		}
+		if (eb != null)
+			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 		else {
-			EmbedBuilder eb = new EmbedBuilder();
+			eb = new EmbedBuilder();
 			eb.setAuthor(id + " " + id2);
 			eb.setTitle("Demande d'échange");
-			eb.setDescription(msg.getMember().getAsMention() + " demande " + w2.getName() + " contre " + w1.getName() + "\n");
-			eb.setFooter(w2.getOwner());
+			eb.setColor(Color.WHITE);
+			eb.setDescription(msg.getMember().getAsMention() + " cherche à échanger avec " + msg.getGuild().getMemberById(w2.getOwner()).getAsMention() + "\nIl demande " + w2.getName() + " contre " + w1.getName());
+			eb.setFooter(w1.getOwner() +" "+w2.getOwner());
 			ArrayList<ActionRow> bttn = new ArrayList<>();
 			bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui")));
 			bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non")));
@@ -128,7 +149,7 @@ public class WaifuCommand {
 		}
 		else if (Waifu.timeleft(msg.getMember().getId()) < 0){
 			long t = Waifu.timeleft(msg.getMember().getId());
-			long th = t / 3600000;
+			long th = - t / 3600000;
 			long tmin = (th * 3600000 - t) / 60000;
 			long ts = (th * 3600000 - tmin * 60000 - t) / 1000;
 			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle Waifu").queue();
@@ -219,6 +240,11 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 	}
 
 	public static void infowaifu(Message msg) throws InterruptedException {
+		if (msg.getContentRaw().split(" ").length <= 2) {
+			EmbedBuilder eb = new EmbedBuilder().setTitle("coming soon");
+			eb.setDescription("Yann est en train d'écrire\nça devrait pas tarder à arriver");
+			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+		}
 		ArrayList<Waifu> w = Waifu.getWaifubyName(msg.getContentRaw().substring(">Waifu info ".length()));
 		if (w != null) {
 			for (Waifu waif : w) {

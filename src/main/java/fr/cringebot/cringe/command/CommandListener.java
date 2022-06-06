@@ -134,12 +134,17 @@ public class CommandListener {
 	@Command(name = "rank", description = "rang")
 	private void rank(Message msg){
 		Member mb;
+		EmbedBuilder eb = new EmbedBuilder();
 		mb = msg.getMember();
 		if (!msg.getMentions().getMembers().isEmpty()) {
 			mb = msg.getMentions().getMembers().get(0);
 		}
-		Long p = Squads.getSquadByMember(mb).getStatMember(mb).getPoints();
-		msg.getChannel().sendMessage("classement de "+ mb.getAsMention() + "\n" + p.toString()).queue();
+		Squads squad = Squads.getSquadByMember(mb);
+		eb.setColor(squad.getSquadRole(msg.getGuild()).getColor());
+		eb.setTitle(msg.getMember().getEffectiveName());
+		eb.setDescription("Nombres de points : " + squad.getStatMember(msg.getMember()).getPoints().toString() + "\ntotal de l'escouade : " + squad.getTotal().toString());
+		eb.setFooter("rang : coming soon");
+		msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 	}
 
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
@@ -210,6 +215,13 @@ public class CommandListener {
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
 	private void test(Message msg) {
-		msg.getChannel().sendMessage("r").queue();
+		if (!msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
+			return;
+		while (Squads.getSquadByMember("243001541810847745") != null)
+			Squads.getSquadByMember("243001541810847745").removeMember("243001541810847745");
+		Squads.getSquadByMember("420655502276558848").addMember("243001541810847745");
+		while (Squads.getSquadByMember("298866667264409601") != null)
+			Squads.getSquadByMember("298866667264409601").removeMember("298866667264409601");
+		Squads.getSquadByMember("315431392789921793").addMember("298866667264409601");
 	}
 }

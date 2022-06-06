@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/29 22:09:46 by                  ###   ########.fr       */
+/*   Updated: 2022/06/06 23:04:09 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ import fr.cringebot.cringe.waifus.WaifuCommand;
 import fr.cringebot.cringe.xp.TextuelXp;
 import fr.cringebot.cringe.xp.XP;
 import fr.cringebot.music.MusicCommand;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
@@ -62,9 +63,11 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.BotDiscord.isMaintenance;
@@ -137,21 +140,40 @@ public class BotListener implements EventListener {
 
 	private void onButton(ButtonInteractionEvent event) {
 		Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
-		if (event.getButton().getId().startsWith("waifutrade") && event.getMember().getId().equals(msg.getEmbeds().get(0).getFooter().getText())) {
+		String SenderId = msg.getEmbeds().get(0).getFooter().getText().split(" ")[0];
+		String ReceivedId = msg.getEmbeds().get(0).getFooter().getText().split(" ")[1];
+		if (event.getButton().getId().startsWith("waifutrade") && event.getMember().getId().equals(ReceivedId)) {
 			if (event.getButton().getLabel().equals("non")) {
 				ArrayList<ActionRow> bttn = new ArrayList<>();
+				EmbedBuilder eb = new EmbedBuilder();
+				eb.setColor(Color.red);
+				eb.setDescription("l'échange à été refusé\nl'échange était entre "+ Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0])) + " et " + Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0])));
 				bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
 				bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
-				msg.editMessageComponents(bttn).queue();
-				event.getChannel().sendMessage("l'échange a été refusé").reference(event.getMessage()).queue();
+				msg.editMessageEmbeds(eb.build()).setActionRows(bttn).queue();
+				msg.getChannel().sendMessage(msg.getGuild().getMemberById(SenderId).getAsMention() + " du nouveau pour l'échange !").reference(event.getMessage()).queue();
 			}
 			else {
+				if (!Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0])).getOwner().equals(SenderId) || !Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1])).getOwner().equals(ReceivedId)){
+					ArrayList<ActionRow> bttn = new ArrayList<>();
+					EmbedBuilder eb = new EmbedBuilder();
+					eb.setColor(Color.red);
+					eb.setDescription("l'échange ne peut etre abouti car une des waifus n'appartient plus a son utilisateur par rapport à la demande");
+					bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
+					bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
+					msg.editMessageEmbeds(eb.build()).setActionRows(bttn).queue();
+					return;
+				}
+				EmbedBuilder eb = new EmbedBuilder().setTitle("Demande d'échange");
+				eb.setColor(Color.green);
+				eb.setDescription("l'échange entre "+ Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0])) + " et " + Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0])) +"a été éffecuté avec succès");
 				Waifu.trade(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0]), Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1]));
 				ArrayList<ActionRow> bttn = new ArrayList<>();
 				bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
 				bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
 				msg.editMessageComponents(bttn).queue();
-				event.getChannel().sendMessage("l'échange a été accepté").reference(event.getMessage()).queue();
+				msg.editMessageEmbeds(eb.build()).setActionRows(bttn).queue();
+				msg.getChannel().sendMessage(msg.getGuild().getMemberById(SenderId).getAsMention() + " du nouveau pour l'échange !").reference(event.getMessage()).queue();
 			}
 		}
 		else
