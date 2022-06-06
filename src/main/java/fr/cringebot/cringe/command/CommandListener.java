@@ -15,10 +15,7 @@ import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
 import net.dv8tion.jda.api.*;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
@@ -213,11 +210,17 @@ public class CommandListener {
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
 	private void test(Message msg) {
-		for (Member m : msg.getGuild().getMembersWithRoles(msg.getGuild().getRoleById(BotDiscord.SecondaryRoleId))){
-			ArrayList<Waifu> waifus = Waifu.getAllWaifu();
-			waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(m.getId()));
-			for (Waifu w : waifus)
-				w.setOwner(null);
-		}
+		Guild g = msg.getGuild();
+		g.addRoleToMember(g.getMemberById("298866667264409601"), g.getRoleById("979455622145773589")).queue();
+		g.removeRoleFromMember(g.getMemberById("298866667264409601"), g.getRoleById("979455623295041578")).queue();
+		g.removeRoleFromMember(g.getMemberById("243001541810847745"), g.getRoleById("979455623295041578")).queue();
+		g.addRoleToMember(g.getMemberById("243001541810847745"), g.getRoleById("979455621638262784")).queue();
+		msg.getChannel().sendMessage(g.getMemberById("298866667264409601").getAsMention() + " et " + g.getMemberById("243001541810847745") + "\nchange d'équipe pour un équilibrage").queue();
+		Squads.getSquadByMember("298866667264409601").removeMember("298866667264409601");
+		Squads.getSquadByRole(g.getRoleById("979455622145773589")).addMember("298866667264409601");
+		Squads.getSquadByMember("243001541810847745").removeMember("243001541810847745");
+		Squads.getSquadByRole(g.getRoleById("979455621638262784")).addMember("243001541810847745");
+
+
 	}
 }

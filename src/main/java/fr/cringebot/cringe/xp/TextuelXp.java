@@ -23,7 +23,8 @@ public class TextuelXp {
     private Long calcul() {
         double bite = (this.nbmsg-20)/2;
         System.out.println("double : "+ bite);
-        return Math.round(-100*Math.exp(bite) + 100);
+        long calcul = Math.round(-100*Math.exp(bite) + 100);
+        return Math.max(calcul, 0L);
     }
 
     public static void addmsg(Member m){
