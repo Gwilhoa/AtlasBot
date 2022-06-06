@@ -128,9 +128,9 @@ public class WaifuCommand {
 		}
 		else if (Waifu.timeleft(msg.getMember().getId()) < 0){
 			long t = Waifu.timeleft(msg.getMember().getId());
-			long th = (10800000 - t) / 3600000;
-			long tmin = (10800000 - th * 3600000 - t) / 60000;
-			long ts = (10800000 - th * 3600000 - tmin * 60000 - t) / 1000;
+			long th = t / 3600000;
+			long tmin = (th * 3600000 - t) / 60000;
+			long ts = (th * 3600000 - tmin * 60000 - t) / 1000;
 			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle Waifu").queue();
 			return;
 
