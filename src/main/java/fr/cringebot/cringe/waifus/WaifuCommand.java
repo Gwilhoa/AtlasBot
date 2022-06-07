@@ -78,8 +78,18 @@ public class WaifuCommand {
 		}
 		String id = msg.getContentRaw().split(" ")[2];
 		String id2 = msg.getContentRaw().split(" ")[3];
-		Waifu w1 = Waifu.getWaifuById(Integer.parseInt(id));
-		Waifu w2 = Waifu.getWaifuById(Integer.parseInt(id2));
+		Waifu w1 = null;
+		Waifu w2 = null;
+		try {
+			w1 = Waifu.getWaifuById(Integer.parseInt(id));
+			w2 = Waifu.getWaifuById(Integer.parseInt(id2));
+		} catch (NumberFormatException e){
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setColor(Color.red);
+			eb.setTitle("Demande d'échange");
+			eb.setDescription("mauvais format : \n>waifu trade TA_WAIFU_ID SA_WAIFU_ID");
+			return;
+		}
 		EmbedBuilder eb = null;
 		if (w1.getOwner() == null || !w1.getOwner().equals(msg.getMember().getId()))
 		{
@@ -151,7 +161,7 @@ public class WaifuCommand {
 			return;
 		}
 		else if (Waifu.timeleft(msg.getMember().getId()) < 0){
-			long t = Waifu.timeleft(msg.getMember().getId());
+			long t = -Waifu.timeleft(msg.getMember().getId());
 			long th = t/HOUR;
 			t %= HOUR;
 			long tmin = t/MINUTE;
