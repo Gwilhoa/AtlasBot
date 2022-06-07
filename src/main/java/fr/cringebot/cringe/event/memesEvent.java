@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2022/06/07 20:35:10 by                  ###   ########.fr       */
+/*   Updated: 2022/06/07 20:35:50 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ import java.nio.file.Path;
 import static fr.cringebot.cringe.objects.Emotes.getEmote;
 
 public class memesEvent {
-	public static void addReaction(Message message, MessageReaction react) {
+	public static void addReaction(Message message, MessageReaction react) throws IOException {
 		int u = 0;
 		int d = 0;
 		for ( MessageReaction reaction : message.getReactions()) {
@@ -48,8 +48,7 @@ public class memesEvent {
 			if (DetectorAttachment.isYoutube(message.getContentRaw()) || DetectorAttachment.isTenor(message.getContentRaw())) {
 				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).queue();
 			} else if (message.getEmbeds().isEmpty()) {
-				File f = new File(message.getAttachments().get(0).getFileName());
-				f = message.getAttachments().get(0).getProxy().downloadToFile(f).join();
+				File f = imgExtenders.getFile(message.getAttachments().get(0).getProxyUrl(),message.getAttachments().get(0).getFileName(), null);
 				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(f).queue();
 				f.delete();
 			} else {
@@ -126,8 +125,7 @@ public class memesEvent {
 		}
 		if (ret == null) {
 			if (!msg.getAttachments().isEmpty()) {
-				f = new File(msg.getAttachments().get(0).getFileName());
-				f = msg.getAttachments().get(0).getProxy().downloadToFile(f).join();
+				f = imgExtenders.getFile(msg.getAttachments().get(0).getProxyUrl(),msg.getAttachments().get(0).getFileName(), null);
 				Content = msg.getContentRaw();
 			} else {
 				for (String mot : args) {
