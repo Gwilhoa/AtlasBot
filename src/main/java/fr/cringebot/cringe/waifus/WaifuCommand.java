@@ -324,6 +324,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 		}
 		eb.setColor(Squads.getSquadByMember(MemberID).getSquadRole(msg.getGuild()).getColor());
 		eb.setDescription(sb);
+		eb.setAuthor(MemberID);
 		msg.editMessageEmbeds(eb.build()).queue();
 	}
 
