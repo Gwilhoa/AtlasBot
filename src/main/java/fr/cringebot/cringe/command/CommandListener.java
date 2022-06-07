@@ -182,11 +182,11 @@ public class CommandListener {
 		if (!msg.getMentions().getMembers().isEmpty())
 			id = msg.getMentions().getMembers().get(0).getId();
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setTitle("Waifu de " + msg.getGuild().getMemberById(id));
+		eb.setTitle("Waifu de " + msg.getGuild().getMemberById(id).getEffectiveName());
 		eb.setAuthor(id);
 		eb.setDescription("chargement...");
 		msg = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
-		harem(msg);
+		WaifuCommand.haremEmbed(msg);
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException {
