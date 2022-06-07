@@ -303,7 +303,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 		Waifu w;
 		EmbedBuilder eb = new EmbedBuilder();
 		String MemberID = msg.getEmbeds().get(0).getAuthor().getName();
-		waifus.removeIf(wai -> wai == null || !wai.getOwner().equals(MemberID));
+		waifus.removeIf(wai -> wai.getOwner() == null || !wai.getOwner().equals(MemberID));
 		int	i = f*10;
 		if (waifus.isEmpty())
 		{
