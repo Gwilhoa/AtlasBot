@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2022/06/06 22:31:58 by                  ###   ########.fr       */
+/*   Updated: 2022/06/07 20:35:10 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ public class memesEvent {
 			if (DetectorAttachment.isYoutube(message.getContentRaw()) || DetectorAttachment.isTenor(message.getContentRaw())) {
 				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).queue();
 			} else if (message.getEmbeds().isEmpty()) {
-				File f = message.getAttachments().get(0).getProxy().downloadToPath().join().toFile();
+				File f = new File(message.getAttachments().get(0).getFileName());
+				f = message.getAttachments().get(0).getProxy().downloadToFile(f).join();
 				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(f).queue();
 				f.delete();
 			} else {
@@ -125,7 +126,8 @@ public class memesEvent {
 		}
 		if (ret == null) {
 			if (!msg.getAttachments().isEmpty()) {
-				f = msg.getAttachments().get(0).getProxy().downloadToPath().join().toFile();
+				f = new File(msg.getAttachments().get(0).getFileName());
+				f = msg.getAttachments().get(0).getProxy().downloadToFile(f).join();
 				Content = msg.getContentRaw();
 			} else {
 				for (String mot : args) {
