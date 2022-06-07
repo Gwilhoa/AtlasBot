@@ -153,7 +153,9 @@ public class WaifuCommand {
 		else if (Waifu.timeleft(msg.getMember().getId()) < 0){
 			long t = Waifu.timeleft(msg.getMember().getId());
 			long th = t/HOUR;
+			t %= HOUR;
 			long tmin = t/MINUTE;
+			t %= MINUTE;
 			long ts = t/SECOND;
 			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle Waifu").queue();
 			return;
