@@ -26,6 +26,9 @@ import static fr.cringebot.BotDiscord.isMaintenance;
 public class WaifuCommand {
 	private static Message msg;
 	public static Lock waifuLock = new ReentrantLock();
+	private static final int SECOND = 1000;
+	private static final int MINUTE = 60 * SECOND;
+	private static final int HOUR = 60 * MINUTE;
 
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
 
@@ -149,9 +152,9 @@ public class WaifuCommand {
 		}
 		else if (Waifu.timeleft(msg.getMember().getId()) < 0){
 			long t = Waifu.timeleft(msg.getMember().getId());
-			long th = - t / 3600000;
-			long tmin = (th * 3600000 - t) / 60000;
-			long ts = (th * 3600000 - tmin * 60000 - t) / 1000;
+			long th = t/HOUR;
+			long tmin = t/MINUTE;
+			long ts = t/SECOND;
 			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle Waifu").queue();
 			return;
 
