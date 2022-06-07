@@ -70,6 +70,10 @@ public class WaifuCommand {
 	}
 
 	private static void trade(Message msg) {
+		if (!msg.getChannel().getId().equals(BotDiscord.FarmingSalonId)) {
+			msg.getChannel().sendMessage("Mové salon comme dirait l'autre").queue();
+			return;
+		}
 		if (msg.getContentRaw().split(" ").length != 3){
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setColor(Color.red);
@@ -152,6 +156,10 @@ public class WaifuCommand {
 	}
 
 	private static void newWaifu(Message msg) throws InterruptedException {
+		if (!msg.getChannel().getId().equals(BotDiscord.FarmingSalonId)) {
+			msg.getChannel().sendMessage("Mové salon comme dirait l'autre").queue();
+			return;
+		}
 		if (isMaintenance) {
 			msg.getChannel().sendMessage("le bot est actuellement en maintenance").queue();
 			return;
@@ -255,6 +263,10 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 	}
 
 	public static void infowaifu(Message msg) throws InterruptedException {
+		if (!msg.getChannel().getId().equals(BotDiscord.FarmingSalonId)) {
+			msg.getChannel().sendMessage("Mové salon comme dirait l'autre").queue();
+			return;
+		}
 		if (msg.getContentRaw().split(" ").length <= 2) {
 			EmbedBuilder eb = new EmbedBuilder().setTitle("coming soon");
 			eb.setDescription("Yann est en train d'écrire\nça devrait pas tarder à arriver");
@@ -398,6 +410,10 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 	}
 
 	private static void release(Message msg) {
+		if (!msg.getChannel().getId().equals(BotDiscord.FarmingSalonId)) {
+			msg.getChannel().sendMessage("Mové salon comme dirait l'autre").queue();
+			return;
+		}
 		String id = msg.getContentRaw().split(" ")[2];
 		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w.getOwner() == null)
