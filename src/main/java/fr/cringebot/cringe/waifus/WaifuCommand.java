@@ -5,6 +5,7 @@ import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -263,10 +264,6 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 	}
 
 	public static void infowaifu(Message msg) throws InterruptedException {
-		if (!msg.getChannel().getId().equals(BotDiscord.FarmingSalonId)) {
-			msg.getChannel().sendMessage("Mové salon comme dirait l'autre").queue();
-			return;
-		}
 		if (msg.getContentRaw().split(" ").length <= 2) {
 			EmbedBuilder eb = new EmbedBuilder().setTitle("coming soon");
 			eb.setDescription("Yann est en train d'écrire\nça devrait pas tarder à arriver");
@@ -296,6 +293,42 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			}
 		}
 	}
+
+
+	public static void haremEmbed(Message msg){
+		haremEmbed(msg, 0);
+	}
+	public static void haremEmbed(Message msg, Integer f) {
+		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
+		Waifu w;
+		String MemberID = msg.getEmbeds().get(0).getAuthor().getName();
+		EmbedBuilder eb = new EmbedBuilder();
+		waifus.removeIf(wai -> !wai.getOwner().equals(MemberID));
+		int	i = f*10;
+		if (waifus.isEmpty())
+		{
+			msg.editMessageEmbeds(eb.setDescription("tu as actuellement aucune waifu").build()).queue();
+			return;
+		}
+		if (i > waifus.size() || i < 0)
+			return;
+		eb.setFooter(f.toString()).setTitle(msg.getEmbeds().get(0).getTitle());
+		StringBuilder sb = new StringBuilder();
+		while (i < (f*10)+10)
+		{
+			if (i < waifus.size()) {
+				w = waifus.get(i);
+				sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
+			}
+			i++;
+		}
+		eb.setColor(Squads.getSquadByMember(MemberID).getSquadRole(msg.getGuild()).getColor());
+		eb.setDescription(sb);
+		msg.editMessageEmbeds(eb.build()).queue();
+	}
+
+
+
 
 	public static void listwaifu(Message msg){
 		listwaifu(msg, 0);

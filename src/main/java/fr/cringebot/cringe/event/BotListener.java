@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/06/07 20:47:25 by                  ###   ########.fr       */
+/*   Updated: 2022/06/07 23:31:19 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -376,14 +376,18 @@ public class BotListener implements EventListener {
 			if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().equals("Listes des waifus")){
 				WaifuCommand.listwaifu(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())-1);
 				event.getReaction().removeReaction(event.getUser()).queue();
-			}
+			} else if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().startsWith("Waifu de")){
+				WaifuCommand.haremEmbed(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())-1);
+				event.getReaction().removeReaction(event.getUser()).queue();}
 		}
 		else if (event.getReaction().getReactionEmote().getAsReactionCode().equals("▶️")) {
 			Message msg = event.retrieveMessage().complete();
 			if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().equals("Listes des waifus")){
 				WaifuCommand.listwaifu(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())+1);
 				event.getReaction().removeReaction(event.getUser()).queue();
-			}
+			} else if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().startsWith("Waifu de")){
+				WaifuCommand.haremEmbed(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())+1);
+				event.getReaction().removeReaction(event.getUser()).queue();}
 		}
 		else if (event.getReaction().getReactionEmote().getAsReactionCode().equals("⬆️") ) {
 			Message msg = event.retrieveMessage().complete();
@@ -437,7 +441,6 @@ public class BotListener implements EventListener {
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		if (!event.getGuild().getId().equals("382938797442334720")) return;
 		Message msg = event.getMessage();
-		TextuelXp.addmsg(event.getMember());
 		if (msg.getChannel().getId().equals("947564791759777792"))
 			msg.createThreadChannel("Parlez ici bandes de shlags").queue();
 		if (msg.getMentions().getMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())) && msg.getReferencedMessage() == null)
@@ -446,10 +449,12 @@ public class BotListener implements EventListener {
 			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
 			return;
 		}
-		if (cki.wtpThreads.containsKey(msg.getChannel().getId())) {
+		TextuelXp.addmsg(event.getMember());
+		if (cki.wtpThreads.containsKey(msg.getChannel().getId()))
 			new ckiListener(msg, cki.wtpThreads.get(msg.getChannel().getId()));
-		}
 
+		if (msg.getChannel().getId().equals("461606547064356864"))
+			new Thread(() -> postmeme(msg)).start();
 
 		String[] args = msg.getContentRaw().split(" ");
 
@@ -470,11 +475,13 @@ public class BotListener implements EventListener {
 		{
 			int i = firstsearch(msg.getContentRaw().toLowerCase(Locale.ROOT), "je suis");
 			String str = msg.getContentRaw().substring(i + 2);
-			str = str.replace("@everyone", "tout le monde");
-			if (new Random().nextInt(2) == 0 &&  msg.getGuild().getMember(bot.getJda().getSelfUser()) != null)
-				msg.getChannel().sendMessage("Bonjour "+ str+". Moi c'est " + msg.getGuild().getMember(bot.getJda().getSelfUser()).getEffectiveName()).queue();
-			else
-				msg.getChannel().sendMessage("Bonjour "+ str+". Moi c'est " + bot.getJda().getSelfUser().getName()).queue();
+			if (str.split(" ").length == 1) {
+				str = str.replace("@everyone", "tout le monde");
+				if (new Random().nextInt(2) == 0 && msg.getGuild().getMember(bot.getJda().getSelfUser()) != null)
+					msg.getChannel().sendMessage("Bonjour " + str + ". Moi c'est " + msg.getGuild().getMember(bot.getJda().getSelfUser()).getEffectiveName()).queue();
+				else
+					msg.getChannel().sendMessage("Bonjour " + str + ". Moi c'est " + bot.getJda().getSelfUser().getName()).queue();
+			}
 		}
 
 		if (msg.getContentRaw().equalsIgnoreCase("ratio") )
@@ -494,23 +501,10 @@ public class BotListener implements EventListener {
 			msg.getChannel().sendMessage("pong").complete().editMessageFormat("Pong: %d ms", System.currentTimeMillis() - time).queue();
 		}
 
-		if (containsIgnoreCase(msg.getContentRaw(), "nice")) {
-			if (!DetectorAttachment.isAnyLink(msg)) {
-				try {
-					nice(msg);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
 		String[] s = msg.getContentRaw().replace("?","").replace(".","").split(" ");
 		if (containsIgnoreCase(s[s.length - 1], "quoi" )){
 			feur(msg);
 		}
-
-		if (msg.getContentRaw().equals("rip"))
-			rip(msg, msg.getMember().getUser().getAvatarUrl());
 
 		if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))
 			msg.getChannel().sendFile(imgExtenders.getFile("societer.png")).queue();
@@ -535,10 +529,6 @@ public class BotListener implements EventListener {
 			if (!DetectorAttachment.isAnyLink(msg))
 				msg.getTextChannel().sendMessage("https://tenor.com/view/oh-no-cringe-cringe-oh-no-kimo-kimmo-gif-23168319").queue();
 		}
-		if (msg.getChannel().getId().equals("461606547064356864"))
-			new Thread(() -> {
-					postmeme(msg);
-			}).start();
 
 		if (containsIgnoreCase(msg.getContentRaw(), "stonks")) {
 			if (new Random().nextInt(100) >= 95)

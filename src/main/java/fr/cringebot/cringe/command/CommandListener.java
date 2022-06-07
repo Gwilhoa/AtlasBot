@@ -174,24 +174,19 @@ public class CommandListener {
 
 	@Command(name = "harem", description = "la listes des waifus", type = ExecutorType.USER)
 	private void harem(Message msg){
+		if (!msg.getChannel().getId().equals("975087822618910800")) {
+			msg.getChannel().sendMessage("non").queue();
+			return;
+		}
 		String id = msg.getMember().getId();
 		if (!msg.getMentions().getMembers().isEmpty())
 			id = msg.getMentions().getMembers().get(0).getId();
-		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
-		String finalId = id;
-		waifus.removeIf(w -> w.getOwner() == null || !w.getOwner().equals(finalId));
-		if (waifus.isEmpty())
-		{
-			msg.getChannel().sendMessage("\uD83D\uDE2D tu n'as pas de waifus, fais >Waifu pour en avoir une !").queue();
-			return;
-		}
-		StringBuilder sb = new StringBuilder().append("waifus de ").append(msg.getGuild().getMemberById(id).getEffectiveName()).append("\n\n");
-		for (Waifu w : waifus)
-			sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
-		MessageBuilder mb = new MessageBuilder().append(sb);
-		Queue<Message> ml = mb.buildAll();
-		while (!ml.isEmpty())
-			msg.getChannel().sendMessage(ml.poll()).queue();
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setTitle("Waifu de " + msg.getGuild().getMemberById(id));
+		eb.setAuthor(id);
+		eb.setDescription("chargement...");
+		msg = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
+		harem(msg);
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException {

@@ -6,12 +6,13 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2022/05/25 18:05:40 by                  ###   ########.fr       */
+/*   Updated: 2022/06/07 23:16:25 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 package fr.cringebot.cringe.event;
 
+import com.fasterxml.jackson.core.json.UTF8DataInputJsonParser;
 import fr.cringebot.cringe.objects.DetectorAttachment;
 import fr.cringebot.cringe.objects.MessageConsumer;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -25,6 +26,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Random;
 
@@ -113,15 +116,7 @@ public class ReactionEvent {
      * @param msg
      * @throws IOException
      */
-    public static void nice(Message msg) throws IOException {
-        Document doc = Jsoup.connect("https://randomcity.net").get();
-        EmbedBuilder eb = new EmbedBuilder();
-        String str = doc.select("body:nth-child(2) div.pure-g:nth-child(1) div.pure-u-1:nth-child(2) > h1:nth-child(1)").text();
-        eb.setTitle(str).setColor(new Color(255,215,0));
-        str = doc.select("body:nth-child(2) div.pure-g:nth-child(1) div.pure-u-1:nth-child(2) h1:nth-child(1) > img.flag").attr("src");
-        eb.setImage("https://randomcity.net/" + str);
-        msg.getChannel().sendMessageEmbeds(eb.build()).queue();
-    }
+
 
     /**
      * on évite de casser une table à chaque putain bordel
@@ -164,11 +159,6 @@ public class ReactionEvent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void rip(Message msg,String avatarUrl) {
-        BufferedImage avatar = getImage(avatarUrl);
-
     }
 
     public static void daronned(Message msg)
