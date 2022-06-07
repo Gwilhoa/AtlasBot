@@ -174,7 +174,7 @@ public class CommandListener {
 
 	@Command(name = "harem", description = "la listes des waifus", type = ExecutorType.USER)
 	private void harem(Message msg){
-		if (!msg.getChannel().getId().equals("975087822618910800")) {
+		if (!msg.getChannel().getId().equals(BotDiscord.FarmingSalonId)) {
 			msg.getChannel().sendMessage("non").queue();
 			return;
 		}
@@ -186,6 +186,7 @@ public class CommandListener {
 		eb.setAuthor(id);
 		eb.setDescription("chargement...");
 		msg = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
+		msg.addReaction("◀️").and(msg.addReaction("▶️")).queue();
 		WaifuCommand.haremEmbed(msg);
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
