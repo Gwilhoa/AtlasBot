@@ -301,9 +301,9 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 	public static void haremEmbed(Message msg, Integer f) {
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
 		Waifu w;
-		String MemberID = msg.getEmbeds().get(0).getAuthor().getName();
 		EmbedBuilder eb = new EmbedBuilder();
-		waifus.removeIf(wai -> !wai.getOwner().equals(MemberID));
+		String MemberID = msg.getEmbeds().get(0).getAuthor().getName();
+		waifus.removeIf(wai -> wai == null || !wai.getOwner().equals(MemberID));
 		int	i = f*10;
 		if (waifus.isEmpty())
 		{
