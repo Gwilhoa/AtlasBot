@@ -24,14 +24,16 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static fr.cringebot.cringe.cki.mainCommand.ckimain;
 
@@ -200,6 +202,56 @@ public class CommandListener {
 		WaifuCommand.CommandMain(msg);
 	}
 
+	private void addDirectory(ZipOutputStream zos, Path relativeFilePath) {
+		try {
+			ZipEntry entry = new ZipEntry(relativeFilePath.toString() + "/");
+			zos.putNextEntry(entry);
+			zos.closeEntry();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = inputStream.read(buffer)) >= 0) {
+			outputStream.write(buffer, 0, length);
+		}
+	}
+	private void addFile(ZipOutputStream zos, Path filePath, Path zipFilePath) {
+		try (FileInputStream fis = new FileInputStream(filePath.toFile())) {
+			ZipEntry entry = new ZipEntry(zipFilePath.toString());
+			zos.putNextEntry(entry);
+			copy(fis, zos);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@Command(name = "getbdd", description = "recuperer la bdd", type = ExecutorType.USER)
+	private void getbdd(Message msg){
+		if (!msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
+			return;
+		Path zipPath = new File("bdd.zip").toPath();
+		Path inputDirectoryPath = new File("save/").toPath();
+		try (FileOutputStream fos = new FileOutputStream(zipPath.toFile());
+			 ZipOutputStream zos = new ZipOutputStream(fos)) {
+			Files.walk(inputDirectoryPath)
+					.filter(someFileToZip -> !someFileToZip.equals(inputDirectoryPath))
+					.forEach(
+							someFileToZip -> {
+								Path pathInZip = inputDirectoryPath.relativize(someFileToZip);
+								if (Files.isDirectory(someFileToZip)) {
+									addDirectory(zos, pathInZip);
+								} else {
+									addFile(zos, someFileToZip, pathInZip);
+								}
+							});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		msg.getChannel().sendFile(zipPath.toFile()).queue();
+	}
+
 	@Command(name = "cki", description = "mais qui est-il !", type = ExecutorType.USER)
 	private void cki(Message msg){
 		ckimain(msg);
@@ -226,9 +278,10 @@ public class CommandListener {
 		dataset.setValue("waifu disponible", waifus.size());
 		dataset.setValue("waifu attrapé", total - waifus.size());
 
-		JFreeChart chart = ChartFactory.createPieChart("Popular destinations",
+		JFreeChart chart = ChartFactory.createPieChart("Waifus stat",
 				dataset, true, false, false);
 
+		chart.setElementHinting(true);
 		chart.setBorderVisible(false);
 
 		int width = 500;
@@ -236,6 +289,6 @@ public class CommandListener {
 
 		File f = new File("test.png");
 		ChartUtils.saveChartAsPNG(f, chart, width, height);
-		msg.getChannel().sendFile(f).queue();
+		msg.getChannel().sendMessage(waifus.size() + "/" + total).addFile(f).queue();
 	}
 }
