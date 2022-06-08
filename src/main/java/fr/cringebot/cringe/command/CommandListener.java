@@ -18,9 +18,15 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -210,14 +216,26 @@ public class CommandListener {
 	}
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
-	private void test(Message msg) {
+	private void test(Message msg) throws IOException {
+		List<Waifu> waifus = Waifu.getAllWaifu();
+		Integer total = waifus.size();
+		waifus.removeIf(w -> w.getOwner() == null);
 		if (!msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 			return;
-		while (Squads.getSquadByMember("243001541810847745") != null)
-			Squads.getSquadByMember("243001541810847745").removeMember("243001541810847745");
-		Squads.getSquadByMember("420655502276558848").addMember("243001541810847745");
-		while (Squads.getSquadByMember("298866667264409601") != null)
-			Squads.getSquadByMember("298866667264409601").removeMember("298866667264409601");
-		Squads.getSquadByMember("315431392789921793").addMember("298866667264409601");
+		DefaultPieDataset<String> dataset = new DefaultPieDataset();
+		dataset.setValue("waifu disponible", waifus.size());
+		dataset.setValue("waifu attrapé", total - waifus.size());
+
+		JFreeChart chart = ChartFactory.createPieChart("Popular destinations",
+				dataset, true, false, false);
+
+		chart.setBorderVisible(false);
+
+		int width = 500;
+		int height = 350;
+
+		File f = new File("test.png");
+		ChartUtils.saveChartAsPNG(f, chart, width, height);
+		msg.getChannel().sendFile(f).queue();
 	}
 }
