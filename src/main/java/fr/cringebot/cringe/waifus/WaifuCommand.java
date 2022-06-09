@@ -75,8 +75,12 @@ public class WaifuCommand {
 
 	private static void stats(Message msg) {
 		ArrayList<Waifu> waifuList = Waifu.getAllWaifu();
-		if (">waifu stats ".length() < msg.getContentRaw().length())
+		EmbedBuilder eb = new EmbedBuilder();
+		if (">waifu stats ".length() < msg.getContentRaw().length()) {
 			waifuList.removeIf(waifu -> !waifu.getOrigin().equalsIgnoreCase(msg.getContentRaw().substring(">waifu stats ".length())));
+			eb.setAuthor("msg.getContentRaw().substring(\">waifu stats \".length())");
+		} else
+			eb.setAuthor("général");
 		ArrayList<String> origins = new ArrayList<>();
 		HashMap<String, Integer> content = new HashMap<>();
 		int disponible = 0;
@@ -94,8 +98,7 @@ public class WaifuCommand {
 				origins.add(w.getOrigin());
 		}
 
-		EmbedBuilder eb = new EmbedBuilder();
-		eb.setTitle("Waifu stat").setAuthor("général");
+		eb.setTitle("Waifu stat");
 		eb.setDescription("Nombres de waifus encore disponible : "+ disponible + "/"+waifuList.size()+"\n\norigines disponible :\n");
 		for (String origin : origins)
 			eb.appendDescription(origin + " / ");
