@@ -75,9 +75,10 @@ public class WaifuCommand {
 
 	private static void stats(Message msg) {
 		ArrayList<Waifu> waifuList = Waifu.getAllWaifu();
+		if (">waifu stats ".length() > msg.getContentRaw().length())
+			waifuList.removeIf(waifu -> !waifu.getOrigin().equalsIgnoreCase(msg.getContentRaw().substring(">waifu stats ".length())));
 		ArrayList<String> origins = new ArrayList<>();
 		HashMap<String, Integer> content = new HashMap<>();
-		int nbwaifus = waifuList.size();
 		int disponible = 0;
 		for (Waifu w : waifuList) {
 			if (w.getOwner() == null)
