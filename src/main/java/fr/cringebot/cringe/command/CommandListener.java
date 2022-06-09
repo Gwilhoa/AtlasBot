@@ -10,6 +10,7 @@ import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
+import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.objects.UserExtenders;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.waifus.Waifu;
@@ -270,13 +271,15 @@ public class CommandListener {
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
 	private void test(Message msg) throws IOException {
 		List<Waifu> waifus = Waifu.getAllWaifu();
-		Integer total = waifus.size();
+		for (Waifu w : waifus)
+			if (StringExtenders.startWithIgnoreCase(w.getOrigin(),"League of Lege"))
+				w.setOrigin("League of Legends");Integer total = waifus.size();
 		waifus.removeIf(w -> w.getOwner() == null);
 		if (!msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 			return;
 		DefaultPieDataset<String> dataset = new DefaultPieDataset();
-		dataset.setValue("waifu disponible", waifus.size());
-		dataset.setValue("waifu attrapé", total - waifus.size());
+		dataset.setValue("waifu attrapés", waifus.size());
+		dataset.setValue("waifu disponible", total - waifus.size());
 
 		JFreeChart chart = ChartFactory.createPieChart("Waifus stat",
 				dataset, true, false, false);
