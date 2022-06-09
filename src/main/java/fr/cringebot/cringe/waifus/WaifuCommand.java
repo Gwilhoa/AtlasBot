@@ -78,7 +78,7 @@ public class WaifuCommand {
 		EmbedBuilder eb = new EmbedBuilder();
 		if (">waifu stats ".length() < msg.getContentRaw().length()) {
 			waifuList.removeIf(waifu -> !waifu.getOrigin().equalsIgnoreCase(msg.getContentRaw().substring(">waifu stats ".length())));
-			eb.setAuthor("msg.getContentRaw().substring(\">waifu stats \".length())");
+			eb.setAuthor(msg.getContentRaw().substring(">waifu stats ".length()));
 		} else
 			eb.setAuthor("général");
 		ArrayList<String> origins = new ArrayList<>();
