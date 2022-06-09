@@ -84,7 +84,7 @@ public class WaifuCommand {
 				disponible++;
 			else
 			{
-				if (content.containsKey(w.getOwner()))
+				if (!content.containsKey(w.getOwner()))
 					content.put(w.getOwner(), 1);
 				else
 					content.put(w.getOwner(), content.get(w.getOwner()) + 1);
