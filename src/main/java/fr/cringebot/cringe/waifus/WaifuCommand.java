@@ -17,6 +17,7 @@ import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Lock;
@@ -65,9 +66,43 @@ public class WaifuCommand {
 			trade(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("release"))
 			release(msg);
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("stats"))
+			stats(msg);
 		else
 			newWaifu(msg);
 
+	}
+
+	private static void stats(Message msg) {
+		ArrayList<Waifu> waifuList = Waifu.getAllWaifu();
+		ArrayList<String> origins = new ArrayList<>();
+		HashMap<String, Integer> content = new HashMap<>();
+		int nbwaifus = waifuList.size();
+		int disponible = 0;
+		for (Waifu w : waifuList) {
+			if (w.getOwner() == null)
+				disponible++;
+			else
+			{
+				if (content.containsKey(w.getOwner()))
+					content.put(w.getOwner(), 1);
+				else
+					content.put(w.getOwner(), content.get(w.getOwner()) + 1);
+			}
+			if (!origins.contains(w.getOrigin()))
+				origins.add(w.getOrigin());
+		}
+
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setTitle("Waifu stat").setAuthor("général");
+		eb.setDescription("Nombres de waifus encore disponible : "+ disponible + "/"+waifuList.size()+"\n\norigines disponible :\n");
+		for (String origin : origins)
+			eb.appendDescription(origin + " ");
+		eb.appendDescription("\n");
+		for (String id : content.keySet()){
+			eb.appendDescription(msg.getGuild().getMemberById(id).getAsMention() +" : "+content.get(id) +"\n");
+		}
+		msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 	}
 
 	private static void trade(Message msg) {
