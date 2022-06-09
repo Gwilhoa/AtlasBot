@@ -97,7 +97,7 @@ public class WaifuCommand {
 		eb.setTitle("Waifu stat").setAuthor("général");
 		eb.setDescription("Nombres de waifus encore disponible : "+ disponible + "/"+waifuList.size()+"\n\norigines disponible :\n");
 		for (String origin : origins)
-			eb.appendDescription(origin + " ");
+			eb.appendDescription(origin + " / ");
 		eb.appendDescription("\n");
 		for (String id : content.keySet()){
 			eb.appendDescription(msg.getGuild().getMemberById(id).getAsMention() +" : "+content.get(id) +"\n");
