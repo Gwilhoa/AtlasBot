@@ -304,9 +304,23 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 
 	public static void infowaifu(Message msg) throws InterruptedException {
 		if (msg.getContentRaw().split(" ").length <= 2) {
-			EmbedBuilder eb = new EmbedBuilder().setTitle("coming soon");
-			eb.setDescription("Yann est en train d'écrire\nça devrait pas tarder à arriver");
+
+			ArrayList<Waifu> waifuList = Waifu.getAllWaifu();
+			int disponible = 0;
+			for (Waifu w : waifuList) {
+				if (w.getOwner() == null) {disponible++;}
+			}
+			int i;
+			int P = ((disponible*100)/waifuList.size());
+			String texte = P + " % des waifu ont été capturée \n\n|| ";
+			for (i = 0; i<(P/2); i++) {texte += ". ";}
+			texte +="||";
+			for (int j = i; j<50; j++) {texte += " I";}
+			EmbedBuilder eb = new EmbedBuilder().setTitle("Waifu Capturée");
+			eb.setDescription(texte);
+			eb.setFooter(msg.getMember().getUser().getName(),msg.getMember().getUser().getAvatarUrl());
 			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+
 			return;
 		}
 		ArrayList<Waifu> w = Waifu.getWaifubyName(msg.getContentRaw().substring(">Waifu info ".length()));
