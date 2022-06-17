@@ -221,6 +221,11 @@ public class WaifuCommand {
 		}
 		Waifu.setTime(msg.getMember().getId());
 		Waifu w;
+		if (Waifu.getAvailableWaifu().isEmpty())
+		{
+			msg.getChannel().sendMessage("y'a plus rien").queue();
+			return;
+		}
 		w = Waifu.getAvailableWaifu().get(new Random().nextInt(Waifu.getAvailableWaifu().size() - 1));
 		File f = new File(w.getProfile());
 		w.setOwner(msg.getMember().getId());

@@ -270,28 +270,7 @@ public class CommandListener {
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
 	private void test(Message msg) throws IOException {
-		List<Waifu> waifus = Waifu.getAllWaifu();
-		for (Waifu w : waifus)
-			if (StringExtenders.startWithIgnoreCase(w.getOrigin(),"League of Lege"))
-				w.setOrigin("League of Legends");Integer total = waifus.size();
-		waifus.removeIf(w -> w.getOwner() == null);
-		if (!msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
-			return;
-		DefaultPieDataset<String> dataset = new DefaultPieDataset();
-		dataset.setValue("waifu attrapés", waifus.size());
-		dataset.setValue("waifu disponible", total - waifus.size());
-
-		JFreeChart chart = ChartFactory.createPieChart("Waifus stat",
-				dataset, true, false, false);
-
-		chart.setElementHinting(true);
-		chart.setBorderVisible(false);
-
-		int width = 500;
-		int height = 350;
-
-		File f = new File("test.png");
-		ChartUtils.saveChartAsPNG(f, chart, width, height);
-		msg.getChannel().sendMessage(waifus.size() + "/" + total).addFile(f).queue();
+		Squads.getSquadByMember("371249604177428481").addMember("605089426284085259");
+		msg.getGuild().addRoleToMember(msg.getGuild().getMemberById("605089426284085259"), Squads.getSquadByMember("371249604177428481").getSquadRole(msg.getGuild())).queue();
 	}
 }
