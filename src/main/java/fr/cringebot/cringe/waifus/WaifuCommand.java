@@ -226,7 +226,10 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage("y'a plus rien").queue();
 			return;
 		}
-		w = Waifu.getAvailableWaifu().get(new Random().nextInt(Waifu.getAvailableWaifu().size() - 1));
+		if (Waifu.getAvailableWaifu().size() > 1)
+			w = Waifu.getAvailableWaifu().get(new Random().nextInt(Waifu.getAvailableWaifu().size() - 1));
+		else
+			w = Waifu.getAvailableWaifu().get(0);
 		File f = new File(w.getProfile());
 		w.setOwner(msg.getMember().getId());
 		EmbedBuilder eb = new EmbedBuilder();
