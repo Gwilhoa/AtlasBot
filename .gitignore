@@ -1,7 +1,6 @@
 .idea/
 out/
 target/
-save/
 dependency-reduced-pom.xml
 *.class
 *.jar
