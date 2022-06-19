@@ -151,7 +151,7 @@ public class CommandListener {
 		Squads squad = Squads.getSquadByMember(mb);
 		eb.setColor(squad.getSquadRole(msg.getGuild()).getColor());
 		eb.setTitle(msg.getMember().getEffectiveName());
-		eb.setDescription("Nombres de points : " + squad.getStatMember(msg.getMember()).getPoints().toString() + "\ntotal de l'escouade : " + squad.getTotal().toString());
+		eb.setDescription("Nombres de points : " + squad.getStatMember(mb).getPoints().toString() + "\ntotal de l'escouade : " + squad.getTotal().toString());
 		eb.setFooter("rang : coming soon");
 		msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 	}

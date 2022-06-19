@@ -205,7 +205,7 @@ public class WaifuCommand {
 			return;
 		}
 		else if (msg.getMember().getRoles().contains(msg.getGuild().getRoleById(BotDiscord.SecondaryRoleId))){
-			msg.getChannel().sendMessage("Tu es un compte secondaire et mo, j'aime pas les comptes secondaires").queue();
+			msg.getChannel().sendMessage("Tu es un compte secondaire et moi, j'aime pas les comptes secondaires").queue();
 			return;
 		}
 		else if (Waifu.timeleft(msg.getMember().getId()) < 0){
