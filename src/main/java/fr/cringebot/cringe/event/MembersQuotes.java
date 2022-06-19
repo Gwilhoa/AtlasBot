@@ -1,5 +1,6 @@
 package fr.cringebot.cringe.event;
 
+import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;
 import org.jsoup.Jsoup;
@@ -130,6 +131,7 @@ public class MembersQuotes {
 					"qu'est ce que poutine fait au collet d'allevard ?"
 			};
     public static boolean MemberReact(Message msg) throws IOException {
+		Squads.addPoints(msg.getMember(), 50L);
         if (msg.getContentRaw().equalsIgnoreCase("max"))
             quoteDefault(msg, max);
         else if (msg.getContentRaw().equalsIgnoreCase("logan"))
