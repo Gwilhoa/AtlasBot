@@ -270,7 +270,6 @@ public class CommandListener {
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
 	private void test(Message msg) throws IOException {
-		Squads.getSquadByMember("371249604177428481").addMember("605089426284085259");
-		msg.getGuild().addRoleToMember(msg.getGuild().getMemberById("605089426284085259"), Squads.getSquadByMember("371249604177428481").getSquadRole(msg.getGuild())).queue();
+		msg.getChannel().sendFile(new File("save.zip")).queue();
 	}
 }
