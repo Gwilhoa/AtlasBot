@@ -311,7 +311,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 				if (w.getOwner() == null) {disponible++;}
 			}
 			int i;
-			int P = ((disponible*100)/waifuList.size());
+			int P = 100 - ((disponible*100)/waifuList.size());
 			String texte = P + " % des waifu ont été capturée \n\n|| ";
 			for (i = 0; i<(P/2); i++) {texte += ". ";}
 			texte +="||";
