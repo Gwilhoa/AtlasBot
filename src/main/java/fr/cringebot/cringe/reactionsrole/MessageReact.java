@@ -95,9 +95,19 @@ public class MessageReact {
     public void refresh(Guild guild) {
         Message msg = guild.getTextChannelById(channel).retrieveMessageById(this.Id).complete();
         StringBuilder sb = new StringBuilder();
+        int i = 0;
+        while (i < this.list.size())
+        {
+            int j = 0;
+            while (j < this.list.size())
+            {
+                if (j != i && this.list.get(j).getId().equals(this.list.get(i)))
+                    this.list.remove(j);
+                j++;
+            }
+            i++;
+        }
         for (RoleReaction rr : this.list) {
-            if (rr.verif(msg) == -1)
-                this.list.remove(rr);
             guild.getRoleById(rr.getId()).getManager().setColor(this.color).queue();
             sb.append(rr.getName()).append(" ").append(rr.getEmote()).append('\n');
             msg.addReaction(Emoji.fromFormatted(rr.getEmote())).queue();
