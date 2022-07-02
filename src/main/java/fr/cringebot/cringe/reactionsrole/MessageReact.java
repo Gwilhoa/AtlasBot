@@ -104,6 +104,7 @@ public class MessageReact {
         if (this.color != null)
             eb.setColor(color);
         msg.editMessageEmbeds(eb.setDescription(sb.toString()).build()).queue();
+        save();
     }
 }
 

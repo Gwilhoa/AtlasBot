@@ -79,7 +79,9 @@ public class ReactionEvent {
 
         String[] s = msg.getContentRaw().replace("?","").replace(".","").split(" ");
         if (containsIgnoreCase(s[s.length - 1], "quoi" )){
-            feur(msg);
+            String l = s[s.length - 1].toLowerCase(Locale.ROOT);
+            if (l.charAt(l.length() - 1) == 'i' && l.charAt(l.length() - 2) == 'o' && l.charAt(l.length() - 3) == 'u' && l.charAt(l.length() - 4) == 'q')
+                feur(msg);
         }
 
         if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))

@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/07/02 17:17:54 by                  ###   ########.fr       */
+/*   Updated: 2022/07/02 20:03:07 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,13 +312,14 @@ public class BotListener implements EventListener {
 		Waifu.load();
 		MessageReact.load();
 		MessageReact.message.get(0).setColor(new Color(138, 43, 226));
-		MessageReact.message.get(1).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("382938797442334720").getColor());
+		MessageReact.message.get(1).setColor(new Color(238,34,85));
 		MessageReact.message.get(2).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942041255502823424").getColor());
 		MessageReact.message.get(3).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942070824247115796").getColor());
 		MessageReact.message.get(4).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942080793096896552").getColor());
 		MessageReact.message.get(5).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942079123856171090").getColor());
 		MessageReact.message.get(6).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942089503978438686").getColor());
-		MessageReact.message.get(7).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942075754294964296").getColor());
+		MessageReact.message.get(8).setColor(new Color(253,78,255));
+		MessageReact.message.get(8).setColor(new Color(81,229,99));
 
 
 
