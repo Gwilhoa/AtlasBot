@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2022/07/02 11:31:44 by                  ###   ########.fr       */
+/*   Updated: 2022/07/02 21:48:56 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,9 @@ public class ReactionEvent {
             msg.getChannel().sendMessage("pong").complete().editMessageFormat("Pong: %d ms", System.currentTimeMillis() - time).queue();
         }
 
-        String[] s = msg.getContentRaw().replace("?","").replace(".","").split(" ");
-        if (containsIgnoreCase(s[s.length - 1], "quoi" )){
-            String l = s[s.length - 1].toLowerCase(Locale.ROOT);
-            if (l.charAt(l.length() - 1) == 'i' && l.charAt(l.length() - 2) == 'o' && l.charAt(l.length() - 3) == 'u' && l.charAt(l.length() - 4) == 'q')
-                feur(msg);
+        String s = msg.getContentRaw().replace("?","").replace(".","").replace(" ","");
+        if ( s.substring(s.length() - 4).equalsIgnoreCase("quoi")){
+            feur(msg);
         }
 
         if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))

@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/07/02 20:54:25 by                  ###   ########.fr       */
+/*   Updated: 2022/07/02 21:33:04 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,8 +311,6 @@ public class BotListener implements EventListener {
 		cki.load();
 		Waifu.load();
 		MessageReact.load();
-		MessageReact.message.get(4).setColor(new Color(255,107,132));
-		MessageReact.message.get(5).setColor(new Color(89,60,250));
 
 
 
@@ -465,6 +463,7 @@ public class BotListener implements EventListener {
 				}
 			return;
 		}
+
 		MusicCommand.MusicAddReact(event);
 	}
 
@@ -498,6 +497,7 @@ public class BotListener implements EventListener {
 		if (MemberReact(msg))
 			return;
 
+		ReactionEvent.reactionevent(msg, msg.getJDA());
 		//tous les events mis sans le prefix les reactions en gros
 		if (args[0].equalsIgnoreCase("f")) {
 			pressf(msg);
