@@ -42,6 +42,28 @@ public class Squads {
 		return new ArrayList<>(squadsHashMap.values());
 	}
 
+	public static ArrayList<Squads> getSortedSquads()
+	{
+		ArrayList<Squads> init = getAllSquads();
+		long best;
+		Squads s = null;
+		ArrayList<Squads> ret = new ArrayList<>();
+		while (!init.isEmpty())
+		{
+			best = -100L;
+			for (Squads sq : init)
+			{
+				if (sq.getTotal() > best) {
+					s = sq;
+					best = sq.getTotal();
+				}
+			}
+			ret.add(s);
+			init.remove(s);
+		}
+		return ret;
+	}
+
 	public static void updateSquads() {
 		List<Squads> squads = getAllSquads();
 		for (Squads squad : squads) {

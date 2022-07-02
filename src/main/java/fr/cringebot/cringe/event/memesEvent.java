@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:28 by gchatain          #+#    #+#             */
-/*   Updated: 2022/06/19 11:22:52 by                  ###   ########.fr       */
+/*   Updated: 2022/07/02 13:41:31 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,29 +33,40 @@ import java.nio.file.Path;
 import static fr.cringebot.cringe.objects.Emotes.getEmote;
 
 public class memesEvent {
+
+	/**
+	 * vois si ça passe dans meilleurs meme
+	 * @param message
+	 * @param react
+	 * @throws IOException
+	 */
 	public static void addReaction(Message message, MessageReaction react) throws IOException {
 		int u = 0;
 		int d = 0;
 		for ( MessageReaction reaction : message.getReactions()) {
-			if (getEmote(reaction.getReactionEmote()).equals("rirededroite"))
+			System.out.println(reaction.getEmoji().getName());
+			if (reaction.getEmoji().getName().equals("rirededroite"))
 				u = reaction.getCount();
-			else if (getEmote(reaction.getReactionEmote()).equals("porte"))
+			else if (reaction.getEmoji().getName().equals("porte"))
 				d = reaction.getCount();
 		}
 		if (u - d <= -5)
 			message.delete().queue();
 		else if (u - d >= 5) {
-			if (DetectorAttachment.isYoutube(message.getContentRaw()) || DetectorAttachment.isTenor(message.getContentRaw())) {
-				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).queue();
-			} else if (message.getEmbeds().isEmpty()) {
+			if (message.getEmbeds().isEmpty()) {
 				File f = imgExtenders.getFile(message.getAttachments().get(0).getProxyUrl(),message.getAttachments().get(0).getFileName(), null);
 				message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(f).queue();
+				Squads.addPoints(message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0), 1000L);
 				f.delete();
 			} else {
 				if (message.getEmbeds().get(0).getAuthor() != null && message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("reddit"))
 					repostReddit(message, null, message.getGuild().getTextChannelById("911549374696411156"));
 				else if (message.getEmbeds().get(0).getAuthor() != null &&message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("twitter"))
 					repostTwitter(message, null, message.getGuild().getTextChannelById("911549374696411156"));
+				else if (!message.getContentRaw().isEmpty()) {
+					message.getGuild().getTextChannelById("911549374696411156").sendMessage(message.getContentRaw()).queue();
+					Squads.addPoints(message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0), 1000L);
+				}
 				else {
 					String name = message.getEmbeds().get(0).getImage().getUrl().split(" ")[0].split("/")[message.getEmbeds().get(0).getImage().getUrl().split("/").length - 1];
 					try (BufferedInputStream bis = new BufferedInputStream(new URL(message.getEmbeds().get(0).getImage().getUrl()).openStream());
@@ -77,6 +88,7 @@ public class memesEvent {
 									.setColor(Color.GREEN)
 									.build()
 					).queue();
+					Squads.addPoints(message.getGuild().getMembersByName(message.getEmbeds().get(0).getFooter().getText(), false).get(0), 1000L);
 					f.delete();
 				}
 			}
@@ -107,8 +119,8 @@ public class memesEvent {
 		File f = null;
 		int i = 0;
 		if (DetectorAttachment.isYoutube(msg.getContentRaw()) || DetectorAttachment.isTenor(msg.getContentRaw())) {
-			ret = msg.getGuild().getTextChannelById(channel).sendMessage(msg.getContentRaw()).complete();
-			ret.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
+			ret = msg.getChannel().sendMessage("> " + msg.getMember().getUser().getName() + "\n" + msg.getContentRaw()).complete();
+			ret.addReaction(msg.getGuild().getEmojiById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmojiById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmojiById(Emotes.porte))).queue();
 			msg.delete().queue();
 			return;
 		}
@@ -144,26 +156,24 @@ public class memesEvent {
 		}
 		if (f != null && f.length() >= 8000000) {
 			f.delete();
-			if (msg.getReactions().isEmpty())
-				msg.addReaction(msg.getGuild().getEmoteById(Emotes.anto)).queue();
-			return;
+			ret = msg.getChannel().sendMessage("> "+ msg.getMember().getUser().getName() + "\n" +msg.getContentRaw()).complete();
 		}
-		if (ext.equals("mp4") || ext.equals("mov") || ext.equals("webm")) {
+		if (ret == null && (ext.equals("mp4") || ext.equals("mov") || ext.equals("webm"))) {
 			if (Content == null)
 				ret = msg.getGuild().getTextChannelById(channel).sendMessage("> " + msg.getMember().getUser().getName()).addFile(f).complete();
 			else
 				ret = msg.getGuild().getTextChannelById(channel).sendMessage("> " + msg.getMember().getUser().getName() + "\n\n" + Content).addFile(f).complete();
-		} else {
+		} else if (ret == null) {
 			EmbedBuilder eb = new EmbedBuilder()
 					.setImage("attachment://" + f.getName())
-					.setFooter(msg.getAuthor().getName(), msg.getAuthor().getAvatarUrl())
-					.setColor(Squads.getSquadByMember(msg.getMember()).getSquadRole(msg.getGuild()).getColor());
-			if (Content != null)
-				eb.setDescription(Content);
+					.setFooter(msg.getAuthor().getName(), msg.getAuthor().getAvatarUrl());
+			if (Squads.getSquadByMember(msg.getMember()) != null)
+					eb.setColor(Squads.getSquadByMember(msg.getMember()).getSquadRole(msg.getGuild()).getColor());
+			eb.setDescription(Content);
 			ret = msg.getGuild().getTextChannelById(channel).sendFile(f).setEmbeds(eb.build()).complete();
 		}
 		if (ret != null)
-			ret.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
+			ret.addReaction(msg.getGuild().getEmojiById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmojiById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmojiById(Emotes.porte))).queue();
 		msg.delete().queue();
 		f.delete();
 	}
@@ -171,7 +181,7 @@ public class memesEvent {
 	private static void ret(Message msg, Message ret) {
 		if (ret == null)
 			return;
-		ret.addReaction(msg.getGuild().getEmoteById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
+		ret.addReaction(msg.getGuild().getEmojiById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmojiById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmojiById(Emotes.porte))).queue();
 		msg.delete().queue();
 		return;
 	}

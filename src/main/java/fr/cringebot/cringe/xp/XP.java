@@ -16,10 +16,10 @@ public class XP {
         int i = 0;
         for (Member m : vc.getMembers())
         {
-            if (!m.getRoles().contains(vc.getGuild().getRoleById(BotDiscord.SecondaryRoleId)) && !m.getRoles().contains(vc.getGuild().getRoleById("502530450279890945")))
+            if (!m.getRoles().contains(vc.getGuild().getRoleById(BotDiscord.SecondaryRoleId)) && !m.getRoles().contains(vc.getGuild().getRoleById("502530450279890945")) && !m.getVoiceState().isMuted())
                 i++;
         }
-        return (i >= 2 || !vc.getId().equals("979859652848283748"));
+        return (i >= 2 && !vc.getId().equals("979859652848283748"));
     }
 
 

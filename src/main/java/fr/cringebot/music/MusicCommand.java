@@ -7,6 +7,7 @@ import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 import java.awt.*;
@@ -75,7 +76,7 @@ public class MusicCommand {
         {
             EmbedBuilder eb = getVolumeEmbed(vol*5);
             Message ret = textChannel.sendMessageEmbeds(eb.build()).complete();
-            ret.addReaction("\uD83D\uDD3C").and(ret.addReaction("\uD83D\uDD3D")).queue();
+            ret.addReaction(Emoji.fromFormatted("\uD83D\uDD3C")).and(ret.addReaction(Emoji.fromFormatted("\uD83D\uDD3D"))).queue();
         }
         System.out.println(vol*5);
         return vol*5;
@@ -93,8 +94,21 @@ public class MusicCommand {
         play(guild, textChannel, user, msg, false);
     }
 
+    @Command(name = "playmerde", type = ExecutorType.USER, description = "ajoute une musique a la playlist")
+    private void playmerde(Guild guild, TextChannel textChannel, User user, Message msg) {
+        play(guild, textChannel, user,"https://www.youtube.com/playlist?list=PLXNtHjjUh7HwLdiCIwSrGiiTAv95GTBjy" , true);
+    }
+
+    @Command(name = "jouemerde", type = ExecutorType.USER, description = "ajoute une musique a la playlist")
+    private void jouemerde(Guild guild, TextChannel textChannel, User user, Message msg) {
+        play(guild, textChannel, user,"https://www.youtube.com/playlist?list=PLXNtHjjUh7HwLdiCIwSrGiiTAv95GTBjy" , true);
+    }
 
     private void play(Guild guild, TextChannel textChannel, User user, Message msg, boolean random) {
+        play(guild, textChannel, user, msg.getContentRaw().replaceFirst(CommandMap.getTag(),"").replaceFirst("play ", "").replaceFirst("random ", ""), random);
+    }
+
+    private void play(Guild guild, TextChannel textChannel, User user, String str, boolean random) {
         if (guild == null) return;
         if (!guild.getAudioManager().isConnected()) {
             AudioChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
@@ -105,7 +119,7 @@ public class MusicCommand {
             guild.getAudioManager().openAudioConnection(voiceChannel);
             volume(guild, null, 50);
         }
-        manager.loadTrack(textChannel, msg.getContentRaw().replaceFirst(CommandMap.getTag(),"").replaceFirst("play ", "").replaceFirst("random ", ""), random);
+        manager.loadTrack(textChannel, str, random);
     }
 
 
@@ -141,7 +155,7 @@ public class MusicCommand {
     }
 
 
-    @Command(name="clear",type=ExecutorType.USER)
+    @Command(name="musicclear",type=ExecutorType.USER)
     private void clear(TextChannel textChannel){
         MusicPlayer player = manager.getPlayer(textChannel.getGuild());
 
@@ -189,21 +203,20 @@ public class MusicCommand {
         manager.getPlayer(guild).getListener().nowLoop(msg.getTextChannel());
     }
 
-    public static void onAddReact(MessageReactionAddEvent event) {
+    public static void MusicAddReact(MessageReactionAddEvent event) {
         if (event.getMember().getUser().isBot())
             return;
         Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
-        if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getFooter().getText().equals("MusicManager")) {
+        if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getFooter() != null && msg.getEmbeds().get(0).getFooter().getText().equals("MusicManager")) {
             if (!event.getGuild().getAudioManager().isConnected()) {
                 msg.editMessageEmbeds(new EmbedBuilder().setDescription("not playing").setColor(Color.red).build()).complete().clearReactions().queue();
             }
             else if (msg.getEmbeds().get(0).getTitle().equals("Volume")) {
-                System.out.println(event.getReaction().getReactionEmote().getAsCodepoints());
-                if (event.getReaction().getReactionEmote().getAsCodepoints().equals("U+1f53c")) {
+                if (event.getReaction().getEmoji().getAsReactionCode().equals("U+1f53c")) {
                     int vol = Integer.parseInt(msg.getEmbeds().get(0).getDescription().replace("%", "").split("\n")[0]);
                     vol = volume(msg.getGuild(), null, vol + 10);
                     msg.editMessageEmbeds(getVolumeEmbed(vol).build()).queue();
-                } else if (event.getReaction().getReactionEmote().getAsCodepoints().equals("U+1f53d")) {
+                } else if (event.getReaction().getEmoji().getAsReactionCode().equals("U+1f53d")) {
                     int vol = Integer.parseInt(msg.getEmbeds().get(0).getDescription().replace("%", "").split("\n")[0]);
                     vol = volume(msg.getGuild(), null, vol - 10);
                     msg.editMessageEmbeds(getVolumeEmbed(vol).build()).queue();

@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
@@ -45,7 +46,7 @@ public class WaifuCommand {
 			if (msg.getContentRaw().split(" ").length > 2)
 				eb.setAuthor(msg.getContentRaw().substring(">Waifu list ".length()));
 			Message ls = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
-			ls.addReaction("◀️").and(ls.addReaction("▶️")).queue();
+			ls.addReaction(Emoji.fromFormatted("◀️")).and(ls.addReaction(Emoji.fromFormatted("▶️"))).queue();
 			listwaifu(ls);
 		}
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info"))
@@ -181,7 +182,7 @@ public class WaifuCommand {
 			return;
 		}
 		w.setFile(msg.getAttachments().get(0));
-		msg.addReaction("\uD83D\uDC4C").queue();
+		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
 	}
 
 	private static void reset(Message msg) {
@@ -451,7 +452,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 		}
 		String name = msg.getContentRaw().substring(">Waifu setdescription  ".length() + id.length());
 		w.setDescription(name);
-		msg.addReaction("\uD83D\uDC4C").queue();
+		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
 	}
 
 	public static void setOrigin(Message msg)
@@ -468,7 +469,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 		}
 		String name = msg.getContentRaw().substring(">Waifu setOrigin  ".length() + id.length());
 		w.setOrigin(name);
-		msg.addReaction("\uD83D\uDC4C").queue();
+		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
 	}
 
 	public static void delwaifu(Message msg)
@@ -484,7 +485,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			return;
 		}
 		w.delwaifu();
-		msg.addReaction("\uD83D\uDC4C").queue();
+		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
 	}
 
 	public static void setName(Message msg)
@@ -501,7 +502,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 		}
 		String name = msg.getContentRaw().substring(">Waifu setname  ".length() + id.length());
 		w.setName(name);
-		msg.addReaction("\uD83D\uDC4C").queue();
+		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
 	}
 
 	private static void release(Message msg) {

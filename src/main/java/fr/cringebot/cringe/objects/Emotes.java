@@ -13,6 +13,7 @@
 package fr.cringebot.cringe.objects;
 
 import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 /**
  * je vous déteste
@@ -27,11 +28,11 @@ public class Emotes {
      * @param em
      * @return
      */
-    public static String getEmote(MessageReaction.ReactionEmote em)
+    public static String getEmote(Emoji em)
     {
         if (em.getAsReactionCode().length() > 7)
             return em.getAsReactionCode().substring(0, StringExtenders.firstsearch(em.getAsReactionCode(), ":"));
-        return em.getAsCodepoints();
+        return em.getName();
     }
 
 }

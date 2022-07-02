@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 import java.awt.*;
 import java.io.*;
@@ -17,17 +18,19 @@ public class MessageReact {
     private static final String file = "save/MessageReaction.json";
     private static final TypeToken<ArrayList<MessageReact>> typeToken = new TypeToken<ArrayList<MessageReact>>() {
     };
+    private Color color;
     public static ArrayList<MessageReact> message;
     private final String Title;
     private final String Id;
     public ArrayList<RoleReaction> list;
 
 
-    public MessageReact(String title, Guild guild) {
+    public MessageReact(String title, Guild guild, Color color) {
         load();
+        this.color = color;
         list = new ArrayList<>();
         Title = title;
-        Id = guild.getTextChannelById(channel).sendMessageEmbeds(new EmbedBuilder().setColor(new Color(138, 43, 226)).setTitle(title).build()).complete().getId();
+        Id = guild.getTextChannelById(channel).sendMessageEmbeds(new EmbedBuilder().setColor(color).setTitle(title).build()).complete().getId();
         message.add(this);
         save();
     }
@@ -75,6 +78,14 @@ public class MessageReact {
         return Id;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public void addRole(RoleReaction rr, Guild guild) {
         this.list.add(rr);
         save();
@@ -85,12 +96,13 @@ public class MessageReact {
         Message msg = guild.getTextChannelById(channel).retrieveMessageById(this.Id).complete();
         StringBuilder sb = new StringBuilder();
         for (RoleReaction rr : this.list) {
-            if (rr.verif(msg) == -1)
-                this.list.remove(rr);
+            guild.getRoleById(this.Id).getManager().setColor(this.color).queue();
             sb.append(rr.getName()).append(" ").append(rr.getEmote()).append('\n');
-            msg.addReaction(rr.getEmote()).queue();
+            msg.addReaction(Emoji.fromFormatted(rr.getName())).queue();
         }
-        EmbedBuilder eb = new EmbedBuilder().setTitle(this.Title).setColor(msg.getEmbeds().get(0).getColor());
+        EmbedBuilder eb = new EmbedBuilder().setTitle(this.Title);
+        if (this.color != null)
+            eb.setColor(color);
         msg.editMessageEmbeds(eb.setDescription(sb.toString()).build()).queue();
     }
 }

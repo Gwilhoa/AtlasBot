@@ -41,7 +41,7 @@ public class RoleReaction {
             return -1;
         this.setName(msg.getGuild().getRoleById(this.getId()).getName());
         for (MessageReaction mr : msg.getReactions()) {
-            if (mr.getReactionEmote().getAsReactionCode().equals(this.getEmote())) {
+            if (mr.getEmoji().getAsReactionCode().equals(this.getEmote())) {
                 userList = mr.retrieveUsers().complete();
                 for (User user : userList)
                     if ( msg.getGuild().getMemberById(user.getId()) != null && !msg.getGuild().getMemberById(user.getId()).getRoles().contains(msg.getGuild().getRoleById(this.getId())))

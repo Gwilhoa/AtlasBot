@@ -21,11 +21,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * tout ce qui touche au images
  */
 public class imgExtenders {
+    private static final Lock download = new ReentrantLock();
     //sert a re tailler une image
     public static BufferedImage resize(BufferedImage img, int newW, int newH, int posx, int posy, boolean scale){
         return resize(img,newW,newH,posx,posy,scale,true);
@@ -72,6 +75,7 @@ public class imgExtenders {
      * @return
      */
     public static BufferedImage getImage(URL url) {
+        download.lock();
         BufferedImage image;
         try {
             image = ImageIO.read(url);
@@ -79,6 +83,7 @@ public class imgExtenders {
             image = null;
             e.printStackTrace();
         }
+        download.unlock();
         return image;
     }
 
@@ -101,6 +106,7 @@ public class imgExtenders {
     }
 
     private static void downloadFile(String name, BufferedInputStream bs) throws IOException {
+        download.lock();
         FileOutputStream fos = new FileOutputStream(name);
         byte[] data = new byte[1024];
         int ByteContent;
@@ -109,5 +115,6 @@ public class imgExtenders {
         }
         bs.close();
         fos.close();
+        download.unlock();
     }
 }

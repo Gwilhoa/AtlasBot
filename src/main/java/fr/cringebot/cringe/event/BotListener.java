@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/06/19 11:22:52 by                  ###   ########.fr       */
+/*   Updated: 2022/07/02 17:17:54 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,24 @@ public class BotListener implements EventListener {
 		this.commandMap = cmd;
 		this.bot = bot;
 	}
+
+	public static class ArrayNumber<E extends Number> {
+		public ArrayList<E> li = new ArrayList<>();
+
+		public ArrayNumber() {
+		}
+
+		public ArrayNumber(E element) {
+			li.add(element);
+		}
+
+		@Override
+		public String toString() {
+			return li.toString();
+		}
+	}
+
+
 
 	public static Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(ArrayNumber.class,
 			(JsonDeserializer<ArrayNumber<Integer>>) (jsonElement, type, jsonDeserializationContext) -> {
@@ -212,7 +230,7 @@ public class BotListener implements EventListener {
 			for (MessageReact mr : MessageReact.message) {
 				if (event.getMessageId().equals(mr.getId())) {
 					for (RoleReaction rr : mr.list) {
-						if (event.getReactionEmote().getAsReactionCode().equals(rr.getEmote())) {
+						if (event.getEmoji().getAsReactionCode().equals(rr.getEmote())) {
 							event.getGuild().removeRoleFromMember(event.getMember(), event.getGuild().getRoleById(rr.getId())).queue();
 							return;
 						}
@@ -257,7 +275,9 @@ public class BotListener implements EventListener {
 				ret = memesEvent.repostTwitter(msg, null, msg.getTextChannel());
 			else
 				return;
-			ret.addReaction(ret.getGuild().getEmoteById(Emotes.rirederoite)).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.anto))).and(ret.addReaction(msg.getGuild().getEmoteById(Emotes.porte))).queue();
+			ret.addReaction(ret.getGuild().getEmojiById(Emotes.rirederoite))
+					.and(ret.addReaction(msg.getGuild().getEmojiById(Emotes.anto)))
+					.and(ret.addReaction(msg.getGuild().getEmojiById(Emotes.porte))).queue();
 			msg.delete().queue();
 		}
 	}
@@ -290,8 +310,22 @@ public class BotListener implements EventListener {
 		PollMessage.load();
 		cki.load();
 		Waifu.load();
-			for (MessageReact mr : MessageReact.message)
+		MessageReact.load();
+		MessageReact.message.get(0).setColor(new Color(138, 43, 226));
+		MessageReact.message.get(1).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("382938797442334720").getColor());
+		MessageReact.message.get(2).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942041255502823424").getColor());
+		MessageReact.message.get(3).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942070824247115796").getColor());
+		MessageReact.message.get(4).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942080793096896552").getColor());
+		MessageReact.message.get(5).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942079123856171090").getColor());
+		MessageReact.message.get(6).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942089503978438686").getColor());
+		MessageReact.message.get(7).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942075754294964296").getColor());
+
+
+
+
+		for (MessageReact mr : MessageReact.message) {
 				mr.refresh(event.getJDA().getGuildById("382938797442334720"));
+			}
 		new Thread(() -> {
 			for (Member mem : event.getJDA().getGuildById("382938797442334720").getMembers()) {
 				if (mem.getRoles().get(0).getPosition() < mem.getGuild().getRoleById("734011696242360331").getPosition())
@@ -371,29 +405,35 @@ public class BotListener implements EventListener {
 		if (event.getJDA().getSelfUser().equals(event.getMember().getUser()))
 			return;
 
-		if (event.getReaction().getReactionEmote().getAsReactionCode().equals("◀️")) {
+		if (event.getReaction().getEmoji().getAsReactionCode().equals("◀️")) {
 			Message msg = event.retrieveMessage().complete();
 			if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().equals("Listes des waifus")){
 				WaifuCommand.listwaifu(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())-1);
 				event.getReaction().removeReaction(event.getUser()).queue();
+				return;
 			} else if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().startsWith("Waifu de")){
 				WaifuCommand.haremEmbed(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())-1);
-				event.getReaction().removeReaction(event.getUser()).queue();}
+				event.getReaction().removeReaction(event.getUser()).queue();
+				return;
+			}
 		}
-		else if (event.getReaction().getReactionEmote().getAsReactionCode().equals("▶️")) {
+		else if (event.getReaction().getEmoji().getAsReactionCode().equals("▶️")) {
 			Message msg = event.retrieveMessage().complete();
 			if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().equals("Listes des waifus")){
 				WaifuCommand.listwaifu(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())+1);
 				event.getReaction().removeReaction(event.getUser()).queue();
+				return;
 			} else if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().startsWith("Waifu de")){
 				WaifuCommand.haremEmbed(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())+1);
-				event.getReaction().removeReaction(event.getUser()).queue();}
+				event.getReaction().removeReaction(event.getUser()).queue();
+				return;
+			}
 		}
-		else if (event.getReaction().getReactionEmote().getAsReactionCode().equals("⬆️") ) {
+		else if (event.getReaction().getEmoji().getAsReactionCode().equals("⬆️") ) {
 			Message msg = event.retrieveMessage().complete();
 			int u = 0;
 			for (MessageReaction reaction : msg.getReactions()) {
-				if (reaction.getReactionEmote().getAsReactionCode().equals("⬆️"))
+				if (reaction.getEmoji().getAsReactionCode().equals("⬆️"))
 					u = reaction.getCount() - 1;
 			}
 			if (msg.getAuthor().equals(event.getJDA().getSelfUser()))
@@ -413,22 +453,25 @@ public class BotListener implements EventListener {
 					msg.editMessage("RATIO MYTHIQUE").queue();
 			else if (msg.getContentRaw().equalsIgnoreCase("RATIO MYTHIQUE") && u >= 20)
 					msg.editMessage("**RATIO LÉGENDAIRE**").queue();
+			return;
 		}
 		if (event.getChannel().getId().equals("461606547064356864")) {
 			memesEvent.addReaction(event.getChannel().retrieveMessageById(event.getMessageId()).complete(), event.getReaction());
+			return;
 		}
 		if (event.getChannel().getId().equals("853210283480055809")) {
 			for (MessageReact mr : MessageReact.message)
 				if (event.getMessageId().equals(mr.getId())) {
 					for (RoleReaction rr : mr.list) {
-						if (event.getReactionEmote().getAsReactionCode().equals(rr.getEmote())) {
+						if (event.getEmoji().getAsReactionCode().equals(rr.getEmote())) {
 							event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById(rr.getId())).queue();
 							return;
 						}
 					}
 				}
+			return;
 		}
-		MusicCommand.onAddReact(event);
+		MusicCommand.MusicAddReact(event);
 	}
 
 
@@ -460,151 +503,17 @@ public class BotListener implements EventListener {
 
 		if (MemberReact(msg))
 			return;
-		
+
 		//tous les events mis sans le prefix les reactions en gros
 		if (args[0].equalsIgnoreCase("f")) {
 			pressf(msg);
 		}
 
-		if (msg.getContentRaw().equalsIgnoreCase("meme") && msg.getReferencedMessage() != null)
-		{
+		if (msg.getContentRaw().equalsIgnoreCase("meme") && msg.getReferencedMessage() != null) {
 			memesEvent.postmeme(msg.getReferencedMessage());
 			msg.delete().queue();
 		}
-		if (containsIgnoreCase(msg.getContentRaw(), "je suis"))
-		{
-			int i = firstsearch(msg.getContentRaw().toLowerCase(Locale.ROOT), "je suis");
-			String str = msg.getContentRaw().substring(i + 2);
-			if (str.split(" ").length == 1) {
-				str = str.replace("@everyone", "tout le monde");
-				if (new Random().nextInt(2) == 0 && msg.getGuild().getMember(bot.getJda().getSelfUser()) != null)
-					msg.getChannel().sendMessage("Bonjour " + str + ". Moi c'est " + msg.getGuild().getMember(bot.getJda().getSelfUser()).getEffectiveName()).queue();
-				else
-					msg.getChannel().sendMessage("Bonjour " + str + ". Moi c'est " + bot.getJda().getSelfUser().getName()).queue();
-			}
-		}
 
-		if (msg.getContentRaw().equalsIgnoreCase("ratio") )
-		{
-			if (msg.getReferencedMessage() != null) {
-				msg.getChannel().sendMessage("Ratio").reference(msg.getReferencedMessage()).complete().addReaction("⬆️").queue();
-				msg.delete().queue();
-			}
-		}
-
-		if (StringExtenders.containsWord(msg.getContentRaw(), "sus"))
-			sus(msg);
-
-		if (msg.getContentRaw().equalsIgnoreCase("ping"))
-		{
-			long time = System.currentTimeMillis();
-			msg.getChannel().sendMessage("pong").complete().editMessageFormat("Pong: %d ms", System.currentTimeMillis() - time).queue();
-		}
-
-		String[] s = msg.getContentRaw().replace("?","").replace(".","").split(" ");
-		if (containsIgnoreCase(s[s.length - 1], "quoi" )){
-			feur(msg);
-		}
-
-		if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))
-			msg.getChannel().sendFile(imgExtenders.getFile("societer.png")).queue();
-		if (containsIgnoreCase(msg.getContentRaw(), "putain")) {
-			putain(msg);
-		}
-
-		if (containsIgnoreCase(msg.getContentRaw(), "hmm")){
-			for (String split : msg.getContentRaw().split(" "))
-				if (StringExtenders.startWithIgnoreCase(split,"hmm"))
-					hmm(msg, split);
-		}
-
-		if (containsIgnoreCase(msg.getContentRaw(), "je lag"))
-		{
-			File f = imgExtenders.getFile("internet.png");
-			msg.getChannel().sendFile(f).queue();
-			f.delete();
-		}
-
-		if (containsIgnoreCase(msg.getContentRaw(), "cringe")) {
-			if (!DetectorAttachment.isAnyLink(msg))
-				msg.getTextChannel().sendMessage("https://tenor.com/view/oh-no-cringe-cringe-oh-no-kimo-kimmo-gif-23168319").queue();
-		}
-
-		if (containsIgnoreCase(msg.getContentRaw(), "stonks")) {
-			if (new Random().nextInt(100) >= 95)
-			{
-				BufferedImage bi = imgExtenders.getImage("not stonks.png");
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				ImageIO.write(bi, "gif", baos);
-				msg.getChannel().sendFile(baos.toByteArray(), "not stonks.png").queue();
-				return;
-			}
-			File f = imgExtenders.getFile("stonks.gif");
-			msg.getChannel().sendFile(f).queue();
-		}
-
-		if (startWithIgnoreCase(msg.getContentRaw(), "daronned") || startWithIgnoreCase(msg.getContentRaw(), "daronné"))
-			daronned(msg);
-
-		if (msg.getContentRaw().equalsIgnoreCase("saint pierre"))
-		{
-			int r = new Random().nextInt(2);
-			if (r == 1)
-				msg.getChannel().sendMessage("cret-en-belledonne, nuance.\nsi ça se trouve les habitants sont les crétins").queue();
-			if (r == 0)
-				msg.getChannel().sendMessage("village préféré de mon conseillé principal, il a souvent des idées de merde et des blagues beauf\nmais bon on l'aime quand meme").queue();
-		}
-		if (msg.getContentRaw().equalsIgnoreCase("allevard"))
-		{
-			int r = new Random().nextInt(2);
-			if (r == 1)
-				msg.getChannel().sendMessage("village de dealers").queue();
-			if (r == 0)
-				msg.getChannel().sendMessage("village natal de mon créateur, il est un peu tete en l'air mais ça va").queue();
-		}
-		if (containsIgnoreCase(msg.getContentRaw(), "michel"))
-			msg.getChannel().sendMessage( msg.getGuild().getMemberById("282859044593598464").getAsMention()+ ", eh oh je crois qu'on parle de toi").queue();
-		if (containsIgnoreCase(msg.getContentRaw(), "shadow hunter"))
-			msg.getChannel().sendMessage("*shadow **in**ter*").reference(msg).queue();
-		if (msg.getContentRaw().equalsIgnoreCase("creeper"))
-			msg.getChannel().sendMessage("Aww man").queue();
-		if (msg.getContentRaw().equalsIgnoreCase("i am a dwarf"))
-			msg.getChannel().sendMessage("and I'm digging a hole").queue();
-		if (msg.getContentRaw().equalsIgnoreCase("je suis un nain"))
-			msg.getChannel().sendMessage("et je creuse un gros trou").queue();
-		if (msg.getContentRaw().equalsIgnoreCase("mové salon"))
-		{
-			if (msg.getMember().getId().equals("280959408119349248"))
-				{
-				msg.getChannel().sendMessage("Franchement si j'étais vous **je me tairais**").queue();
-					return;
-				}
-			msg.getChannel().sendMessage("eh oh tu t'es pris pour Logan ou quoi ? \n**MDR**").queue();
-		}
-
-		if (containsIgnoreCase(msg.getContentRaw(), "je possede des thunes") || containsIgnoreCase(msg.getContentRaw(), "je possède des thunes"))
-			msg.getChannel().sendMessage(msg.getMember().getAsMention() + " est à l'aise financièrement").queue();
 
 	}
-
-	/**
-	 *
-	 * @param <E>
-	 */
-	public static class ArrayNumber<E extends Number> {
-		public ArrayList<E> li = new ArrayList<>();
-
-		public ArrayNumber() {
-		}
-
-		public ArrayNumber(E element) {
-			li.add(element);
-		}
-
-		@Override
-		public String toString() {
-			return li.toString();
-		}
-	}
-
 }

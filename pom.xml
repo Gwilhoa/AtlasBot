@@ -13,8 +13,8 @@
   <url>http://www.example.com</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.16</maven.compiler.source>
+    <maven.compiler.target>1.16</maven.compiler.target>
   </properties>
   <repositories>
     <repository>
@@ -43,7 +43,7 @@
     <dependency>
       <groupId>net.dv8tion</groupId>
       <artifactId>JDA</artifactId>
-      <version>5.0.0-alpha.12</version>
+      <version>5.0.0-alpha.13</version>
     </dependency>
     <dependency>
       <groupId>com.github.idpromnut</groupId>
@@ -122,8 +122,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <source>8</source>
-          <target>8</target>
+          <source>9</source>
+          <target>9</target>
         </configuration>
       </plugin>
       <plugin>
