@@ -98,7 +98,7 @@ public class MessageReact {
         for (RoleReaction rr : this.list) {
             guild.getRoleById(rr.getId()).getManager().setColor(this.color).queue();
             sb.append(rr.getName()).append(" ").append(rr.getEmote()).append('\n');
-            msg.addReaction(Emoji.fromFormatted(rr.getName())).queue();
+            msg.addReaction(Emoji.fromFormatted(rr.getEmote())).queue();
         }
         EmbedBuilder eb = new EmbedBuilder().setTitle(this.Title);
         if (this.color != null)
