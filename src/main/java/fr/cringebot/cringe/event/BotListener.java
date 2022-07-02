@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/07/02 20:03:07 by                  ###   ########.fr       */
+/*   Updated: 2022/07/02 20:25:31 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,8 +317,8 @@ public class BotListener implements EventListener {
 		MessageReact.message.get(3).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942070824247115796").getColor());
 		MessageReact.message.get(4).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942080793096896552").getColor());
 		MessageReact.message.get(5).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942079123856171090").getColor());
-		MessageReact.message.get(6).setColor(event.getJDA().getGuildById("382938797442334720").getRoleById("942089503978438686").getColor());
-		MessageReact.message.get(8).setColor(new Color(253,78,255));
+		MessageReact.message.get(6).setColor(new Color(255,250,42));
+		MessageReact.message.get(7).setColor(new Color(253,78,255));
 		MessageReact.message.get(8).setColor(new Color(81,229,99));
 
 
