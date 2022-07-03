@@ -108,7 +108,7 @@ public class CommandListener {
 		EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
 		for (Squads sq : squads)
 			sb.append(sq.getName()).append(' ').append(sq.getTotal()).append('\n')
-					.append(" meilleur : ").append(msg.getGuild().getMemberById(sq.getBestid())).append(" avec ").append(sq.getStatMember(sq.getBestid()).getPoints());
+					.append(" meilleur : ").append(msg.getGuild().getMemberById(sq.getBestid()).getAsMention()).append(" avec ").append(sq.getStatMember(sq.getBestid()).getPoints()).append('\n');
 		eb.setColor(squads.get(0).getSquadRole(msg.getGuild()).getColor());
 		eb.setDescription(sb);
 		msg.getChannel().sendMessageEmbeds(eb.build()).queue();
