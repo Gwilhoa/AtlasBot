@@ -54,9 +54,11 @@ public class Squads {
 		return null;
 	}
 
-	public List<SquadMember> getSquadMembers()
+	public ArrayList<SquadMember> getSquadMembers()
 	{
-		return (List<SquadMember>) this.MemberList.values();
+		ArrayList<SquadMember> sm = new ArrayList<>();
+				sm.addAll(this.MemberList.values());
+				return sm;
 	}
 
 	public List<SquadMember> getSortedSquadMember()
