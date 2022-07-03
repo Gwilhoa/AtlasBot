@@ -119,9 +119,12 @@ public class CommandListener {
 			for (SquadMember s : sm)
 			{
 				sb.append("n°")
-						.append(i).append(" : ")
-						.append(guild.getMemberById(s.getId()).getAsMention())
-						.append(" avec ").append(s.getPoints()).append("\n");
+						.append(i).append(" : ");
+						if (guild.getMemberById(s.getId()) != null)
+							sb.append(guild.getMemberById(s.getId()).getAsMention());
+						else
+							sb.append("Inconnu");
+						sb.append(" avec ").append(s.getPoints()).append("\n");
 				i++;
 			}
 			eb.setDescription(sb.toString());
