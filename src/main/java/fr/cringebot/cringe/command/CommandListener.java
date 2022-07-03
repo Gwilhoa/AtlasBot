@@ -113,13 +113,19 @@ public class CommandListener {
 				return;
 			List<SquadMember> sm = squad.getSortedSquadMember();
 			EmbedBuilder eb = new EmbedBuilder();
+			eb.setColor(squad.getSquadRole(guild).getColor());
 			eb.setTitle("escouade "+ squad.getName());
 			int i = 1;
 			for (SquadMember s : sm)
 			{
-				sb.append("n°").append(i).append(" : ").append(guild.getMemberById(s.getId()).getAsMention()).append(" avec ").append(s.getPoints()).append("\n");
+				sb.append("n°")
+						.append(i).append(" : ")
+						.append(guild.getMemberById(s.getId()).getAsMention())
+						.append(" avec ").append(s.getPoints()).append("\n");
 				i++;
 			}
+			eb.setDescription(sb.toString());
+			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}
 		else
 		{
