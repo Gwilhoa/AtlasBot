@@ -8,6 +8,7 @@ import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
+import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.event.memesEvent;
 import fr.cringebot.cringe.objects.DetectorAttachment;
@@ -103,15 +104,35 @@ public class CommandListener {
 	 */
 	@Command(name = "top", description = "regarder le classement des escouades")
 	private void top(Message msg){
-		List<Squads> squads = Squads.getSortedSquads();
-		StringBuilder sb = new StringBuilder();
-		EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
-		for (Squads sq : squads)
-			sb.append(sq.getName()).append(' ').append(sq.getTotal()).append('\n')
-					.append(" meilleur : ").append(msg.getGuild().getMemberById(sq.getBestid()).getAsMention()).append(" avec ").append(sq.getStatMember(sq.getBestid()).getPoints()).append('\n');
-		eb.setColor(squads.get(0).getSquadRole(msg.getGuild()).getColor());
-		eb.setDescription(sb);
-		msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+		if (msg.getContentRaw().length() > ">top ".length())
+		{
+			Guild guild = msg.getGuild();
+			StringBuilder sb = new StringBuilder();
+			Squads squad = Squads.getSquadByName(msg.getContentRaw().substring(">top ".length()));
+			if (squad == null)
+				return;
+			List<SquadMember> sm = squad.getSortedSquadMember();
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setTitle("escouade "+ squad.getName());
+			int i = 1;
+			for (SquadMember s : sm)
+			{
+				sb.append("n°").append(i).append(" : ").append(guild.getMemberById(s.getId()).getAsMention()).append(" avec ").append(s.getPoints()).append("\n");
+				i++;
+			}
+		}
+		else
+		{
+			List<Squads> squads = Squads.getSortedSquads();
+			StringBuilder sb = new StringBuilder();
+			EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
+			for (Squads sq : squads)
+				sb.append(sq.getName()).append(' ').append(sq.getTotal()).append('\n')
+						.append(" meilleur : ").append(msg.getGuild().getMemberById(sq.getBestid()).getAsMention()).append(" avec ").append(sq.getStatMember(sq.getBestid()).getPoints()).append('\n');
+			eb.setColor(squads.get(0).getSquadRole(msg.getGuild()).getColor());
+			eb.setDescription(sb);
+			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+		}
 	}
 
 	@Command(name = "rank", description = "rang")

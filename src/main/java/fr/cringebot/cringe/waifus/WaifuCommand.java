@@ -35,6 +35,10 @@ public class WaifuCommand {
 
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
 
+		if (true){
+			msg.getChannel().sendMessage("les waifus reviennent vite !").queue();
+			return;
+		}
 		if (msg.getContentRaw().split(" ").length == 1) {
 			newWaifu(msg);
 			return;

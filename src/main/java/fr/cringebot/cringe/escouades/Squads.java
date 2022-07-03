@@ -34,6 +34,54 @@ public class Squads {
 			this.addMember(m);
 	}
 
+	public static Squads getSquadByRoles(Role role){
+		List<Squads> sqs = getAllSquads();
+		for (Squads sq : sqs)
+		{
+			if (sq.getSquadRole(role.getGuild()).getId().equals(role.getId()))
+				return sq;
+		}
+		return null;
+	}
+
+	public static Squads getSquadByName(String str){
+		List<Squads> sqs = getAllSquads();
+		for (Squads sq : sqs)
+		{
+			if (sq.getName().equalsIgnoreCase(str))
+				return sq;
+		}
+		return null;
+	}
+
+	public List<SquadMember> getSquadMembers()
+	{
+		return (List<SquadMember>) this.MemberList.values();
+	}
+
+	public List<SquadMember> getSortedSquadMember()
+	{
+		ArrayList<SquadMember> sq = (ArrayList<SquadMember>) this.getSquadMembers();
+		ArrayList<SquadMember> ret = new ArrayList<>();
+		long best;
+		SquadMember sm = null;
+		while (!sq.isEmpty())
+		{
+			best = -100L;
+			for (SquadMember squadmember : sq)
+			{
+				if (squadmember.getPoints() > best) {
+					sm = squadmember;
+					best = sm.getPoints();
+				}
+			}
+			ret.add(sm);
+			sq.remove(sm);
+		}
+		return ret;
+
+	}
+
 	public static Squads getSquadByMember(Member m){
 		return getSquadByMember(m.getId());
 	}
