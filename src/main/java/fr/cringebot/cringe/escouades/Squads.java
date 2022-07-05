@@ -142,6 +142,7 @@ public class Squads {
 
 	public void removeMember(String id) {
 		this.MemberList.remove(id);
+		save();
 	}
 
 	public void ResetPoint() {

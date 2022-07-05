@@ -237,6 +237,7 @@ public class memesEvent {
 				if (DetectorAttachment.isTwitter(mot))
 					link = mot;
 		}
+		link = link.replace("vxtwitter","twitter");
 		EmbedBuilder eb = new EmbedBuilder();
 		if (msg.getContentRaw().split(" ").length == 1)
 			eb.setDescription(msg.getEmbeds().get(0).getDescription());
@@ -250,7 +251,7 @@ public class memesEvent {
 			eb.setFooter(msg.getEmbeds().get(0).getFooter().getText(),msg.getEmbeds().get(0).getFooter().getIconUrl());
 		eb.setTitle(msg.getEmbeds().get(0).getAuthor().getName())
 				.setColor(msg.getEmbeds().get(0).getColor())
-				.setAuthor("Twitter", msg.getEmbeds().get(0).getUrl(), msg.getEmbeds().get(0).getFooter().getIconUrl());
+				.setFooter(msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
 		if (msg.getEmbeds().get(0).getImage() != null)
 			eb.setImage(msg.getEmbeds().get(0).getImage().getUrl());
 		return channel.sendMessageEmbeds(eb.build()).complete();

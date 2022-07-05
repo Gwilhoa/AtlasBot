@@ -252,6 +252,6 @@ public class CommandListener {
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
 	private void test(Message msg) throws IOException {
-		msg.getChannel().sendFile(new File("save.zip")).queue();
+		Squads.getSquadByMember("509750171010334743").removeMember("509750171010334743");
 	}
 }

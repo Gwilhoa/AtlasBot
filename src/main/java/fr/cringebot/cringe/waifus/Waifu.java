@@ -20,7 +20,7 @@ public class Waifu {
 	private String name;
 	private String description;
 	private String owner;
-	private final String type;
+	private String type;
 	private Integer id;
 	private String origin;
 	private ArrayList<String> nickname;
@@ -32,17 +32,6 @@ public class Waifu {
 	public void setOrigin(String name) {
 		this.origin = name;
 		save();
-	}
-
-	public enum Type
-	{
-		JEUX_VIDEO,
-		FILM,
-		ANIME,
-		B2K,
-		SERIE,
-		IRL,
-		AUTRES
 	}
 
 	public Waifu(Message.Attachment f, String name, String description, String type, String origin)
@@ -69,6 +58,10 @@ public class Waifu {
 		f.downloadToFile(this.profile);
 		waifuList.put(this.id, this);
 		save();
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public void setFile(Message.Attachment f){
@@ -168,7 +161,7 @@ public class Waifu {
 
 
 
-	private static void save() {
+	public static void save() {
 		if (!new File(file).exists()) {
 			try {
 				new File(file).createNewFile();

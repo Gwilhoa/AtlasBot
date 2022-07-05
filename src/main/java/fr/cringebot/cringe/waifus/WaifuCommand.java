@@ -35,8 +35,8 @@ public class WaifuCommand {
 
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
 
-		if (true){
-			msg.getChannel().sendMessage("les waifus reviennent vite !").queue();
+		if (!msg.getMember().getId().equals("315431392789921793")){
+			msg.getChannel().sendMessage("mdr tu as cru").queue();
 			return;
 		}
 		if (msg.getContentRaw().split(" ").length == 1) {
@@ -196,8 +196,11 @@ public class WaifuCommand {
 			return;
 		}
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
-		for (Waifu w : waifus)
+		for (Waifu w : waifus) {
 			w.setOwner(null);
+			w.setType(null);
+		}
+		Waifu.save();
 	}
 
 	private static void newWaifu(Message msg) throws InterruptedException {
@@ -213,7 +216,7 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage("Tu es un compte secondaire et moi, j'aime pas les comptes secondaires").queue();
 			return;
 		}
-		else if (Waifu.timeleft(msg.getMember().getId()) < 0){
+		else if (false && Waifu.timeleft(msg.getMember().getId()) < 0){
 			long t = -Waifu.timeleft(msg.getMember().getId());
 			long th = t/HOUR;
 			t %= HOUR;
@@ -269,21 +272,7 @@ public static void addwaifu(Message msg) throws ExecutionException, InterruptedE
 			return;
 		}
 		if (!msg.getAttachments().isEmpty() && msg.getAttachments().size() == 1) {
-		ArrayList<SelectOption> options = new ArrayList<>();
-		for (Waifu.Type tpe : Waifu.Type.values())
-			options.add(new SelectOptionImpl("Catégorie : " + tpe.name(), tpe.name()));
-		options.add(new SelectOptionImpl("Annuler", "stop"));
-		SelectMenuImpl selectionMenu = new SelectMenuImpl("Waifu", "selectionnez un choix", 1, 1, false, options);
-			MessageAction toSend = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setTitle(args[0].substring(">Waifu add".length())).setFooter(args[1]).setDescription(msg.getContentRaw().substring(args[0].length() + args[1].length() + 1)).build());
-			File f = new File(msg.getAttachments().get(0).downloadToFile().get().getName());
-			try(DataInputStream str = new DataInputStream(new FileInputStream(f))){
-				byte[] bytes = new byte[(int) f.length()];
-				str.readFully(bytes);
-				toSend.addFile(bytes, f.getName()).setActionRow(selectionMenu).complete();
-			} catch (IOException e) {
-				//Wrap et remonter
-				throw new RuntimeException(e);
-			}
+			msg.getChannel().sendMessage("coming soon").queue();
 		} else {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 		}
