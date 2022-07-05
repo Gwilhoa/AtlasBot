@@ -109,8 +109,10 @@ public class CommandListener {
 			Guild guild = msg.getGuild();
 			StringBuilder sb = new StringBuilder();
 			Squads squad = Squads.getSquadByName(msg.getContentRaw().substring(">top ".length()));
-			if (squad == null)
+			if (squad == null) {
+				msg.getChannel().sendMessage("aucune squad est a ce nom").queue();
 				return;
+			}
 			List<SquadMember> sm = squad.getSortedSquadMember();
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setColor(squad.getSquadRole(guild).getColor());

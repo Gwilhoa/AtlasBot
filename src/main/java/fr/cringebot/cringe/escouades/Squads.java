@@ -63,13 +63,13 @@ public class Squads {
 
 	public List<SquadMember> getSortedSquadMember()
 	{
-		ArrayList<SquadMember> sq = (ArrayList<SquadMember>) this.getSquadMembers();
+		ArrayList<SquadMember> sq = this.getSquadMembers();
 		ArrayList<SquadMember> ret = new ArrayList<>();
 		long best;
 		SquadMember sm = null;
 		while (!sq.isEmpty())
 		{
-			best = -100L;
+			best = -10000000L;
 			for (SquadMember squadmember : sq)
 			{
 				if (squadmember.getPoints() > best) {
