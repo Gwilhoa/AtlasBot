@@ -17,9 +17,10 @@ public class Waifu {
 	private static HashMap<Integer, Waifu> waifuList = new HashMap<>();
 	private final static HashMap<String, Long> timer = new HashMap<>();
 	private final String profile;
+	private boolean legendary;
+	private boolean istaken = false;
 	private String name;
 	private String description;
-	private String owner;
 	private String type;
 	private Integer id;
 	private String origin;
@@ -34,13 +35,13 @@ public class Waifu {
 		save();
 	}
 
-	public Waifu(Message.Attachment f, String name, String description, String type, String origin)
+	public Waifu(Message.Attachment f, String name, String description, String type, String origin, boolean legendary)
 	{
+		this.legendary = legendary;
 		int	i = 0;
 		this.id = -1;
 		this.description = description;
 		this.name = name;
-		this.owner = null;
 		this.type = type;
 		this.nickname = null;
 		while (i < waifuList.size())
@@ -74,24 +75,14 @@ public class Waifu {
 		save();
 	}
 
-	public static void trade(Integer w1, Integer w2) {
-		Waifu w01 = getWaifuById(w1);
-		Waifu w02 = getWaifuById(w2);
-		String temp = w02.getOwner();
-		w02.setOwner(w01.getOwner());
-		w01.setOwner(temp);
-		save();
+	public void setLegendary(boolean legendary) {
+		this.legendary = legendary;
 	}
 
 	public static ArrayList<Waifu> getAllWaifu(){
 		return new ArrayList<>(waifuList.values());
 	}
 
-	public static ArrayList<Waifu> getAvailableWaifu() {
-		ArrayList<Waifu> waifus = getAllWaifu();
-		waifus.removeIf(w -> w.getOwner() != null);
-		return waifus;
-	}
 	public static ArrayList<Waifu> getWaifubyName(String name){
 		ArrayList<Waifu> list = new ArrayList<>();
 		if (!waifuList.isEmpty())
@@ -140,15 +131,6 @@ public class Waifu {
 
 	public String getDescription() {
 		return description;
-	}
-
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-		save();
 	}
 
 	public Integer getId() {
@@ -204,5 +186,17 @@ public class Waifu {
 		if (timer.get(id) == null)
 			return (1L);
 		return ( System.currentTimeMillis() - (timer.get(id) + 25200000L));
+	}
+
+	public void setIstaken(boolean istaken) {
+		this.istaken = istaken;
+	}
+
+	public boolean isIstaken() {
+		return istaken;
+	}
+
+	public boolean isLegendary() {
+		return legendary;
 	}
 }

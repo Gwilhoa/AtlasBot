@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/07/02 21:33:04 by                  ###   ########.fr       */
+/*   Updated: 2022/07/05 20:26:02 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,45 +157,7 @@ public class BotListener implements EventListener {
 	}
 
 	private void onButton(ButtonInteractionEvent event) {
-		Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
-		String SenderId = msg.getEmbeds().get(0).getFooter().getText().split(" ")[0];
-		String ReceivedId = msg.getEmbeds().get(0).getFooter().getText().split(" ")[1];
-		if (event.getButton().getId().startsWith("waifutrade") && event.getMember().getId().equals(ReceivedId)) {
-			if (event.getButton().getLabel().equals("non")) {
-				ArrayList<ActionRow> bttn = new ArrayList<>();
-				EmbedBuilder eb = new EmbedBuilder();
-				eb.setColor(Color.red);
-				eb.setDescription("l'échange à été refusé\nl'échange était entre "+ Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0])).getName() + " et " + Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1])).getName());
-				bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
-				bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
-				msg.editMessageEmbeds(eb.build()).setActionRows(bttn).queue();
-				msg.getChannel().sendMessage(msg.getGuild().getMemberById(SenderId).getAsMention() + " du nouveau pour l'échange !").reference(event.getMessage()).queue();
-			}
-			else {
-				if (!Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0])).getOwner().equals(SenderId) || !Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1])).getOwner().equals(ReceivedId)){
-					ArrayList<ActionRow> bttn = new ArrayList<>();
-					EmbedBuilder eb = new EmbedBuilder();
-					eb.setColor(Color.red);
-					eb.setDescription("l'échange ne peut etre abouti car une des waifus n'appartient plus a son utilisateur par rapport à la demande");
-					bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
-					bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
-					msg.editMessageEmbeds(eb.build()).setActionRows(bttn).queue();
-					return;
-				}
-				EmbedBuilder eb = new EmbedBuilder().setTitle("Demande d'échange");
-				eb.setColor(Color.green);
-				eb.setDescription("l'échange entre "+ Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0])).getName() + " et " + Waifu.getWaifuById(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1])).getName() +"a été éffecuté avec succès");
-				Waifu.trade(Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[0]), Integer.parseInt(msg.getEmbeds().get(0).getAuthor().getName().split(" ")[1]));
-				ArrayList<ActionRow> bttn = new ArrayList<>();
-				bttn.add(ActionRow.of(Button.primary("waifutrade_oui", "oui").asDisabled()));
-				bttn.add(ActionRow.of(Button.danger("waifutrade_non", "non").asDisabled()));
-				msg.editMessageComponents(bttn).queue();
-				msg.editMessageEmbeds(eb.build()).setActionRows(bttn).queue();
-				msg.getChannel().sendMessage(msg.getGuild().getMemberById(SenderId).getAsMention() + " du nouveau pour l'échange !").reference(event.getMessage()).queue();
-			}
-		}
-		else
-			event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
+		return;
 	}
 
 	private void onSlashCommand(SlashCommandInteraction event) {

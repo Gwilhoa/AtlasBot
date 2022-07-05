@@ -20,7 +20,7 @@ public class MenuInteract {
 		if (event.getComponent().getId().equals("Waifu")) {
 			if (event.getSelectedOptions().get(0).getValue().equals("stop"))
 				event.getMessage().delete().queue();
-			new Waifu(event.getMessage().getAttachments().get(0), event.getMessage().getEmbeds().get(0).getTitle(), event.getMessage().getEmbeds().get(0).getDescription(), event.getSelectedOptions().get(0).getLabel(), event.getMessage().getEmbeds().get(0).getFooter().getText());
+			new Waifu(event.getMessage().getAttachments().get(0), event.getMessage().getEmbeds().get(0).getTitle(), event.getMessage().getEmbeds().get(0).getDescription(), event.getSelectedOptions().get(0).getLabel(), event.getMessage().getEmbeds().get(0).getFooter().getText(), false);
 			Squads.addPoints(event.getMember(), 1000L);
 			event.getMessage().delete().queue();
 		}
