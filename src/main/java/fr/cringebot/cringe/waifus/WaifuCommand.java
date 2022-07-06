@@ -17,9 +17,7 @@ import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -35,25 +33,22 @@ public class WaifuCommand {
 
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
 
-		if (!msg.getMember().getId().equals("315431392789921793")){
-			msg.getChannel().sendMessage("mdr tu as cru").queue();
-			return;
-		}
-		if (msg.getContentRaw().split(" ").length == 1) {
+		if (msg.getContentRaw().split(" ").length == 1 && !msg.getMember().getId().equals("315431392789921793")) {
 			catchWaifu(msg);
 			return;
+		} else {
+			stats(msg);
 		}
 		if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add"))
 			addwaifu(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")){
+		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")) {
 			EmbedBuilder eb = new EmbedBuilder().setTitle("Listes des waifus").setDescription("chargement...");
 			if (msg.getContentRaw().split(" ").length > 2)
 				eb.setAuthor(msg.getContentRaw().substring(">Waifu list ".length()));
 			Message ls = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
 			ls.addReaction(Emoji.fromFormatted("◀️")).and(ls.addReaction(Emoji.fromFormatted("▶️"))).queue();
 			listwaifu(ls);
-		}
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info"))
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info"))
 			infowaifu(msg);
 		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setdescription"))
 			setDescription(msg);
@@ -79,8 +74,19 @@ public class WaifuCommand {
 	}
 
 	private static void stats(Message msg) {
-		return;
+		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
+		ArrayList<String> str = new ArrayList<>();
+		for (Waifu w : waifus) {
+			if (!str.contains(w.getOrigin())) {
+				str.add(w.getOrigin());
+			}
 		}
+		str.sort(Comparator.naturalOrder());
+		StringBuilder sb = new StringBuilder();
+		for (String ret : str)
+			sb.append(ret).append("   ");
+		msg.getChannel().sendMessage(sb).queue();
+	}
 
 
 	private static void trade(Message msg) {
@@ -145,14 +151,14 @@ public class WaifuCommand {
 
 		}
 		Waifu.setTime(msg.getMember().getId());
-		Waifu w;
-		w = Waifu.getWaifuById(0);
+		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
+		Waifu w = waifus.get(new Random().nextInt(waifus.size() - 1));
 		File f = new File(w.getProfile());
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setImage("attachment://"+f.getName());
 		eb.setTitle("Nouvelle Waifu !");
-		eb.setDescription("ta nouvelle Waifu est " + w.getName() + " de " + w.getOrigin());
-		eb.setFooter("id : " + w.getId());
+		eb.setDescription("ta nouvelle Waifu est " + w.getName() + " de " + w.getOrigin() + " ou pas");
+		eb.setFooter("id : " + w.getId() + " et oui tu as encore cru");
 		eb.setColor(Squads.getSquadByMember(msg.getMember()).getSquadRole(msg.getGuild()).getColor());
 		waifuLock.lock();
 		Thread.sleep(100);
