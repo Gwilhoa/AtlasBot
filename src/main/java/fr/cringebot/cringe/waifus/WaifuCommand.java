@@ -5,6 +5,7 @@ import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -85,7 +86,11 @@ public class WaifuCommand {
 		StringBuilder sb = new StringBuilder();
 		for (String ret : str)
 			sb.append(ret).append("   ");
-		msg.getChannel().sendMessage(sb).queue();
+		MessageBuilder mb = new MessageBuilder();
+		mb.append(sb);
+		Queue<Message> mq =  mb.buildAll();
+		for (Message ms : mq)
+			msg.getChannel().sendMessage(ms).queue();
 	}
 
 
