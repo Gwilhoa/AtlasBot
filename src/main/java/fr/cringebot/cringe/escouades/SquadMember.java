@@ -14,12 +14,14 @@ public class SquadMember {
 	private final String id;
 	private HashMap<String, Integer> collections;
 	private HashMap<Integer, InvWaifu> waifus;
+	private Long coins;
 
 	public SquadMember(String id) {
 		this.id = id;
 		this.points = 0L;
 		this.collections = new HashMap<>();
 		this.waifus = new HashMap<>();
+		this.coins = 0L;
 	}
 	//---waifu---//
 
@@ -27,6 +29,27 @@ public class SquadMember {
 			InvWaifu.catchWaifu(msg, id);
 			this.addPoint(50L);
 			this.waifus.put(id, new InvWaifu(id));
+	}
+
+	public void addCoins(Long coins) {
+		if (this.coins == null)
+			this.coins = 0L;
+		this.coins = coins + this.coins;
+	}
+
+	public boolean removeCoins(Long coins) {
+		if (this.coins == null)
+			this.coins = 0L;
+		if (this.coins - coins < 0)
+			return false;
+		this.coins = this.coins - coins;
+		return true;
+	}
+
+	public Long getCoins() {
+		if (coins == null)
+			coins = 0L;
+		return coins;
 	}
 
 	public void initCollections() {

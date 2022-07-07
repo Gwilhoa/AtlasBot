@@ -34,6 +34,19 @@ public class Squads {
 			this.addMember(m);
 	}
 
+	public Integer getRank(String id)
+	{
+		Integer ret = 1;
+		List<SquadMember> sms = this.getSortedSquadMember();
+		for (SquadMember sm : sms)
+		{
+			if (sm.getId().equalsIgnoreCase(id))
+				return ret;
+			ret++;
+		}
+		return ret;
+	}
+
 	public static Squads getSquadByRoles(Role role){
 		List<Squads> sqs = getAllSquads();
 		for (Squads sq : sqs)

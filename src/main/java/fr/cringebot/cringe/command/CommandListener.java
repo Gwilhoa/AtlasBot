@@ -80,16 +80,21 @@ public class CommandListener {
 			mem = msg.getMentions().getMembers().get(0);
 		}
 		Squads squads = Squads.getSquadByMember(mem);
+		StringBuilder sb = new StringBuilder();
+		sb.append("> surnom : ").append(mem.getEffectiveName()).append('\n')
+				.append("> état : ").append(mem.getOnlineStatus().name()).append('\n')
+				.append("> rejoint le serveur le ").append(mem.getTimeJoined().getDayOfMonth()).append("/").append(mem.getTimeJoined().getMonthValue()).append("/").append(mem.getTimeJoined().getYear()).append("\n")
+				.append("> creer son compte le ").append(mem.getTimeCreated().getDayOfMonth()).append("/").append(mem.getTimeCreated().getMonthValue()).append("/").append(mem.getTimeCreated().getYear()).append("\n")
+				.append("> B2C ").append(squads.getStatMember(mem).getCoins())
+				.append("> escouade : ").append(squads.getName()).append("\n")
+				.append("> points : ").append(squads.getStatMember(mem).getPoints()).append("\n")
+				.append("> rang : ").append(squads.getRank(mem.getId()));
 		EmbedBuilder builder = new EmbedBuilder()
 				.setColor(squads.getSquadRole(msg.getGuild()).getColor())
 				.setAuthor(mem.getUser().getName(), null, mem.getUser().getAvatarUrl() + "?size=256")
 				.setTitle("Informations")
-				.setDescription("> surnom :" + mem.getEffectiveName() + "\n" +
-						"> état :" + mem.getOnlineStatus().name() + "\n" +
-						"> rejoint le serveur le " + mem.getTimeJoined().getDayOfMonth() + "/" + mem.getTimeJoined().getMonthValue() + "/" + mem.getTimeJoined().getYear() + "\n" +
-						"> creer son compte le " + mem.getTimeCreated().getDayOfMonth() + "/" + mem.getTimeCreated().getMonthValue() + "/" + mem.getTimeCreated().getYear() + "\n" +
-						"> escouade : " + squads.getName() + "\n" +
-						"> points : " + squads.getStatMember(mem).getPoints());
+				.setDescription(sb.toString());
+
 		channel.sendMessageEmbeds(builder.build()).queue();
 	}
 
