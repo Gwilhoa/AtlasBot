@@ -2,7 +2,6 @@ package fr.cringebot.cringe.escouades;
 
 import fr.cringebot.cringe.waifus.InvWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
-import fr.cringebot.cringe.waifus.WaifuCommand;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ public class SquadMember {
 	private final String id;
 	private HashMap<String, Integer> collections;
 	private HashMap<Integer, InvWaifu> waifus;
-	private Long waifuTimer;
 
 	public SquadMember(String id) {
 		this.id = id;
@@ -34,6 +32,10 @@ public class SquadMember {
 		this.collections = new HashMap<>();
 	}
 
+	public void initwaifus() {
+		this.waifus = new HashMap<>();
+	}
+
 	private void getWaifu(String str, Message msg) throws InterruptedException {
 		ArrayList<Waifu> waifus = Waifu.getWaifusByOrigin(str);
 		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()));
@@ -49,11 +51,16 @@ public class SquadMember {
 		{
 			this.getWaifu(str, msg);
 		}
+		Squads.save();
 	}
 
 	public Integer getCollection(String str)
 	{
 		return this.collections.getOrDefault(str, 0);
+	}
+	public HashMap<String, Integer> getCollection()
+	{
+		return this.collections;
 	}
 
 	//---squads---//

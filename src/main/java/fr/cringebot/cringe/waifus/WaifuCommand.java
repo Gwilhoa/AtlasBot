@@ -46,6 +46,11 @@ public class WaifuCommand {
 		else {
 			Waifu.setTime(msg.getMember().getId());
 			SquadMember Sm = Squads.getSquadByMember(msg.getMember()).getStatMember(msg.getMember());
+			if (Sm.getCollection() == null)
+			{
+				Sm.initwaifus();
+				Sm.initCollections();
+			}
 			ArrayList<String> origins = Waifu.getAllOrigins();
 			String origin = origins.get(new Random().nextInt(origins.size() - 1));
 			msg.getChannel().sendMessage("tu as trouvé un jeton de la collection "+ origin).queue();
