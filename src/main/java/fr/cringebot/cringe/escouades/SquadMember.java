@@ -37,7 +37,7 @@ public class SquadMember {
 	}
 
 	private void getWaifu(String str, Message msg) throws InterruptedException {
-		ArrayList<Waifu> waifus = Waifu.getWaifusByOrigin(str);
+		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
 		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()));
 		newWaifu(waifus.get(new Random().nextInt(waifus.size() - 1)).getId(), msg);
 	}

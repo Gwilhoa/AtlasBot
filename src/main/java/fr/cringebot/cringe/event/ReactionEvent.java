@@ -47,6 +47,11 @@ public class ReactionEvent {
     public static void reactionevent(Message msg, JDA jda) throws IOException {
         if (msg.getTextChannel().getId().equals(msg.getGuild().getTextChannelById("461606547064356864")))
             return;
+
+        if (startWithIgnoreCase(msg.getContentRaw(), "f")) {
+            pressf(msg);
+        }
+
         if (containsIgnoreCase(msg.getContentRaw(), "je suis"))
         {
             int i = firstsearch(msg.getContentRaw().toLowerCase(Locale.ROOT), "je suis");
@@ -78,7 +83,7 @@ public class ReactionEvent {
         }
 
         String s = msg.getContentRaw().replace("?","").replace(".","").replace(" ","");
-        if ( s.substring(s.length() - 4).equalsIgnoreCase("quoi")){
+        if ( s.substring(Math.max(0, s.length() - 4)).equalsIgnoreCase("quoi")){
             feur(msg);
         }
 

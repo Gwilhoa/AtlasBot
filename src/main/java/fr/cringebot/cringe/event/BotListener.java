@@ -461,9 +461,7 @@ public class BotListener implements EventListener {
 
 		ReactionEvent.reactionevent(msg, msg.getJDA());
 		//tous les events mis sans le prefix les reactions en gros
-		if (args[0].equalsIgnoreCase("f")) {
-			pressf(msg);
-		}
+
 
 		if (msg.getContentRaw().equalsIgnoreCase("meme") && msg.getReferencedMessage() != null) {
 			memesEvent.postmeme(msg.getReferencedMessage());
