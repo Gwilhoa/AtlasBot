@@ -19,6 +19,7 @@ public class SquadMember {
 		this.id = id;
 		this.points = 0L;
 		this.collections = new HashMap<>();
+		this.waifus = new HashMap<>();
 	}
 	//---waifu---//
 
@@ -43,15 +44,6 @@ public class SquadMember {
 	}
 
 	public void addCollection(String str, Message msg) throws InterruptedException {
-		/**
-		if (!this.collections.containsKey(str))
-			this.collections.put(str, 1);
-		else
-			this.collections.put(str, this.collections.get(str) + 1);
-		if (this.collections.getOrDefault(str, 0) >= 3 && !str.equals("B2K") || (str.equals("B2K") && this.collections.getOrDefault(str, 0) >= 10))
-		{
-			this.getWaifu(str, msg);
-		}**/
 		this.getWaifu(str, msg);
 		Squads.save();
 	}

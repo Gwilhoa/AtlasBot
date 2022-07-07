@@ -84,6 +84,26 @@ public class Squads {
 
 	}
 
+	public static void resetWaifu()
+	{
+		for (Squads sq : Squads.getAllSquads())
+		{
+			for (SquadMember sm: sq.getSquadMembers())
+			{
+				sm.initwaifus();
+				sm.initCollections();
+			}
+		}
+	}
+	public static SquadMember getstats(Member m)
+	{
+		return getstats(m.getId());
+	}
+	public static SquadMember getstats(String id)
+	{
+		return Squads.getSquadByMember(id).getStatMember(id);
+	}
+
 	public static Squads getSquadByMember(Member m){
 		return getSquadByMember(m.getId());
 	}

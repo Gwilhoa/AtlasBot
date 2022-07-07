@@ -34,28 +34,27 @@ public class WaifuCommand {
 	private static final int HOUR = 60 * MINUTE;
 
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
-		if (Waifu.timeleft(msg.getMember().getId()) < 0){
-			long t = -Waifu.timeleft(msg.getMember().getId());
-			long th = t/HOUR;
-			t %= HOUR;
-			long tmin = t/MINUTE;
-			t %= MINUTE;
-			long ts = t/SECOND;
-			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle Waifu").queue();
-		}
-		else {
-			Waifu.setTime(msg.getMember().getId());
-			SquadMember Sm = Squads.getSquadByMember(msg.getMember()).getStatMember(msg.getMember());
-			if (Sm.getCollection() == null)
-			{
-				Sm.initwaifus();
-				Sm.initCollections();
+		if (msg.getContentRaw().split(" ").length == 1) {
+			if (Waifu.timeleft(msg.getMember().getId()) < 0) {
+				long t = -Waifu.timeleft(msg.getMember().getId());
+				long th = t / HOUR;
+				t %= HOUR;
+				long tmin = t / MINUTE;
+				t %= MINUTE;
+				long ts = t / SECOND;
+				msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle Waifu").queue();
+			} else {
+				Waifu.setTime(msg.getMember().getId());
+				SquadMember Sm = Squads.getSquadByMember(msg.getMember()).getStatMember(msg.getMember());
+				ArrayList<String> origins = Waifu.getAllOrigins();
+				String origin = origins.get(new Random().nextInt(origins.size() - 1));
+				Sm.addCollection(origin, msg);
+				Squads.save();
 			}
-			ArrayList<String> origins = Waifu.getAllOrigins();
-			String origin = origins.get(new Random().nextInt(origins.size() - 1));
-			//msg.getChannel().sendMessage("tu as trouvé un jeton de la collection "+ origin).queue();
-			Sm.addCollection(origin, msg);
-			Squads.save();
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info")) {
+			infowaifu(msg);
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset")) {
+			Squads.resetWaifu();
 		}
 	}
 

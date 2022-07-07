@@ -79,16 +79,17 @@ public class CommandListener {
 		if (msg.getMentions().getMembers().size() != 0) {
 			mem = msg.getMentions().getMembers().get(0);
 		}
+		Squads squads = Squads.getSquadByMember(mem);
 		EmbedBuilder builder = new EmbedBuilder()
+				.setColor(squads.getSquadRole(msg.getGuild()).getColor())
 				.setAuthor(mem.getUser().getName(), null, mem.getUser().getAvatarUrl() + "?size=256")
 				.setTitle("Informations")
 				.setDescription("> surnom :" + mem.getEffectiveName() + "\n" +
 						"> état :" + mem.getOnlineStatus().name() + "\n" +
 						"> rejoint le serveur le " + mem.getTimeJoined().getDayOfMonth() + "/" + mem.getTimeJoined().getMonthValue() + "/" + mem.getTimeJoined().getYear() + "\n" +
-						"> hypesquad " + UserExtenders.getHypesquad(mem) + "\n" +
 						"> creer son compte le " + mem.getTimeCreated().getDayOfMonth() + "/" + mem.getTimeCreated().getMonthValue() + "/" + mem.getTimeCreated().getYear() + "\n" +
-						"> messages total : " + UserExtenders.getAllmsg(mem))
-				.setColor(mem.getColor());
+						"> escouade : " + squads.getName() + "\n" +
+						"> points : " + squads.getStatMember(mem).getPoints());
 		channel.sendMessageEmbeds(builder.build()).queue();
 	}
 
@@ -140,21 +141,6 @@ public class CommandListener {
 			eb.setDescription(sb);
 			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}
-	}
-
-	@Command(name = "rank", description = "rang")
-	private void rank(Message msg){
-		Member mb;
-		EmbedBuilder eb = new EmbedBuilder();
-		mb = msg.getMember();
-		if (!msg.getMentions().getMembers().isEmpty())
-			mb = msg.getMentions().getMembers().get(0);
-		Squads squad = Squads.getSquadByMember(mb);
-		eb.setColor(squad.getSquadRole(msg.getGuild()).getColor());
-		eb.setTitle(msg.getMember().getEffectiveName());
-		eb.setDescription("Nombres de points : " + squad.getStatMember(mb).getPoints().toString() + "\ntotal de l'escouade : " + squad.getTotal().toString());
-		eb.setFooter("rang : coming soon");
-		msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 	}
 
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
