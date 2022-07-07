@@ -180,17 +180,16 @@ public class WaifuCommand {
 	}
 	public static void haremEmbed(Message msg, Integer f) {
 		ArrayList<Waifu> waifus = new ArrayList<>();
-		ArrayList<InvWaifu> invWaifus;
 		Waifu w;
 		EmbedBuilder eb = new EmbedBuilder();
 		String MemberID = msg.getEmbeds().get(0).getAuthor().getName();
-		invWaifus = (ArrayList<InvWaifu>) Squads.getSquadByMember(MemberID).getStatMember(MemberID).getWaifus().values();
+		ArrayList<InvWaifu> invWaifus = new ArrayList<>(Squads.getSquadByMember(MemberID).getStatMember(MemberID).getWaifus().values());
 		for (InvWaifu inw : invWaifus)
 			waifus.add(Waifu.getWaifuById(inw.getId()));
 		int	i = f*10;
 		if (waifus.isEmpty())
 		{
-			msg.editMessageEmbeds(eb.setDescription("bah non mdr").build()).queue();
+			msg.editMessageEmbeds(eb.setDescription("tu as pas de waifu").setColor(Color.RED).build()).queue();
 			return;
 		}
 		if (i > waifus.size() || i < 0)
