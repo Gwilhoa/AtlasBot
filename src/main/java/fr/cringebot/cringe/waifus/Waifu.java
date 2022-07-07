@@ -26,6 +26,17 @@ public class Waifu {
 	private String origin;
 	private ArrayList<String> nickname;
 
+	public static ArrayList<String> getAllOrigins() {
+		ArrayList<Waifu> waifus = getAllWaifu();
+		ArrayList<String> ret = new ArrayList<>();
+		for (Waifu waifu : waifus)
+		{
+			if (!ret.contains(waifu.getOrigin()))
+				ret.add(waifu.getOrigin());
+		}
+		return ret;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -81,6 +92,13 @@ public class Waifu {
 
 	public static ArrayList<Waifu> getAllWaifu(){
 		return new ArrayList<>(waifuList.values());
+	}
+
+	public static ArrayList<Waifu> getWaifusByOrigin(String str)
+	{
+		ArrayList<Waifu> waifus = getAllWaifu();
+		waifus.removeIf(w -> !w.getOrigin().equalsIgnoreCase(str));
+		return waifus;
 	}
 
 	public static ArrayList<Waifu> getWaifubyName(String name){

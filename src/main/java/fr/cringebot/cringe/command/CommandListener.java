@@ -251,39 +251,10 @@ public class CommandListener {
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
 		for (Waifu waifu : waifus)
 		{
-			if (waifu.getOrigin().equalsIgnoreCase("animal crossing"))
-				waifu.setOrigin("Animal Crossing");
-			else if (waifu.getOrigin().equals("Assasination Classroom"))
-				waifu.setOrigin("Assassination Classroom");
-			else if (waifu.getOrigin().equalsIgnoreCase("Breath of the Wild") || waifu.getOrigin().equalsIgnoreCase("legend of zelda") || waifu.getOrigin().equalsIgnoreCase("The Legend of Zelda"))
-				waifu.setOrigin("The Legend of Zelda");
-			else if (waifu.getOrigin().equalsIgnoreCase("elden ring"))
-				waifu.setOrigin("Elden Ring");
-			else if (waifu.getOrigin().equalsIgnoreCase("fairy tail"))
-				waifu.setOrigin("Fairy Tail");
-			else if (waifu.getOrigin().equalsIgnoreCase("Five night at Freddy's"))
-				waifu.setOrigin("Five nights at Freddy's");
-			else if (waifu.getOrigin().equalsIgnoreCase("High school DxD"))
-				waifu.setOrigin("High school DxD");
-			else if (waifu.getOrigin().equalsIgnoreCase("hunterxhunter"))
-				waifu.setOrigin("Hunter x Hunter");
-			else if (waifu.getOrigin().equalsIgnoreCase("Jujutsu Kaisen"))
-				waifu.setOrigin("Jujutsu Kaisen");
-			else if (waifu.getOrigin().equalsIgnoreCase("l'Age de glace"))
-				waifu.setOrigin("l'Age de glace");
-			else if (waifu.getOrigin().equalsIgnoreCase("Love is War"))
-				waifu.setOrigin("Love is War");
-			else if (waifu.getOrigin().equalsIgnoreCase("mario (fan made)"))
+			if (waifu.getOrigin().equalsIgnoreCase("my hero academia"))
+				waifu.setOrigin("My Hero Academia");
+			else if (waifu.getOrigin().equalsIgnoreCase("mario (fan-made)"))
 				waifu.setOrigin("Mario");
-			else if (waifu.getOrigin().equalsIgnoreCase("My Little Pony"))
-				waifu.setOrigin("My Little Pony");
-			else if (waifu.getOrigin().equalsIgnoreCase("Mythologie Inca") || waifu.getOrigin().equalsIgnoreCase("Mythologie Maya"))
-				waifu.setOrigin("Mythologie");
-			else if (waifu.getOrigin().equalsIgnoreCase("one piece"))
-				waifu.setOrigin("One Piece");
-			else if (waifu.getOrigin().equalsIgnoreCase("voiture"))
-				waifu.setOrigin("Voiture");
-
 		}
 	}
 }

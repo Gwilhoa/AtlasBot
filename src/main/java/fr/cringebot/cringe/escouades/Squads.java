@@ -208,7 +208,7 @@ public class Squads {
 	public void addMember(String id) {
 		this.MemberList.put(id, new SquadMember(id));
 	}
-	private static void save() {
+	public static void save() {
 		updateSquads();
 		if (!new File(file).exists()) {
 			try {

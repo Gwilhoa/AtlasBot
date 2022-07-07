@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.waifus;
 
 import fr.cringebot.BotDiscord;
+import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.StringExtenders;
@@ -33,45 +34,24 @@ public class WaifuCommand {
 	private static final int HOUR = 60 * MINUTE;
 
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
-
-		if (msg.getContentRaw().split(" ").length == 1 && !msg.getMember().getId().equals("315431392789921793")) {
-			catchWaifu(msg);
-			return;
-		} else {
-			stats(msg);
+		if (Waifu.timeleft(msg.getMember().getId()) < 0){
+			long t = -Waifu.timeleft(msg.getMember().getId());
+			long th = t/HOUR;
+			t %= HOUR;
+			long tmin = t/MINUTE;
+			t %= MINUTE;
+			long ts = t/SECOND;
+			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle Waifu").queue();
 		}
-		if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add"))
-			addwaifu(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")) {
-			EmbedBuilder eb = new EmbedBuilder().setTitle("Listes des waifus").setDescription("chargement...");
-			if (msg.getContentRaw().split(" ").length > 2)
-				eb.setAuthor(msg.getContentRaw().substring(">Waifu list ".length()));
-			Message ls = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
-			ls.addReaction(Emoji.fromFormatted("◀️")).and(ls.addReaction(Emoji.fromFormatted("▶️"))).queue();
-			listwaifu(ls);
-		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info"))
-			infowaifu(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setdescription"))
-			setDescription(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("delete"))
-			delwaifu(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setname"))
-			setName(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset"))
-			reset(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage"))
-			setImage(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setorigin"))
-			setOrigin(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("trade"))
-			trade(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("release"))
-			release(msg);
-		else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("stats"))
-			stats(msg);
-		else
-			catchWaifu(msg);
-
+		else {
+			Waifu.setTime(msg.getMember().getId());
+			SquadMember Sm = Squads.getSquadByMember(msg.getMember()).getStatMember(msg.getMember());
+			ArrayList<String> origins = Waifu.getAllOrigins();
+			String origin = origins.get(new Random().nextInt(origins.size() - 1));
+			msg.getChannel().sendMessage("tu as trouvé un jeton de la collection "+ origin).queue();
+			Sm.addCollection(origin, msg);
+			Squads.save();
+		}
 	}
 
 	private static void stats(Message msg) {
@@ -131,58 +111,6 @@ public class WaifuCommand {
 		Waifu.save();
 	}
 
-	private static void catchWaifu(Message msg) throws InterruptedException {
-		if (!msg.getChannel().getId().equals(BotDiscord.FarmingSalonId)) {
-			msg.getChannel().sendMessage("Mové salon comme dirait l'autre").queue();
-			return;
-		}
-		if (isMaintenance) {
-			msg.getChannel().sendMessage("le bot est actuellement en maintenance").queue();
-			return;
-		}
-		else if (msg.getMember().getRoles().contains(msg.getGuild().getRoleById(BotDiscord.SecondaryRoleId))){
-			msg.getChannel().sendMessage("Tu es un compte secondaire et moi, j'aime pas les comptes secondaires").queue();
-			return;
-		}
-		else if (Waifu.timeleft(msg.getMember().getId()) < 0){
-			long t = -Waifu.timeleft(msg.getMember().getId());
-			long th = t/HOUR;
-			t %= HOUR;
-			long tmin = t/MINUTE;
-			t %= MINUTE;
-			long ts = t/SECOND;
-			msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle Waifu").queue();
-			return;
-
-		}
-		Waifu.setTime(msg.getMember().getId());
-		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
-		Waifu w = waifus.get(new Random().nextInt(waifus.size() - 1));
-		File f = new File(w.getProfile());
-		EmbedBuilder eb = new EmbedBuilder();
-		eb.setImage("attachment://"+f.getName());
-		eb.setTitle("Nouvelle Waifu !");
-		eb.setDescription("ta nouvelle Waifu est " + w.getName() + " de " + w.getOrigin() + " ou pas");
-		eb.setFooter("id : " + w.getId() + " et oui tu as encore cru");
-		eb.setColor(Squads.getSquadByMember(msg.getMember()).getSquadRole(msg.getGuild()).getColor());
-		waifuLock.lock();
-		Thread.sleep(100);
-		MessageAction toSend = msg.getChannel().sendMessageEmbeds(eb.build());
-		downloadWaifu(f, toSend);
-		Squads.addPoints(msg.getMember(), 50L);
-	}
-
-	private static void downloadWaifu(File f, MessageAction toSend) {
-		try(DataInputStream str = new DataInputStream(new FileInputStream(f))){
-			byte[] bytes = new byte[(int) f.length()];
-			str.readFully(bytes);
-			toSend.addFile(bytes, f.getName()).complete();
-		} catch (IOException e) {
-			//Wrap et remonter
-			throw new RuntimeException(e);
-		}
-		waifuLock.unlock();
-	}
 
 	public static void addwaifu(Message msg) throws ExecutionException, InterruptedException {
 		if (!msg.getChannel().getId().equals("975087822618910800")) {
@@ -210,7 +138,7 @@ public class WaifuCommand {
 		waifuLock.lock();
 		Thread.sleep(100);
 		MessageAction toSend = tc.sendMessageEmbeds(eb.build());
-		downloadWaifu(f, toSend);
+		InvWaifu.downloadWaifu(f, toSend);
 	}
 
 	public static void infowaifu(Message msg) throws InterruptedException {
@@ -246,14 +174,14 @@ public class WaifuCommand {
 		haremEmbed(msg, 0);
 	}
 	public static void haremEmbed(Message msg, Integer f) {
-		ArrayList<Waifu> waifus = Waifu.getAllWaifu(); //changer par la liste des waifus du mec
+		ArrayList<Waifu> waifus = new ArrayList<>(); //changer par la liste des waifus du mec
 		Waifu w;
 		EmbedBuilder eb = new EmbedBuilder();
 		String MemberID = msg.getEmbeds().get(0).getAuthor().getName();
 		int	i = f*10;
 		if (waifus.isEmpty())
 		{
-			msg.editMessageEmbeds(eb.setDescription("tu as actuellement aucune waifu").build()).queue();
+			msg.editMessageEmbeds(eb.setDescription("bah non mdr").build()).queue();
 			return;
 		}
 		if (i > waifus.size() || i < 0)
