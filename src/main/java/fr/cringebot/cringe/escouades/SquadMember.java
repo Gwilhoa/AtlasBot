@@ -43,6 +43,7 @@ public class SquadMember {
 	}
 
 	public void addCollection(String str, Message msg) throws InterruptedException {
+		/**
 		if (!this.collections.containsKey(str))
 			this.collections.put(str, 1);
 		else
@@ -50,7 +51,8 @@ public class SquadMember {
 		if (this.collections.getOrDefault(str, 0) >= 3 && !str.equals("B2K") || (str.equals("B2K") && this.collections.getOrDefault(str, 0) >= 10))
 		{
 			this.getWaifu(str, msg);
-		}
+		}**/
+		this.getWaifu(str, msg);
 		Squads.save();
 	}
 
@@ -61,6 +63,10 @@ public class SquadMember {
 	public HashMap<String, Integer> getCollection()
 	{
 		return this.collections;
+	}
+
+	public HashMap<Integer, InvWaifu> getWaifus() {
+		return waifus;
 	}
 
 	//---squads---//

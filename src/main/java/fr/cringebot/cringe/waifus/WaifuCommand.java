@@ -53,7 +53,7 @@ public class WaifuCommand {
 			}
 			ArrayList<String> origins = Waifu.getAllOrigins();
 			String origin = origins.get(new Random().nextInt(origins.size() - 1));
-			msg.getChannel().sendMessage("tu as trouvé un jeton de la collection "+ origin).queue();
+			//msg.getChannel().sendMessage("tu as trouvé un jeton de la collection "+ origin).queue();
 			Sm.addCollection(origin, msg);
 			Squads.save();
 		}
@@ -179,10 +179,14 @@ public class WaifuCommand {
 		haremEmbed(msg, 0);
 	}
 	public static void haremEmbed(Message msg, Integer f) {
-		ArrayList<Waifu> waifus = new ArrayList<>(); //changer par la liste des waifus du mec
+		ArrayList<Waifu> waifus = new ArrayList<>();
+		ArrayList<InvWaifu> invWaifus;
 		Waifu w;
 		EmbedBuilder eb = new EmbedBuilder();
 		String MemberID = msg.getEmbeds().get(0).getAuthor().getName();
+		invWaifus = (ArrayList<InvWaifu>) Squads.getSquadByMember(MemberID).getStatMember(MemberID).getWaifus().values();
+		for (InvWaifu inw : invWaifus)
+			waifus.add(Waifu.getWaifuById(inw.getId()));
 		int	i = f*10;
 		if (waifus.isEmpty())
 		{
