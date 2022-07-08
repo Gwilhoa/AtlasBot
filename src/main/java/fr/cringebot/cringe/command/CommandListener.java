@@ -86,7 +86,7 @@ public class CommandListener {
 				.append("> état : ").append(mem.getOnlineStatus().name()).append('\n')
 				.append("> rejoint le serveur le ").append(mem.getTimeJoined().getDayOfMonth()).append("/").append(mem.getTimeJoined().getMonthValue()).append("/").append(mem.getTimeJoined().getYear()).append("\n")
 				.append("> creer son compte le ").append(mem.getTimeCreated().getDayOfMonth()).append("/").append(mem.getTimeCreated().getMonthValue()).append("/").append(mem.getTimeCreated().getYear()).append("\n")
-				.append("> B2C ").append(squads.getStatMember(mem).getCoins()).append('\n')
+				.append("> B2C : ").append(squads.getStatMember(mem).getCoins()).append('\n')
 				.append("> escouade : ").append(squads.getName()).append("\n")
 				.append("> points : ").append(squads.getStatMember(mem).getPoints()).append("\n")
 				.append("> rang : ").append(squads.getRank(mem.getId()));
@@ -106,7 +106,7 @@ public class CommandListener {
 		{
 			Long points;
 			String str = msg.getContentRaw().substring(">removepoints ".length());
-			str = str.split(" ")[2];
+			str = str.split(" ")[1];
 			try {
 				points = Long.parseLong(str);
 			} catch (NumberFormatException e) {
