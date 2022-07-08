@@ -122,6 +122,8 @@ public class CommandListener {
 
 	@Command(name = "gift", description = "des cadeaux ?", type = ExecutorType.USER)
 	private void gift(Message msg) throws InterruptedException, IOException {
+		if (msg.getContentRaw().split(" ").length <= 1)
+			return;
 		String code = msg.getContentRaw().substring(">gift ".length());
 		if (code.equals("SITNFU06938") && new File("save/gift/SITNFU06938").createNewFile())
 		{
@@ -134,13 +136,14 @@ public class CommandListener {
 			String ret = new BufferedReader(new FileReader(f)).readLine();
 			if (ret.split(";")[0].equals("coins"))
 			{
-				msg.getChannel().sendMessage("tu as gagné "+ ret.split(" ")[1] +" B2C").queue();
-				Squads.getstats(msg.getMember()).addCoins(Long.parseLong(ret.split(" ")[1]));
+				msg.getChannel().sendMessage("tu as gagné "+ ret.split(";")[1] +" B2C").queue();
+				Squads.getstats(msg.getMember()).addCoins(Long.parseLong(ret.split(";")[1]));
 			}
 			if (ret.split(";")[0].equals("waifu"))
 			{
-				Squads.getstats(msg.getMember()).newWaifu(Integer.parseInt(ret), msg);
+				Squads.getstats(msg.getMember()).newWaifu(Integer.parseInt(ret.split(";")[1]), msg);
 			}
+			f.delete();
 		}
 	}
 
