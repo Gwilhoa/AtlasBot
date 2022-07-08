@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2022/07/02 21:48:56 by                  ###   ########.fr       */
+/*   Updated: 2022/07/08 10:52:14 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ public class ReactionEvent {
         if (msg.getTextChannel().getId().equals(msg.getGuild().getTextChannelById("461606547064356864")))
             return;
 
-        if (startWithIgnoreCase(msg.getContentRaw(), "f ")) {
+        if (msg.getContentRaw().split(" ")[0].equalsIgnoreCase("f")) {
             pressf(msg);
         }
 

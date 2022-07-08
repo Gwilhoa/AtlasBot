@@ -99,39 +99,48 @@ public class CommandListener {
 		channel.sendMessageEmbeds(builder.build()).queue();
 	}
 
+	@Command(name = "removepoints", description = "enlever des points", type = ExecutorType.USER)
+	private void removepoints(Message msg)
+	{
+		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getMembers().isEmpty())
+		{
+			Long points;
+			String str = msg.getContentRaw().substring(">removepoints ".length()).replace(msg.getMentions().getMembers().get(0).getAsMention(), "");
+			try {
+				points = Long.parseLong(str);
+			} catch (NumberFormatException e) {
+				msg.getChannel().sendMessage("les points donné ne sont pas des nombres").queue();
+				return;
+			}
+			msg.getChannel().sendMessage("moins "+ points + " points pour " + Squads.getSquadByMember(msg.getMentions().getMembers().get(0))).queue();
+			Squads.removePoints(msg.getMentions().getMembers().get(0).getId(), points);
+		} else {
+			msg.getChannel().sendMessage("tu n'as pas les droits").queue();
+		}
+	}
+
+
 	@Command(name = "gift", description = "des cadeaux ?", type = ExecutorType.USER)
 	private void gift(Message msg) throws InterruptedException, IOException {
 		String code = msg.getContentRaw().substring(">gift ".length());
-		if (code.equals("NKIWFU01022") && new File("save/gift/NKIWFU01022").createNewFile()) {
-			Squads.getstats(msg.getMember()).newWaifu(829, msg);
-		}
-		if (code.equals("NOKWFU03852") && new File("save/gift/NOKWFU03852").createNewFile()) {
-			Squads.getstats(msg.getMember()).newWaifu(933, msg);
-		}
-		if (code.equals("TEROFU05021") && new File("save/gift/TEROFU05021").createNewFile()) {
-			Squads.getstats(msg.getMember()).newWaifu(860, msg);
-		}
-		if (code.equals("GWILFU02050") && new File("save/gift/GWILFU02050").createNewFile()) {
-			Squads.getstats(msg.getMember()).newWaifu(586, msg);
-		}
-		if (code.equals("TIREOFU5690") && new File("save/gift/TIREOFU5690").createNewFile())
-		{
-			Squads.getstats(msg.getMember()).newWaifu(551, msg);
-		}
-		if (code.equals("GUITST01274") && new File("save/gift/GUITST01274").createNewFile())
-		{
-			msg.getChannel().sendMessage("tu as gagné 10 B2Coins").queue();
-			Squads.getstats(msg.getMember()).addCoins(10L);
-		}
-		if (code.equals("JSPAFU38580") && new File("save/gift/JSPAFU38580").createNewFile())
-		{
-			Squads.getstats(msg.getMember()).newWaifu(91, msg);
-			Squads.getstats(msg.getMember()).newWaifu(289, msg);
-		}
-		if (code.equals("SITNFU06938") && new File("save/gift/JSPAFU38580").createNewFile())
+		if (code.equals("SITNFU06938") && new File("save/gift/SITNFU06938").createNewFile())
 		{
 			Squads.getstats(msg.getMember()).newWaifu(new Random().nextInt(1000), msg);
 			Squads.getstats(msg.getMember()).newWaifu(new Random().nextInt(1000), msg);
+		}
+		File f = new File("save/gift/"+code);
+		if (f.exists() && f.isFile())
+		{
+			String ret = new BufferedReader(new FileReader(f)).readLine();
+			if (ret.split(";")[0].equals("coins"))
+			{
+				msg.getChannel().sendMessage("tu as gagné "+ ret.split(" ")[1] +" B2C").queue();
+				Squads.getstats(msg.getMember()).addCoins(Long.parseLong(ret.split(" ")[1]));
+			}
+			if (ret.split(";")[0].equals("waifu"))
+			{
+				Squads.getstats(msg.getMember()).newWaifu(Integer.parseInt(ret), msg);
+			}
 		}
 	}
 

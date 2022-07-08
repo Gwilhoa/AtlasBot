@@ -31,12 +31,14 @@ public class SquadMember {
 				Waifu.getWaifuById(id).setIstaken(true);
 			this.addPoint(50L);
 			this.waifus.put(id, new InvWaifu(id));
+			Squads.save();
 	}
 
 	public void addCoins(Long coins) {
 		if (this.coins == null)
 			this.coins = 0L;
 		this.coins = coins + this.coins;
+		Squads.save();
 	}
 
 	public boolean removeCoins(Long coins) {
@@ -45,6 +47,7 @@ public class SquadMember {
 		if (this.coins - coins < 0)
 			return false;
 		this.coins = this.coins - coins;
+		Squads.save();
 		return true;
 	}
 
