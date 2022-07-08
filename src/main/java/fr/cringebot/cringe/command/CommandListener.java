@@ -105,7 +105,8 @@ public class CommandListener {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getMembers().isEmpty())
 		{
 			Long points;
-			String str = msg.getContentRaw().substring(">removepoints ".length()).replace(msg.getMentions().getMembers().get(0).getAsMention(), "");
+			String str = msg.getContentRaw().substring(">removepoints ".length());
+			str = str.split(" ")[2];
 			try {
 				points = Long.parseLong(str);
 			} catch (NumberFormatException e) {
