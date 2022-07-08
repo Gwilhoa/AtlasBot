@@ -27,6 +27,8 @@ public class SquadMember {
 
 	public void newWaifu(Integer id, Message msg) throws InterruptedException {
 			InvWaifu.catchWaifu(msg, id);
+			if (Waifu.getWaifuById(id).isLegendary())
+				Waifu.getWaifuById(id).setIstaken(true);
 			this.addPoint(50L);
 			this.waifus.put(id, new InvWaifu(id));
 	}

@@ -264,6 +264,8 @@ public class BotListener implements EventListener {
 		bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);
 		if (new File("save").mkdir())
 			System.out.println("création du directoryCentral");
+		if (new File("save/gift").mkdir())
+			System.out.println("CADO");
 		if (new File("save/waifu").mkdir())
 			System.out.println("création du directory Waifu");
 		Request.sendRequest(Request.Type.SETSEASON, event.getJDA().getGuildById("382938797442334720").getName());

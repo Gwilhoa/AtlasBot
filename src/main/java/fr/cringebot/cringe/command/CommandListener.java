@@ -16,6 +16,7 @@ import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.objects.UserExtenders;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
+import fr.cringebot.cringe.waifus.InvWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
 import net.dv8tion.jda.api.*;
@@ -85,7 +86,7 @@ public class CommandListener {
 				.append("> état : ").append(mem.getOnlineStatus().name()).append('\n')
 				.append("> rejoint le serveur le ").append(mem.getTimeJoined().getDayOfMonth()).append("/").append(mem.getTimeJoined().getMonthValue()).append("/").append(mem.getTimeJoined().getYear()).append("\n")
 				.append("> creer son compte le ").append(mem.getTimeCreated().getDayOfMonth()).append("/").append(mem.getTimeCreated().getMonthValue()).append("/").append(mem.getTimeCreated().getYear()).append("\n")
-				.append("> B2C ").append(squads.getStatMember(mem).getCoins())
+				.append("> B2C ").append(squads.getStatMember(mem).getCoins()).append('\n')
 				.append("> escouade : ").append(squads.getName()).append("\n")
 				.append("> points : ").append(squads.getStatMember(mem).getPoints()).append("\n")
 				.append("> rang : ").append(squads.getRank(mem.getId()));
@@ -96,6 +97,42 @@ public class CommandListener {
 				.setDescription(sb.toString());
 
 		channel.sendMessageEmbeds(builder.build()).queue();
+	}
+
+	@Command(name = "gift", description = "des cadeaux ?", type = ExecutorType.USER)
+	private void gift(Message msg) throws InterruptedException, IOException {
+		String code = msg.getContentRaw().substring(">gift ".length());
+		if (code.equals("NKIWFU01022") && new File("save/gift/NKIWFU01022").createNewFile()) {
+			Squads.getstats(msg.getMember()).newWaifu(829, msg);
+		}
+		if (code.equals("NOKWFU03852") && new File("save/gift/NOKWFU03852").createNewFile()) {
+			Squads.getstats(msg.getMember()).newWaifu(933, msg);
+		}
+		if (code.equals("TEROFU05021") && new File("save/gift/TEROFU05021").createNewFile()) {
+			Squads.getstats(msg.getMember()).newWaifu(860, msg);
+		}
+		if (code.equals("GWILFU02050") && new File("save/gift/GWILFU02050").createNewFile()) {
+			Squads.getstats(msg.getMember()).newWaifu(586, msg);
+		}
+		if (code.equals("TIREOFU5690") && new File("save/gift/TIREOFU5690").createNewFile())
+		{
+			Squads.getstats(msg.getMember()).newWaifu(551, msg);
+		}
+		if (code.equals("GUITST01274") && new File("save/gift/GUITST01274").createNewFile())
+		{
+			msg.getChannel().sendMessage("tu as gagné 10 B2Coins").queue();
+			Squads.getstats(msg.getMember()).addCoins(10L);
+		}
+		if (code.equals("JSPAFU38580") && new File("save/gift/JSPAFU38580").createNewFile())
+		{
+			Squads.getstats(msg.getMember()).newWaifu(91, msg);
+			Squads.getstats(msg.getMember()).newWaifu(289, msg);
+		}
+		if (code.equals("SITNFU06938") && new File("save/gift/JSPAFU38580").createNewFile())
+		{
+			Squads.getstats(msg.getMember()).newWaifu(new Random().nextInt(1000), msg);
+			Squads.getstats(msg.getMember()).newWaifu(new Random().nextInt(1000), msg);
+		}
 	}
 
 	/**
