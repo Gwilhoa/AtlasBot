@@ -48,7 +48,7 @@ public class ReactionEvent {
         if (msg.getTextChannel().getId().equals(msg.getGuild().getTextChannelById("461606547064356864")))
             return;
 
-        if (startWithIgnoreCase(msg.getContentRaw(), "f")) {
+        if (startWithIgnoreCase(msg.getContentRaw(), "f ")) {
             pressf(msg);
         }
 

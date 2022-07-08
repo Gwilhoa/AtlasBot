@@ -107,6 +107,7 @@ public class Squads {
 				sm.initCollections();
 			}
 		}
+		save();
 	}
 	public static SquadMember getstats(Member m)
 	{
