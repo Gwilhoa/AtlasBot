@@ -113,7 +113,7 @@ public class CommandListener {
 				msg.getChannel().sendMessage("les points donné ne sont pas des nombres").queue();
 				return;
 			}
-			msg.getChannel().sendMessage("moins "+ points + " points pour " + Squads.getSquadByMember(msg.getMentions().getMembers().get(0))).queue();
+			msg.getChannel().sendMessage("moins "+ points + " points pour " + Squads.getSquadByMember(msg.getMentions().getMembers().get(0)).getName()).queue();
 			Squads.removePoints(msg.getMentions().getMembers().get(0).getId(), points);
 		} else {
 			msg.getChannel().sendMessage("tu n'as pas les droits").queue();
@@ -225,10 +225,6 @@ public class CommandListener {
 
 	@Command(name = "harem", description = "la listes des waifus", type = ExecutorType.USER)
 	private void harem(Message msg){
-		if (!msg.getChannel().getId().equals(BotDiscord.FarmingSalonId)) {
-			msg.getChannel().sendMessage("non").queue();
-			return;
-		}
 		String id = msg.getMember().getId();
 		if (!msg.getMentions().getMembers().isEmpty())
 			id = msg.getMentions().getMembers().get(0).getId();

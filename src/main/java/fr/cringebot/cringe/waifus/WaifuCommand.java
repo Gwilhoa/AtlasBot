@@ -55,6 +55,8 @@ public class WaifuCommand {
 			infowaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset")) {
 			Squads.resetWaifu();
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage")) {
+			setImage(msg);
 		}
 	}
 
@@ -83,10 +85,6 @@ public class WaifuCommand {
 	}
 
 	private static void setImage(Message msg) {
-		if (!msg.getChannel().getId().equals("975087822618910800")) {
-			msg.getChannel().sendMessage("non").queue();
-			return;
-		}
 		String id = msg.getContentRaw().split(" ")[2];
 		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w == null) {
