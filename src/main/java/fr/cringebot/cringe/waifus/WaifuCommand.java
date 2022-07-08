@@ -35,6 +35,10 @@ public class WaifuCommand {
 
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
 		if (msg.getContentRaw().split(" ").length == 1) {
+			if (true) {
+				msg.getChannel().sendMessage("en attente de correction").queue();
+				return;
+			}
 			if (Waifu.timeleft(msg.getMember().getId()) < 0) {
 				long t = -Waifu.timeleft(msg.getMember().getId());
 				long th = t / HOUR;
@@ -97,20 +101,6 @@ public class WaifuCommand {
 		}
 		w.setFile(msg.getAttachments().get(0));
 		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
-	}
-
-	private static void reset(Message msg) {
-		if (!msg.getMember().getId().equals("315431392789921793"))
-		{
-			msg.getChannel().sendMessage("https://tenor.com/view/fanta-pas-toi-qui-d%C3%A9cide-serious-selfie-gif-13900956").queue();
-			return;
-		}
-		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
-		for (Waifu w : waifus) {
-			if (w.getOrigin().equals("B2K"))
-				w.setLegendary(true);
-		}
-		Waifu.save();
 	}
 
 
