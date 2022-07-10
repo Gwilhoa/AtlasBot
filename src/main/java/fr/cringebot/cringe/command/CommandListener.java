@@ -237,7 +237,7 @@ public class CommandListener {
 		WaifuCommand.haremEmbed(msg);
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
-	private void waifu(Message msg) throws ExecutionException, InterruptedException {
+	private void waifu(Message msg) throws ExecutionException, InterruptedException, IOException {
 		WaifuCommand.CommandMain(msg);
 	}
 

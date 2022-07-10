@@ -33,7 +33,7 @@ public class WaifuCommand {
 	private static final int MINUTE = 60 * SECOND;
 	private static final int HOUR = 60 * MINUTE;
 
-	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException {
+	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException, IOException {
 		if (msg.getContentRaw().split(" ").length == 1) {
 			if (true) {
 				msg.getChannel().sendMessage("en attente de correction").queue();
@@ -88,7 +88,7 @@ public class WaifuCommand {
 		return;
 	}
 
-	private static void setImage(Message msg) {
+	private static void setImage(Message msg) throws IOException {
 		String id = msg.getContentRaw().split(" ")[2];
 		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w == null) {
@@ -99,8 +99,10 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 			return;
 		}
-		w.setFile(msg.getAttachments().get(0));
-		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
+		if (!w.setFile(msg.getAttachments().get(0)))
+			msg.getChannel().sendMessage("l'image est trop grande").queue();
+		else
+			msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
 	}
 
 

@@ -2,6 +2,7 @@ package fr.cringebot.cringe.waifus;
 
 import com.google.gson.reflect.TypeToken;
 import fr.cringebot.cringe.objects.StringExtenders;
+import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.io.*;
@@ -76,8 +77,9 @@ public class Waifu {
 		this.type = type;
 	}
 
-	public void setFile(Message.Attachment f){
-		f.downloadToFile(this.profile);
+	public boolean setFile(Message.Attachment f) throws IOException {
+		File s = imgExtenders.getFile(f.getUrl(), this.profile, this.profile);
+		return s.length() <= 1040863;
 	}
 
 	public void delwaifu()
