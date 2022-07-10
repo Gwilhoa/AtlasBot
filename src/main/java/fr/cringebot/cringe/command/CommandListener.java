@@ -120,17 +120,25 @@ public class CommandListener {
 		}
 	}
 
+	@Command(name = "shop", description = "ouvrir le shopping")
+	private void shop(Message msg) {
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setColor(Color.ORANGE).setTitle("le Shop");
+		eb.setDescription("bounjour que voulez vous achetez");
+		eb.setFooter("vous avez " + Squads.getstats(msg.getMember()).getCoins() + " B2C");
+
+		ArrayList<SelectOption> options = new ArrayList<>();
+		options.add(new SelectOptionImpl("annuler", "stop"));
+		options.add(new SelectOptionImpl("pièce de collection : 10 B2C", "PDCSH"));
+		SelectMenuImpl selectionMenu = new SelectMenuImpl("shop", "selectionnez un choix", 1, 1, false, options);
+		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(selectionMenu).queue();
+	}
 
 	@Command(name = "gift", description = "des cadeaux ?", type = ExecutorType.USER)
 	private void gift(Message msg) throws InterruptedException, IOException {
 		if (msg.getContentRaw().split(" ").length <= 1)
 			return;
 		String code = msg.getContentRaw().substring(">gift ".length());
-		if (code.equals("SITNFU06938") && new File("save/gift/SITNFU06938").createNewFile())
-		{
-			Squads.getstats(msg.getMember()).newWaifu(new Random().nextInt(1000), msg);
-			Squads.getstats(msg.getMember()).newWaifu(new Random().nextInt(1000), msg);
-		}
 		File f = new File("save/gift/"+code);
 		if (f.exists() && f.isFile())
 		{
@@ -143,6 +151,10 @@ public class CommandListener {
 			if (ret.split(";")[0].equals("waifu"))
 			{
 				Squads.getstats(msg.getMember()).newWaifu(Integer.parseInt(ret.split(";")[1]), msg);
+			}
+			if (ret.split(";")[0].equals("squad"))
+			{
+				Squads.addPoints(msg.getMember(),Long.parseLong(ret.split(";")[1]));
 			}
 			f.delete();
 		}

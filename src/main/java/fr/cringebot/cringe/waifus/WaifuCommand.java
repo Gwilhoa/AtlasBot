@@ -57,6 +57,8 @@ public class WaifuCommand {
 			Squads.resetWaifu();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage")) {
 			setImage(msg);
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")) {
+			listwaifu(msg);
 		}
 	}
 
@@ -77,11 +79,6 @@ public class WaifuCommand {
 		Queue<Message> mq =  mb.buildAll();
 		for (Message ms : mq)
 			msg.getChannel().sendMessage(ms).queue();
-	}
-
-
-	private static void trade(Message msg) {
-		return;
 	}
 
 	private static void setImage(Message msg) throws IOException {
@@ -118,13 +115,23 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 		}
 	}
-	private static void sendEmbedInfo(Waifu w, TextChannel tc) throws InterruptedException {
+	private static void sendEmbedInfo(Waifu w, TextChannel tc, Member m) throws InterruptedException {
 		EmbedBuilder eb = new EmbedBuilder();
 		File f = new File(w.getProfile());
 		eb.setAuthor(w.getOrigin());
 		eb.setTitle("Information : " + w.getName() + "\nIdentifiant : " + w.getId());
 		eb.setImage("attachment://"+f.getName());
 		eb.setDescription(w.getDescription());
+		for (InvWaifu iw : Squads.getstats(m).getWaifus().values())
+		{
+			if (iw.getId().equals(w.getId()))
+			{
+				eb.setColor(Color.GREEN)
+						.setFooter("Obtenu !")
+						.appendDescription("\n affection " + iw.getFriendlyLevel() + "%")
+						.appendDescription("\n niveau : coming soon");
+			}
+		}
 		waifuLock.lock();
 		Thread.sleep(100);
 		MessageAction toSend = tc.sendMessageEmbeds(eb.build());
@@ -133,12 +140,12 @@ public class WaifuCommand {
 
 	public static void infowaifu(Message msg) throws InterruptedException {
 		if (msg.getContentRaw().split(" ").length <= 2) {
-			return;
+
 		}
 		ArrayList<Waifu> w = Waifu.getWaifubyName(msg.getContentRaw().substring(">Waifu info ".length()));
-		if (w != null) {
+		if (w != null && !msg.getContentRaw().split(" ")[2].equals("0")) {
 			for (Waifu waif : w) {
-				sendEmbedInfo(waif, msg.getTextChannel());
+				sendEmbedInfo(waif, msg.getTextChannel(), msg.getMember());
 			}
 		}
 		else
@@ -152,7 +159,7 @@ public class WaifuCommand {
 				return;
 			}
 			if (wid != null)
-				sendEmbedInfo(wid, msg.getTextChannel());
+				sendEmbedInfo(wid, msg.getTextChannel(), msg.getMember());
 			else {
 				msg.getChannel().sendMessage("je ne connais pas de Waifu à ce nom ou cet id").queue();
 			}
