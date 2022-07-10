@@ -155,6 +155,7 @@ public class CommandListener {
 			if (ret.split(";")[0].equals("squad"))
 			{
 				Squads.addPoints(msg.getMember(),Long.parseLong(ret.split(";")[1]));
+				msg.getChannel().sendMessage(Squads.getSquadByMember(msg.getMember()).getName() + " gagne " + Long.parseLong(ret.split(";")[1]) + " points");
 			}
 			f.delete();
 		}
@@ -202,8 +203,9 @@ public class CommandListener {
 			StringBuilder sb = new StringBuilder();
 			EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
 			for (Squads sq : squads)
-				sb.append(sq.getName()).append(' ').append(sq.getTotal()).append('\n')
+				sb.append(sq.getSquadRole(msg.getGuild()).getAsMention()).append(' ').append(sq.getTotal()).append('\n')
 						.append(" meilleur : ").append(msg.getGuild().getMemberById(sq.getBestid()).getAsMention()).append(" avec ").append(sq.getStatMember(sq.getBestid()).getPoints()).append('\n');
+			eb.setFooter(squads.get(0).getName() + " a 15% de bonus sur les B2C et les futurs event");
 			eb.setColor(squads.get(0).getSquadRole(msg.getGuild()).getColor());
 			eb.setDescription(sb);
 			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
