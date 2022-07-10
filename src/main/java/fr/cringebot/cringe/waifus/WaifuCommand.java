@@ -35,10 +35,6 @@ public class WaifuCommand {
 
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException, IOException {
 		if (msg.getContentRaw().split(" ").length == 1) {
-			if (true) {
-				msg.getChannel().sendMessage("en attente de correction").queue();
-				return;
-			}
 			if (Waifu.timeleft(msg.getMember().getId()) < 0) {
 				long t = -Waifu.timeleft(msg.getMember().getId());
 				long th = t / HOUR;
