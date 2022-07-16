@@ -155,7 +155,7 @@ public class CommandListener {
 			if (ret.split(";")[0].equals("squad"))
 			{
 				Squads.addPoints(msg.getMember(),Long.parseLong(ret.split(";")[1]));
-				msg.getChannel().sendMessage(Squads.getSquadByMember(msg.getMember()).getName() + " gagne " + Long.parseLong(ret.split(";")[1]) + " points");
+				msg.getChannel().sendMessage(Squads.getSquadByMember(msg.getMember()).getName() + " gagne " + Long.parseLong(ret.split(";")[1]) + " points").queue();
 			}
 			f.delete();
 		}

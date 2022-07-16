@@ -58,6 +58,7 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage")) {
 			setImage(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")) {
+			msg = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setFooter(msg.getContentRaw().substring("<waifu list ".length())).build()).complete();
 			listwaifu(msg);
 		}
 	}
@@ -140,7 +141,8 @@ public class WaifuCommand {
 
 	public static void infowaifu(Message msg) throws InterruptedException {
 		if (msg.getContentRaw().split(" ").length <= 2) {
-
+			msg.getChannel().sendMessage(">waifu info <nom>").queue();
+			return;
 		}
 		ArrayList<Waifu> w = Waifu.getWaifubyName(msg.getContentRaw().substring(">Waifu info ".length()));
 		if (w != null && !msg.getContentRaw().split(" ")[2].equals("0")) {
@@ -211,15 +213,8 @@ public class WaifuCommand {
 	public static void listwaifu(Message tc, Integer f) {
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
 		Waifu w;
-		String search = null;
-		if (tc.getEmbeds().get(0).getAuthor() != null)
-			search = tc.getEmbeds().get(0).getAuthor().getName();
 		EmbedBuilder eb = new EmbedBuilder();
-		if (search != null) {
-			eb.setAuthor(search);
-			String finalSearch = search;
-			waifus.removeIf(wai -> !StringExtenders.startWithIgnoreCase(wai.getOrigin(), finalSearch));
-		}
+		waifus.removeIf(waifu -> !waifu.getOrigin().startsWith(tc.getEmbeds().get(0).getFooter().getText()));
 		int	i = f*10;
 		if (waifus.isEmpty())
 		{
@@ -228,7 +223,7 @@ public class WaifuCommand {
 		}
 		if (i > waifus.size() || i < 0)
 			return;
-		eb.setFooter(f.toString()).setTitle(tc.getEmbeds().get(0).getTitle());
+		eb.setFooter(tc.getEmbeds().get(0).getFooter().getText());
 		StringBuilder sb = new StringBuilder();
 		while (i < (f*10)+10)
 		{
