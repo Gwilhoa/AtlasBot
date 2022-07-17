@@ -192,7 +192,7 @@ public class WaifuCommand {
 		{
 			if (i < waifus.size()) {
 				w = waifus.get(i);
-				sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append(' ').append(invWaifus.get(i).getFriendlyLevel()).append("\n");
+				sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append(" affection : ").append(invWaifus.get(i).getFriendlyLevel()).append("%\n");
 			}
 			i++;
 		}

@@ -1,7 +1,9 @@
 package fr.cringebot.cringe.escouades;
 
+import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.waifus.InvWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ public class SquadMember {
 	private HashMap<String, Integer> collections;
 	private HashMap<Integer, InvWaifu> waifus;
 	private Long coins;
+	private Integer bank;
 
 	public SquadMember(String id) {
 		this.id = id;
@@ -22,6 +25,7 @@ public class SquadMember {
 		this.collections = new HashMap<>();
 		this.waifus = new HashMap<>();
 		this.coins = 0L;
+		this.bank = 0;
 	}
 	//---waifu---//
 
@@ -32,6 +36,17 @@ public class SquadMember {
 			this.addPoint(50L);
 			this.waifus.put(id, new InvWaifu(id));
 			Squads.save();
+	}
+
+	public void addBank(Integer points)
+	{
+		if (this.bank == null)
+			bank = 0;
+		this.bank = this.bank + points;
+		if (this.bank > 1000) {
+			addCoins(1L);
+			this.bank = this.bank -1000;
+		}
 	}
 
 	public void addCoins(Long coins) {
@@ -91,6 +106,7 @@ public class SquadMember {
 
 	//---squads---//
 	public void addPoint(Long nb) {
+		addBank(nb.intValue());
 		this.points = this.points + nb;
 	}
 
