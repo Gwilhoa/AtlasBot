@@ -28,9 +28,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-
-import static fr.cringebot.cringe.objects.Emotes.getEmote;
 
 public class memesEvent {
 

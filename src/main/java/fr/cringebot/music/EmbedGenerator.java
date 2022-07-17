@@ -1,7 +1,6 @@
 package fr.cringebot.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import fr.cringebot.music.MusicPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;

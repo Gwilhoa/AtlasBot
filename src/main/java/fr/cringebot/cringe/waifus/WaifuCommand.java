@@ -3,28 +3,22 @@ package fr.cringebot.cringe.waifus;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
-import fr.cringebot.cringe.objects.SelectOptionImpl;
-import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
 import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Queue;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import static fr.cringebot.BotDiscord.isMaintenance;
 
 public class WaifuCommand {
 	private static Message msg;

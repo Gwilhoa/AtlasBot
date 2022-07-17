@@ -4,9 +4,7 @@ import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.escouades.Squads;
 import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.VoiceChannel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class XP {

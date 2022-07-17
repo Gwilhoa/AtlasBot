@@ -12,33 +12,25 @@
 
 package fr.cringebot.cringe.event;
 
-import com.fasterxml.jackson.core.json.UTF8DataInputJsonParser;
 import fr.cringebot.cringe.objects.DetectorAttachment;
 import fr.cringebot.cringe.objects.MessageConsumer;
 import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.objects.imgExtenders;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 import static fr.cringebot.cringe.objects.StringExtenders.*;
-import static fr.cringebot.cringe.objects.StringExtenders.containsIgnoreCase;
 import static fr.cringebot.cringe.objects.imgExtenders.getImage;
 import static fr.cringebot.cringe.objects.imgExtenders.resize;
 

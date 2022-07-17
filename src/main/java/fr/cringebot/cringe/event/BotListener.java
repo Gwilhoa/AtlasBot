@@ -26,7 +26,9 @@ import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.lol.Champion;
-import fr.cringebot.cringe.objects.*;
+import fr.cringebot.cringe.objects.DetectorAttachment;
+import fr.cringebot.cringe.objects.Emotes;
+import fr.cringebot.cringe.objects.activity;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
@@ -37,7 +39,6 @@ import fr.cringebot.cringe.waifus.WaifuCommand;
 import fr.cringebot.cringe.xp.TextuelXp;
 import fr.cringebot.cringe.xp.XP;
 import fr.cringebot.music.MusicCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
@@ -59,23 +60,21 @@ import net.dv8tion.jda.api.events.role.RoleCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.BotDiscord.isMaintenance;
 import static fr.cringebot.cringe.event.MembersQuotes.MemberReact;
 import static fr.cringebot.cringe.event.MenuInteract.onSelectMenu;
-import static fr.cringebot.cringe.event.ReactionEvent.*;
 import static fr.cringebot.cringe.event.memesEvent.postmeme;
-import static fr.cringebot.cringe.objects.StringExtenders.*;
 
 /**
  * capture tout les evenements du bot

@@ -10,9 +10,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
 
 import static fr.cringebot.BotDiscord.isMaintenance;
 import static fr.cringebot.cringe.waifus.WaifuCommand.waifuLock;

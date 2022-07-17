@@ -1,9 +1,7 @@
 package fr.cringebot.cringe.escouades;
 
-import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.waifus.InvWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.ArrayList;

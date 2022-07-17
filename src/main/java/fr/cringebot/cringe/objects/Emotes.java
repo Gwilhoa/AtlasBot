@@ -12,7 +12,6 @@
 
 package fr.cringebot.cringe.objects;
 
-import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 /**
