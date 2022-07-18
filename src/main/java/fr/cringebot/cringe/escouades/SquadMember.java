@@ -4,9 +4,7 @@ import fr.cringebot.cringe.waifus.InvWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 public class SquadMember {
 
@@ -25,25 +23,19 @@ public class SquadMember {
 		this.coins = 0L;
 		this.bank = 0;
 	}
-	//---waifu---//
 
-	public void newWaifu(Integer id, Message msg) throws InterruptedException {
-			InvWaifu.catchWaifu(msg, id);
-			if (Waifu.getWaifuById(id).isLegendary())
-				Waifu.getWaifuById(id).setIstaken(true);
-			this.addPoint(50L);
-			this.waifus.put(id, new InvWaifu(id));
-			Squads.save();
-	}
-
+	//---coins---//
 	public void addBank(Integer points)
 	{
+		int lim = 1000;
 		if (this.bank == null)
 			bank = 0;
 		this.bank = this.bank + points;
-		if (this.bank > 1000) {
+		if (Squads.getSortedSquads().get(0).equals(Squads.getSquadByMember(this.id)))
+			lim = 833;
+		if (this.bank > lim) {
 			addCoins(1L);
-			this.bank = this.bank -1000;
+			this.bank = this.bank - lim;
 		}
 	}
 
@@ -70,6 +62,19 @@ public class SquadMember {
 		return coins;
 	}
 
+	//---waifu---//
+
+	public void newWaifu(Integer id, Message msg) throws InterruptedException {
+		InvWaifu.catchWaifu(msg, id);
+		if (Waifu.getWaifuById(id).isLegendary())
+			Waifu.getWaifuById(id).setIstaken(true);
+		this.addPoint(50L);
+		this.waifus.put(id, new InvWaifu(id));
+		TreeMap<Integer, InvWaifu> map1 = new TreeMap<>(this.waifus);
+		this.waifus = new HashMap<>(map1);
+		Squads.save();
+	}
+
 	public void initCollections() {
 		this.collections = new HashMap<>();
 	}
@@ -80,7 +85,7 @@ public class SquadMember {
 
 	private void getWaifu(String str, Message msg) throws InterruptedException {
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
-		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()));
+		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()) || (waifu.isLegendary() && waifu.isIstaken()));
 		newWaifu(waifus.get(new Random().nextInt(waifus.size() - 1)).getId(), msg);
 	}
 
