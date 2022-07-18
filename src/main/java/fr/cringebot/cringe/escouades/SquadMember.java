@@ -5,6 +5,7 @@ import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SquadMember {
 
@@ -70,7 +71,12 @@ public class SquadMember {
 			Waifu.getWaifuById(id).setIstaken(true);
 		this.addPoint(50L);
 		this.waifus.put(id, new InvWaifu(id));
-		TreeMap<Integer, InvWaifu> map1 = new TreeMap<>(this.waifus);
+		TreeMap<Integer, InvWaifu> map1 = this.waifus.entrySet()
+				.stream().collect(Collectors
+						.toMap(
+								Map.Entry::getKey,
+								Map.Entry::getValue,
+								(oldValue, newValue) -> newValue, TreeMap::new));
 		this.waifus = new HashMap<>(map1);
 		Squads.save();
 	}
