@@ -67,8 +67,10 @@ public class SquadMember {
 
 	public void newWaifu(Integer id, Message msg) throws InterruptedException {
 		InvWaifu.catchWaifu(msg, id);
-		if (Waifu.getWaifuById(id).isLegendary())
+		if (Waifu.getWaifuById(id).isLegendary()) {
 			Waifu.getWaifuById(id).setIstaken(true);
+			Waifu.save();
+		}
 		this.addPoint(50L);
 		this.waifus.put(id, new InvWaifu(id));
 		TreeMap<Integer, InvWaifu> map1 = this.waifus.entrySet()
@@ -89,9 +91,18 @@ public class SquadMember {
 		this.waifus = new HashMap<>();
 	}
 
+	public boolean removeWaifu(Integer i)
+	{
+		if (this.waifus.get(i) != null) {
+			this.waifus.remove(i);
+			return true;
+		}
+		return false;
+	}
+
 	private void getWaifu(String str, Message msg) throws InterruptedException {
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
-		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()) || (waifu.isLegendary() && waifu.isIstaken()));
+		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()) || (waifu.isLegendary() && !waifu.isIstaken()));
 		newWaifu(waifus.get(new Random().nextInt(waifus.size() - 1)).getId(), msg);
 	}
 

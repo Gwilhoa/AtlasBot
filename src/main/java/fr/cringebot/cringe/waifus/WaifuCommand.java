@@ -3,8 +3,10 @@ package fr.cringebot.cringe.waifus;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
+import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -14,6 +16,7 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Queue;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -54,6 +57,22 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")) {
 			msg = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setFooter(msg.getContentRaw().substring("<waifu list ".length()).toLowerCase(Locale.ROOT)).build()).complete();
 			listwaifu(msg);
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add")){
+			addwaifu(msg);
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("removeat")) {
+			if (msg.getMentions().getMembers().get(0) != null && msg.getContentRaw().split(" ").length == 4 && msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
+			{
+				if (Squads.getstats(msg.getMentions().getMembers().get(0)).removeWaifu(Integer.parseInt(msg.getContentRaw().split(" ")[3])))
+				{
+					msg.getChannel().sendMessage("waifu " + Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[3])).getName() + "supprimé à " + msg.getMentions().getMembers().get(0).getAsMention()).queue();
+				} else
+				{
+					msg.getChannel().sendMessage("en attente du message, mais pour x ou y raison ça a pas marché").queue();
+				}
+			} else {
+				msg.getChannel().sendMessage("tu as pas les droits").queue();
+			}
+
 		}
 	}
 
@@ -95,17 +114,20 @@ public class WaifuCommand {
 
 
 	public static void addwaifu(Message msg) throws ExecutionException, InterruptedException {
-		if (!msg.getChannel().getId().equals("975087822618910800")) {
-			msg.getChannel().sendMessage("non").queue();
-			return;
-		}
+		String name;
 		String[] args = msg.getContentRaw().split("\n");
 		if (args[0].split(" ").length <= 2) {
 			msg.getChannel().sendMessage("SOMBRE MERDE").queue();
 			return;
 		}
+		if (args[0].length() < ">waifu add ".length())
+		{
+			msg.getChannel().sendMessage("nom non définis : \n>waifu add NOM\ndescription").queue();
+			return;
+		}
+		name = args[0].substring(">waifu add ".length());
 		if (!msg.getAttachments().isEmpty() && msg.getAttachments().size() == 1) {
-			msg.getChannel().sendMessage("coming soon").queue();
+			new Waifu(msg.getAttachments().get(0), name, msg.getContentRaw().substring(args[0].length() + args[1].length() + 2), null, args[1], false);
 		} else {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 		}
@@ -205,9 +227,9 @@ public class WaifuCommand {
 	public static void listwaifu(Message tc, Integer f) {
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
 		Waifu w;
-		EmbedBuilder eb = new EmbedBuilder();
-		waifus.removeIf(waifu -> !waifu.getOrigin().startsWith(tc.getEmbeds().get(0).getFooter().getText()));
 		int	i = f*10;
+		EmbedBuilder eb = new EmbedBuilder();
+		waifus.removeIf(waifu -> !StringExtenders.startWithIgnoreCase(waifu.getOrigin(), tc.getEmbeds().get(0).getFooter().getText()));
 		if (waifus.isEmpty())
 		{
 			tc.editMessageEmbeds(eb.setDescription("aucune waifu sous cette origine").build()).queue();

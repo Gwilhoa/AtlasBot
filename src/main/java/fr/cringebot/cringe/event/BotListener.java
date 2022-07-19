@@ -41,6 +41,7 @@ import fr.cringebot.cringe.xp.XP;
 import fr.cringebot.music.MusicCommand;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -440,8 +441,11 @@ public class BotListener implements EventListener {
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		if (!event.getGuild().getId().equals("382938797442334720")) return;
 		Message msg = event.getMessage();
-		if (msg.getChannel().getId().equals("947564791759777792"))
-			msg.createThreadChannel("Parlez ici bandes de shlags").queue();
+		if (msg.getChannel().getId().equals("912092369292263534"))
+			msg.createThreadChannel("requete n°" + msg.getId()).complete().addThreadMember(event.getGuild().getMemberById("315431392789921793"))
+					.and(msg.addReaction(Emoji.fromFormatted("⬆️")))
+					.and(msg.addReaction(Emoji.fromFormatted("⬇️")))
+					.queue();
 		if (msg.getMentions().getMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())) && msg.getReferencedMessage() == null)
 			msg.getChannel().sendMessage("Hé oh t'es qui a me ping, tu veux te battre ?\nfais un ping everyone pendant que t'y est").queue();
 		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {
