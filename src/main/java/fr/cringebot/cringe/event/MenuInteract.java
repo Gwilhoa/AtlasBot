@@ -38,12 +38,13 @@ public class MenuInteract {
 					ArrayList<SelectOption> options2 = new ArrayList<>();
 					ArrayList<SelectOption> options3 = new ArrayList<>();
 					int i = 0;
-					while (25 > i)
+					System.out.println(Waifu.getAllOrigins().size());
+					while (24 > i)
 					{
 						options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
 						i++;
 					}
-					while (50 > i)
+					while (48 > i)
 					{
 						options2.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
 						i++;
@@ -56,7 +57,11 @@ public class MenuInteract {
 					SelectMenuImpl selectionMenu = new SelectMenuImpl("collection", "selectionnez un choix", 1, 1, false, options);
 					SelectMenuImpl selectionMenu2 = new SelectMenuImpl("collection2", "selectionnez un choix", 1, 1, false, options2);
 					SelectMenuImpl selectionMenu3 = new SelectMenuImpl("collection3", "selectionnez un choix", 1, 1, false, options3);
-					event.reply("de quelle collection votre pièce ?").addActionRow(selectionMenu).addActionRow(selectionMenu2).addActionRow(selectionMenu3).setEphemeral(true).queue();
+					event.reply("de quelle collection votre pièce ?")
+							.addActionRow(selectionMenu)
+							.addActionRow(selectionMenu2)
+							.addActionRow(selectionMenu3)
+							.setEphemeral(true).queue();
 				}
 			}
 			else {
