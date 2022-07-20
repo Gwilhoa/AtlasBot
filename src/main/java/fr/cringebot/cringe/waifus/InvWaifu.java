@@ -83,4 +83,8 @@ public class InvWaifu {
 		}
 		waifuLock.unlock();
 	}
+
+	public Waifu getWaifu() {
+		return Waifu.getWaifuById(this.Id);
+	}
 }

@@ -100,6 +100,15 @@ public class SquadMember {
 		return false;
 	}
 
+	public ArrayList<Waifu> getWaifubyOrigin(String origin)
+	{
+		ArrayList<Waifu> ret = new ArrayList<>();
+		for (InvWaifu iw : this.getWaifus().values())
+			if (iw.getWaifu().getOrigin().equalsIgnoreCase(origin))
+				ret.add(iw.getWaifu());
+			return ret;
+	}
+
 	public void getWaifu(String str, Message msg) throws InterruptedException {
 		ArrayList<Waifu> waifus;
 		if (str == null)
