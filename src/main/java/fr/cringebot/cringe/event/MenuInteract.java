@@ -2,21 +2,43 @@ package fr.cringebot.cringe.event;
 
 import fr.cringebot.cringe.Polls.PollListener;
 import fr.cringebot.cringe.escouades.Squads;
+import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.reactionsrole.RoleReaction;
 import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 
 public class MenuInteract {
 	public static void onSelectMenu(SelectMenuInteractionEvent event) throws ExecutionException, InterruptedException {
+		if (event.getSelectMenu().getId().equals("collection")){
+			Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getValue(), event.getMessage());
+			Squads.getstats(event.getMember()).removeCoins(10L);
+		}
 		if (event.getSelectMenu().getId().equals("shop")) {
 			if (event.getSelectedOptions().get(0).getValue().equals("stop")) {
 				event.getMessage().delete().queue();
 				event.reply("merci, à bientot").setEphemeral(true).queue();
+			}
+			else if (event.getSelectedOptions().get(0).getValue().equals("PDCFU"))
+			{
+				if (Squads.getstats(event.getMember()).getCoins() < 10)
+				{
+					event.reply("tu as pas assez d'argent").queue();
+				}
+				else {
+					ArrayList<SelectOption> options = new ArrayList<>();
+					for (String str : Waifu.getAllOrigins())
+						options.add(new SelectOptionImpl(str, str));
+					SelectMenuImpl selectionMenu = new SelectMenuImpl("collection", "selectionnez un choix", 1, 1, false, options);
+					event.reply("de quelle collection votre pièce ?").addActionRow(selectionMenu).setEphemeral(true).queue();
+				}
 			}
 			else {
 				event.reply("coming soon").setEphemeral(true).queue();

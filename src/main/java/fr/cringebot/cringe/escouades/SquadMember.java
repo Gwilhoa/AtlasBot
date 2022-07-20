@@ -101,13 +101,22 @@ public class SquadMember {
 	}
 
 	private void getWaifu(String str, Message msg) throws InterruptedException {
-		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
+		ArrayList<Waifu> waifus;
+		if (str == null)
+			waifus = Waifu.getAllWaifu();
+		else
+			waifus = Waifu.getWaifusByOrigin(str);
 		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()) || (waifu.isLegendary() && !waifu.isIstaken()));
 		newWaifu(waifus.get(new Random().nextInt(waifus.size() - 1)).getId(), msg);
 	}
 
 	public void addCollection(String str, Message msg) throws InterruptedException {
-		this.getWaifu(str, msg);
+		if (this.collections.getOrDefault(str, 0) == 2) {
+			this.collections.put(str, 0);
+			this.getWaifu(str, msg);
+		}
+		else
+			this.collections.put(str, this.collections.get(str) + 1);
 		Squads.save();
 	}
 

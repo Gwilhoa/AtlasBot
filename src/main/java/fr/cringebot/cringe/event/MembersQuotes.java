@@ -107,7 +107,8 @@ public class MembersQuotes {
 		"Son deuxième prénom est discrétion !",
 		"Le PussySlayer par excellence !",
 		"***Errape.mp3***",
-		"https://www.youtube.com/watch?v=DeumyOzKqgI"
+		"https://www.youtube.com/watch?v=DeumyOzKqgI",
+			"Qui s'en fout ?"
 	};
     
     static String[] jojo =
@@ -166,7 +167,7 @@ public class MembersQuotes {
 			{
 					"Premier conseiller connu",
 					"Prend un grand plaisir a faire chier guigui",
-					"un homme bon a marrier"
+					"un homme bon a marier"
 			};
     
     

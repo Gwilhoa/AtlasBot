@@ -123,7 +123,7 @@ public class CommandListener {
 		eb.setDescription("Bonjour que voulez vous acheter\n" +
 				"Pièce de collection : 3 de la meme catégorie donne accès a une waifu\n" +
 				"Chronomètre érotique : vous enlève 30min avant votre prochaine waifu\n" +
-				"Horloge érotique : vous enlève 20min à votre timer de chaque prochaine waifu\n" +
+				"(3 max)Horloge érotique : vous enlève 20min à votre timer de chaque prochaine waifu\n" +
 				"Ticket simple Bithume -> brésil : you are going to bresil\n" +
 				"joujou pour waifu : augmente l'affection de votre waifu");
 		eb.setFooter("vous avez " + Squads.getstats(msg.getMember()).getCoins() + " B2C");
