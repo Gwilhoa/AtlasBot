@@ -71,7 +71,7 @@ public class WaifuCommand {
 			{
 				if (Squads.getstats(msg.getMentions().getMembers().get(0)).removeWaifu(Integer.parseInt(msg.getContentRaw().split(" ")[3])))
 				{
-					msg.getChannel().sendMessage("waifu " + Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[3])).getName() + "supprimé à " + msg.getMentions().getMembers().get(0).getAsMention()).queue();
+					msg.getChannel().sendMessage("waifu " + Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[3])).getName() + " supprimé à " + msg.getMentions().getMembers().get(0).getAsMention()).queue();
 				} else
 				{
 					msg.getChannel().sendMessage("en attente du message, mais pour x ou y raison ça a pas marché").queue();
