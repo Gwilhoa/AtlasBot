@@ -18,9 +18,24 @@ import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 public class MenuInteract {
 	public static void onSelectMenu(SelectMenuInteractionEvent event) throws ExecutionException, InterruptedException {
 		if (event.getSelectMenu().getId().startsWith("collection")){
-			Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getValue(), event.getMessage());
-			event.getMessage().delete().queue();
-			Squads.getstats(event.getMember()).removeCoins(10L);
+			if (event.getSelectedOptions().get(0).getValue().equals("next"))
+			{
+				int nb = Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) * 10;
+				int i = nb;
+				ArrayList<SelectOption> options = new ArrayList<>();
+				while (i < nb + 10)
+				{
+					options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
+					i++;
+				}
+				SelectMenuImpl selectionMenu = new SelectMenuImpl("collection"+Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) + 1, "selectionnez un choix", 1, 1, false, options);
+				event.getMessage().editMessage("de quelle collection ?").setActionRow(selectionMenu).queue();
+			}
+			else {
+				Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getValue(), event.getMessage());
+				event.getMessage().delete().queue();
+				Squads.getstats(event.getMember()).removeCoins(10L);
+			}
 		}
 		if (event.getSelectMenu().getId().equals("shop")) {
 			if (event.getSelectedOptions().get(0).getValue().equals("stop")) {
@@ -35,16 +50,15 @@ public class MenuInteract {
 				}
 				else {
 					ArrayList<SelectOption> options = new ArrayList<>();
-					ArrayList<SelectOption> options2 = new ArrayList<>();
-					ArrayList<SelectOption> options3 = new ArrayList<>();
 					int i = 0;
 					System.out.println(Waifu.getAllOrigins().size());
-					while (24 > i)
+					while (10 > i)
 					{
 						options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
 						i++;
 					}
-					SelectMenuImpl selectionMenu = new SelectMenuImpl("collection", "selectionnez un choix", 1, 1, false, options);
+					options.add(new SelectOptionImpl("autres", "next"));
+					SelectMenuImpl selectionMenu = new SelectMenuImpl("collection0", "selectionnez un choix", 1, 1, false, options);
 					event.reply("de quelle collection votre pièce ?")
 							.addActionRow(selectionMenu)
 							.setEphemeral(true).queue();

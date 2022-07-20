@@ -116,7 +116,7 @@ public class SquadMember {
 			this.getWaifu(str, msg);
 		}
 		else
-			this.collections.put(str, this.collections.get(str) + 1);
+			this.collections.put(str, this.collections.getOrDefault(str, 0) + 1);
 		Squads.save();
 	}
 
