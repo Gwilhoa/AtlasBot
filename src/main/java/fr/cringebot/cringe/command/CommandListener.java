@@ -120,15 +120,21 @@ public class CommandListener {
 	private void shop(Message msg) {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.ORANGE).setTitle("le Shop");
-		eb.setDescription("bounjour que voulez vous achetez");
+		eb.setDescription("Bonjour que voulez vous acheter\n" +
+				"Pièce de collection : 3 de la meme catégorie donne accès a une waifu\n" +
+				"Chronomètre érotique : vous enlève 30min avant votre prochaine waifu\n" +
+				"Horloge érotique : vous enlève 20min à votre timer de chaque prochaine waifu\n" +
+				"Ticket simple Bithume -> brésil : you are going to bresil\n" +
+				"joujou pour waifu : augmente l'affection de votre waifu");
 		eb.setFooter("vous avez " + Squads.getstats(msg.getMember()).getCoins() + " B2C");
 
 		ArrayList<SelectOption> options = new ArrayList<>();
-		options.add(new SelectOptionImpl("annuler", "stop"));
-		options.add(new SelectOptionImpl("pièce de collection : 10 B2C", "PDCFU"));
-		options.add(new SelectOptionImpl("chronomètre érotique (-30min avant la prochaine waifu) : 25 B2C", "RDTPFU"));
-		options.add(new SelectOptionImpl("horloge érotique (-10min sur ton timer de waifu) : 55 B2C", "RDTDFU"));
+		options.add(new SelectOptionImpl("Pièce de collection : 10 B2C", "PDCFU"));
+		options.add(new SelectOptionImpl("Chronomètre érotique : 25 B2C", "RDTPFU"));
+		options.add(new SelectOptionImpl("horloge érotique : 55 B2C", "RDTDFU"));
 		options.add(new SelectOptionImpl("aller simple pour le brésil : 40 B2C", "YAGTB"));
+		options.add(new SelectOptionImpl("Joujou pour waifu : 20 B2C", "JJFU"));
+		options.add(new SelectOptionImpl("annuler", "stop"));
 		SelectMenuImpl selectionMenu = new SelectMenuImpl("shop", "selectionnez un choix", 1, 1, false, options);
 		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(selectionMenu).queue();
 	}

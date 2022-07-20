@@ -55,13 +55,16 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage")) {
 			setImage(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")) {
+			EmbedBuilder eb = new EmbedBuilder();
+			if (msg.getContentRaw().length() > "<waifu list ".length()){
+				eb.setTitle("Listes des waifus : " + msg.getContentRaw().substring("<waifu list ".length()).toLowerCase(Locale.ROOT));
+			} else {
+				eb.setTitle("Listes des waifus : all");
+			}
 			msg = msg.getChannel().sendMessageEmbeds(
-					new EmbedBuilder()
-							.setTitle("Listes des waifus : " + msg.getContentRaw().substring("<waifu list ".length()).toLowerCase(Locale.ROOT))
-							.setFooter("0 " + msg.getMember().getId())
-							.build()
+					eb.setFooter("0 " + msg.getMember().getId()).build()
 			).complete();
-					msg.addReaction(Emoji.fromFormatted("⬆️")).and(msg.addReaction(Emoji.fromFormatted("⬇️"))).queue();
+					msg.addReaction(Emoji.fromFormatted("◀️")).and(msg.addReaction(Emoji.fromFormatted("▶️"))).queue();
 			listwaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add")){
 			addwaifu(msg);
@@ -236,7 +239,8 @@ public class WaifuCommand {
 		Waifu w;
 		int	i = f*10;
 		EmbedBuilder eb = new EmbedBuilder();
-		waifus.removeIf(waifu -> !StringExtenders.startWithIgnoreCase(waifu.getOrigin(), tc.getEmbeds().get(0).getTitle().substring("Listes des waifus : ".length())));
+		if (!tc.getEmbeds().get(0).getTitle().substring("Listes des waifus : ".length()).equals("all"))
+			waifus.removeIf(waifu -> !StringExtenders.startWithIgnoreCase(waifu.getOrigin(), tc.getEmbeds().get(0).getTitle().substring("Listes des waifus : ".length())));
 		if (waifus.isEmpty())
 		{
 			tc.editMessageEmbeds(eb.setDescription("aucune waifu sous cette origine").build()).queue();

@@ -364,7 +364,7 @@ public class BotListener implements EventListener {
 		if (event.getReaction().getEmoji().getAsReactionCode().equals("◀️")) {
 			Message msg = event.retrieveMessage().complete();
 			if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().startsWith("Listes des waifus")){
-				WaifuCommand.listwaifu(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())-1);
+				WaifuCommand.listwaifu(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText().split(" ")[0])-1);
 				event.getReaction().removeReaction(event.getUser()).queue();
 				return;
 			} else if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().startsWith("Waifu de")){
@@ -376,7 +376,7 @@ public class BotListener implements EventListener {
 		else if (event.getReaction().getEmoji().getAsReactionCode().equals("▶️")) {
 			Message msg = event.retrieveMessage().complete();
 			if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().startsWith("Listes des waifus")){
-				WaifuCommand.listwaifu(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText())+1);
+				WaifuCommand.listwaifu(msg, Integer.parseInt(msg.getEmbeds().get(0).getFooter().getText().split(" ")[0])+1);
 				event.getReaction().removeReaction(event.getUser()).queue();
 				return;
 			} else if (!msg.getEmbeds().isEmpty() && msg.getEmbeds().get(0).getTitle().startsWith("Waifu de")){
