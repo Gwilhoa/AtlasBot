@@ -37,7 +37,7 @@ public class MenuInteract {
 			}
 			else {
 				Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getValue(), event.getMessage());
-				event.getMessage().delete().queue();
+				event.editMessage("tu as acheté un jeton "+ event.getSelectedOptions().get(0).getValue() + "\ntu en as " + Squads.getstats(event.getMember()).getCollection().get(event.getSelectedOptions().get(0).getValue())).queue();
 				Squads.getstats(event.getMember()).removeCoins(10L);
 			}
 		}

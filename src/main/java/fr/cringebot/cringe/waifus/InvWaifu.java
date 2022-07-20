@@ -61,7 +61,10 @@ public class InvWaifu {
 		eb.setTitle("Nouvelle Waifu !");
 		eb.setDescription("ta nouvelle Waifu est " + w.getName() + " de " + w.getOrigin());
 		eb.setFooter("id : " + w.getId());
-		eb.setColor(Squads.getSquadByMember(msg.getMember()).getSquadRole(msg.getGuild()).getColor());
+		if (!msg.getMember().getId().equals("881962597526696038"))
+			eb.setColor(Squads.getSquadByMember(msg.getMember()).getSquadRole(msg.getGuild()).getColor());
+		else
+			eb.setColor(Squads.getSquadByMember(msg.getContentRaw().split("\n")[1]).getSquadRole(msg.getGuild()).getColor());
 		waifuLock.lock();
 		Thread.sleep(100);
 		MessageAction toSend = msg.getChannel().sendMessageEmbeds(eb.build());
