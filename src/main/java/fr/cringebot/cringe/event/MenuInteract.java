@@ -41,6 +41,7 @@ public class MenuInteract {
 			else {
 				if (event.getSelectedOptions().get(0).getValue().equals("B2K") || Squads.getstats(event.getMember()).getWaifubyOrigin(event.getSelectedOptions().get(0).getValue()).size() == Waifu.getWaifusByOrigin(event.getSelectedOptions().get(0).getValue()).size())
 				{
+					event.getMessage().delete().queue();
 					event.reply("désolé j'en ai plus").queue();
 					return;
 				}
