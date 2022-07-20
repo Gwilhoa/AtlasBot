@@ -13,6 +13,15 @@ import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 
 public class MenuInteract {
 	public static void onSelectMenu(SelectMenuInteractionEvent event) throws ExecutionException, InterruptedException {
+		if (event.getSelectMenu().getId().equals("shop")) {
+			if (event.getSelectedOptions().get(0).getValue().equals("stop")) {
+				event.getMessage().delete().queue();
+				event.reply("merci, à bientot").setEphemeral(true).queue();
+			}
+			else {
+				event.reply("coming soon").setEphemeral(true).queue();
+			}
+		}
 		if (!event.getMessage().getEmbeds().isEmpty() && event.getMessage().getEmbeds().get(0).getAuthor() != null && event.getMessage().getEmbeds().get(0).getAuthor().getName().equals("poll")) {
 			PollListener.reactSelectMenu(event.getMessage(), event.getMember(), event.getSelectedOptions().get(0));
 			event.reply("Ton vote a été enregistré \uD83D\uDC4D").setEphemeral(true).queue();

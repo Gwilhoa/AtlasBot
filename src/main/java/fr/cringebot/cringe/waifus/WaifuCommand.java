@@ -55,7 +55,13 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage")) {
 			setImage(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")) {
-			msg = msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setFooter(msg.getContentRaw().substring("<waifu list ".length()).toLowerCase(Locale.ROOT)).build()).complete();
+			msg = msg.getChannel().sendMessageEmbeds(
+					new EmbedBuilder()
+							.setTitle("Listes des waifus : " + msg.getContentRaw().substring("<waifu list ".length()).toLowerCase(Locale.ROOT))
+							.setFooter("0 " + msg.getMember().getId())
+							.build()
+			).complete();
+					msg.addReaction(Emoji.fromFormatted("⬆️")).and(msg.addReaction(Emoji.fromFormatted("⬇️"))).queue();
 			listwaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add")){
 			addwaifu(msg);
@@ -226,10 +232,11 @@ public class WaifuCommand {
 	}
 	public static void listwaifu(Message tc, Integer f) {
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
+		String id = tc.getEmbeds().get(0).getFooter().getText().split(" ")[1];
 		Waifu w;
 		int	i = f*10;
 		EmbedBuilder eb = new EmbedBuilder();
-		waifus.removeIf(waifu -> !StringExtenders.startWithIgnoreCase(waifu.getOrigin(), tc.getEmbeds().get(0).getFooter().getText()));
+		waifus.removeIf(waifu -> !StringExtenders.startWithIgnoreCase(waifu.getOrigin(), tc.getEmbeds().get(0).getTitle().substring("Listes des waifus : ".length())));
 		if (waifus.isEmpty())
 		{
 			tc.editMessageEmbeds(eb.setDescription("aucune waifu sous cette origine").build()).queue();
@@ -237,13 +244,17 @@ public class WaifuCommand {
 		}
 		if (i > waifus.size() || i < 0)
 			return;
-		eb.setFooter(tc.getEmbeds().get(0).getFooter().getText());
+		eb.setTitle(tc.getEmbeds().get(0).getTitle());
+		eb.setFooter(f + " " + id);
 		StringBuilder sb = new StringBuilder();
 		while (i < (f*10)+10)
 		{
 			if (i < waifus.size()) {
 				w = waifus.get(i);
-				sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
+				if (Squads.getstats(id).getWaifus().get(w.getId()) != null)
+					sb.append("__").append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("__\n");
+				else
+					sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
 			}
 			i++;
 		}

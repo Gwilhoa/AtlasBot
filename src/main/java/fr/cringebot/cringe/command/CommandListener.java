@@ -125,7 +125,10 @@ public class CommandListener {
 
 		ArrayList<SelectOption> options = new ArrayList<>();
 		options.add(new SelectOptionImpl("annuler", "stop"));
-		options.add(new SelectOptionImpl("pièce de collection : 10 B2C", "PDCSH"));
+		options.add(new SelectOptionImpl("pièce de collection : 10 B2C", "PDCFU"));
+		options.add(new SelectOptionImpl("chronomètre érotique (-30min avant la prochaine waifu) : 25 B2C", "RDTPFU"));
+		options.add(new SelectOptionImpl("horloge érotique (-10min sur ton timer de waifu) : 55 B2C", "RDTDFU"));
+		options.add(new SelectOptionImpl("aller simple pour le brésil : 40 B2C", "YAGTB"));
 		SelectMenuImpl selectionMenu = new SelectMenuImpl("shop", "selectionnez un choix", 1, 1, false, options);
 		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(selectionMenu).queue();
 	}
@@ -298,10 +301,7 @@ public class CommandListener {
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
 		for (Waifu waifu : waifus)
 		{
-			if (waifu.getOrigin().equalsIgnoreCase("my hero academia"))
-				waifu.setOrigin("My Hero Academia");
-			else if (waifu.getOrigin().equalsIgnoreCase("mario (fan-made)"))
-				waifu.setOrigin("Mario");
+			waifu.setType(null);
 		}
 	}
 }
