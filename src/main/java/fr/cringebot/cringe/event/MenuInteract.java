@@ -18,6 +18,10 @@ import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 public class MenuInteract {
 	public static void onSelectMenu(SelectMenuInteractionEvent event) throws ExecutionException, InterruptedException {
 		if (event.getSelectMenu().getId().startsWith("collection")){
+			if (!event.getMember().getId().equals(event.getMessage().getContentRaw().split("\n")[1]))
+			{
+				event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
+			}
 			if (event.getSelectedOptions().get(0).getValue().equals("next"))
 			{
 				int nb = Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) * 10;
@@ -29,7 +33,7 @@ public class MenuInteract {
 					i++;
 				}
 				SelectMenuImpl selectionMenu = new SelectMenuImpl("collection"+Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) + 1, "selectionnez un choix", 1, 1, false, options);
-				event.getMessage().editMessage("de quelle collection ?").setActionRow(selectionMenu).queue();
+				event.getMessage().editMessage(event.getMessage().getContentRaw()).setActionRow(selectionMenu).queue();
 			}
 			else {
 				Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getValue(), event.getMessage());
@@ -59,9 +63,8 @@ public class MenuInteract {
 					}
 					options.add(new SelectOptionImpl("autres", "next"));
 					SelectMenuImpl selectionMenu = new SelectMenuImpl("collection0", "selectionnez un choix", 1, 1, false, options);
-					event.reply("de quelle collection votre pièce ?")
-							.addActionRow(selectionMenu)
-							.setEphemeral(true).queue();
+					event.reply("de quelle collection votre pièce ?\n"+event.getMember().getId())
+							.addActionRow(selectionMenu).queue();
 				}
 			}
 			else {
