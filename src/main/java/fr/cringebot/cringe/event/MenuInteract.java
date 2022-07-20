@@ -19,6 +19,7 @@ public class MenuInteract {
 	public static void onSelectMenu(SelectMenuInteractionEvent event) throws ExecutionException, InterruptedException {
 		if (event.getSelectMenu().getId().equals("collection")){
 			Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getValue(), event.getMessage());
+			event.getMessage().delete().queue();
 			Squads.getstats(event.getMember()).removeCoins(10L);
 		}
 		if (event.getSelectMenu().getId().equals("shop")) {
@@ -34,10 +35,21 @@ public class MenuInteract {
 				}
 				else {
 					ArrayList<SelectOption> options = new ArrayList<>();
-					for (String str : Waifu.getAllOrigins())
-						options.add(new SelectOptionImpl(str, str));
+					ArrayList<SelectOption> options2 = new ArrayList<>();
+					int i = 0;
+					while (20 > i)
+					{
+						options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
+						i++;
+					}
+					while (Waifu.getAllOrigins().size() > i)
+					{
+						options2.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
+						i++;
+					}
 					SelectMenuImpl selectionMenu = new SelectMenuImpl("collection", "selectionnez un choix", 1, 1, false, options);
-					event.reply("de quelle collection votre pièce ?").addActionRow(selectionMenu).setEphemeral(true).queue();
+					SelectMenuImpl selectionMenu2 = new SelectMenuImpl("collection", "selectionnez un choix", 1, 1, false, options2);
+					event.reply("de quelle collection votre pièce ?").addActionRow(selectionMenu).addActionRow(selectionMenu2).setEphemeral(true).queue();
 				}
 			}
 			else {
