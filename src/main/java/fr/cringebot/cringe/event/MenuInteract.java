@@ -17,7 +17,7 @@ import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 
 public class MenuInteract {
 	public static void onSelectMenu(SelectMenuInteractionEvent event) throws ExecutionException, InterruptedException {
-		if (event.getSelectMenu().getId().equals("collection")){
+		if (event.getSelectMenu().getId().startsWith("collection")){
 			Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getValue(), event.getMessage());
 			event.getMessage().delete().queue();
 			Squads.getstats(event.getMember()).removeCoins(10L);
@@ -48,7 +48,7 @@ public class MenuInteract {
 						i++;
 					}
 					SelectMenuImpl selectionMenu = new SelectMenuImpl("collection", "selectionnez un choix", 1, 1, false, options);
-					SelectMenuImpl selectionMenu2 = new SelectMenuImpl("collection", "selectionnez un choix", 1, 1, false, options2);
+					SelectMenuImpl selectionMenu2 = new SelectMenuImpl("collection2", "selectionnez un choix", 1, 1, false, options2);
 					event.reply("de quelle collection votre pièce ?").addActionRow(selectionMenu).addActionRow(selectionMenu2).setEphemeral(true).queue();
 				}
 			}
