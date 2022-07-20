@@ -21,10 +21,11 @@ public class MenuInteract {
 			if (!event.getMember().getId().equals(event.getMessage().getContentRaw().split("\n")[1]))
 			{
 				event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
+				return;
 			}
 			if (event.getSelectedOptions().get(0).getValue().equals("next"))
 			{
-				int nb = Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) * 10;
+				int nb = (Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) + 1) * 10;
 				int i = nb;
 				ArrayList<SelectOption> options = new ArrayList<>();
 				while (i < nb + 10)
@@ -32,12 +33,19 @@ public class MenuInteract {
 					options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
 					i++;
 				}
+				options.add(new SelectOptionImpl("autres", "next"));
 				SelectMenuImpl selectionMenu = new SelectMenuImpl("collection"+Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) + 1, "selectionnez un choix", 1, 1, false, options);
 				event.getMessage().editMessage(event.getMessage().getContentRaw()).setActionRow(selectionMenu).queue();
 			}
 			else {
+				if (event.getSelectedOptions().equals("B2K"))
+				{
+					event.reply("désolé j'en ai plus").queue();
+					return;
+				}
 				Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getValue(), event.getMessage());
-				event.editMessage("tu as acheté un jeton "+ event.getSelectedOptions().get(0).getValue() + "\ntu en as " + Squads.getstats(event.getMember()).getCollection().get(event.getSelectedOptions().get(0).getValue())).queue();
+				event.getMessage().delete().queue();
+				event.reply("tu as acheté un jeton "+ event.getSelectedOptions().get(0).getValue() + "\ntu en as " + Squads.getstats(event.getMember()).getCollection().get(event.getSelectedOptions().get(0).getValue())).queue();
 				Squads.getstats(event.getMember()).removeCoins(10L);
 			}
 		}
@@ -50,7 +58,7 @@ public class MenuInteract {
 			{
 				if (Squads.getstats(event.getMember()).getCoins() < 10)
 				{
-					event.reply("tu as pas assez d'argent").queue();
+					event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
 				}
 				else {
 					ArrayList<SelectOption> options = new ArrayList<>();
