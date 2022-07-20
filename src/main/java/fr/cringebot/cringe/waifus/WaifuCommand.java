@@ -43,9 +43,7 @@ public class WaifuCommand {
 			} else {
 				Waifu.setTime(msg.getMember().getId());
 				SquadMember Sm = Squads.getSquadByMember(msg.getMember()).getStatMember(msg.getMember());
-				ArrayList<String> origins = Waifu.getAllOrigins();
-				String origin = origins.get(new Random().nextInt(origins.size() - 1));
-				Sm.addCollection(origin, msg);
+				Sm.getWaifu(null, msg);
 				Squads.save();
 			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info")) {

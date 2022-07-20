@@ -36,20 +36,27 @@ public class MenuInteract {
 				else {
 					ArrayList<SelectOption> options = new ArrayList<>();
 					ArrayList<SelectOption> options2 = new ArrayList<>();
+					ArrayList<SelectOption> options3 = new ArrayList<>();
 					int i = 0;
-					while (20 > i)
+					while (25 > i)
 					{
 						options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
 						i++;
 					}
-					while (Waifu.getAllOrigins().size() > i)
+					while (50 > i)
 					{
 						options2.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
 						i++;
 					}
+					while (Waifu.getAllOrigins().size() > i)
+					{
+						options3.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
+						i++;
+					}
 					SelectMenuImpl selectionMenu = new SelectMenuImpl("collection", "selectionnez un choix", 1, 1, false, options);
 					SelectMenuImpl selectionMenu2 = new SelectMenuImpl("collection2", "selectionnez un choix", 1, 1, false, options2);
-					event.reply("de quelle collection votre pièce ?").addActionRow(selectionMenu).addActionRow(selectionMenu2).setEphemeral(true).queue();
+					SelectMenuImpl selectionMenu3 = new SelectMenuImpl("collection3", "selectionnez un choix", 1, 1, false, options3);
+					event.reply("de quelle collection votre pièce ?").addActionRow(selectionMenu).addActionRow(selectionMenu2).addActionRow(selectionMenu3).setEphemeral(true).queue();
 				}
 			}
 			else {

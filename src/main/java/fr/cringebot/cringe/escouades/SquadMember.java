@@ -100,7 +100,7 @@ public class SquadMember {
 		return false;
 	}
 
-	private void getWaifu(String str, Message msg) throws InterruptedException {
+	public void getWaifu(String str, Message msg) throws InterruptedException {
 		ArrayList<Waifu> waifus;
 		if (str == null)
 			waifus = Waifu.getAllWaifu();
