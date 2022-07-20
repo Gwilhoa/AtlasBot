@@ -44,23 +44,9 @@ public class MenuInteract {
 						options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
 						i++;
 					}
-					while (48 > i)
-					{
-						options2.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
-						i++;
-					}
-					while (Waifu.getAllOrigins().size() > i)
-					{
-						options3.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
-						i++;
-					}
 					SelectMenuImpl selectionMenu = new SelectMenuImpl("collection", "selectionnez un choix", 1, 1, false, options);
-					SelectMenuImpl selectionMenu2 = new SelectMenuImpl("collection2", "selectionnez un choix", 1, 1, false, options2);
-					SelectMenuImpl selectionMenu3 = new SelectMenuImpl("collection3", "selectionnez un choix", 1, 1, false, options3);
 					event.reply("de quelle collection votre pièce ?")
 							.addActionRow(selectionMenu)
-							.addActionRow(selectionMenu2)
-							.addActionRow(selectionMenu3)
 							.setEphemeral(true).queue();
 				}
 			}
