@@ -309,5 +309,6 @@ public class CommandListener {
 		{
 			waifu.setType(null);
 		}
+		msg.getGuild().updateCommands().queue();
 	}
 }

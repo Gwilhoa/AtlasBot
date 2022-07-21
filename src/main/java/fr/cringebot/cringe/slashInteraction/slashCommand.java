@@ -38,7 +38,7 @@ public class slashCommand {
                 .queue();
 
         jda.upsertCommand("cki", "mini jeu, retrouve à qui ça fait référence")
-                .addOption(OptionType.STRING,"type","vous voulez le jeu de quel type")
+                .addOption(OptionType.STRING,"type","vous voulez le jeu de quel type", true)
                 .queue();
 
         jda.upsertCommand("shop", "ouvre le shopping")
