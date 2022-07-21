@@ -38,15 +38,15 @@ public class slashCommand {
                 .queue();
 
         jda.upsertCommand("cki", "mini jeu, retrouve à qui ça fait référence")
-                .addOption(OptionType.STRING,"de quel type ?","vous voulez le jeu de quel type")
+                .addOption(OptionType.STRING,"de quel type","vous voulez le jeu de quel type")
                 .queue();
 
         jda.upsertCommand("shop", "ouvre le shopping")
                 .queue();
 
         jda.upsertCommand("role", "permet de creer un role")
-                .addOption(OptionType.STRING, "NOM", "le nom du nouveau role", true)
-                .addOption(OptionType.STRING, "EMOTE", "l'emote de représentation (Attention emote de base seulement)", true)
+                .addOption(OptionType.STRING, "nom", "le nom du nouveau role", true)
+                .addOption(OptionType.STRING, "emote", "l'emote de représentation (Attention emote de base seulement)", true)
                 .queue();
 
         jda.upsertCommand("poll", "faire un poll")
