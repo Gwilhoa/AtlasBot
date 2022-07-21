@@ -78,10 +78,10 @@ public class MenuInteract {
 				{
 					if (Waifu.removeTime(event.getMember().getId(), 1800000L))
 					{
-						event.reply("votre chronomètre a fait effet, je ressens une excitation").queue();
+						event.reply("Votre chronomètre a fait effet, je ressens une excitation").queue();
 						Squads.getstats(event.getMember()).removeCoins(25L);
 					} else {
-						event.reply("tiens ça a pas marché, réessayez plus tard").queue();
+						event.reply("Tiens ça a pas marché, réessayez plus tard").queue();
 					}
 				} else
 				{
