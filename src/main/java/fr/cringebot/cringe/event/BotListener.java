@@ -299,12 +299,12 @@ public class BotListener implements EventListener {
 
 		if (isMaintenance) {
 			act = new activity(", je suis en maintenance", null, Activity.ActivityType.LISTENING);
-			bot.getJda().getPresence().setPresence(OnlineStatus.ONLINE, act);
+			bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);
 
 		}
 		else {
 			act = new activity(", si tu lis ça tu es cringe", null, Activity.ActivityType.LISTENING);
-			bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);
+			bot.getJda().getPresence().setPresence(OnlineStatus.ONLINE, act);
 		}
 
 	}
