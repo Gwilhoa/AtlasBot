@@ -59,13 +59,10 @@ public class MenuInteract {
 			else if (event.getSelectedOptions().get(0).getValue().equals("PDCFU"))
 			{
 				if (Squads.getstats(event.getMember()).getCoins() < 10)
-				{
 					event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
-				}
 				else {
 					ArrayList<SelectOption> options = new ArrayList<>();
 					int i = 0;
-					System.out.println(Waifu.getAllOrigins().size());
 					while (10 > i)
 					{
 						options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
@@ -75,6 +72,20 @@ public class MenuInteract {
 					SelectMenuImpl selectionMenu = new SelectMenuImpl("collection0", "selectionnez un choix", 1, 1, false, options);
 					event.reply("de quelle collection votre pièce ?\n"+event.getMember().getId())
 							.addActionRow(selectionMenu).queue();
+				}
+			} else if (event.getSelectedOptions().get(0).getValue().equals("RDTPFU")){
+				if (Squads.getstats(event.getMember()).getCoins() >= 25L)
+				{
+					if (Waifu.removeTime(event.getMember().getId(), 1800000L))
+					{
+						event.reply("votre chronomètre a fait effet, je ressens une excitation").queue();
+						Squads.getstats(event.getMember()).removeCoins(25L);
+					} else {
+						event.reply("tiens ça a pas marché, réessayez plus tard").queue();
+					}
+				} else
+				{
+					event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
 				}
 			}
 			else {

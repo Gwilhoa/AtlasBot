@@ -202,10 +202,18 @@ public class Waifu {
 	{
 		timer.put(id, System.currentTimeMillis());
 	}
+	public static boolean removeTime(String id, Long time)
+	{
+		if (timeleft(id) > 0) {
+			timer.put(id, timer.get(id) - time);
+			return true;
+		}
+		return false;
+	}
 	public static Long timeleft(String id){
 		if (timer.get(id) == null)
-			return (1L);
-		return ( System.currentTimeMillis() - (timer.get(id) + 25200000L));
+			return (-1L);
+		return ( (System.currentTimeMillis() - (timer.get(id) + 25200000L)) * -1);
 	}
 
 	public void setIstaken(boolean istaken) {
