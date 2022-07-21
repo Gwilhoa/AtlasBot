@@ -16,12 +16,12 @@ public class slashCommand {
                 .addOption(OptionType.INTEGER, "niveau", "niveau du son a définir (entre 0 et 300)")
                 .queue();
 
-        jda.upsertCommand("np", "musique à jouer MAINTENANT (les actuelles passe après)")
+        jda.upsertCommand("np", "musique à jouer maintenant (les actuelles passe après)")
                 .addOption(OptionType.STRING, "rechercher", "indiquez la musique, url ou recherche", true)
                 .queue();
 
         jda.upsertCommand("random", "rendre aléatoire les prochaines musique")
-                .addOption(OptionType.STRING, "PLAYLIST", "une playlist qui sera totalement aléatoire")
+                .addOption(OptionType.STRING, "playlist", "une playlist qui sera totalement aléatoire")
                 .queue();
 
         jda.upsertCommand("skip", "passer à la musique suivante")
@@ -34,7 +34,7 @@ public class slashCommand {
                 .queue();
 
         jda.upsertCommand("gift", "des cadeaux")
-                .addOption(OptionType.STRING, "CODE", "indique le code",true)
+                .addOption(OptionType.STRING, "code", "indique le code",true)
                 .queue();
 
         jda.upsertCommand("cki", "mini jeu, retrouve à qui ça fait référence")
@@ -50,33 +50,33 @@ public class slashCommand {
                 .queue();
 
         jda.upsertCommand("poll", "faire un poll")
-                .addOption(OptionType.STRING, "NOM/TITRE", "le titre du poll", true)
-                .addOption(OptionType.STRING, "ARG01", "premier argument", true)
-                .addOption(OptionType.STRING, "ARG02", "second argument", true)
-                .addOption(OptionType.STRING, "ARG03", "troisième argument")
-                .addOption(OptionType.STRING, "ARG04", "quatrième argument")
+                .addOption(OptionType.STRING, "nom", "le titre du poll", true)
+                .addOption(OptionType.STRING, "arg01", "premier argument", true)
+                .addOption(OptionType.STRING, "arg02", "second argument", true)
+                .addOption(OptionType.STRING, "arg03", "troisième argument")
+                .addOption(OptionType.STRING, "arg04", "quatrième argument")
                 .queue();
 
         jda.upsertCommand("top", "savoir le leaderboard d'une ou des escouades")
-                .addOption(OptionType.STRING, "NOM", "nom de l'escouade a observer", false)
+                .addOption(OptionType.STRING, "nom", "nom de l'escouade a observer", false)
                 .queue();
 
         jda.upsertCommand("waifu", "capturer une waifu (coming soon)")
                 .queue();
 
         jda.upsertCommand("harem", "savoir le harem de quelqu'un")
-                .addOption(OptionType.USER, "NOM", "le harem que tu veux savoir")
+                .addOption(OptionType.USER, "nom", "le harem que tu veux savoir")
                 .queue();
 
         jda.upsertCommand("info", "tout savoir sur une personne ou vous meme")
-                .addOption(OptionType.USER, "NOM", "la personne que tu veux savoir")
+                .addOption(OptionType.USER, "nom", "la personne que tu veux savoir")
                 .queue();
 
         jda.upsertCommand("pokemon", "attraper un pokemon")
                 .queue();
 
         jda.upsertCommand("clear", "nettoyer le channel")
-                .addOption(OptionType.INTEGER, "NBR", "le nombre de message a delete", true)
+                .addOption(OptionType.INTEGER, "nombre", "le nombre de message a delete", true)
                 .queue();
 
         jda.upsertCommand("meteo", "savoir la météo")
@@ -84,7 +84,7 @@ public class slashCommand {
                 .queue();
 
         jda.upsertCommand("pokedex", "description d'un pokemon")
-                .addOption(OptionType.STRING, "NOM", "nom du pokémon", true)
+                .addOption(OptionType.STRING, "nom", "nom du pokémon", true)
                 .queue();
 
         jda.upsertCommand("help", "savoir les commandes")
