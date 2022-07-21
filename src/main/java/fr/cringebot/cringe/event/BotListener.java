@@ -34,6 +34,8 @@ import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.reactionsrole.RoleReaction;
 import fr.cringebot.cringe.siterequest.Request;
+import fr.cringebot.cringe.slashInteraction.SlashListener;
+import fr.cringebot.cringe.slashInteraction.slashCommand;
 import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
 import fr.cringebot.cringe.xp.TextuelXp;
@@ -137,7 +139,7 @@ public class BotListener implements EventListener {
 			else if (event instanceof GuildVoiceJoinEvent) onConnect((GuildVoiceJoinEvent) event);
 			else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
 			else if (event instanceof MessageEmbedEvent) onEmbed((MessageEmbedEvent) event);
-			else if (event instanceof SlashCommandInteraction) onSlashCommand((SlashCommandInteraction) event);
+			else if (event instanceof SlashCommandInteraction) SlashListener.onSlashCommand((SlashCommandInteraction) event);
 			else if (event instanceof ButtonInteractionEvent) onButton((ButtonInteractionEvent) event);
 			else if (event instanceof GuildVoiceMoveEvent) onMove((GuildVoiceMoveEvent) event);
 		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException | ExecutionException e) {
@@ -158,10 +160,6 @@ public class BotListener implements EventListener {
 
 	private void onButton(ButtonInteractionEvent event) {
 		return;
-	}
-
-	private void onSlashCommand(SlashCommandInteraction event) {
-		event.reply("en attente d'update de JDA").setEphemeral(true).queue();
 	}
 
 	private void onDisconnect(GuildVoiceLeaveEvent event) {
@@ -259,6 +257,7 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onEnable(ReadyEvent event) {
+		slashCommand.load(event.getJDA());
 		Activity act;
 		act = new activity("Analyse en cours", null, Activity.ActivityType.WATCHING);
 		bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);

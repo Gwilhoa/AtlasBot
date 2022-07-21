@@ -151,7 +151,8 @@ public class WaifuCommand {
 			if (iw.getId().equals(w.getId()))
 			{
 				eb.setColor(Squads.getSquadByMember(m).getSquadRole(m.getGuild()).getColor())
-						.setFooter("\naffection " + iw.getFriendlyLevel() + "%");
+						.setFooter("niveau : " + iw.getLevel()
+								+ "\naffection " + iw.getFriendlyLevel() + "%");
 			}
 		}
 		waifuLock.lock();
@@ -215,7 +216,7 @@ public class WaifuCommand {
 		{
 			if (i < waifus.size()) {
 				w = waifus.get(i);
-				sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n\taffection : ").append(invWaifus.get(i).getFriendlyLevel()).append("%\n");
+				sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n    niveau : ").append(invWaifus.get(i).getLevel()).append("%\n");
 			}
 			i++;
 		}
