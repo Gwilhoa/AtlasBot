@@ -142,7 +142,9 @@ public class CommandListener {
 		if (msg.getContentRaw().split(" ").length <= 1)
 			return;
 		String code = msg.getContentRaw().substring(">gift ".length());
-		msg.getChannel().sendMessage(gift(code, msg.getMember(), msg.getTextChannel())).queue();
+		Message ret = gift(code, msg.getMember(), msg.getTextChannel());
+		msg.getChannel().sendMessage(ret).queue();
+		ret.delete().queue();
 	}
 
 	public static Message gift(String code, Member member, TextChannel tc) throws IOException, InterruptedException {
