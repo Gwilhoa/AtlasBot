@@ -58,7 +58,7 @@ public class slashCommand {
                 .queue();
 
         jda.upsertCommand("top", "savoir le leaderboard d'une ou des escouades")
-                .addOption(OptionType.STRING, "nom", "nom de l'escouade a observer", false)
+                .addOption(OptionType.STRING, "squadname", "nom de l'escouade a observer", false, true)
                 .queue();
 
         jda.upsertCommand("waifu", "capturer une waifu (coming soon)")

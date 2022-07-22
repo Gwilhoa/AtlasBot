@@ -6,6 +6,8 @@ package fr.cringebot.cringe.command;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.CommandBuilder.Gift;
 import fr.cringebot.cringe.CommandBuilder.Info;
+import fr.cringebot.cringe.CommandBuilder.Shop;
+import fr.cringebot.cringe.CommandBuilder.Top;
 import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
@@ -29,8 +31,12 @@ import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 import net.dv8tion.jda.internal.interactions.component.ButtonInteractionImpl;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -38,6 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static fr.cringebot.cringe.cki.mainCommand.ckimain;
+import static fr.cringebot.cringe.objects.imgExtenders.resize;
 
 /**
  * fichier de commandes de base
@@ -66,12 +73,6 @@ public class CommandListener {
 		botDiscord.setRunning(false);
 	}
 
-	/**
-	 * donne les informations sur une personne
-	 *
-	 * @param channel channel du message
-	 * @param msg     message de l'envoyeur
-	 */
 	@Command(name = "info", description = "information sur un joueur", type = ExecutorType.USER)
 	private void info(MessageChannel channel, Message msg) {
 		Member mem = msg.getMember();
@@ -80,48 +81,9 @@ public class CommandListener {
 		channel.sendMessageEmbeds(Info.info(mem).build()).queue();
 	}
 
-	@Command(name = "removepoints", description = "enlever des points", type = ExecutorType.USER)
-	private void removepoints(Message msg)
-	{
-		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getMembers().isEmpty())
-		{
-			Long points;
-			String str = msg.getContentRaw().substring(">removepoints ".length());
-			str = str.split(" ")[1];
-			try {
-				points = Long.parseLong(str);
-			} catch (NumberFormatException e) {
-				msg.getChannel().sendMessage("les points donné ne sont pas des nombres").queue();
-				return;
-			}
-			msg.getChannel().sendMessage("moins "+ points + " points pour " + Squads.getSquadByMember(msg.getMentions().getMembers().get(0)).getName()).queue();
-			Squads.removePoints(msg.getMentions().getMembers().get(0).getId(), points);
-		} else {
-			msg.getChannel().sendMessage("tu n'as pas les droits").queue();
-		}
-	}
-
 	@Command(name = "shop", description = "ouvrir le shopping")
 	private void shop(Message msg) {
-		EmbedBuilder eb = new EmbedBuilder();
-		eb.setColor(Color.ORANGE).setTitle("le Shop");
-		eb.setDescription("Bonjour que voulez vous acheter\n" +
-				"Pièce de collection : 3 de la meme catégorie donne accès a une waifu\n" +
-				"Chronomètre érotique : vous enlève 30min avant votre prochaine waifu\n" +
-				"(3 max)Horloge érotique : vous enlève 20min à votre timer de chaque prochaine waifu\n" +
-				"Ticket simple Bithume -> brésil : you are going to bresil\n" +
-				"joujou pour waifu : augmente l'affection de votre waifu");
-		eb.setFooter("vous avez " + Squads.getstats(msg.getMember()).getCoins() + " B2C");
-
-		ArrayList<SelectOption> options = new ArrayList<>();
-		options.add(new SelectOptionImpl("Pièce de collection : 10 B2C", "PDCFU"));
-		options.add(new SelectOptionImpl("Chronomètre érotique : 25 B2C", "RDTPFU"));
-		options.add(new SelectOptionImpl("horloge érotique : 55 B2C", "RDTDFU"));
-		options.add(new SelectOptionImpl("aller simple pour le brésil : 40 B2C", "YAGTB"));
-		options.add(new SelectOptionImpl("Joujou pour waifu : 20 B2C", "JJFU"));
-		options.add(new SelectOptionImpl("annuler", "stop"));
-		SelectMenuImpl selectionMenu = new SelectMenuImpl("shop", "selectionnez un choix", 1, 1, false, options);
-		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(selectionMenu).queue();
+		msg.getChannel().sendMessageEmbeds(Shop.ShopDisplay(msg.getMember()).build()).setActionRow(Shop.PrincipalMenu()).queue();
 	}
 
 	@Command(name = "gift", description = "des cadeaux ?", type = ExecutorType.USER)
@@ -139,55 +101,12 @@ public class CommandListener {
 		}
 	}
 
-	/**
-	 * Donne le classement des escoudes
-	 * en fonction de leurs point respectif
-	 *
-	 * @param msg	message de l'envoyeur
-	 */
 	@Command(name = "top", description = "regarder le classement des escouades")
 	private void top(Message msg){
 		if (msg.getContentRaw().length() > ">top ".length())
-		{
-			Guild guild = msg.getGuild();
-			StringBuilder sb = new StringBuilder();
-			Squads squad = Squads.getSquadByName(msg.getContentRaw().substring(">top ".length()));
-			if (squad == null) {
-				msg.getChannel().sendMessage("aucune squad est a ce nom").queue();
-				return;
-			}
-			List<SquadMember> sm = squad.getSortedSquadMember();
-			EmbedBuilder eb = new EmbedBuilder();
-			eb.setColor(squad.getSquadRole(guild).getColor());
-			eb.setTitle("escouade "+ squad.getName());
-			int i = 1;
-			for (SquadMember s : sm)
-			{
-				sb.append("n°")
-						.append(i).append(" : ");
-						if (guild.getMemberById(s.getId()) != null)
-							sb.append(guild.getMemberById(s.getId()).getAsMention());
-						else
-							sb.append("Inconnu");
-						sb.append(" avec ").append(s.getPoints()).append("\n");
-				i++;
-			}
-			eb.setDescription(sb.toString());
-			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
-		}
+			msg.getChannel().sendMessageEmbeds(Top.top(msg.getContentRaw().substring(">top ".length()), msg.getGuild()).build()).queue();
 		else
-		{
-			List<Squads> squads = Squads.getSortedSquads();
-			StringBuilder sb = new StringBuilder();
-			EmbedBuilder eb = new EmbedBuilder().setTitle("Classement :");
-			for (Squads sq : squads)
-				sb.append(sq.getSquadRole(msg.getGuild()).getAsMention()).append(" : ").append(sq.getTotal()).append('\n')
-						.append(" meilleur : ").append(msg.getGuild().getMemberById(sq.getBestid()).getAsMention()).append(" avec ").append(sq.getStatMember(sq.getBestid()).getPoints()).append('\n');
-			eb.setFooter(squads.get(0).getName() + " a un bonus de gains d'argent");
-			eb.setColor(squads.get(0).getSquadRole(msg.getGuild()).getColor());
-			eb.setDescription(sb);
-			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
-		}
+			msg.getChannel().sendMessageEmbeds(Top.top(null, msg.getGuild()).build()).queue();
 	}
 
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
@@ -273,6 +192,26 @@ public class CommandListener {
 				}
 			}
 		}
+	}
+
+	@Command(name = "meteo", type = Command.ExecutorType.USER, description = "donne la météo")
+	private void meteo(Guild guild, TextChannel textChannel, Message msg){
+		String ville = "shrek";
+		if (msg.getContentRaw().split(" ").length != 1)
+			ville = msg.getContentRaw().split(" ")[1];
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			URLConnection connection = new URL("https://wttr.in/"+ville+"_3tqp_lang=fr.png").openConnection();
+			connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
+			BufferedImage im = ImageIO.read(connection.getInputStream());
+			im = resize(im, 1032*2, 546*2, 0, 0, true);
+			im = resize(im, 1032*2, 546*2, 0, 0, false);
+			ImageIO.write(im, "png", baos);
+			textChannel.sendFile(baos.toByteArray(), "meteo.png").queue();
+		} catch (IOException e) {
+			textChannel.sendMessage("météo introuvable").queue();
+		}
+
 	}
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)

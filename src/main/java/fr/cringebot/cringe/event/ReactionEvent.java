@@ -37,7 +37,7 @@ import static fr.cringebot.cringe.objects.imgExtenders.resize;
 public class ReactionEvent {
 
     public static void reactionevent(Message msg, JDA jda) throws IOException {
-        if (msg.getTextChannel().getId().equals(msg.getGuild().getTextChannelById("461606547064356864")))
+        if (msg.getChannel().getId().equals("461606547064356864"))
             return;
 
         if (msg.getContentRaw().split(" ")[0].equalsIgnoreCase("f")) {

@@ -63,6 +63,7 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.events.role.RoleCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 
 import java.io.BufferedReader;
@@ -143,6 +144,7 @@ public class BotListener implements EventListener {
 			else if (event instanceof SlashCommandInteraction) SlashListener.onSlashCommand((SlashCommandInteraction) event);
 			else if (event instanceof ButtonInteractionEvent) onButton((ButtonInteractionEvent) event);
 			else if (event instanceof GuildVoiceMoveEvent) onMove((GuildVoiceMoveEvent) event);
+			else if (event instanceof CommandAutoCompleteInteraction) SlashListener.autoComplete((CommandAutoCompleteInteraction) event);
 		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException | ExecutionException e) {
 			e.printStackTrace();
 			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
