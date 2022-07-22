@@ -145,12 +145,12 @@ public class CommandListener {
 		if (msg.getContentRaw().split(" ").length <= 1)
 			return;
 		String code = msg.getContentRaw().substring(">gift ".length());
-		Hashtable<EmbedBuilder, String> ret = Gift.sendGift(code, msg.getMember());
-		EmbedBuilder eb = ret.keys().nextElement();
-		if (Objects.equals(ret.get(eb), "null"))
+		Gift ret = Gift.sendGift(code, msg.getMember());
+		EmbedBuilder eb = ret.getEmbedBuilder();
+		if (ret.getId() == null)
 			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 		else {
-			ButtonImpl bttn = new ButtonImpl("gift_" + ret.get(eb), "ouvrir", ButtonStyle.SUCCESS, false, null);
+			ButtonImpl bttn = new ButtonImpl("gift_" + ret.getId(), "ouvrir", ButtonStyle.SUCCESS, false, null);
 			msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(bttn).queue();
 		}
 	}

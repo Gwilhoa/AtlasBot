@@ -16,12 +16,12 @@ public class SlashListener {
     public static void onSlashCommand(SlashCommandInteraction event) throws IOException, InterruptedException {
         if (event.getName().equals("gift"))
         {
-            Hashtable<EmbedBuilder, String> ret = Gift.sendGift(event.getOption("code").getAsString(), event.getMember());
-            EmbedBuilder eb = ret.keys().nextElement();
-            if (Objects.equals(ret.get(eb), "null"))
+            Gift ret = Gift.sendGift(event.getOption("code").getAsString(), event.getMember());
+            EmbedBuilder eb = ret.getEmbedBuilder();
+            if (ret.getId() == null)
                 event.replyEmbeds(eb.build()).queue();
             else {
-                ButtonImpl bttn = new ButtonImpl("gift_" + ret.get(eb), "ouvrir", ButtonStyle.SUCCESS, false, null);
+                ButtonImpl bttn = new ButtonImpl("gift_" + ret.getId(), "ouvrir", ButtonStyle.SUCCESS, false, null);
                 event.replyEmbeds(eb.build()).addActionRow(bttn).queue();
             }
         }

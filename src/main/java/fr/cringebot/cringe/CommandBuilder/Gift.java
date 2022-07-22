@@ -3,7 +3,6 @@ package fr.cringebot.cringe.CommandBuilder;
 import fr.cringebot.cringe.escouades.Squads;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
@@ -16,10 +15,25 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 public class Gift {
-    public static Hashtable<EmbedBuilder, String> sendGift(String code, Member mb) throws IOException, InterruptedException {
+    private String id;
+    private EmbedBuilder embedBuilder;
+    public Gift(String id, EmbedBuilder embedBuilder)
+    {
+        this.id = id;
+        this.embedBuilder = embedBuilder;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public EmbedBuilder getEmbedBuilder() {
+        return embedBuilder;
+    }
+
+    public static Gift sendGift(String code, Member mb) throws IOException, InterruptedException {
         File f = new File("save/gift/"+code);
         String retS;
-        Hashtable<EmbedBuilder, String> ret = new Hashtable<>();
         EmbedBuilder eb = new EmbedBuilder();
         if (f.exists() && f.isFile())
         {
@@ -31,11 +45,10 @@ public class Gift {
         } else
         {
             eb.setColor(Color.RED).setTitle("Échec").setDescription("désolé j'ai rien trouvé");
-            retS = "null";
+            retS = null;
         }
         eb.setFooter(mb.getId());
-        ret.put(eb, retS);
-        return ret;
+        return new Gift(retS, eb);
     }
     public static void openGift(ButtonInteractionEvent e) throws InterruptedException {
         String ret = e.getButton().getId().substring("gift_".length());
