@@ -42,6 +42,7 @@ public class SquadMember {
 	}
 
 	public void addItem(String item){
+		inventory.putIfAbsent(item, 0);
 		inventory.put(item, inventory.getOrDefault(item, 0) + 1);
 	}
 
