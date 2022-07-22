@@ -14,8 +14,10 @@ import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
+import fr.cringebot.cringe.objects.Item;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
+import fr.cringebot.cringe.slashInteraction.slashCommand;
 import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -71,6 +73,28 @@ public class CommandListener {
 	private void stop(JDA jda) {
 		jda.getPresence().setStatus(OnlineStatus.OFFLINE);
 		botDiscord.setRunning(false);
+	}
+
+	@Command(name = "bresil", description = "you are going to brazil", type = ExecutorType.USER)
+	private void bresil(Message msg) {
+		if (msg.getMentions().getMembers().get(0) == null)
+		{
+			msg.getChannel().sendMessage("tu veux emmener qui ?").queue();
+		} else {
+			Member member = msg.getMentions().getMembers().get(0);
+			if (Squads.getstats(msg.getMember()).getAmountItem(Item.Items.PB.getStr()) > 0)
+			{
+				if (msg.getMember().getVoiceState().inAudioChannel() && member.getVoiceState().inAudioChannel())
+				{
+					msg.getChannel().sendMessage(member.getAsMention() + " you are going to brazil with "+ msg.getMember().getAsMention()).queue();
+					msg.getGuild().moveVoiceMember(member, msg.getGuild().getVoiceChannelById("974740318413025340")).queue();
+					msg.getGuild().moveVoiceMember(msg.getMember(), msg.getGuild().getVoiceChannelById("974740318413025340")).queue();
+					Squads.getstats(msg.getMember()).removeItem(Item.Items.PB.getStr());
+				}
+			} else {
+				msg.getChannel().sendMessage("tu n'as pas de ticket").queue();
+			}
+		}
 	}
 
 	@Command(name = "info", description = "information sur un joueur", type = ExecutorType.USER)
@@ -215,12 +239,7 @@ public class CommandListener {
 	}
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
-	private void test(Message msg) throws IOException {
-		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
-		for (Waifu waifu : waifus)
-		{
-			waifu.setType(null);
-		}
-		msg.getGuild().updateCommands().queue();
+	private void test(Message msg) throws IOException, InterruptedException {
+		slashCommand.load(msg.getJDA());
 	}
 }

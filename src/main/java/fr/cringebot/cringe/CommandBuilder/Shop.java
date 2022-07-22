@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.CommandBuilder;
 
 import fr.cringebot.cringe.escouades.Squads;
+import fr.cringebot.cringe.objects.Item;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -40,7 +41,7 @@ public class Shop {
         options.add(new SelectOptionImpl("Pièce de collection : "+PDCPRICE+" B2C", "PDCFU"));
         options.add(new SelectOptionImpl("Chronomètre érotique : "+CEPRICE+" B2C", "RDTPFU"));
         options.add(new SelectOptionImpl("horloge érotique : "+HEPRICE+" B2C", "RDTDFU"));
-        options.add(new SelectOptionImpl("aller simple pour le brésil : "+PBPRICE+ " B2C", "YAGTB"));
+        options.add(new SelectOptionImpl("pass-brésil : "+PBPRICE+ " B2C", "YAGTB"));
         options.add(new SelectOptionImpl("Joujou pour waifu : "+ JJFUPRICE+" B2C", "JJFU"));
         options.add(new SelectOptionImpl("annuler", "stop"));
         return new SelectMenuImpl("shop", "selectionnez un choix", 1, 1, false, options);
@@ -50,6 +51,30 @@ public class Shop {
         if (event.getSelectedOptions().get(0).getValue().equals("stop")) {
             event.getMessage().delete().queue();
             event.reply("merci, à bientot").setEphemeral(true).queue();
+        }
+        else if (event.getSelectedOptions().get(0).getValue().equals("YAGTB"))
+        {
+            if (Squads.getstats(event.getMember()).getCoins() >= PBPRICE) {
+                Squads.getstats(event.getMember()).removeCoins(PBPRICE.longValue());
+                Squads.getstats(event.getMember()).addItem(Item.Items.PB.getStr());
+                event.reply("tu as acheté un pass brésil tu en as désormais" + Squads.getstats(event.getMember()).getAmountItem(Item.Items.PB.getStr())).queue();
+            }
+            else
+                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
+        }
+        else if (event.getSelectedOptions().get(0).getValue().equals("RDTDFU"))
+        {
+            if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.HE.getStr()) >= 4)
+            {
+                event.reply("désolé je n'en n'ai plus").queue();
+            }
+            else if (Squads.getstats(event.getMember()).getCoins() >= HEPRICE) {
+                Squads.getstats(event.getMember()).removeCoins(HEPRICE.longValue());
+                Squads.getstats(event.getMember()).addItem(Item.Items.HE.getStr());
+                event.reply("tu as acheté une horloge érotique tu en as désormais" + Squads.getstats(event.getMember()).getAmountItem(Item.Items.HE.getStr())).queue();
+            }
+            else
+                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
         }
         else if (event.getSelectedOptions().get(0).getValue().equals("PDCFU"))
         {

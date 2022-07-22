@@ -266,7 +266,6 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onEnable(ReadyEvent event) throws InterruptedException {
-		slashCommand.load(event.getJDA());
 		Activity act;
 		act = new activity("Analyse en cours", null, Activity.ActivityType.WATCHING);
 		bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);

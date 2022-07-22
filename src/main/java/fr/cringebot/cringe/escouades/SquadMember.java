@@ -12,6 +12,7 @@ public class SquadMember {
 	private Long points;
 	private final String id;
 	private HashMap<String, Integer> collections;
+	private HashMap<String, Integer> inventory;
 	private HashMap<Integer, InvWaifu> waifus;
 	private Long coins;
 	private Integer bank;
@@ -40,6 +41,23 @@ public class SquadMember {
 		}
 	}
 
+	public void addItem(String item){
+		inventory.put(item, inventory.getOrDefault(item, 0) + 1);
+	}
+
+	public Integer getAmountItem(String item)
+	{
+		return inventory.getOrDefault(item, 0);
+	}
+
+	public Boolean removeItem(String item)
+	{
+		if (inventory.getOrDefault(item, 0) > 0) {
+			inventory.put(item, inventory.get(item) - 1);
+			return true;
+		}
+		return false;
+	}
 	public void addCoins(Long coins) {
 		if (this.coins == null)
 			this.coins = 0L;

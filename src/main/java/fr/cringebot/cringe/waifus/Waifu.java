@@ -1,6 +1,8 @@
 package fr.cringebot.cringe.waifus;
 
 import com.google.gson.reflect.TypeToken;
+import fr.cringebot.cringe.escouades.Squads;
+import fr.cringebot.cringe.objects.Item;
 import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;
@@ -200,7 +202,9 @@ public class Waifu {
 
 	public static void setTime(String id)
 	{
+
 		timer.put(id, System.currentTimeMillis());
+		timer.remove(id, 1800000L * (Squads.getstats(id).getAmountItem(Item.Items.HE.getStr())));
 	}
 	public static boolean removeTime(String id, Long time)
 	{
