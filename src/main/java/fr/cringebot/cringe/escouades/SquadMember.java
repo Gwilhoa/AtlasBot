@@ -47,11 +47,13 @@ public class SquadMember {
 
 	public Integer getAmountItem(String item)
 	{
+		inventory.putIfAbsent(item, 0);
 		return inventory.getOrDefault(item, 0);
 	}
 
 	public Boolean removeItem(String item)
 	{
+		inventory.putIfAbsent(item, 0);
 		if (inventory.getOrDefault(item, 0) > 0) {
 			inventory.put(item, inventory.get(item) - 1);
 			return true;
