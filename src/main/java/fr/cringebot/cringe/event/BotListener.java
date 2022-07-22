@@ -19,6 +19,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
 import fr.cringebot.BotDiscord;
+import fr.cringebot.cringe.CommandBuilder.Gift;
 import fr.cringebot.cringe.Polls.PollListener;
 import fr.cringebot.cringe.Polls.PollMessage;
 import fr.cringebot.cringe.builder.CommandMap;
@@ -158,7 +159,13 @@ public class BotListener implements EventListener {
 			else XP.end(event.getMember());
 	}
 
-	private void onButton(ButtonInteractionEvent event) {
+	private void onButton(ButtonInteractionEvent event) throws InterruptedException {
+		if (event.getButton().getId().startsWith("gift")) {
+			if (event.getMember().getId().equals(event.getMessage().getEmbeds().get(0).getFooter().getText()))
+				Gift.openGift(event);
+			else
+				event.reply("on vole pas le cadeau des autres").setEphemeral(true).queue();
+		}
 		return;
 	}
 

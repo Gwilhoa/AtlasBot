@@ -18,7 +18,7 @@ public class BotDiscord implements Runnable{
 
     public final static String SecondaryRoleId = "502575765179858945";
     public final static String FarmingSalonId = "981183442509238302";
-    public static final Boolean isMaintenance = false;
+    public static final Boolean isMaintenance = true;
     private final JDA jda;
     private final CommandMap commandMap = new CommandMap(this);
     private final Scanner scanner = new Scanner(System.in);
