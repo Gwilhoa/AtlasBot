@@ -96,7 +96,8 @@ public class MessageReact {
         Message msg = guild.getTextChannelById(channel).retrieveMessageById(this.Id).complete();
         StringBuilder sb = new StringBuilder();
         for (RoleReaction rr : this.list) {
-            guild.getRoleById(rr.getId()).getManager().setColor(this.color).queue();
+            if (this.color != null)
+                guild.getRoleById(rr.getId()).getManager().setColor(this.color).queue();
             sb.append(rr.getName()).append(" ").append(rr.getEmote()).append('\n');
             msg.addReaction(Emoji.fromFormatted(rr.getEmote())).queue();
         }
