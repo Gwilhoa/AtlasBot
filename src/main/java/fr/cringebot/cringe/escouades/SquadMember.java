@@ -46,6 +46,7 @@ public class SquadMember {
 			inventory = new HashMap<>();
 		inventory.putIfAbsent(item, 0);
 		inventory.put(item, inventory.getOrDefault(item, 0) + 1);
+		Squads.save();
 	}
 
 	public Integer getAmountItem(String item)
@@ -63,6 +64,7 @@ public class SquadMember {
 		inventory.putIfAbsent(item, 0);
 		if (inventory.getOrDefault(item, 0) > 0) {
 			inventory.put(item, inventory.get(item) - 1);
+			Squads.save();
 			return true;
 		}
 		return false;

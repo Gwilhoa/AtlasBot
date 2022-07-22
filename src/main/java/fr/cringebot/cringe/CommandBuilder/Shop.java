@@ -28,7 +28,7 @@ public class Shop {
         eb.setDescription("Bonjour que voulez vous acheter\n" +
                 "Pièce de collection : 3 de la meme catégorie donne accès a une waifu\n" +
                 "Chronomètre érotique : vous enlève 30min avant votre prochaine waifu\n" +
-                "(3 max)Horloge érotique : vous enlève 20min à votre timer de chaque prochaine waifu\n" +
+                "(4 max)Horloge érotique : vous enlève 30min à votre timer de chaque prochaine waifu\n" +
                 "Ticket simple Bithume -> brésil : you are going to bresil\n" +
                 "joujou pour waifu : augmente l'affection de votre waifu");
         eb.setFooter("vous avez " + Squads.getstats(mem).getCoins() + " B2C");
@@ -57,7 +57,7 @@ public class Shop {
             if (Squads.getstats(event.getMember()).getCoins() >= PBPRICE) {
                 Squads.getstats(event.getMember()).removeCoins(PBPRICE.longValue());
                 Squads.getstats(event.getMember()).addItem(Item.Items.PB.getStr());
-                event.reply("tu as acheté un pass brésil tu en as désormais" + Squads.getstats(event.getMember()).getAmountItem(Item.Items.PB.getStr())).queue();
+                event.reply("tu as acheté un pass brésil tu en as désormais " + Squads.getstats(event.getMember()).getAmountItem(Item.Items.PB.getStr())).queue();
             }
             else
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
@@ -71,7 +71,7 @@ public class Shop {
             else if (Squads.getstats(event.getMember()).getCoins() >= HEPRICE) {
                 Squads.getstats(event.getMember()).removeCoins(HEPRICE.longValue());
                 Squads.getstats(event.getMember()).addItem(Item.Items.HE.getStr());
-                event.reply("tu as acheté une horloge érotique tu en as désormais" + Squads.getstats(event.getMember()).getAmountItem(Item.Items.HE.getStr())).queue();
+                event.reply("tu as acheté une horloge érotique tu en as désormais " + Squads.getstats(event.getMember()).getAmountItem(Item.Items.HE.getStr())).queue();
             }
             else
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();

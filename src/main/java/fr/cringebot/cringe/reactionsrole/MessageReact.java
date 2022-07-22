@@ -98,13 +98,13 @@ public class MessageReact {
         for (RoleReaction rr : this.list) {
             if (guild.getRoleById(rr.getId()) == null)
                 this.list.remove(rr);
-            guild.getRoleById(rr.getId()).getManager().setColor(this.color).queue();
-            sb.append(rr.getName()).append(" ").append(rr.getEmote()).append('\n');
-            msg.addReaction(Emoji.fromFormatted(rr.getEmote())).queue();
+            else {
+                guild.getRoleById(rr.getId()).getManager().setColor(this.color).queue();
+                sb.append(rr.getName()).append(" ").append(rr.getEmote()).append('\n');
+                msg.addReaction(Emoji.fromFormatted(rr.getEmote())).queue();
+            }
         }
         EmbedBuilder eb = new EmbedBuilder().setTitle(this.Title);
-        if (this.color != null)
-            eb.setColor(color);
         msg.editMessageEmbeds(eb.setDescription(sb.toString()).build()).queue();
         save();
     }

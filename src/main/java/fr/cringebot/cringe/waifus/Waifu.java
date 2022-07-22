@@ -202,9 +202,8 @@ public class Waifu {
 
 	public static void setTime(String id)
 	{
-
 		timer.put(id, System.currentTimeMillis());
-		timer.remove(id, 1800000L * (Squads.getstats(id).getAmountItem(Item.Items.HE.getStr())));
+		timer.remove(id, 1800000L * (Squads.getstats(id).getAmountItem(Item.Items.HE.getStr())).longValue());
 	}
 	public static boolean removeTime(String id, Long time)
 	{
