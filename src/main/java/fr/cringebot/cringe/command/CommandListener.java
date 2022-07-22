@@ -21,13 +21,11 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -144,26 +142,32 @@ public class CommandListener {
 		if (msg.getContentRaw().split(" ").length <= 1)
 			return;
 		String code = msg.getContentRaw().substring(">gift ".length());
+		msg.getChannel().sendMessage(gift(code, msg.getMember(), msg.getTextChannel())).queue();
+	}
+
+	public static Message gift(String code, Member member, TextChannel tc) throws IOException, InterruptedException {
 		File f = new File("save/gift/"+code);
 		if (f.exists() && f.isFile())
 		{
 			String ret = new BufferedReader(new FileReader(f)).readLine();
-			if (ret.split(";")[0].equals("coins"))
-			{
-				msg.getChannel().sendMessage("tu as gagné "+ ret.split(";")[1] +" B2C").queue();
-				Squads.getstats(msg.getMember()).addCoins(Long.parseLong(ret.split(";")[1]));
-			}
-			if (ret.split(";")[0].equals("waifu"))
-			{
-				Squads.getstats(msg.getMember()).newWaifu(Integer.parseInt(ret.split(";")[1]), msg);
-			}
-			if (ret.split(";")[0].equals("squad"))
-			{
-				Squads.addPoints(msg.getMember(),Long.parseLong(ret.split(";")[1]));
-				msg.getChannel().sendMessage(Squads.getSquadByMember(msg.getMember()).getName() + " gagne " + Long.parseLong(ret.split(";")[1]) + " points").queue();
+			switch (ret.split(";")[0]) {
+				case "coins":
+					Squads.getstats(member).addCoins(Long.parseLong(ret.split(";")[1]));
+					return tc.sendMessage("tu as gagné " + ret.split(";")[1] + " B2C").complete();
+				case "waifu":
+					Squads.getstats(member).newWaifu(Integer.parseInt(ret.split(";")[1]), tc.sendMessage("ouais").complete());
+					break;
+				case "squad":
+					Squads.addPoints(member, Long.parseLong(ret.split(";")[1]));
+					return tc.sendMessage("l'escouade "
+							+ Squads.getSquadByMember(member).getName()
+							+ " gagne "
+							+ Long.parseLong(ret.split(";")[1])
+							+ " points").complete();
 			}
 			f.delete();
 		}
+		return tc.sendMessage("le code " + code + "n'existe pas").complete();
 	}
 
 	/**

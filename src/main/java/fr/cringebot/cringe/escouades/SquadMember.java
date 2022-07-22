@@ -73,13 +73,6 @@ public class SquadMember {
 		}
 		this.addPoint(50L);
 		this.waifus.put(id, new InvWaifu(id));
-		TreeMap<Integer, InvWaifu> map1 = this.waifus.entrySet()
-				.stream().collect(Collectors
-						.toMap(
-								Map.Entry::getKey,
-								Map.Entry::getValue,
-								(oldValue, newValue) -> newValue, TreeMap::new));
-		this.waifus = new HashMap<>(map1);
 		Squads.save();
 	}
 
