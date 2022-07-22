@@ -37,11 +37,11 @@ public class Shop {
     public static SelectMenuImpl PrincipalMenu()
     {
         ArrayList<SelectOption> options = new ArrayList<>();
-        options.add(new SelectOptionImpl("Pièce de collection : "+PDCPRICE+"B2C", "PDCFU"));
-        options.add(new SelectOptionImpl("Chronomètre érotique : "+CEPRICE+"B2C", "RDTPFU"));
-        options.add(new SelectOptionImpl("horloge érotique : "+HEPRICE+"B2C", "RDTDFU"));
-        options.add(new SelectOptionImpl("aller simple pour le brésil : "+PBPRICE+ "B2C", "YAGTB"));
-        options.add(new SelectOptionImpl("Joujou pour waifu : "+ JJFUPRICE+"B2C", "JJFU"));
+        options.add(new SelectOptionImpl("Pièce de collection : "+PDCPRICE+" B2C", "PDCFU"));
+        options.add(new SelectOptionImpl("Chronomètre érotique : "+CEPRICE+" B2C", "RDTPFU"));
+        options.add(new SelectOptionImpl("horloge érotique : "+HEPRICE+" B2C", "RDTDFU"));
+        options.add(new SelectOptionImpl("aller simple pour le brésil : "+PBPRICE+ " B2C", "YAGTB"));
+        options.add(new SelectOptionImpl("Joujou pour waifu : "+ JJFUPRICE+" B2C", "JJFU"));
         options.add(new SelectOptionImpl("annuler", "stop"));
         return new SelectMenuImpl("shop", "selectionnez un choix", 1, 1, false, options);
     }
