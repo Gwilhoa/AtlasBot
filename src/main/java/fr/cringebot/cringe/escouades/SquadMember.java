@@ -42,18 +42,24 @@ public class SquadMember {
 	}
 
 	public void addItem(String item){
+		if (inventory == null)
+			inventory = new HashMap<>();
 		inventory.putIfAbsent(item, 0);
 		inventory.put(item, inventory.getOrDefault(item, 0) + 1);
 	}
 
 	public Integer getAmountItem(String item)
 	{
+		if (inventory == null)
+			inventory = new HashMap<>();
 		inventory.putIfAbsent(item, 0);
 		return inventory.getOrDefault(item, 0);
 	}
 
 	public Boolean removeItem(String item)
 	{
+		if (inventory == null)
+			inventory = new HashMap<>();
 		inventory.putIfAbsent(item, 0);
 		if (inventory.getOrDefault(item, 0) > 0) {
 			inventory.put(item, inventory.get(item) - 1);
