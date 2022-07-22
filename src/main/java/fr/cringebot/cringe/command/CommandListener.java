@@ -5,6 +5,7 @@ package fr.cringebot.cringe.command;
 
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.CommandBuilder.Gift;
+import fr.cringebot.cringe.CommandBuilder.Info;
 import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
@@ -74,26 +75,9 @@ public class CommandListener {
 	@Command(name = "info", description = "information sur un joueur", type = ExecutorType.USER)
 	private void info(MessageChannel channel, Message msg) {
 		Member mem = msg.getMember();
-		if (msg.getMentions().getMembers().size() != 0) {
+		if (msg.getMentions().getMembers().size() != 0)
 			mem = msg.getMentions().getMembers().get(0);
-		}
-		Squads squads = Squads.getSquadByMember(mem);
-		StringBuilder sb = new StringBuilder();
-		sb.append("> surnom : ").append(mem.getEffectiveName()).append('\n')
-				.append("> état : ").append(mem.getOnlineStatus().name()).append('\n')
-				.append("> rejoint le serveur le ").append(mem.getTimeJoined().getDayOfMonth()).append("/").append(mem.getTimeJoined().getMonthValue()).append("/").append(mem.getTimeJoined().getYear()).append("\n")
-				.append("> creer son compte le ").append(mem.getTimeCreated().getDayOfMonth()).append("/").append(mem.getTimeCreated().getMonthValue()).append("/").append(mem.getTimeCreated().getYear()).append("\n")
-				.append("> B2C : ").append(squads.getStatMember(mem).getCoins()).append('\n')
-				.append("> escouade : ").append(squads.getName()).append("\n")
-				.append("> points : ").append(squads.getStatMember(mem).getPoints()).append("\n")
-				.append("> rang : ").append(squads.getRank(mem.getId()));
-		EmbedBuilder builder = new EmbedBuilder()
-				.setColor(squads.getSquadRole(msg.getGuild()).getColor())
-				.setAuthor(mem.getUser().getName(), null, mem.getUser().getAvatarUrl() + "?size=256")
-				.setTitle("Informations")
-				.setDescription(sb.toString());
-
-		channel.sendMessageEmbeds(builder.build()).queue();
+		channel.sendMessageEmbeds(Info.info(mem).build()).queue();
 	}
 
 	@Command(name = "removepoints", description = "enlever des points", type = ExecutorType.USER)

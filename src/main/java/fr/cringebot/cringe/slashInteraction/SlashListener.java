@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.slashInteraction;
 
 import fr.cringebot.cringe.CommandBuilder.Gift;
+import fr.cringebot.cringe.CommandBuilder.Info;
 import fr.cringebot.cringe.command.CommandListener;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -25,6 +26,14 @@ public class SlashListener {
                 event.replyEmbeds(eb.build()).addActionRow(bttn).queue();
             }
         }
-        event.reply("patience ça arrive").setEphemeral(true).queue();
+        else if (event.getName().equals("info"))
+        {
+            if (event.getOption("nom") == null)
+                event.replyEmbeds(Info.info(event.getMember()).build()).queue();
+            else
+                event.replyEmbeds(Info.info(event.getOption("nom").getAsMember()).build()).queue();
+        }
+        else
+            event.reply("patience ça arrive").setEphemeral(true).queue();
     }
 }

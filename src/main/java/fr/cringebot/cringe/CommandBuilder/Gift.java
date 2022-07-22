@@ -68,7 +68,6 @@ public class Gift {
                         + Long.parseLong(ret.split(";")[1])
                         + " points").queue();
         }
-        e.reply("oui").complete().deleteOriginal().queue();
         e.getMessage().editMessageEmbeds(new EmbedBuilder().setTitle("Cadeau ouvert").setDescription("ce cadeau à déja été ouvert").build()).setActionRow(new ButtonImpl("gift", "ouvrir", ButtonStyle.SUCCESS, true, null)).queue();
     }
 }
