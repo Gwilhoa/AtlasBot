@@ -29,7 +29,7 @@ public class Shop {
                 "Pièce de collection : 3 de la meme catégorie donne accès a une waifu\n" +
                 "Chronomètre érotique : vous enlève 30min avant votre prochaine waifu\n" +
                 "(4 max)Horloge érotique : vous enlève 30min à votre timer de chaque prochaine waifu\n" +
-                "Ticket simple Bithume -> brésil : you are going to bresil\n" +
+                "pass-brésil : you are going to bresil\n" +
                 "joujou pour waifu : augmente l'affection de votre waifu");
         eb.setFooter("vous avez " + Squads.getstats(mem).getCoins() + " B2C");
         return eb;
