@@ -31,7 +31,7 @@ public class Gift {
         } else
         {
             eb.setColor(Color.RED).setTitle("Échec").setDescription("désolé j'ai rien trouvé");
-            retS = null;
+            retS = "null";
         }
         eb.setFooter(mb.getId());
         ret.put(eb, retS);

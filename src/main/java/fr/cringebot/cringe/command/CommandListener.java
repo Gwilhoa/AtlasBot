@@ -30,10 +30,8 @@ import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -149,8 +147,12 @@ public class CommandListener {
 		String code = msg.getContentRaw().substring(">gift ".length());
 		Hashtable<EmbedBuilder, String> ret = Gift.sendGift(code, msg.getMember());
 		EmbedBuilder eb = ret.keys().nextElement();
-		ButtonImpl bttn = new ButtonImpl("gift_"+ret.get(eb), "ouvrir", ButtonStyle.SUCCESS, false, null);
-		msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(bttn).queue();
+		if (Objects.equals(ret.get(eb), "null"))
+			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+		else {
+			ButtonImpl bttn = new ButtonImpl("gift_" + ret.get(eb), "ouvrir", ButtonStyle.SUCCESS, false, null);
+			msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(bttn).queue();
+		}
 	}
 
 	/**

@@ -10,6 +10,7 @@ import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Objects;
 
 public class SlashListener {
     public static void onSlashCommand(SlashCommandInteraction event) throws IOException, InterruptedException {
@@ -17,8 +18,12 @@ public class SlashListener {
         {
             Hashtable<EmbedBuilder, String> ret = Gift.sendGift(event.getOption("code").getAsString(), event.getMember());
             EmbedBuilder eb = ret.keys().nextElement();
-            ButtonImpl bttn = new ButtonImpl("gift_"+ret.get(eb), "ouvrir", ButtonStyle.SUCCESS, false, null);
-            event.replyEmbeds(eb.build()).addActionRow(bttn).queue();
+            if (Objects.equals(ret.get(eb), "null"))
+                event.replyEmbeds(eb.build()).queue();
+            else {
+                ButtonImpl bttn = new ButtonImpl("gift_" + ret.get(eb), "ouvrir", ButtonStyle.SUCCESS, false, null);
+                event.replyEmbeds(eb.build()).addActionRow(bttn).queue();
+            }
         }
         event.reply("patience ça arrive").setEphemeral(true).queue();
     }
