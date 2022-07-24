@@ -83,7 +83,8 @@ public class WaifuCommand {
 			} else {
 				msg.getChannel().sendMessage("tu as pas les droits").queue();
 			}
-
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("delete")) {
+			Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2])).delwaifu();
 		}
 	}
 	private static void tradewaifu(Message msg) {
@@ -95,7 +96,7 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage(msg.getMember().getAsMention() + " veux faire un échange avec " +  msg.getMentions().getMembers().get(0).getAsMention()).setEmbeds(eb.build()).setActionRow(bttn).queue();
 		}
 		else {
-			msg.getChannel().sendMessage("toi ou la personne demandé n'a pas les waifus demandé").queue();
+			msg.getChannel().sendMessage("toi ou la personne demandé n'a pas les waifus demandé ou un des deux a deja la waifu").queue();
 		}
 	}
 
@@ -103,11 +104,11 @@ public class WaifuCommand {
 		InvWaifu ivWaifu01 = Squads.getstats(sender).getWaifus().get(IdWaifu01);
 		InvWaifu ivWaifu02 = Squads.getstats(received).getWaifus().get(IdWaifu02);
 
-		if ( ivWaifu01 != null && ivWaifu02 != null)
+		if ( ivWaifu01 != null && ivWaifu02 != null && Squads.getstats(sender).getWaifus().get(IdWaifu02) == null && Squads.getstats(received).getWaifus().get(IdWaifu01) == null)
 		{
 			EmbedBuilder eb = new EmbedBuilder();
-			eb.setTitle("requête d'échange").setDescription(ivWaifu01.getWaifu().getName() + "provenant de " + ivWaifu01.getWaifu().getOrigin() + " de niveau " + ivWaifu01.getLevel()
-			+ "\ncontre\n" + ivWaifu02.getWaifu().getName()+ "provenant de " + ivWaifu01.getWaifu().getOrigin()  + " de niveau " + ivWaifu02.getLevel());
+			eb.setTitle("Requête d'échange").setDescription(ivWaifu01.getWaifu().getName() + " provenant de " + ivWaifu01.getWaifu().getOrigin() + " de niveau " + ivWaifu01.getLevel()
+			+ "\ncontre\n" + ivWaifu02.getWaifu().getName()+ " provenant de " + ivWaifu02.getWaifu().getOrigin()  + " de niveau " + ivWaifu02.getLevel());
 			return eb;
 			}
 		else {
