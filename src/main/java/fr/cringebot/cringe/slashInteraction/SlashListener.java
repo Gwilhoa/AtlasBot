@@ -52,9 +52,9 @@ public class SlashListener {
             String name = event.getOption("nom").getAsString();
             args.add(event.getOption("arg01").getAsString());
             args.add(event.getOption("arg02").getAsString());
-            if (event.getOption("arg03") == null)
+            if (event.getOption("arg03") != null)
                 args.add(event.getOption("arg03").getAsString());
-            if (event.getOption("arg04") == null)
+            if (event.getOption("arg04") != null)
                 args.add(event.getOption("arg04").getAsString());
             PollMain.PollMain(args.toArray(new String[0]), name, event.getTextChannel(), event.getMember());
         }

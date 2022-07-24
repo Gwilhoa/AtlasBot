@@ -87,11 +87,19 @@ public class WaifuCommand {
 		}
 	}
 	private static void tradewaifu(Message msg) {
-
-		tradewaifu(msg.getMember(),Integer.parseInt(msg.getContentRaw().split(" ")[2]), Integer.parseInt(msg.getContentRaw().split(" ")[3]), msg.getMentions().getMembers().get(0));
+		EmbedBuilder eb = tradewaifu(msg.getMember(),Integer.parseInt(msg.getContentRaw().split(" ")[2]), Integer.parseInt(msg.getContentRaw().split(" ")[3]), msg.getMentions().getMembers().get(0));
+		if (eb != null) {
+			ArrayList<ButtonImpl> bttn = new ArrayList<>();
+			bttn.add(new ButtonImpl("trade_ok", "accepter", ButtonStyle.SUCCESS, false, null));
+			bttn.add(new ButtonImpl("trade_no", "refuser", ButtonStyle.DANGER, false, null));
+			msg.getChannel().sendMessage(msg.getMember().getAsMention() + " veux faire un échange avec " +  msg.getMentions().getMembers().get(0).getAsMention()).setEmbeds(eb.build()).setActionRow(bttn).queue();
+		}
+		else {
+			msg.getChannel().sendMessage("toi ou la personne demandé n'a pas les waifus demandé").queue();
+		}
 	}
 
-	private static void tradewaifu(Member sender, Integer IdWaifu01, Integer IdWaifu02, Member received) {
+	private static EmbedBuilder tradewaifu(Member sender, Integer IdWaifu01, Integer IdWaifu02, Member received) {
 		InvWaifu ivWaifu01 = Squads.getstats(sender).getWaifus().get(IdWaifu01);
 		InvWaifu ivWaifu02 = Squads.getstats(received).getWaifus().get(IdWaifu02);
 
@@ -100,13 +108,11 @@ public class WaifuCommand {
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("requête d'échange").setDescription(ivWaifu01.getWaifu().getName() + "provenant de " + ivWaifu01.getWaifu().getOrigin() + " de niveau " + ivWaifu01.getLevel()
 			+ "\ncontre\n" + ivWaifu02.getWaifu().getName()+ "provenant de " + ivWaifu01.getWaifu().getOrigin()  + " de niveau " + ivWaifu02.getLevel());
-			ArrayList<ButtonImpl> bttn = new ArrayList<>();
-			bttn.add(new ButtonImpl("trade_ok", "accepter", ButtonStyle.SUCCESS, false, null));
-			bttn.add(new ButtonImpl("trade_no", "refuser", ButtonStyle.DANGER, false, null));
-			msg.getChannel().sendMessage(sender.getAsMention() + " veux faire un échange avec " + received.getAsMention()).setEmbeds(eb.build()).setActionRow(bttn).queue();
-		}
+			return eb;
+			}
 		else {
-			msg.getChannel().sendMessage("toi ou la personne demandé n'a pas les waifus demandé").queue();
+			return null;
+
 		}
 	}
 

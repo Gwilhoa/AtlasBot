@@ -42,6 +42,7 @@ import fr.cringebot.cringe.waifus.WaifuCommand;
 import fr.cringebot.cringe.xp.TextuelXp;
 import fr.cringebot.cringe.xp.XP;
 import fr.cringebot.music.MusicCommand;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -167,6 +168,13 @@ public class BotListener implements EventListener {
 				Gift.openGift(event);
 			else
 				event.reply("on vole pas le cadeau des autres").setEphemeral(true).queue();
+		} else if (event.getButton().getId().startsWith("trade")){
+			if (event.getButton().getId().contains("ok"))
+			{
+				event.reply("échange effectué").queue();
+			} else {
+				event.reply("échange refusé").queue();
+			}
 		}
 		return;
 	}
