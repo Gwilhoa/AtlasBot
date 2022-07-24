@@ -136,7 +136,7 @@ public class CommandListener {
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
 	private void poll(Message msg) {
 		String[] args = msg.getContentRaw().split("\n");
-		String name = args[0];
+		String name = args[0].substring(">poll ".length());
 		args = msg.getContentRaw().substring(name.length() + 1).split("\n");
 		PollMain.PollMain(args, name, msg.getTextChannel(), msg.getMember());
 	}
