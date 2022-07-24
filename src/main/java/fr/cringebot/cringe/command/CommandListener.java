@@ -135,7 +135,10 @@ public class CommandListener {
 
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
 	private void poll(Message msg) {
-		PollMain.PollMain(msg);
+		String[] args = msg.getContentRaw().split("\n");
+		String name = args[0];
+		args = msg.getContentRaw().substring(name.length() + 1).split("\n");
+		PollMain.PollMain(args, name, msg.getTextChannel(), msg.getMember());
 	}
 
 	@Command(name = "role", description = "permettre de creer un role", type = ExecutorType.USER)

@@ -4,6 +4,7 @@ import fr.cringebot.cringe.CommandBuilder.Gift;
 import fr.cringebot.cringe.CommandBuilder.Info;
 import fr.cringebot.cringe.CommandBuilder.Shop;
 import fr.cringebot.cringe.CommandBuilder.Top;
+import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.escouades.Squads;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
@@ -27,6 +28,10 @@ public class SlashListener {
                 event.replyEmbeds(eb.build()).addActionRow(bttn).queue();
             }
         }
+        else if (event.getName().equals("shop"))
+        {
+            event.replyEmbeds(Shop.ShopDisplay(event.getMember()).build()).addActionRow(Shop.PrincipalMenu()).queue();
+        }
         else if (event.getName().equals("info"))
         {
             if (event.getOption("nom") == null)
@@ -41,6 +46,18 @@ public class SlashListener {
                 event.replyEmbeds(Top.top(event.getOption("nom").getAsString(), event.getGuild()).build()).queue();
         } else if (event.getName().equals("squadname"))
             event.replyEmbeds(Shop.ShopDisplay(event.getMember()).build()).addActionRow(Shop.PrincipalMenu()).queue();
+        else if (event.getName().equals("poll"))
+        {
+            ArrayList<String> args = new ArrayList<>();
+            String name = event.getOption("nom").getAsString();
+            args.add(event.getOption("arg01").getAsString());
+            args.add(event.getOption("arg02").getAsString());
+            if (event.getOption("arg03") == null)
+                args.add(event.getOption("arg03").getAsString());
+            if (event.getOption("arg04") == null)
+                args.add(event.getOption("arg04").getAsString());
+            PollMain.PollMain(args.toArray(new String[0]), name, event.getTextChannel(), event.getMember());
+        }
         else
             event.reply("patience ça arrive").setEphemeral(true).queue();
     }

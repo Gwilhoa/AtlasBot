@@ -104,7 +104,9 @@ public class MessageReact {
                 msg.addReaction(Emoji.fromFormatted(rr.getEmote())).queue();
             }
         }
-        EmbedBuilder eb = new EmbedBuilder().setTitle(this.Title);
+        EmbedBuilder eb = new EmbedBuilder()
+                .setTitle(this.Title)
+                .setColor(this.color);
         msg.editMessageEmbeds(eb.setDescription(sb.toString()).build()).queue();
         save();
     }

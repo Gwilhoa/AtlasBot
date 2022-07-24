@@ -11,7 +11,9 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
 import java.awt.*;
 import java.io.File;
@@ -64,8 +66,10 @@ public class WaifuCommand {
 			).complete();
 					msg.addReaction(Emoji.fromFormatted("◀️")).and(msg.addReaction(Emoji.fromFormatted("▶️"))).queue();
 			listwaifu(msg);
-		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add")){
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add")) {
 			addwaifu(msg);
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("trade")){
+			tradewaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("removeat")) {
 			if (msg.getMentions().getMembers().get(0) != null && msg.getContentRaw().split(" ").length == 4 && msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 			{
@@ -80,6 +84,29 @@ public class WaifuCommand {
 				msg.getChannel().sendMessage("tu as pas les droits").queue();
 			}
 
+		}
+	}
+	private static void tradewaifu(Message msg) {
+
+		tradewaifu(msg.getMember(),Integer.parseInt(msg.getContentRaw().split(" ")[2]), Integer.parseInt(msg.getContentRaw().split(" ")[3]), msg.getMentions().getMembers().get(0));
+	}
+
+	private static void tradewaifu(Member sender, Integer IdWaifu01, Integer IdWaifu02, Member received) {
+		InvWaifu ivWaifu01 = Squads.getstats(sender).getWaifus().get(IdWaifu01);
+		InvWaifu ivWaifu02 = Squads.getstats(received).getWaifus().get(IdWaifu02);
+
+		if ( ivWaifu01 != null && ivWaifu02 != null)
+		{
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setTitle("requête d'échange").setDescription(ivWaifu01.getWaifu().getName() + "provenant de " + ivWaifu01.getWaifu().getOrigin() + " de niveau " + ivWaifu01.getLevel()
+			+ "\ncontre\n" + ivWaifu02.getWaifu().getName()+ "provenant de " + ivWaifu01.getWaifu().getOrigin()  + " de niveau " + ivWaifu02.getLevel());
+			ArrayList<ButtonImpl> bttn = new ArrayList<>();
+			bttn.add(new ButtonImpl("trade_ok", "accepter", ButtonStyle.SUCCESS, false, null));
+			bttn.add(new ButtonImpl("trade_no", "refuser", ButtonStyle.DANGER, false, null));
+			msg.getChannel().sendMessage(sender.getAsMention() + " veux faire un échange avec " + received.getAsMention()).setEmbeds(eb.build()).setActionRow(bttn).queue();
+		}
+		else {
+			msg.getChannel().sendMessage("toi ou la personne demandé n'a pas les waifus demandé").queue();
 		}
 	}
 
