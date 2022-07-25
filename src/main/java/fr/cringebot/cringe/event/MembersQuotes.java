@@ -18,7 +18,8 @@ public class MembersQuotes {
 					"Super koala de destruction massif",
 					"D'après ce qu'on m'a dit cette personne est sacrée\ndonc j'en déduis qu'il est parlementaire",
 					"",
-					"https://tenor.com/view/chika-chika-dance-anime-anime-dance-dance-gif-13973731"
+					"https://tenor.com/view/chika-chika-dance-anime-anime-dance-dance-gif-13973731",
+					"blblblbl"
 			};
 
 
@@ -40,7 +41,10 @@ public class MembersQuotes {
 					"Il veut faire des croisades contre les roux (sans rancunes oscar)",
 					"Roi des galipettes",
 					"Non, on nage pas sous les tables,\nc'est pas fait pour ça",
-					""
+					"",
+					"Un vrai Homme, askip il a un couteau dans ses couilles",
+					"***YAAAEEEEGERR***",
+					"Son nom est swain"
 			};
 	static String[] jhuna =
 			{
@@ -52,11 +56,11 @@ public class MembersQuotes {
 
     static String[] max =
 	{
-			"La personne la plus calme et la plus sereine que je connaisse \n\n*ou pas*",
-			"Le chevalier ou le roi du sel en personne\nRien que ça",
-			"Composé à 95% de sel",
-			"Un jour il sera calme, un jour...",
-			"ComputerSlayer"
+					"La personne la plus calme et la plus sereine que je connaisse \n\n*ou pas*",
+					"Le chevalier ou le roi du sel en personne\nRien que ça",
+					"Composé à 95% de sel",
+					"Un jour il sera calme, un jour...",
+					"ComputerSlayer"
 	};
     
     static String[] logan =
@@ -69,16 +73,28 @@ public class MembersQuotes {
     
     static String[] guigui =
 	{
-		"C'est quoi une vache ?",
-		"Roro :heart:",
-		"Créateur de la méta Diablo backlane",
-		"Mon magnifique créateur, il est noir et PD,\nil a vraiment rien pour lui",
-		"ChairSlayer",
-		"ah ouuuuaiis \nça se passe comme ça dans le Nexus",
-		"mamaaaaaaaaaaa",
-		"C'est rien, c'est la rue"
+				"C'est quoi une vache ?",
+				"Roro :heart:",
+				"Créateur de la méta Diablo backlane",
+				"Mon magnifique créateur, il est noir et PD,\nil a vraiment rien pour lui",
+				"ChairSlayer",
+				"ah ouuuuaiis \nça se passe comme ça dans le Nexus",
+				"mamaaaaaaaaaaa",
+				"C'est rien, c'est la rue",
+				"42 main",
+				"Une soudaine envie de dev"
 	};
-    
+
+	static String[] smog =
+			{
+					"Random de qualité",
+					"Raleur de qualité",
+					"Si ça tenait qu'à lui une personne disparaitrais",
+					"Gilet jaune de qualité",
+					"Antonin en plus gros, moche et avec de la barbe"
+
+			};
+
     static String[] enki =
 	{
 		"https://www.alcool-info-service.fr",
@@ -86,7 +102,8 @@ public class MembersQuotes {
 		"https://www.caf.fr/",
 		"Enki, c'est mon hébergeur, il a chopé 2147483647 fois le covid\nil est parfois un peu con dans ses décisions",
 		"il a pas une carte fidelité burger king ?",
-		"je pense qu'il a déjà fait 4 fois le tour du monde en voiture"
+		"je pense qu'il a déjà fait 4 fois le tour du monde en voiture",
+			"XILAM POWER"
 	};
     
     static String[] oscar =
@@ -108,7 +125,8 @@ public class MembersQuotes {
 		"Le PussySlayer par excellence !",
 		"***Errape.mp3***",
 		"https://www.youtube.com/watch?v=DeumyOzKqgI",
-			"Qui s'en fout ?"
+			"Qui s'en fout ?",
+			"il sait terraformer IRL"
 	};
     
     static String[] jojo =
@@ -129,7 +147,15 @@ public class MembersQuotes {
 					"",
 					"",
 					"des montages de qualités, ça c'est sur",
-					"qu'est ce que poutine fait au collet d'allevard ?"
+					"qu'est ce que poutine fait au collet d'allevard ?",
+					"bourré en 30 min top chrono"
+			};
+
+	static String[] yann =
+			{
+					"Premier conseiller connu",
+					"Prend un grand plaisir a faire chier guigui",
+					"un homme bon a marier"
 			};
     public static boolean MemberReact(Message msg) throws IOException {
 		Squads.addPoints(msg.getMember(), 50L);
@@ -159,16 +185,12 @@ public class MembersQuotes {
 			quoteDefault(msg, jhuna);
 		else if (msg.getContentRaw().equalsIgnoreCase("virgile"))
 			Virgile(msg);
+		else if (msg.getContentRaw().equalsIgnoreCase("smog") || msg.getContentRaw().equalsIgnoreCase("aurel")){
+			quoteDefault(msg,smog);
+		}
 		else return false;
         return true;
     }
-
-    static String[] yann =
-			{
-					"Premier conseiller connu",
-					"Prend un grand plaisir a faire chier guigui",
-					"un homme bon a marier"
-			};
     
     
 
