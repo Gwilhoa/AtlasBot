@@ -177,12 +177,12 @@ public class BotListener implements EventListener {
 			ArrayList<ButtonImpl> bttn = new ArrayList<>();
 			bttn.add(new ButtonImpl("trade_ok", "accepter", ButtonStyle.SUCCESS, true, null));
 			bttn.add(new ButtonImpl("trade_no", "refuser", ButtonStyle.DANGER, true, null));
-			if (!event.getMember().getId().equals(event.getMessage().getMentions().getMembers().get(1).getId()))
+			if (!event.getMember().getId().equals(event.getButton().getId().split(";")[4]))
 				event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
 			else if (event.getButton().getId().contains("ok"))
 			{
-				Member sender = event.getGuild().getMemberById(Integer.parseInt(event.getButton().getId().split(";")[3]));
-				Member receiver = event.getGuild().getMemberById(Integer.parseInt(event.getButton().getId().split(";")[4]));
+				Member sender = event.getGuild().getMemberById(event.getButton().getId().split(";")[3]);
+				Member receiver = event.getGuild().getMemberById(event.getButton().getId().split(";")[4]);
 				InvWaifu invWaifuSender = Squads.getstats(sender).popInvWaifu(Integer.parseInt(event.getButton().getId().split(";")[1]));
 				InvWaifu invWaifuReceiver = Squads.getstats(receiver).popInvWaifu(Integer.parseInt(event.getButton().getId().split(";")[2]));
 				Squads.getstats(sender).addInvWaifu(invWaifuReceiver);
