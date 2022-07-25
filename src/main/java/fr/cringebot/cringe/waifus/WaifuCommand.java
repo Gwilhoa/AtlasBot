@@ -26,7 +26,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class WaifuCommand {
-	private static Message msg;
 	public static Lock waifuLock = new ReentrantLock();
 	private static final int SECOND = 1000;
 	private static final int MINUTE = 60 * SECOND;
@@ -84,12 +83,12 @@ public class WaifuCommand {
 				msg.getChannel().sendMessage("tu as pas les droits").queue();
 			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("delete")) {
-			Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2])).delwaifu();
+			delwaifu(msg);
 		}
 	}
 	private static void tradewaifu(Message msg) {
 		EmbedBuilder eb = tradewaifu(msg.getMember(),Integer.parseInt(msg.getContentRaw().split(" ")[2]), Integer.parseInt(msg.getContentRaw().split(" ")[3]), msg.getMentions().getMembers().get(0));
-		if (eb != null) {
+		if (Objects.equals(eb.build().getColor(), Color.WHITE)) {
 			ArrayList<ButtonImpl> bttn = new ArrayList<>();
 			bttn.add(new ButtonImpl("trade_ok;"+Integer.parseInt(msg.getContentRaw().split(" ")[2]) +";"+Integer.parseInt(msg.getContentRaw().split(" ")[3]) +";"+ msg.getMember().getId() + ";" + msg.getMentions().getMembers().get(0).getId(), "accepter", ButtonStyle.SUCCESS, false, null));
 			bttn.add(new ButtonImpl("trade_no;"+msg.getMentions().getMembers().get(0).getId(), "refuser", ButtonStyle.DANGER, false, null));
@@ -103,37 +102,28 @@ public class WaifuCommand {
 	private static EmbedBuilder tradewaifu(Member sender, Integer IdWaifu01, Integer IdWaifu02, Member received) {
 		InvWaifu ivWaifu01 = Squads.getstats(sender).getWaifus().get(IdWaifu01);
 		InvWaifu ivWaifu02 = Squads.getstats(received).getWaifus().get(IdWaifu02);
-
-		if ( ivWaifu01 != null && ivWaifu02 != null && Squads.getstats(sender).getWaifus().get(IdWaifu02) == null && Squads.getstats(received).getWaifus().get(IdWaifu01) == null)
+		EmbedBuilder eb = new EmbedBuilder();
+		if (ivWaifu01 != null && ivWaifu02 != null && Squads.getstats(sender).getWaifus().get(IdWaifu02) == null && Squads.getstats(received).getWaifus().get(IdWaifu01) == null)
 		{
-			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("Requête d'échange").setDescription(ivWaifu01.getWaifu().getName() + " provenant de " + ivWaifu01.getWaifu().getOrigin() + " de niveau " + ivWaifu01.getLevel()
 			+ "\ncontre\n" + ivWaifu02.getWaifu().getName()+ " provenant de " + ivWaifu02.getWaifu().getOrigin()  + " de niveau " + ivWaifu02.getLevel());
-			return eb;
-			}
-		else {
-			return null;
-
+			eb.setColor(Color.WHITE);
 		}
-	}
-
-	private static void stats(Message msg) {
-		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
-		ArrayList<String> str = new ArrayList<>();
-		for (Waifu w : waifus) {
-			if (!str.contains(w.getOrigin())) {
-				str.add(w.getOrigin());
+		else
+		{
+			eb.setTitle("Échec");
+			if (ivWaifu01 == null) {
+				eb.setDescription("tu n'as pas " + Waifu.getWaifuById(IdWaifu01));
+			} else if (ivWaifu02 == null) {
+				eb.setDescription(received.getAsMention() + " n'a pas " + Waifu.getWaifuById(IdWaifu02).getName());
+			} else if (Squads.getstats(sender).getWaifus().get(IdWaifu02) != null) {
+				eb.setDescription("tu as déja "+ Waifu.getWaifuById(IdWaifu02).getName());
+			} else if (Squads.getstats(received).getWaifus().get(IdWaifu01) != null) {
+				eb.setDescription(received.getAsMention() + " a déjà " + Waifu.getWaifuById(IdWaifu01).getName());
 			}
+			eb.setColor(Color.red);
 		}
-		str.sort(Comparator.naturalOrder());
-		StringBuilder sb = new StringBuilder();
-		for (String ret : str)
-			sb.append(ret).append("   ");
-		MessageBuilder mb = new MessageBuilder();
-		mb.append(sb);
-		Queue<Message> mq =  mb.buildAll();
-		for (Message ms : mq)
-			msg.getChannel().sendMessage(ms).queue();
+		return eb;
 	}
 
 	private static void setImage(Message msg) throws IOException {
@@ -168,7 +158,8 @@ public class WaifuCommand {
 		}
 		name = args[0].substring(">waifu add ".length());
 		if (!msg.getAttachments().isEmpty() && msg.getAttachments().size() == 1) {
-			new Waifu(msg.getAttachments().get(0), name, msg.getContentRaw().substring(args[0].length() + args[1].length() + 2), null, args[1], false);
+			Waifu waifu = new Waifu(msg.getAttachments().get(0), name, msg.getContentRaw().substring(args[0].length() + args[1].length() + 2), null, args[1], false);
+			msg.getChannel().sendMessage("waifu bien ajouté #"+ waifu.getId()).reference(msg).queue();
 		} else {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 		}
