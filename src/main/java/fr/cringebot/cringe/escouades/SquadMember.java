@@ -105,6 +105,21 @@ public class SquadMember {
 		Squads.save();
 	}
 
+	public void addInvWaifu(InvWaifu ivW)
+	{
+		this.waifus.put(ivW.getId(), ivW);
+		Squads.save();
+	}
+
+	public InvWaifu popInvWaifu (Integer id)
+	{
+		InvWaifu ivW = this.waifus.get(id);
+		if (ivW != null)
+			this.waifus.remove(id);
+		Squads.save();
+		return ivW;
+	}
+
 	public void initCollections() {
 		this.collections = new HashMap<>();
 	}

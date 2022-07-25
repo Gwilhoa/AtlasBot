@@ -37,6 +37,7 @@ import fr.cringebot.cringe.reactionsrole.RoleReaction;
 import fr.cringebot.cringe.siterequest.Request;
 import fr.cringebot.cringe.slashInteraction.SlashListener;
 import fr.cringebot.cringe.slashInteraction.slashCommand;
+import fr.cringebot.cringe.waifus.InvWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
 import fr.cringebot.cringe.xp.TextuelXp;
@@ -66,7 +67,10 @@ import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
+import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -169,10 +173,24 @@ public class BotListener implements EventListener {
 			else
 				event.reply("on vole pas le cadeau des autres").setEphemeral(true).queue();
 		} else if (event.getButton().getId().startsWith("trade")){
-			if (event.getButton().getId().contains("ok"))
+			EmbedBuilder eb = new EmbedBuilder().setTitle("Requête d'échange").setDescription(event.getMessage().getEmbeds().get(0).getDescription());
+			ArrayList<ButtonImpl> bttn = new ArrayList<>();
+			bttn.add(new ButtonImpl("trade_ok", "accepter", ButtonStyle.SUCCESS, true, null));
+			bttn.add(new ButtonImpl("trade_no", "refuser", ButtonStyle.DANGER, true, null));
+			if (!event.getMember().getId().equals(event.getMessage().getMentions().getMembers().get(1).getId()))
+				event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
+			else if (event.getButton().getId().contains("ok"))
 			{
+				Member sender = event.getMessage().getMentions().getMembers().get(0);
+				Member receiver = event.getMessage().getMentions().getMembers().get(1);
+				InvWaifu invWaifuSender = Squads.getstats(sender).popInvWaifu(Integer.parseInt(event.getButton().getId().split(";")[1]));
+				InvWaifu invWaifuReceiver = Squads.getstats(receiver).popInvWaifu(Integer.parseInt(event.getButton().getId().split(";")[2]));
+				Squads.getstats(sender).addInvWaifu(invWaifuReceiver);
+				Squads.getstats(receiver).addInvWaifu(invWaifuSender);
+				event.editMessageEmbeds(eb.setColor(Color.green).build()).setActionRow(bttn).queue();
 				event.reply("échange effectué").queue();
 			} else {
+				event.editMessageEmbeds(eb.setColor(Color.green).build()).setActionRow(bttn).queue();;
 				event.reply("échange refusé").queue();
 			}
 		}

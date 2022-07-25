@@ -64,7 +64,7 @@ public class InvWaifu {
 		if (!msg.getMember().getId().equals("881962597526696038"))
 			eb.setColor(Squads.getSquadByMember(msg.getMember()).getSquadRole(msg.getGuild()).getColor());
 		else
-			eb.setColor(Squads.getSquadByMember(msg.getContentRaw().split("\n")[1]).getSquadRole(msg.getGuild()).getColor());
+			eb.setColor(Squads.getSquadByMember(msg.getEmbeds().get(0).getFooter().getText()).getSquadRole(msg.getGuild()).getColor());
 		waifuLock.lock();
 		Thread.sleep(100);
 		MessageAction toSend = msg.getChannel().sendMessageEmbeds(eb.build());

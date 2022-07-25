@@ -216,7 +216,7 @@ public class Waifu {
 	public static Long timeleft(String id){
 		if (timer.get(id) == null)
 			return (-1L);
-		return ( (System.currentTimeMillis() - (timer.get(id) + 25200000L)) * -1);
+		return ((System.currentTimeMillis() - (timer.get(id) + 25200000L)) * -1);
 	}
 
 	public void setIstaken(boolean istaken) {
