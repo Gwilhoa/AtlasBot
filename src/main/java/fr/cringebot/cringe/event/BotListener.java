@@ -188,13 +188,13 @@ public class BotListener implements EventListener {
 				InvWaifu invWaifuReceiver = Squads.getstats(receiver).popInvWaifu(Integer.parseInt(event.getButton().getId().split(";")[2]));
 				Squads.getstats(sender).addInvWaifu(invWaifuReceiver);
 				Squads.getstats(receiver).addInvWaifu(invWaifuSender);
-				event.editMessageEmbeds(eb.setColor(Color.green).build()).setActionRow(bttn).queue();
-				event.reply("échange effectué").queue();
+				event.editMessageEmbeds(eb.setColor(Color.green).setFooter("accepté").build()).setActionRow(bttn).queue();
+				event.getChannel().sendMessage("échange accepté").reference(event.getMessage()).queue();
 			} else {
 				if (!event.getMember().getId().equals(event.getButton().getId().split(";")[1]))
 					event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
-				event.editMessageEmbeds(eb.setColor(Color.green).build()).setActionRow(bttn).queue();;
-				event.reply("échange refusé").queue();
+				event.editMessageEmbeds(eb.setColor(Color.red).setFooter("refusé").build()).setActionRow(bttn).queue();;
+				event.getChannel().sendMessage("échange refusé").reference(event.getMessage()).queue();
 			}
 		}
 	}

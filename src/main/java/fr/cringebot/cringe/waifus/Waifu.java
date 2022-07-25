@@ -113,8 +113,6 @@ public class Waifu {
 			{
 				if (waifu.getName() == null || StringExtenders.startWithIgnoreCase(waifu.getName(),name))
 					list.add(waifu);
-				else
-					System.out.println(waifu.id);
 			}
 		}
 		if (list.isEmpty())
