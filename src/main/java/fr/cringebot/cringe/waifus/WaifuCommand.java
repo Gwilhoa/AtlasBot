@@ -92,7 +92,7 @@ public class WaifuCommand {
 		if (eb != null) {
 			ArrayList<ButtonImpl> bttn = new ArrayList<>();
 			bttn.add(new ButtonImpl("trade_ok;"+Integer.parseInt(msg.getContentRaw().split(" ")[2]) +";"+Integer.parseInt(msg.getContentRaw().split(" ")[3]) +";"+ msg.getMember().getId() + ";" + msg.getMentions().getMembers().get(0).getId(), "accepter", ButtonStyle.SUCCESS, false, null));
-			bttn.add(new ButtonImpl("trade_no", "refuser", ButtonStyle.DANGER, false, null));
+			bttn.add(new ButtonImpl("trade_no;"+msg.getMentions().getMembers().get(0).getId(), "refuser", ButtonStyle.DANGER, false, null));
 			msg.getChannel().sendMessage(msg.getMember().getAsMention() + " veux faire un échange avec " +  msg.getMentions().getMembers().get(0).getAsMention()).setEmbeds(eb.build()).setActionRow(bttn).queue();
 		}
 		else {

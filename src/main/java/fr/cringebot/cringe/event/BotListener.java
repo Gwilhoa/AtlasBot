@@ -178,10 +178,10 @@ public class BotListener implements EventListener {
 			bttn.add(new ButtonImpl("trade_ok", "accepter", ButtonStyle.SUCCESS, true, null));
 			bttn.add(new ButtonImpl("trade_no", "refuser", ButtonStyle.DANGER, true, null));
 			System.out.println(event.getButton().getId());
-			if (!event.getMember().getId().equals(event.getButton().getId().split(";")[4]))
-				event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
-			else if (event.getButton().getId().contains("ok"))
+			if (event.getButton().getId().contains("ok"))
 			{
+				if (!event.getMember().getId().equals(event.getButton().getId().split(";")[4]))
+					event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
 				Member sender = event.getGuild().getMemberById(event.getButton().getId().split(";")[3]);
 				Member receiver = event.getGuild().getMemberById(event.getButton().getId().split(";")[4]);
 				InvWaifu invWaifuSender = Squads.getstats(sender).popInvWaifu(Integer.parseInt(event.getButton().getId().split(";")[1]));
@@ -191,6 +191,8 @@ public class BotListener implements EventListener {
 				event.editMessageEmbeds(eb.setColor(Color.green).build()).setActionRow(bttn).queue();
 				event.reply("échange effectué").queue();
 			} else {
+				if (!event.getMember().getId().equals(event.getButton().getId().split(";")[1]))
+					event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
 				event.editMessageEmbeds(eb.setColor(Color.green).build()).setActionRow(bttn).queue();;
 				event.reply("échange refusé").queue();
 			}
