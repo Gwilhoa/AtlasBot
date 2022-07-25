@@ -177,6 +177,7 @@ public class BotListener implements EventListener {
 			ArrayList<ButtonImpl> bttn = new ArrayList<>();
 			bttn.add(new ButtonImpl("trade_ok", "accepter", ButtonStyle.SUCCESS, true, null));
 			bttn.add(new ButtonImpl("trade_no", "refuser", ButtonStyle.DANGER, true, null));
+			System.out.println(event.getMessage().getMentions().getMembers());
 			if (!event.getMember().getId().equals(event.getMessage().getMentions().getMembers().get(1).getId()))
 				event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
 			else if (event.getButton().getId().contains("ok"))
