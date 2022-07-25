@@ -44,6 +44,10 @@ public class ReactionEvent {
             pressf(msg);
         }
 
+        if (StringExtenders.containsWord(msg.getContentRaw(),"lyon"))
+        {
+            msg.getChannel().sendMessage("les portes s'ouvriront à droite dans le sens de la circulation").queue();
+        }
         if (containsIgnoreCase(msg.getContentRaw(), "je suis"))
         {
             int i = firstsearch(msg.getContentRaw().toLowerCase(Locale.ROOT), "je suis");
