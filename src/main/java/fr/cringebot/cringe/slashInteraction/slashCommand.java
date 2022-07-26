@@ -90,7 +90,31 @@ public class slashCommand {
         jda.upsertCommand("help", "savoir les commandes")
                 .queue();
          **/
-        jda.upsertCommand("waifu info", "savoir les commandes")
+        jda.upsertCommand("waifu_info", "savoir les informations d'une waifu")
+                .addOption(OptionType.STRING, "nom/id", "id ou le nom de la waifu a chercher", true)
+                .queue();
+        jda.upsertCommand("waifu_trade", "échanger une waifu avec quelqu'un")
+                .addOption(OptionType.INTEGER, "id", "l'id de votre waifu a échanger")
+                .addOption(OptionType.INTEGER, "id2", "l'id de la waifu voulu")
+                .addOption(OptionType.USER, "name", "nom de celui avec qui échanger")
+                .queue();
+        jda.upsertCommand("waifu_reset", "reinitialisation !")
+                .queue();
+        jda.upsertCommand("waifu_setimage", "modifier l'image d'une waifu")
+                .addOption(OptionType.INTEGER, "id", "l'id de la waifu a modifier")
+                .queue();
+        jda.upsertCommand("waifu_list", "modifier l'image d'une waifu")
+                .addOption(OptionType.STRING, "nom", "collection a rechercher")
+                .queue();
+        jda.upsertCommand("waifu_delete", "modifier l'image d'une waifu")
+                .addOption(OptionType.INTEGER, "id", "l'id de la waifu a supprimer")
+                .queue();
+        jda.upsertCommand("waifu_removeat", "enlever une waifu à quelqu'un")
+                .addOption(OptionType.INTEGER, "id", "l'id de la waifu a supprimer")
+                .addOption(OptionType.USER, "nom", "la personne à qui l'enlever")
+                .queue();
+        jda.upsertCommand("waifu_release", "liberer une waifu capturé")
+                .addOption(OptionType.INTEGER, "id", "l'id de la waifu a liberer")
                 .queue();
     }
 
