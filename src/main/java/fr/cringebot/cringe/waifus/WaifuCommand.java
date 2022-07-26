@@ -84,6 +84,13 @@ public class WaifuCommand {
 			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("delete")) {
 			delwaifu(msg);
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("release")) {
+			if (release(msg.getMember(), Integer.parseInt(msg.getContentRaw().split(" ")[2])))
+			{
+				Waifu w = Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
+				Squads.getstats(msg.getMember()).addCollection(w.getOrigin(), msg);
+				msg.getChannel().sendMessage(w.getName() + " a été relaché, vous gagné une pièce de " + w.getOrigin()).queue();
+			}
 		}
 	}
 	private static void tradewaifu(Message msg) {
@@ -95,7 +102,7 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage(msg.getMember().getAsMention() + " veux faire un échange avec " +  msg.getMentions().getMembers().get(0).getAsMention()).setEmbeds(eb.build()).setActionRow(bttn).queue();
 		}
 		else {
-			msg.getChannel().sendMessage("toi ou la personne demandé n'a pas les waifus demandé ou un des deux a deja la waifu").queue();
+			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}
 	}
 
@@ -357,12 +364,8 @@ public class WaifuCommand {
 		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
 	}
 
-	private static void release(Message msg) {
-		if (!msg.getChannel().getId().equals(BotDiscord.FarmingSalonId)) {
-			msg.getChannel().sendMessage("Mové salon comme dirait l'autre").queue();
-			return;
-		}
-		return;
+	private static boolean release(Member m, Integer id) {
+		return Squads.getstats(m).removeWaifu(id);
 	}
 }
 

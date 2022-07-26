@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 public class slashCommand {
     public static void load(JDA jda) throws InterruptedException {
+        /**
         jda.updateCommands().queue();
 
         jda.upsertCommand("play", "jouer de la musique")
@@ -87,6 +88,9 @@ public class slashCommand {
                 .queue();
 
         jda.upsertCommand("help", "savoir les commandes")
+                .queue();
+         **/
+        jda.upsertCommand("waifu info", "savoir les commandes")
                 .queue();
     }
 
