@@ -91,7 +91,7 @@ public class slashCommand {
                 .queue();
          **/
         jda.upsertCommand("waifu_info", "savoir les informations d'une waifu")
-                .addOption(OptionType.STRING, "nom/id", "id ou le nom de la waifu a chercher", true)
+                .addOption(OptionType.STRING, "nom", "id ou le nom de la waifu a chercher", true)
                 .queue();
         jda.upsertCommand("waifu_trade", "échanger une waifu avec quelqu'un")
                 .addOption(OptionType.INTEGER, "id", "l'id de votre waifu a échanger")
