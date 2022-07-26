@@ -3,7 +3,8 @@ package fr.cringebot.cringe.objects;
 public class Item {
     public enum Items {
         HE("Horloge Érotique"),
-        PB("pass brésil");
+        PB("Pass Brésil"),
+        SB("Super Bonbon");
 
 
         private final String str;
