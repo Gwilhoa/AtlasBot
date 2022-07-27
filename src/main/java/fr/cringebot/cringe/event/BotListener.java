@@ -215,6 +215,9 @@ public class BotListener implements EventListener {
 				event.reply("tu es pas la personne concerné").queue();
 			}
 		}
+		else if (event.getButton().getId().startsWith("harem")){
+			WaifuCommand.haremEmbed(event.getMessage(),Integer.parseInt(event.getId().substring("harem_".length()).split(";")[1]), event.getId().substring("harem_".length()).split(";")[0]);
+		}
 	}
 
 	private void onDisconnect(GuildVoiceLeaveEvent event) {

@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import static fr.cringebot.BotDiscord.isMaintenance;
 import static fr.cringebot.cringe.waifus.WaifuCommand.waifuLock;
+import static java.lang.Math.pow;
 
 public class InvWaifu {
 	private final Integer Id;
@@ -25,7 +26,7 @@ public class InvWaifu {
 	}
 
 	public Integer getFriendlyLevel() {
-		double ret = ((20 * Math.pow(this.level, 2)) + (980 * this.level));
+		double ret = ((2* pow(10, -10)) * pow(this.level, 2));
 		ret = ret - (int) ret;
 		ret = ret * 100;
 		return (int) ret;
@@ -37,7 +38,7 @@ public class InvWaifu {
 
 	public Integer getLevel() {
 		this.FriendlyLevel = null;
-		double ret = ((20 * Math.pow(this.level, 2)) + (980 * this.level));
+		double ret = ((2* pow(10, -10)) * pow(this.level, 2));
 		return (int) ret;
 	}
 
