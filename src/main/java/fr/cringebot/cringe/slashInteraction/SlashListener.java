@@ -6,7 +6,9 @@ import fr.cringebot.cringe.CommandBuilder.Shop;
 import fr.cringebot.cringe.CommandBuilder.Top;
 import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.escouades.Squads;
+import fr.cringebot.cringe.waifus.WaifuCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
@@ -31,6 +33,23 @@ public class SlashListener {
         else if (event.getName().equals("shop"))
         {
             event.replyEmbeds(Shop.ShopDisplay(event.getMember()).build()).addActionRow(Shop.PrincipalMenu()).queue();
+        }
+        else if (event.getName().equals("harem"))
+        {
+            Message msg;
+            if (event.getOption("nom") == null) {
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setTitle("Waifu de " + event.getMember().getEffectiveName());
+                msg = getMessage(event, eb);
+                WaifuCommand.haremEmbed(msg, 0, event.getMember().getId());
+            }
+            else
+            {
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setTitle("Waifu de " + event.getOption("nom").getAsMember().getEffectiveName());
+                msg = getMessage(event, eb);
+                WaifuCommand.haremEmbed(msg, 0, event.getOption("nom").getAsMember().getId());
+            }
         }
         else if (event.getName().equals("info"))
         {
@@ -60,6 +79,16 @@ public class SlashListener {
         }
         else
             event.reply("patience ça arrive").setEphemeral(true).queue();
+    }
+
+    private static Message getMessage(SlashCommandInteraction event, EmbedBuilder eb) {
+        Message msg;
+        eb.setDescription("chargement...");
+        ArrayList<ButtonImpl> bttn = new ArrayList<>();
+        bttn.add(new ButtonImpl("harem_"+event.getMember()+";"+"-1", "page précédente", ButtonStyle.PRIMARY ,true, null));
+        bttn.add(new ButtonImpl("harem_"+event.getMember()+";"+"1", "page suivante",ButtonStyle.SECONDARY ,false, null));
+        msg = (Message) event.replyEmbeds(eb.build()).addActionRow(bttn).complete();
+        return msg;
     }
 
     public static void autoComplete(CommandAutoCompleteInteraction event) {

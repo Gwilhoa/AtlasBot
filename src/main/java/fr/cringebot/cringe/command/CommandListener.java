@@ -168,11 +168,12 @@ public class CommandListener {
 			id = msg.getMentions().getMembers().get(0).getId();
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle("Waifu de " + msg.getGuild().getMemberById(id).getEffectiveName());
-		eb.setAuthor(id);
 		eb.setDescription("chargement...");
-		msg = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
-		msg.addReaction(Emoji.fromFormatted("◀️")).and(msg.addReaction(Emoji.fromFormatted("▶️"))).queue();
-		WaifuCommand.haremEmbed(msg);
+		ArrayList<ButtonImpl> bttn = new ArrayList<>();
+		bttn.add(new ButtonImpl("harem_"+msg.getMember()+";"+"-1", "page précédente",ButtonStyle.PRIMARY ,true, null));
+		bttn.add(new ButtonImpl("harem_"+msg.getMember()+";"+"1", "page suivante",ButtonStyle.SECONDARY ,false, null));
+		msg = msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow().complete();
+		WaifuCommand.haremEmbed(msg, 0, id);
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException, IOException {

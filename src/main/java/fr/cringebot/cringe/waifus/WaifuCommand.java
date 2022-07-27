@@ -233,21 +233,20 @@ public class WaifuCommand {
 	}
 
 
-	public static void haremEmbed(Message msg){
-		haremEmbed(msg, 0);
-	}
-	public static void haremEmbed(Message msg, Integer f) {
+	public static void haremEmbed(Message msg, Integer f, String id) {
+		ArrayList<ButtonImpl> bttn = new ArrayList<>();
 		ArrayList<Waifu> waifus = new ArrayList<>();
 		Waifu w;
 		EmbedBuilder eb = new EmbedBuilder();
-		String MemberID = msg.getEmbeds().get(0).getAuthor().getName();
-		ArrayList<InvWaifu> invWaifus = new ArrayList<>(Squads.getSquadByMember(MemberID).getStatMember(MemberID).getWaifus().values());
+		ArrayList<InvWaifu> invWaifus = new ArrayList<>(Squads.getstats(id).getWaifus().values());
 		for (InvWaifu inw : invWaifus)
 			waifus.add(Waifu.getWaifuById(inw.getId()));
 		int	i = f*10;
 		if (waifus.isEmpty())
 		{
-			msg.editMessageEmbeds(eb.setDescription("tu as pas de waifu").setColor(Color.RED).build()).queue();
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f-1), "page précédente",ButtonStyle.PRIMARY ,true, null));
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f+1), "page suivante",ButtonStyle.SECONDARY ,true, null));
+			msg.editMessageEmbeds(eb.setDescription("tu as pas de waifu").setColor(Color.RED).build()).setActionRow(bttn).queue();
 			return;
 		}
 		if (i > waifus.size() || i < 0)
@@ -262,10 +261,17 @@ public class WaifuCommand {
 			}
 			i++;
 		}
-		eb.setColor(Squads.getSquadByMember(MemberID).getSquadRole(msg.getGuild()).getColor());
+		eb.setColor(Squads.getSquadByMember(id).getSquadRole(msg.getGuild()).getColor());
 		eb.setDescription(sb);
-		eb.setAuthor(MemberID);
-		msg.editMessageEmbeds(eb.build()).queue();
+		if (f == 0)
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f-1), "page précédente",ButtonStyle.PRIMARY ,true, null));
+		else
+			bttn.add(new ButtonImpl("harem_"+msg.getMember()+";"+(f-1), "page précédente",ButtonStyle.PRIMARY ,false, null));
+		if (i >= waifus.size())
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f+1), "page suivante",ButtonStyle.SECONDARY ,false, null));
+		else
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f+1), "page suivante",ButtonStyle.SECONDARY ,true, null));
+		msg.editMessageEmbeds(eb.build()).setActionRow(bttn).queue();
 	}
 
 
