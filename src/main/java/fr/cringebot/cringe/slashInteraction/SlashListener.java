@@ -85,8 +85,8 @@ public class SlashListener {
     private static Message getMessage(SlashCommandInteraction event, EmbedBuilder eb) {
         eb.setDescription("chargement...");
         ArrayList<ButtonImpl> bttn = new ArrayList<>();
-        bttn.add(new ButtonImpl("harem_"+event.getMember()+";"+"-1", "page précédente", ButtonStyle.PRIMARY ,true, null));
-        bttn.add(new ButtonImpl("harem_"+event.getMember()+";"+"1", "page suivante",ButtonStyle.SECONDARY ,false, null));
+        bttn.add(new ButtonImpl("harem_"+event.getMember().getId()+";"+"-1", "page précédente", ButtonStyle.PRIMARY ,true, null));
+        bttn.add(new ButtonImpl("harem_"+event.getMember().getId()+";"+"1", "page suivante",ButtonStyle.SECONDARY ,false, null));
         InteractionHook ih = event.replyEmbeds(eb.build()).addActionRow(bttn).complete();
         return (Message) ih;
     }
