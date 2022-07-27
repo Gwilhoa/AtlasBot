@@ -196,7 +196,7 @@ public class WaifuCommand {
 		if (isCaptured)
 		{
 			if (Squads.getstats(m).getAmountItem(Item.Items.BF.getStr()) > 0)
-				toSend = toSend.setActionRow(new ButtonImpl("AFF_"+ Item.Items.BF + ";" + w.getId() +";"+m.getId(), "donner un bouquet de fleur", ButtonStyle.PRIMARY, false, null));
+				toSend = toSend.setActionRow(new ButtonImpl("AFF_"+ Item.Items.BF.getStr() + ";" + w.getId() +";"+m.getId(), "donner un bouquet de fleur", ButtonStyle.PRIMARY, false, null));
 			else
 				toSend = toSend.setActionRow(new ButtonImpl("AFF", "donner un bouquet de fleur", ButtonStyle.PRIMARY, true, null));
 		}
