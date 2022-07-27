@@ -4,6 +4,7 @@ public class Item {
     public enum Items {
         HE("Horloge Érotique"),
         PB("Pass Brésil"),
+        BF("Bouquet de fleur"),
         SB("Super Bonbon");
 
 

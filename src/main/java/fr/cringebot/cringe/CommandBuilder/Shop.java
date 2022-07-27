@@ -19,7 +19,7 @@ public class Shop {
     private final static Integer CEPRICE = 20;
     private final static Integer HEPRICE = 100;
     private final static Integer PBPRICE = 5;
-    private final static Integer JJFUPRICE = 0;
+    private final static Integer BFPRICE = 1000;
     private final static Integer SBPKMPRICE = 0;
 
     public static EmbedBuilder ShopDisplay(Member mem)
@@ -30,8 +30,8 @@ public class Shop {
                 "Pièce de collection : 3 de la meme catégorie donne accès a une waifu\n" +
                 "Chronomètre érotique : vous enlève 30min avant votre prochaine waifu\n" +
                 "(4 max)Horloge érotique : vous enlève 30min à votre timer de chaque prochaine waifu\n" +
-                "Pass-Brésil : you are going to bresil\n" +
-                "joujou pour waifu : augmente l'affection de votre waifu\n" +
+                "Pass-Brésil : direction le Brésil\n" +
+                "Bouquets de fleur : Augmente l'affection de votre waifu\n" +
                 "Super bonbon : monte d'un niveau un pokemon");
         eb.setFooter("vous avez " + Squads.getstats(mem).getCoins() + " B2C");
         return eb;
@@ -44,7 +44,7 @@ public class Shop {
         options.add(new SelectOptionImpl("Chronomètre érotique : "+CEPRICE+" B2C", "RDTPFU"));
         options.add(new SelectOptionImpl("horloge érotique : "+HEPRICE+" B2C", "RDTDFU"));
         options.add(new SelectOptionImpl("pass-brésil : "+PBPRICE+ " B2C", "YAGTB"));
-        options.add(new SelectOptionImpl("Joujou pour waifu : "+ JJFUPRICE+" B2C", "JJFU"));
+        options.add(new SelectOptionImpl("Bouquet de fleur : "+ BFPRICE +" B2C", "BFFU"));
         options.add(new SelectOptionImpl("Super Bonbon : " + SBPKMPRICE + " B2C", "SBPKM"));
         options.add(new SelectOptionImpl("annuler", "stop"));
         return new SelectMenuImpl("shop", "selectionnez un choix", 1, 1, false, options);
@@ -106,6 +106,15 @@ public class Shop {
                 } else {
                     event.reply("Tiens ça a pas marché, réessayez plus tard").queue();
                 }
+            } else
+            {
+                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
+            }
+        } else if (event.getSelectedOptions().get(0).getValue().equals("BFFU")) {
+            if (Squads.getstats(event.getMember()).getCoins() >= BFPRICE.longValue())
+            {
+                Squads.getstats(event.getMember()).addItem(Item.Items.BF.getStr());
+                event.reply("tu viens d'acheter un bouquet de fleurs").queue();
             } else
             {
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();

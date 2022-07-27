@@ -3,6 +3,7 @@ package fr.cringebot.cringe.waifus;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
+import fr.cringebot.cringe.objects.Item;
 import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -171,8 +172,9 @@ public class WaifuCommand {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 		}
 	}
-	private static void sendEmbedInfo(Waifu w, TextChannel tc, Member m) throws InterruptedException {
+	public static void sendEmbedInfo(Waifu w, TextChannel tc, Member m) throws InterruptedException {
 		EmbedBuilder eb = new EmbedBuilder();
+		boolean isCaptured = false;
 		File f = new File(w.getProfile());
 		eb.setAuthor(w.getOrigin());
 		eb.setTitle("Information : " + w.getName() + "\nIdentifiant : " + w.getId());
@@ -182,6 +184,7 @@ public class WaifuCommand {
 		{
 			if (iw.getId().equals(w.getId()))
 			{
+				isCaptured = true;
 				eb.setColor(Squads.getSquadByMember(m).getSquadRole(m.getGuild()).getColor())
 						.setFooter("niveau : " + iw.getLevel()
 								+ "\naffection " + iw.getFriendlyLevel() + "%");
@@ -190,6 +193,13 @@ public class WaifuCommand {
 		waifuLock.lock();
 		Thread.sleep(100);
 		MessageAction toSend = tc.sendMessageEmbeds(eb.build());
+		if (isCaptured)
+		{
+			if (Squads.getstats(m).getAmountItem(Item.Items.BF.getStr()) > 0)
+				toSend = toSend.setActionRow(new ButtonImpl("AFF_"+ Item.Items.BF + ";" + w.getId() +";"+m.getId(), "donner un bouquet de fleur", ButtonStyle.PRIMARY, false, null));
+			else
+				toSend = toSend.setActionRow(new ButtonImpl("AFF", "donner un bouquet de fleur", ButtonStyle.PRIMARY, true, null));
+		}
 		InvWaifu.downloadWaifu(f, toSend);
 	}
 

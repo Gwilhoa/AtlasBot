@@ -29,6 +29,7 @@ import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.lol.Champion;
 import fr.cringebot.cringe.objects.DetectorAttachment;
 import fr.cringebot.cringe.objects.Emotes;
+import fr.cringebot.cringe.objects.Item;
 import fr.cringebot.cringe.objects.activity;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
@@ -194,6 +195,24 @@ public class BotListener implements EventListener {
 					event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
 				event.editMessageEmbeds(eb.setColor(Color.red).setFooter("refusé").build()).setActionRow(bttn).queue();;
 				event.getChannel().sendMessage("échange refusé").reference(event.getMessage()).queue();
+			}
+		} else if (event.getButton().getId().startsWith("AFF")) {
+			String[] splited = event.getButton().getId().substring("AFF_".length()).split(";");
+
+			if (event.getMember().getId().equals(splited[2])) {
+				if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.BF.getStr()) <= 0) {
+					event.reply("tu as pas de bouquets de fleurs").setEphemeral(true).queue();
+					return;
+				}
+				InvWaifu iWa = Squads.getstats(event.getMember()).getWaifus().get(Integer.parseInt(splited[1]));
+				if (splited[0].equals(Item.Items.BF.getStr())) {
+					iWa.addXp(300L);
+					Squads.getstats(event.getMember()).removeItem(Item.Items.BF.getStr());
+				}
+				WaifuCommand.sendEmbedInfo(iWa.getWaifu(), event.getTextChannel(), event.getMember());
+				event.getMessage().delete().queue();
+			} else {
+				event.reply("tu es pas la personne concerné").queue();
 			}
 		}
 	}

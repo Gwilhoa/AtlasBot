@@ -21,28 +21,34 @@ public class InvWaifu {
 
 	public InvWaifu(Integer id) {
 		Id = id;
-		this.FriendlyLevel = 0;
 		this.level = 0L;
 	}
 
 	public Integer getFriendlyLevel() {
-		return FriendlyLevel;
-	}
-
-	public void setFriendlyLevel(Integer friendlyLevel) {
-		FriendlyLevel = friendlyLevel;
+		double ret = ((20 * Math.pow(this.level, 2)) + (980 * this.level));
+		ret = ret - (int) ret;
+		ret = ret * 100;
+		return (int) ret;
 	}
 
 	public void setLevel(Long level) {
 		this.level = level;
 	}
 
-	public Long getLevel() {
-		return level;
+	public Integer getLevel() {
+		this.FriendlyLevel = null;
+		double ret = ((20 * Math.pow(this.level, 2)) + (980 * this.level));
+		return (int) ret;
 	}
 
 	public Integer getId() {
 		return Id;
+	}
+
+	public void addXp(Long xp)
+	{
+		this.level = this.level + xp;
+		Squads.save();
 	}
 
 	public static void catchWaifu(Message msg, Integer id) throws InterruptedException {
