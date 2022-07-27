@@ -171,8 +171,8 @@ public class CommandListener {
 		eb.setDescription("chargement...");
 		ArrayList<ButtonImpl> bttn = new ArrayList<>();
 		bttn.add(new ButtonImpl("harem_"+msg.getMember()+";"+"-1", "page précédente",ButtonStyle.PRIMARY ,true, null));
-		bttn.add(new ButtonImpl("harem_"+msg.getMember()+";"+"1", "page suivante",ButtonStyle.SECONDARY ,false, null));
-		msg = msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow().complete();
+		bttn.add(new ButtonImpl("harem_"+msg.getMember()+";"+"1", "page suivante",ButtonStyle.SECONDARY ,true, null));
+		msg = msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(bttn).complete();
 		WaifuCommand.haremEmbed(msg, 0, id);
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)

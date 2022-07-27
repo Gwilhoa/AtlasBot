@@ -9,6 +9,7 @@ import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.waifus.WaifuCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
@@ -82,13 +83,12 @@ public class SlashListener {
     }
 
     private static Message getMessage(SlashCommandInteraction event, EmbedBuilder eb) {
-        Message msg;
         eb.setDescription("chargement...");
         ArrayList<ButtonImpl> bttn = new ArrayList<>();
         bttn.add(new ButtonImpl("harem_"+event.getMember()+";"+"-1", "page précédente", ButtonStyle.PRIMARY ,true, null));
         bttn.add(new ButtonImpl("harem_"+event.getMember()+";"+"1", "page suivante",ButtonStyle.SECONDARY ,false, null));
-        msg = (Message) event.replyEmbeds(eb.build()).addActionRow(bttn).complete();
-        return msg;
+        InteractionHook ih = event.replyEmbeds(eb.build()).addActionRow(bttn).complete();
+        return (Message) ih;
     }
 
     public static void autoComplete(CommandAutoCompleteInteraction event) {
