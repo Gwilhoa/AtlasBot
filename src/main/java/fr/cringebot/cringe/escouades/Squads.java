@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static fr.cringebot.cringe.event.BotListener.getSortedHashMap;
 import static fr.cringebot.cringe.event.BotListener.gson;
 
 public class Squads {
@@ -155,6 +156,7 @@ public class Squads {
 			String bestId = null;
 			long max = 0;
 			for (SquadMember sm : squad.MemberList.values()) {
+				sm.setWaifus(getSortedHashMap(sm.getWaifus()));
 				if (bestId == null || max < sm.getPoints()){
 					bestId = sm.getId();
 					max = sm.getPoints();

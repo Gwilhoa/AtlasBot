@@ -268,9 +268,9 @@ public class WaifuCommand {
 		else
 			bttn.add(new ButtonImpl("harem_"+msg.getMember()+";"+(f-1), "page précédente",ButtonStyle.PRIMARY ,false, null));
 		if (i >= waifus.size())
-			bttn.add(new ButtonImpl("harem_"+id+";"+(f+1), "page suivante",ButtonStyle.SECONDARY ,false, null));
-		else
 			bttn.add(new ButtonImpl("harem_"+id+";"+(f+1), "page suivante",ButtonStyle.SECONDARY ,true, null));
+		else
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f+1), "page suivante",ButtonStyle.SECONDARY ,false, null));
 		msg.editMessageEmbeds(eb.build()).setActionRow(bttn).queue();
 	}
 

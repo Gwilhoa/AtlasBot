@@ -179,6 +179,11 @@ public class SquadMember {
 		return waifus;
 	}
 
+	public void setWaifus(HashMap<Integer, InvWaifu> iv) {
+		waifus = iv;
+	}
+
+
 	//---squads---//
 	public void addPoint(Long nb) {
 		addBank(nb.intValue());

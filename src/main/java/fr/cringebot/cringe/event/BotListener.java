@@ -129,6 +129,22 @@ public class BotListener implements EventListener {
 				return n;
 			}).create();
 
+
+	public static HashMap<Integer, InvWaifu> getSortedHashMap(HashMap<Integer, InvWaifu> HashMap)
+	{
+		HashMap<Integer, InvWaifu> ret = new HashMap<>();
+		Integer min = null;
+		while (!HashMap.isEmpty()) {
+			for (Integer cl : HashMap.keySet()) {
+				if (min == null)
+					min = cl;
+				min = Math.min(min, cl);
+			}
+			ret.put(min, HashMap.get(min));
+			HashMap.remove(min);
+		}
+		return ret;
+	}
 	@Override
 	public void onEvent(GenericEvent event) {
 		System.out.println(event.getClass().getSimpleName());

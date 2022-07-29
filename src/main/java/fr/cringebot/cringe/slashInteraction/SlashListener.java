@@ -6,8 +6,11 @@ import fr.cringebot.cringe.CommandBuilder.Shop;
 import fr.cringebot.cringe.CommandBuilder.Top;
 import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.escouades.Squads;
+import fr.cringebot.cringe.waifus.InvWaifu;
+import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
@@ -37,19 +40,16 @@ public class SlashListener {
         }
         else if (event.getName().equals("harem"))
         {
-            Message msg;
             if (event.getOption("nom") == null) {
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setTitle("Waifu de " + event.getMember().getEffectiveName());
-                msg = getMessage(event, eb);
-                WaifuCommand.haremEmbed(msg, 0, event.getMember().getId());
+                getMessage(event, eb, event.getMember().getId());
             }
             else
             {
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setTitle("Waifu de " + event.getOption("nom").getAsMember().getEffectiveName());
-                msg = getMessage(event, eb);
-                WaifuCommand.haremEmbed(msg, 0, event.getOption("nom").getAsMember().getId());
+                getMessage(event, eb,event.getOption("nom").getAsMember().getId());
             }
         }
         else if (event.getName().equals("info"))
@@ -82,13 +82,30 @@ public class SlashListener {
             event.reply("patience ça arrive").setEphemeral(true).queue();
     }
 
-    private static Message getMessage(SlashCommandInteraction event, EmbedBuilder eb) {
-        eb.setDescription("chargement...");
-        ArrayList<ButtonImpl> bttn = new ArrayList<>();
-        bttn.add(new ButtonImpl("harem_"+event.getMember().getId()+";"+"-1", "page précédente", ButtonStyle.PRIMARY ,true, null));
-        bttn.add(new ButtonImpl("harem_"+event.getMember().getId()+";"+"1", "page suivante",ButtonStyle.SECONDARY ,false, null));
-        InteractionHook ih = event.replyEmbeds(eb.build()).addActionRow(bttn).complete();
-        return (Message) ih;
+    private static void getMessage(SlashCommandInteraction event, EmbedBuilder eb, String memId) {
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
+        ArrayList<Waifu> waifus = new ArrayList<>();
+        ArrayList<InvWaifu> invWaifus = new ArrayList<>(Squads.getstats(memId).getWaifus().values());
+        Waifu w;
+        for (InvWaifu inw : invWaifus)
+            waifus.add(Waifu.getWaifuById(inw.getId()));
+        if (invWaifus.isEmpty())
+            event.replyEmbeds(eb.setDescription("tu as pas de waifu").build()).queue();
+        else {
+            while (i < 10) {
+                if (i < waifus.size()) {
+                    w = waifus.get(i);
+                    sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n    niveau : ").append(invWaifus.get(i).getLevel()).append("\n");
+                }
+                i++;
+            }
+            eb.setDescription(sb);
+            ArrayList<ButtonImpl> bttn = new ArrayList<>();
+            bttn.add(new ButtonImpl("harem_" + event.getMember().getId() + ";" + "-1", "page précédente", ButtonStyle.PRIMARY, true, null));
+            bttn.add(new ButtonImpl("harem_" + event.getMember().getId() + ";" + "1", "page suivante", ButtonStyle.SECONDARY, false, null));
+            event.replyEmbeds(eb.build()).addActionRow(bttn).queue();
+        }
     }
 
     public static void autoComplete(CommandAutoCompleteInteraction event) {
