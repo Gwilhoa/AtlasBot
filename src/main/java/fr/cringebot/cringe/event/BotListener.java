@@ -133,8 +133,8 @@ public class BotListener implements EventListener {
 	public static HashMap<Integer, InvWaifu> getSortedHashMap(HashMap<Integer, InvWaifu> HashMap)
 	{
 		HashMap<Integer, InvWaifu> ret = new HashMap<>();
-		Integer min = null;
 		while (!HashMap.isEmpty()) {
+			Integer min = null;
 			for (Integer cl : HashMap.keySet()) {
 				if (min == null)
 					min = cl;
