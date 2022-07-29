@@ -76,11 +76,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import static fr.cringebot.BotDiscord.isMaintenance;
 import static fr.cringebot.cringe.event.MembersQuotes.MemberReact;
@@ -132,18 +131,13 @@ public class BotListener implements EventListener {
 
 	public static HashMap<Integer, InvWaifu> getSortedHashMap(HashMap<Integer, InvWaifu> HashMap)
 	{
-		HashMap<Integer, InvWaifu> ret = new HashMap<>();
-		while (!HashMap.isEmpty()) {
-			Integer min = null;
-			for (Integer cl : HashMap.keySet()) {
-				if (min == null)
-					min = cl;
-				min = Math.min(min, cl);
-			}
-			ret.put(min, HashMap.get(min));
-			HashMap.remove(min);
-		}
-		return ret;
+		return HashMap.entrySet()
+			.stream()
+			.sorted(Map.Entry.comparingByKey())
+			.collect(Collectors.toMap(
+					Map.Entry::getKey,
+					Map.Entry::getValue,
+					(z1, z2) -> z1, LinkedHashMap::new));
 	}
 	@Override
 	public void onEvent(GenericEvent event) {
@@ -232,7 +226,7 @@ public class BotListener implements EventListener {
 			}
 		}
 		else if (event.getButton().getId().startsWith("harem")){
-			WaifuCommand.haremEmbed(event.getMessage(),Integer.parseInt(event.getId().substring("harem_".length()).split(";")[1]), event.getId().substring("harem_".length()).split(";")[0]);
+			WaifuCommand.haremEmbed(event.getMessage(),Integer.parseInt(event.getButton().getId().substring("harem_".length()).split(";")[1]), event.getButton().getId().substring("harem_".length()).split(";")[0]);
 		}
 	}
 
