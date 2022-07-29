@@ -227,6 +227,7 @@ public class BotListener implements EventListener {
 		}
 		else if (event.getButton().getId().startsWith("harem")){
 			WaifuCommand.haremEmbed(event.getMessage(),Integer.parseInt(event.getButton().getId().substring("harem_".length()).split(";")[1]), event.getButton().getId().substring("harem_".length()).split(";")[0]);
+			event.reply("oui").complete().deleteOriginal().queue();
 		}
 	}
 

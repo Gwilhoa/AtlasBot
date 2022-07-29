@@ -26,7 +26,7 @@ public class InvWaifu {
 	}
 
 	public Integer getFriendlyLevel() {
-		double ret = ((2* pow(10, -10)) * pow(this.level, 2));
+		double ret = (0.0004 * Math.pow(this.level, 2) + 999 * this.level);
 		ret = ret - (int) ret;
 		ret = ret * 100;
 		return (int) ret;
@@ -38,7 +38,7 @@ public class InvWaifu {
 
 	public Integer getLevel() {
 		this.FriendlyLevel = null;
-		double ret = ((2* pow(10, -10)) * pow(this.level, 2));
+		double ret = (0.0004 * Math.pow(this.level, 2) + 999 * this.level);
 		return (int) ret;
 	}
 
