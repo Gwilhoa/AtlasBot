@@ -91,7 +91,8 @@ public class MembersQuotes {
 					"Raleur de qualité",
 					"Si ça tenait qu'à lui une personne disparaitrais",
 					"Gilet jaune de qualité",
-					"Antonin en plus gros, moche et avec de la barbe"
+					"Antonin en plus gros, moche et avec de la barbe",
+					"sheeeeesh"
 
 			};
 

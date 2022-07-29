@@ -63,7 +63,7 @@ public class SlashListener {
             if (event.getOption("squadname") == null)
                 event.replyEmbeds(Top.top(null, event.getGuild()).build()).queue();
             else
-                event.replyEmbeds(Top.top(event.getOption("nom").getAsString(), event.getGuild()).build()).queue();
+                event.replyEmbeds(Top.top(event.getOption("squadname").getAsString(), event.getGuild()).build()).queue();
         } else if (event.getName().equals("squadname"))
             event.replyEmbeds(Shop.ShopDisplay(event.getMember()).build()).addActionRow(Shop.PrincipalMenu()).queue();
         else if (event.getName().equals("poll"))
@@ -101,6 +101,7 @@ public class SlashListener {
                 i++;
             }
             eb.setDescription(sb);
+            eb.setColor(Squads.getSquadByMember(memId).getSquadRole(event.getGuild()).getColor());
             ArrayList<ButtonImpl> bttn = new ArrayList<>();
             bttn.add(new ButtonImpl("harem_" + event.getMember().getId() + ";" + "-1", "page précédente", ButtonStyle.PRIMARY, true, null));
             bttn.add(new ButtonImpl("harem_" + event.getMember().getId() + ";" + "1", "page suivante", ButtonStyle.SECONDARY, false, null));
