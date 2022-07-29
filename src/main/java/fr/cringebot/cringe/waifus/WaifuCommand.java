@@ -266,7 +266,7 @@ public class WaifuCommand {
 		if (f == 0)
 			bttn.add(new ButtonImpl("harem_"+id+";"+(f-1), "page précédente",ButtonStyle.PRIMARY ,true, null));
 		else
-			bttn.add(new ButtonImpl("harem_"+msg.getMember()+";"+(f-1), "page précédente",ButtonStyle.PRIMARY ,false, null));
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f-1), "page précédente",ButtonStyle.PRIMARY ,false, null));
 		if (i >= waifus.size())
 			bttn.add(new ButtonImpl("harem_"+id+";"+(f+1), "page suivante",ButtonStyle.SECONDARY ,true, null));
 		else
