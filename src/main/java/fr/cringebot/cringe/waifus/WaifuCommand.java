@@ -54,10 +54,10 @@ public class WaifuCommand {
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException, IOException {
 		if (msg.getContentRaw().split(" ").length == 1) {
 			EmbedBuilder eb = capturedWaifu(msg.getMember().getId(), msg.getGuild());
-			MessageAction ma = msg.getChannel().sendMessageEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText())).getProfile()));
-			if (eb.build().getColor().equals(Color.black))
-				ma.setActionRow(new ButtonImpl("acheter un Chronomètre érotique", "CHRDP", ButtonStyle.SUCCESS,true, null));
-			ma.queue();
+			if (!Objects.equals(eb.build().getColor(), Color.black))
+				msg.getChannel().sendMessageEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id :".length()))).getProfile())).queue();
+			else
+				msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("acheter un Chronomètre érotique", "CHRDP", ButtonStyle.SUCCESS,true, null)).queue();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info")) {
 			infowaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset")) {
