@@ -103,8 +103,8 @@ public class SlashListener {
             eb.setDescription(sb);
             eb.setColor(Squads.getSquadByMember(memId).getSquadRole(event.getGuild()).getColor());
             ArrayList<ButtonImpl> bttn = new ArrayList<>();
-            bttn.add(new ButtonImpl("harem_" + event.getMember().getId() + ";" + "-1", "page précédente", ButtonStyle.PRIMARY, true, null));
-            bttn.add(new ButtonImpl("harem_" + event.getMember().getId() + ";" + "1", "page suivante", ButtonStyle.SECONDARY, false, null));
+            bttn.add(new ButtonImpl("harem_" + memId + ";" + "-1", "page précédente", ButtonStyle.PRIMARY, true, null));
+            bttn.add(new ButtonImpl("harem_" + memId + ";" + "1", "page suivante", ButtonStyle.SECONDARY, false, null));
             event.replyEmbeds(eb.build()).addActionRow(bttn).queue();
         }
     }

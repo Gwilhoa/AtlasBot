@@ -8,6 +8,7 @@ import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -32,22 +33,31 @@ public class WaifuCommand {
 	private static final int MINUTE = 60 * SECOND;
 	private static final int HOUR = 60 * MINUTE;
 
+	public static EmbedBuilder capturedWaifu(String id, Guild g) throws InterruptedException {
+		if (Waifu.timeleft(id) > 0) {
+			long t = Waifu.timeleft(id);
+			long th = t / HOUR;
+			t %= HOUR;
+			long tmin = t / MINUTE;
+			t %= MINUTE;
+			long ts = t / SECOND;
+			return new EmbedBuilder().setTitle("Raté, reviens plus tard").setColor(Color.black).setDescription("il te reste "+ th + "h, "+ tmin + "min et "+ ts +" secondes avant de chercher une nouvelle waifu");
+		} else {
+			Waifu.setTime(id);
+			SquadMember Sm = Squads.getstats(id);
+			EmbedBuilder eb = Sm.getWaifu(null, id, g);
+			Squads.save();
+			return eb;
+		}
+	}
+
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException, IOException {
 		if (msg.getContentRaw().split(" ").length == 1) {
-			if (Waifu.timeleft(msg.getMember().getId()) > 0) {
-				long t = Waifu.timeleft(msg.getMember().getId());
-				long th = t / HOUR;
-				t %= HOUR;
-				long tmin = t / MINUTE;
-				t %= MINUTE;
-				long ts = t / SECOND;
-				msg.getChannel().sendMessage("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle Waifu").queue();
-			} else {
-				Waifu.setTime(msg.getMember().getId());
-				SquadMember Sm = Squads.getSquadByMember(msg.getMember()).getStatMember(msg.getMember());
-				Sm.getWaifu(null, msg);
-				Squads.save();
-			}
+			EmbedBuilder eb = capturedWaifu(msg.getMember().getId(), msg.getGuild());
+			MessageAction ma = msg.getChannel().sendMessageEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText())).getProfile()));
+			if (eb.build().getColor().equals(Color.black))
+				ma.setActionRow(new ButtonImpl("acheter un Chronomètre érotique", "CHRDP", ButtonStyle.SUCCESS,true, null));
+			ma.queue();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info")) {
 			infowaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset")) {

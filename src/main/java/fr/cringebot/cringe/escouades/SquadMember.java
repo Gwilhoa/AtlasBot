@@ -2,6 +2,8 @@ package fr.cringebot.cringe.escouades;
 
 import fr.cringebot.cringe.waifus.InvWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.*;
@@ -94,8 +96,8 @@ public class SquadMember {
 
 	//---waifu---//
 
-	public void newWaifu(Integer id, Message msg) throws InterruptedException {
-		InvWaifu.catchWaifu(msg, id);
+	public EmbedBuilder newWaifu(Integer id, String memId, Guild g) throws InterruptedException {
+		EmbedBuilder eb = InvWaifu.catchWaifu(id, memId, g);
 		if (Waifu.getWaifuById(id).isLegendary()) {
 			Waifu.getWaifuById(id).setIstaken(true);
 			Waifu.save();
@@ -103,6 +105,7 @@ public class SquadMember {
 		this.addPoint(50L);
 		this.waifus.put(id, new InvWaifu(id));
 		Squads.save();
+		return eb;
 	}
 
 	public void addInvWaifu(InvWaifu ivW)
@@ -146,20 +149,20 @@ public class SquadMember {
 			return ret;
 	}
 
-	public void getWaifu(String str, Message msg) throws InterruptedException {
+	public EmbedBuilder getWaifu(String str, String memId, Guild g) throws InterruptedException {
 		ArrayList<Waifu> waifus;
 		if (str == null)
 			waifus = Waifu.getAllWaifu();
 		else
 			waifus = Waifu.getWaifusByOrigin(str);
 		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()) || (waifu.isLegendary() && !waifu.isIstaken()));
-		newWaifu(waifus.get(new Random().nextInt(waifus.size() - 1)).getId(), msg);
+		return newWaifu(waifus.get(new Random().nextInt(waifus.size() - 1)).getId(), memId, g);
 	}
 
 	public void addCollection(String str, Message msg) throws InterruptedException {
 		if (this.collections.getOrDefault(str, 0) == 2) {
 			this.collections.put(str, 0);
-			this.getWaifu(str, msg);
+			msg.getChannel().sendMessageEmbeds(this.getWaifu(str, msg.getMember().getId(), msg.getGuild()).build()).queue();
 		}
 		else
 			this.collections.put(str, this.collections.getOrDefault(str, 0) + 1);

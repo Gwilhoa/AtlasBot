@@ -44,6 +44,18 @@ public class ReactionEvent {
             pressf(msg);
         }
 
+        if (StringExtenders.containsWord(msg.getContentRaw(), "mdr"))
+        {
+            String[] rep = {
+                    "Hilarant...",
+                    "je suis actuellement hilare",
+                    "#jpp",
+                    "\uD83D\uDE02"
+            };
+            int r = new Random().nextInt(rep.length);
+            msg.getChannel().sendMessage(rep[r]).queue();
+        }
+
         if (StringExtenders.containsWord(msg.getContentRaw(),"lyon"))
         {
             msg.getChannel().sendMessage("les portes s'ouvriront à droite dans le sens de la circulation").queue();
@@ -152,11 +164,9 @@ public class ReactionEvent {
         if (msg.getContentRaw().equalsIgnoreCase("mové salon"))
         {
             if (msg.getMember().getId().equals("280959408119349248"))
-            {
                 msg.getChannel().sendMessage("Franchement si j'étais vous **je me tairais**").queue();
-                return;
-            }
-            msg.getChannel().sendMessage("eh oh tu t'es pris pour Logan ou quoi ? \n**MDR**").queue();
+            else
+                msg.getChannel().sendMessage("eh oh tu t'es pris pour Logan ou quoi ? \n**MDR**").queue();
         }
 
         if (containsIgnoreCase(msg.getContentRaw(), "je possede des thunes") || containsIgnoreCase(msg.getContentRaw(), "je possède des thunes"))

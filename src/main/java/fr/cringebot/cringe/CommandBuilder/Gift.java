@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.CommandBuilder;
 
 import fr.cringebot.cringe.escouades.Squads;
+import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -58,7 +59,7 @@ public class Gift {
                 Squads.getstats(member).addCoins(Long.parseLong(ret.split(";")[1]));
                 e.getChannel().sendMessage("tu as gagné " + ret.split(";")[1] + " B2C").queue();
             case "waifu":
-                Squads.getstats(member).newWaifu(Integer.parseInt(ret.split(";")[1]), e.getMessage());
+                e.replyEmbeds(Squads.getstats(member).newWaifu(Integer.parseInt(ret.split(";")[1]), e.getMember().getId(), e.getGuild()).build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(ret.split(";")[1])).getProfile())).queue();
                 break;
             case "squad":
                 Squads.addPoints(member, Long.parseLong(ret.split(";")[1]));

@@ -3,9 +3,11 @@ package fr.cringebot.cringe.waifus;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.escouades.Squads;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
+import java.awt.*;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,14 +54,12 @@ public class InvWaifu {
 		Squads.save();
 	}
 
-	public static void catchWaifu(Message msg, Integer id) throws InterruptedException {
+	public static EmbedBuilder catchWaifu(Integer id, String memID, Guild g) throws InterruptedException {
 		if (isMaintenance) {
-			msg.getChannel().sendMessage("le bot est actuellement en maintenance").queue();
-			return;
+			return new EmbedBuilder().setTitle("Raté, revenez plus tard").setColor(Color.red).setDescription("actuellement en maintenance");
 		}
-		else if (msg.getMember().getRoles().contains(msg.getGuild().getRoleById(BotDiscord.SecondaryRoleId))){
-			msg.getChannel().sendMessage("Tu es un compte secondaire et moi, j'aime pas les comptes secondaires").queue();
-			return;
+		else if (Squads.getstats(memID) == null){
+			return new EmbedBuilder().setTitle("Mais tu es qui ?").setDescription("tu n'as pas d'escouade, c'est peut etre volontaire").setColor(Color.RED);
 		}
 		Waifu w = Waifu.getWaifuById(id);
 		File f = new File(w.getProfile());
@@ -68,18 +68,13 @@ public class InvWaifu {
 		eb.setTitle("Nouvelle Waifu !");
 		eb.setDescription("ta nouvelle Waifu est " + w.getName() + " de " + w.getOrigin());
 		eb.setFooter("id : " + w.getId());
-		if (!msg.getMember().getId().equals("881962597526696038"))
-			eb.setColor(Squads.getSquadByMember(msg.getMember()).getSquadRole(msg.getGuild()).getColor());
-		else
-			eb.setColor(Squads.getSquadByMember(msg.getEmbeds().get(0).getFooter().getText()).getSquadRole(msg.getGuild()).getColor());
-		waifuLock.lock();
-		Thread.sleep(100);
-		MessageAction toSend = msg.getChannel().sendMessageEmbeds(eb.build());
-		downloadWaifu(f, toSend);
+		eb.setColor(Squads.getSquadByMember(memID).getSquadRole(g).getColor());
+		return eb;
 	}
 
 
-	static void downloadWaifu(File f, MessageAction toSend) {
+	public static void downloadWaifu(File f, MessageAction toSend) {
+		waifuLock.lock();
 		try(DataInputStream str = new DataInputStream(new FileInputStream(f))){
 			byte[] bytes = new byte[(int) f.length()];
 			str.readFully(bytes);
