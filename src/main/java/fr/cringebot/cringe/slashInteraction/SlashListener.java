@@ -18,8 +18,13 @@ import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
+
+import static fr.cringebot.cringe.waifus.WaifuCommand.capturedWaifu;
 
 public class SlashListener {
     public static void onSlashCommand(SlashCommandInteraction event) throws IOException, InterruptedException {
@@ -77,6 +82,13 @@ public class SlashListener {
             if (event.getOption("arg04") != null)
                 args.add(event.getOption("arg04").getAsString());
             PollMain.PollMain(args.toArray(new String[0]), name, event.getTextChannel(), event.getMember());
+        }
+        else if (event.getName().equals("waifu")){
+            EmbedBuilder eb = capturedWaifu(event.getMember().getId(), event.getGuild());
+            if (!Objects.equals(eb.build().getColor(), Color.black))
+                event.replyEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id : ".length()))).getProfile())).queue();
+            else
+                event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
         }
         else
             event.reply("patience ça arrive").setEphemeral(true).queue();

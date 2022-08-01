@@ -55,9 +55,9 @@ public class WaifuCommand {
 		if (msg.getContentRaw().split(" ").length == 1) {
 			EmbedBuilder eb = capturedWaifu(msg.getMember().getId(), msg.getGuild());
 			if (!Objects.equals(eb.build().getColor(), Color.black))
-				msg.getChannel().sendMessageEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id :".length()))).getProfile())).queue();
+				msg.getChannel().sendMessageEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id : ".length()))).getProfile())).queue();
 			else
-				msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("acheter un Chronomètre érotique", "CHRDP", ButtonStyle.SUCCESS,true, null)).queue();
+				msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info")) {
 			infowaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset")) {
