@@ -41,7 +41,9 @@ public class WaifuCommand {
 			long tmin = t / MINUTE;
 			t %= MINUTE;
 			long ts = t / SECOND;
-			return new EmbedBuilder().setTitle("Raté, reviens plus tard").setColor(Color.black).setDescription("il te reste "+ th + "h, "+ tmin + "min et "+ ts +" secondes avant de chercher une nouvelle waifu");
+			return new EmbedBuilder().setTitle("Raté, reviens plus tard").setColor(Color.black).setDescription("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de chercher une nouvelle waifu");
+		} else if (BotDiscord.isMaintenance) {
+			return new EmbedBuilder().setTitle("Maintenance en cours").setColor(Color.WHITE).setDescription("une maintenance est en cours, la raison doit etre dans annonce");
 		} else {
 			Waifu.setTime(id);
 			SquadMember Sm = Squads.getstats(id);
@@ -54,7 +56,7 @@ public class WaifuCommand {
 	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException, IOException {
 		if (msg.getContentRaw().split(" ").length == 1) {
 			EmbedBuilder eb = capturedWaifu(msg.getMember().getId(), msg.getGuild());
-			if (!Objects.equals(eb.build().getColor(), Color.black))
+			if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
 				msg.getChannel().sendMessageEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id : ".length()))).getProfile())).queue();
 			else
 				msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();

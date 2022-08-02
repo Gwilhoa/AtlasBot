@@ -85,7 +85,7 @@ public class SlashListener {
         }
         else if (event.getName().equals("waifu")){
             EmbedBuilder eb = capturedWaifu(event.getMember().getId(), event.getGuild());
-            if (!Objects.equals(eb.build().getColor(), Color.black))
+            if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
                 event.replyEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id : ".length()))).getProfile())).queue();
             else
                 event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();

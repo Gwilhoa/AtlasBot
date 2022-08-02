@@ -25,32 +25,37 @@ public class InvWaifu {
 	public InvWaifu(Integer id) {
 		Id = id;
 		this.level = 0L;
+		this.FriendlyLevel = 0;
 	}
 
-	public Integer getFriendlyLevel() {
-		double ret = (0.0004 * Math.pow(this.level, 2) + 999 * this.level);
-		ret = ret - (int) ret;
-		ret = ret * 100;
-		return (int) ret;
+	public Long getFriendlyLevel() {
+		if (this.FriendlyLevel == 0)
+			return 0L;
+		return (this.FriendlyLevel/((this.level + 1) * 5000) * 100);
 	}
 
 	public void setLevel(Long level) {
 		this.level = level;
 	}
 
-	public Integer getLevel() {
-		this.FriendlyLevel = null;
-		double ret = (0.0004 * Math.pow(this.level, 2) + 999 * this.level);
-		return (int) ret;
+	public Long getLevel() {
+		return this.level;
 	}
 
 	public Integer getId() {
 		return Id;
 	}
 
-	public void addXp(Long xp)
+	public void addXp(Integer xp)
 	{
-		this.level = this.level + xp;
+		if (this.FriendlyLevel == null)
+			this.FriendlyLevel = 0;
+		this.FriendlyLevel = this.FriendlyLevel + xp;
+		if (this.FriendlyLevel >= 5000 * (this.level + 1))
+		{
+			this.level++;
+			this.FriendlyLevel = 0;
+		}
 		Squads.save();
 	}
 

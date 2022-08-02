@@ -216,7 +216,7 @@ public class BotListener implements EventListener {
 				}
 				InvWaifu iWa = Squads.getstats(event.getMember()).getWaifus().get(Integer.parseInt(splited[1]));
 				if (splited[0].equals(Item.Items.BF.getStr())) {
-					iWa.addXp(500L);
+					iWa.addXp(1000);
 					Squads.getstats(event.getMember()).removeItem(Item.Items.BF.getStr());
 				}
 				WaifuCommand.sendEmbedInfo(iWa.getWaifu(), event.getTextChannel(), event.getMember());
