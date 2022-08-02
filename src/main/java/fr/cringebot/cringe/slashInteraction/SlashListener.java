@@ -88,8 +88,12 @@ public class SlashListener {
             if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
                 event.replyEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id : ".length()))).getProfile())).queue();
             else
-                event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
-        }
+            {
+                if (Squads.getstats(event.getMember()).getCoins() >= Shop.getCEPRICE())
+                    event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
+                else
+                    event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+            }}
         else
             event.reply("patience ça arrive").setEphemeral(true).queue();
     }

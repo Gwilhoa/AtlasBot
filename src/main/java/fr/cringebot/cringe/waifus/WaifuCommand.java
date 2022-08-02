@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.waifus;
 
 import fr.cringebot.BotDiscord;
+import fr.cringebot.cringe.CommandBuilder.Shop;
 import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.Item;
@@ -59,7 +60,12 @@ public class WaifuCommand {
 			if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
 				msg.getChannel().sendMessageEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id : ".length()))).getProfile())).queue();
 			else
-				msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+			{
+				if (Squads.getstats(msg.getMember()).getCoins() >= Shop.getCEPRICE())
+					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
+				else
+					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info")) {
 			infowaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset")) {

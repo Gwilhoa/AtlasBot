@@ -20,6 +20,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.CommandBuilder.Gift;
+import fr.cringebot.cringe.CommandBuilder.Shop;
 import fr.cringebot.cringe.Polls.PollListener;
 import fr.cringebot.cringe.Polls.PollMessage;
 import fr.cringebot.cringe.builder.CommandMap;
@@ -222,7 +223,26 @@ public class BotListener implements EventListener {
 				WaifuCommand.sendEmbedInfo(iWa.getWaifu(), event.getTextChannel(), event.getMember());
 				event.getMessage().delete().queue();
 			} else {
-				event.reply("tu es pas la personne concerné").queue();
+				event.reply("tu es pas la personne concerné").setEphemeral(true).queue();
+			}
+		}
+		else if (event.getButton().getId().startsWith("CEFUBUY")) {
+			if (!event.getButton().getId().split(";")[1].equals(event.getMember().getId()))
+				event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
+			else if (Squads.getstats(event.getMember()).getCoins() < Shop.getCEPRICE())
+				event.reply("tu as pas assez d'argent").queue();
+			else {
+				Squads.getstats(event.getMember()).removeCoins(Shop.getCEPRICE().longValue());
+				EmbedBuilder eb = WaifuCommand.capturedWaifu(event.getMember().getId(), event.getGuild());
+				if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
+					event.getChannel().sendMessageEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id : ".length()))).getProfile())).queue();
+				else
+				{
+					if (Squads.getstats(event.getMember()).getCoins() >= Shop.getCEPRICE())
+						event.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
+					else
+						event.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+				}
 			}
 		}
 		else if (event.getButton().getId().startsWith("harem")){

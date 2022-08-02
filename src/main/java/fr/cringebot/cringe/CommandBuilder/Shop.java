@@ -22,6 +22,11 @@ public class Shop {
     private final static Integer BFPRICE = 1000;
     private final static Integer SBPKMPRICE = 0;
 
+
+    public static Integer getCEPRICE() {
+        return CEPRICE;
+    }
+
     public static EmbedBuilder ShopDisplay(Member mem)
     {
         EmbedBuilder eb = new EmbedBuilder();
