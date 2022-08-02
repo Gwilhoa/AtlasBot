@@ -90,9 +90,9 @@ public class SlashListener {
             else
             {
                 if (Squads.getstats(event.getMember()).getCoins() >= Shop.getCEPRICE())
-                    event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
+                    event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
                 else
-                    event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+                    event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
             }}
         else
             event.reply("patience ça arrive").setEphemeral(true).queue();

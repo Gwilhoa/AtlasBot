@@ -232,6 +232,8 @@ public class BotListener implements EventListener {
 			else if (Squads.getstats(event.getMember()).getCoins() < Shop.getCEPRICE())
 				event.reply("tu as pas assez d'argent").queue();
 			else {
+				if (!Waifu.removeTime(event.getMember().getId(), 1800000L))
+					event.reply("ça a pas marché").setEphemeral(true).queue();
 				Squads.getstats(event.getMember()).removeCoins(Shop.getCEPRICE().longValue());
 				EmbedBuilder eb = WaifuCommand.capturedWaifu(event.getMember().getId(), event.getGuild());
 				if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
@@ -243,6 +245,7 @@ public class BotListener implements EventListener {
 					else
 						event.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY", "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
 				}
+				event.getMessage().delete().queue();
 			}
 		}
 		else if (event.getButton().getId().startsWith("harem")){
