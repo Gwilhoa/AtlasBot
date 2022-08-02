@@ -62,10 +62,7 @@ public class InvWaifu {
 	}
 
 	public static EmbedBuilder catchWaifu(Integer id, String memID, Guild g) throws InterruptedException {
-		if (isMaintenance) {
-			return new EmbedBuilder().setTitle("Raté, revenez plus tard").setColor(Color.red).setDescription("actuellement en maintenance");
-		}
-		else if (Squads.getstats(memID) == null){
+		if (Squads.getstats(memID) == null){
 			return new EmbedBuilder().setTitle("Mais tu es qui ?").setDescription("tu n'as pas d'escouade, c'est peut etre volontaire").setColor(Color.RED);
 		}
 		Waifu w = Waifu.getWaifuById(id);
