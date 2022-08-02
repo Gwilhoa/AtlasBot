@@ -31,7 +31,7 @@ public class InvWaifu {
 	public Integer getFriendlyLevel() {
 		if (this.FriendlyLevel == 0)
 			return 0;
-		float div = this.FriendlyLevel/((this.level + 1) * 5000);
+		float div = this.FriendlyLevel/((float)(this.level + 1) * 5000);
 		return (int) div*100;
 	}
 
