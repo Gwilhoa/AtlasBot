@@ -19,7 +19,7 @@ public class Shop {
     private final static Integer CEPRICE = 20;
     private final static Integer HEPRICE = 100;
     private final static Integer PBPRICE = 5;
-    private final static Integer BFPRICE = 1000;
+    private final static Integer BFPRICE = 10;
     private final static Integer SBPKMPRICE = 0;
 
 
@@ -118,6 +118,7 @@ public class Shop {
             if (Squads.getstats(event.getMember()).getCoins() >= BFPRICE.longValue())
             {
                 Squads.getstats(event.getMember()).addItem(Item.Items.BF.getStr());
+                Squads.getstats(event.getMember()).removeCoins(BFPRICE.longValue());
                 event.reply("tu viens d'acheter un bouquet de fleurs").queue();
             } else
             {
