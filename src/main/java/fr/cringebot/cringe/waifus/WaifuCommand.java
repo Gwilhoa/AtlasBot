@@ -7,7 +7,6 @@ import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.Item;
 import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -21,9 +20,10 @@ import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Queue;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -35,8 +35,8 @@ public class WaifuCommand {
 	private static final int HOUR = 60 * MINUTE;
 
 	public static EmbedBuilder capturedWaifu(String id, Guild g) throws InterruptedException {
-		if (Waifu.timeleft(id) > 0) {
-			long t = Waifu.timeleft(id);
+		if (Squads.getstats(id).timeleft() > 0) {
+			long t = Squads.getstats(id).timeleft();
 			long th = t / HOUR;
 			t %= HOUR;
 			long tmin = t / MINUTE;
@@ -46,7 +46,7 @@ public class WaifuCommand {
 		} else if (BotDiscord.isMaintenance) {
 			return new EmbedBuilder().setTitle("Maintenance en cours").setColor(Color.WHITE).setDescription("une maintenance est en cours, la raison doit etre dans annonce");
 		} else {
-			Waifu.setTime(id);
+			Squads.getstats(id).setTime();
 			SquadMember Sm = Squads.getstats(id);
 			EmbedBuilder eb = Sm.getWaifu(null, id, g);
 			Squads.save();
@@ -104,23 +104,67 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("delete")) {
 			delwaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("release")) {
-			if (release(msg.getMember(), Integer.parseInt(msg.getContentRaw().split(" ")[2])))
-			{
+			if (release(msg.getMember(), Integer.parseInt(msg.getContentRaw().split(" ")[2]))) {
 				Waifu w = Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
 				Squads.getstats(msg.getMember()).addCollection(w.getOrigin(), msg);
 				msg.getChannel().sendMessage(w.getName() + " a été relaché, vous gagné une pièce de " + w.getOrigin()).queue();
 			}
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("search")) {
+			msg.getChannel().sendMessageEmbeds(waifuSearching(msg.getMember()).build()).queue();
 		}
 	}
+
+	private static EmbedBuilder waifuSearching(Member member) {
+		if (Squads.getstats(member).SearchingTimeleft() < 0) {
+			Squads.getstats(member).setSearchingtimer();
+			ArrayList<InvWaifu> harem = new ArrayList<>(Squads.getstats(member).getWaifus().values());
+			StringBuilder sb = new StringBuilder();
+			for (InvWaifu w : harem) {
+				if (w.getLevel() > 0 && w.getLevel() <= 20) {
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, 1)).append('\n');
+				}
+			}
+			return new EmbedBuilder().setDescription(sb).setTitle("résultat de la recherche").setColor(Color.pink);
+		}
+		long t = Squads.getstats(member).SearchingTimeleft();
+		long th = t / HOUR;
+		t %= HOUR;
+		long tmin = t / MINUTE;
+		t %= MINUTE;
+		long ts = t / SECOND;
+		return new EmbedBuilder().setTitle("Raté, reviens plus tard").setColor(Color.black).setDescription("il te reste " + th + "h, " + tmin + "min et " + ts + " secondes avant de partir à la recherche");
+
+	}
+
+	private static String getSearching(Member member, int i) {
+		int r = new Random().nextInt(100) + 1;
+		if (i == 1) {
+			if (r < 30) {
+				return "a rien trouvé";
+			} else if (r < 60) {
+				Squads.getstats(member).addCoins(1L);
+				return "a trouvé 1 B2C";
+			} else {
+				Squads.getstats(member).addItem(Item.Items.UF.getStr());
+				if (Squads.getstats(member).getAmountItem(Item.Items.UF.getStr()) >= 5) {
+					Squads.getstats(member).addItem(Item.Items.BF.getStr());
+					Squads.getstats(member).removeItem(Item.Items.UF.getStr(), 5);
+					return "a trouvé une fleur, vous avez un nouveau bouquet";
+				}
+				return "a trouvé une fleur";
+			}
+		}
+		return "coming soon";
+	}
+
 	private static void tradewaifu(Message msg) {
-		EmbedBuilder eb = tradewaifu(msg.getMember(),Integer.parseInt(msg.getContentRaw().split(" ")[2]), Integer.parseInt(msg.getContentRaw().split(" ")[3]), msg.getMentions().getMembers().get(0));
+		EmbedBuilder eb = tradewaifu(msg.getMember(), Integer.parseInt(msg.getContentRaw().split(" ")[2]), Integer.parseInt(msg.getContentRaw().split(" ")[3]), msg.getMentions().getMembers().get(0));
 		if (Objects.equals(eb.build().getColor(), Color.WHITE)) {
 			ArrayList<ButtonImpl> bttn = new ArrayList<>();
-			bttn.add(new ButtonImpl("trade_ok;"+Integer.parseInt(msg.getContentRaw().split(" ")[2]) +";"+Integer.parseInt(msg.getContentRaw().split(" ")[3]) +";"+ msg.getMember().getId() + ";" + msg.getMentions().getMembers().get(0).getId(), "accepter", ButtonStyle.SUCCESS, false, null));
-			bttn.add(new ButtonImpl("trade_no;"+msg.getMentions().getMembers().get(0).getId(), "refuser", ButtonStyle.DANGER, false, null));
-			msg.getChannel().sendMessage(msg.getMember().getAsMention() + " veux faire un échange avec " +  msg.getMentions().getMembers().get(0).getAsMention()).setEmbeds(eb.build()).setActionRow(bttn).queue();
-		}
-		else {
+			bttn.add(new ButtonImpl("trade_ok;" + Integer.parseInt(msg.getContentRaw().split(" ")[2]) + ";" + Integer.parseInt(msg.getContentRaw().split(" ")[3]) + ";" + msg.getMember().getId() + ";" + msg.getMentions().getMembers().get(0).getId(), "accepter", ButtonStyle.SUCCESS, false, null));
+			bttn.add(new ButtonImpl("trade_no;" + msg.getMentions().getMembers().get(0).getId(), "refuser", ButtonStyle.DANGER, false, null));
+			msg.getChannel().sendMessage(msg.getMember().getAsMention() + " veux faire un échange avec " + msg.getMentions().getMembers().get(0).getAsMention()).setEmbeds(eb.build()).setActionRow(bttn).queue();
+		} else {
 			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}
 	}

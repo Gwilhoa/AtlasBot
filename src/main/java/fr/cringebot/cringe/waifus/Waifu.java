@@ -1,8 +1,6 @@
 package fr.cringebot.cringe.waifus;
 
 import com.google.gson.reflect.TypeToken;
-import fr.cringebot.cringe.escouades.Squads;
-import fr.cringebot.cringe.objects.Item;
 import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;
@@ -18,7 +16,6 @@ public class Waifu {
 	private static final TypeToken<HashMap<Integer, Waifu>> token = new TypeToken<HashMap<Integer, Waifu>>() {
 	};
 	private static HashMap<Integer, Waifu> waifuList = new HashMap<>();
-	private final static HashMap<String, Long> timer = new HashMap<>();
 	private final String profile;
 	private boolean legendary;
 	private boolean istaken = false;
@@ -196,25 +193,6 @@ public class Waifu {
 		}
 		if (waifuList == null)
 			waifuList = new HashMap<>();
-	}
-
-	public static void setTime(String id)
-	{
-		timer.put(id, System.currentTimeMillis());
-		removeTime(id, 1800000L * (Squads.getstats(id).getAmountItem(Item.Items.HE.getStr())).longValue());
-	}
-	public static boolean removeTime(String id, Long time)
-	{
-		if (timeleft(id) > 0) {
-			timer.put(id, timer.get(id) - time);
-			return true;
-		}
-		return false;
-	}
-	public static Long timeleft(String id){
-		if (timer.get(id) == null)
-			return (-1L);
-		return ((System.currentTimeMillis() - (timer.get(id) + 25200000L)) * -1);
 	}
 
 	public void setIstaken(boolean istaken) {

@@ -1,18 +1,22 @@
 package fr.cringebot.cringe.escouades;
 
+import fr.cringebot.cringe.objects.Item;
 import fr.cringebot.cringe.waifus.InvWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 public class SquadMember {
 
 	private Long points;
 	private final String id;
+	private Long timer;
+	private Long searchingtimer;
 	private HashMap<String, Integer> collections;
 	private HashMap<String, Integer> inventory;
 	private HashMap<Integer, InvWaifu> waifus;
@@ -59,18 +63,22 @@ public class SquadMember {
 		return inventory.getOrDefault(item, 0);
 	}
 
-	public Boolean removeItem(String item)
-	{
+	public Boolean removeItem(String item) {
+		return removeItem(item, 1);
+	}
+
+	public Boolean removeItem(String item, int i) {
 		if (inventory == null)
 			inventory = new HashMap<>();
 		inventory.putIfAbsent(item, 0);
 		if (inventory.getOrDefault(item, 0) > 0) {
-			inventory.put(item, inventory.get(item) - 1);
+			inventory.put(item, inventory.get(item) - i);
 			Squads.save();
 			return true;
 		}
 		return false;
 	}
+
 	public void addCoins(Long coins) {
 		if (this.coins == null)
 			this.coins = 0L;
@@ -207,5 +215,39 @@ public class SquadMember {
 
 	public String getId() {
 		return id;
+	}
+
+	//---timer---//
+
+	public void setSearchingtimer() {
+		searchingtimer = System.currentTimeMillis();
+		Squads.save();
+	}
+
+	public Long SearchingTimeleft() {
+		if (searchingtimer == null)
+			searchingtimer = 0L;
+		return ((System.currentTimeMillis() - (searchingtimer + 25200000L)) * -1);
+	}
+
+	public void setTime() {
+		timer = System.currentTimeMillis();
+		removeTime(1800000L * (this.getAmountItem(Item.Items.HE.getStr())).longValue());
+		Squads.save();
+	}
+
+	public boolean removeTime(Long time) {
+		if (this.timeleft() > 0) {
+			timer = timer - time;
+			Squads.save();
+			return true;
+		}
+		return false;
+	}
+
+	public Long timeleft() {
+		if (timer == null)
+			timer = 0L;
+		return ((System.currentTimeMillis() - (timer + 25200000L)) * -1);
 	}
 }

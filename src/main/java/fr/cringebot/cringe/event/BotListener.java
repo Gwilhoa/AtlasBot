@@ -38,7 +38,6 @@ import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.reactionsrole.RoleReaction;
 import fr.cringebot.cringe.siterequest.Request;
 import fr.cringebot.cringe.slashInteraction.SlashListener;
-import fr.cringebot.cringe.slashInteraction.slashCommand;
 import fr.cringebot.cringe.waifus.InvWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
@@ -77,8 +76,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -232,7 +231,7 @@ public class BotListener implements EventListener {
 			else if (Squads.getstats(event.getMember()).getCoins() < Shop.getCEPRICE())
 				event.reply("tu as pas assez d'argent").queue();
 			else {
-				if (!Waifu.removeTime(event.getMember().getId(), 1800000L)) {
+				if (!Squads.getstats(event.getMember()).removeTime(1800000L)) {
 					event.reply("ça a pas marché").setEphemeral(true).queue();
 					return;
 				}

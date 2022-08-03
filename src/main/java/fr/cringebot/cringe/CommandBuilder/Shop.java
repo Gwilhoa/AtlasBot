@@ -104,8 +104,7 @@ public class Shop {
         } else if (event.getSelectedOptions().get(0).getValue().equals("RDTPFU")){
             if (Squads.getstats(event.getMember()).getCoins() >= CEPRICE.longValue())
             {
-                if (Waifu.removeTime(event.getMember().getId(), 1800000L))
-                {
+                if (Squads.getstats(event.getMember()).removeTime(1800000L)) {
                     event.reply("Votre chronomètre a fait effet, je ressens une excitation").queue();
                     Squads.getstats(event.getMember()).removeCoins(CEPRICE.longValue());
                 } else {
