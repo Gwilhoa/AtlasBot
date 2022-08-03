@@ -118,13 +118,15 @@ public class WaifuCommand {
 		if (Squads.getstats(member).SearchingTimeleft() < 0) {
 			ArrayList<InvWaifu> harem = new ArrayList<>(Squads.getstats(member).getWaifus().values());
 			StringBuilder sb = new StringBuilder();
+			boolean f = false;
 			for (InvWaifu w : harem) {
 				if (w.getLevel() > 0 && w.getLevel() <= 20) {
+					f = true;
 					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, 1)).append('\n');
 				}
 			}
-			if (sb.isEmpty())
-				sb.append("aucune de tes waifus est apte a chercher");
+			if (!f)
+				sb.append("tu as pas de waifu prete a chercher");
 			else
 				Squads.getstats(member).setSearchingtimer();
 			return new EmbedBuilder().setDescription(sb).setTitle("résultat de la recherche").setColor(Color.pink);
