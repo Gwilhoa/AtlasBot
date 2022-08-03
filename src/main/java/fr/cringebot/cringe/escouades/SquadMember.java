@@ -227,7 +227,7 @@ public class SquadMember {
 	public Long SearchingTimeleft() {
 		if (searchingtimer == null)
 			searchingtimer = 0L;
-		return ((System.currentTimeMillis() - (searchingtimer + 25200000L)) * -1);
+		return ((System.currentTimeMillis() - (searchingtimer + 10800000L)) * -1);
 	}
 
 	public void setTime() {
