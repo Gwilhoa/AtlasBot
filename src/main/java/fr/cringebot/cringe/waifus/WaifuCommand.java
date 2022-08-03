@@ -116,11 +116,13 @@ public class WaifuCommand {
 
 	private static EmbedBuilder waifuSearching(Member member) {
 		if (Squads.getstats(member).SearchingTimeleft() < 0) {
+			Integer pts = 0;
 			ArrayList<InvWaifu> harem = new ArrayList<>(Squads.getstats(member).getWaifus().values());
 			StringBuilder sb = new StringBuilder();
 			boolean f = false;
 			for (InvWaifu w : harem) {
 				if (w.getLevel() > 0 && w.getLevel() <= 20) {
+					pts += 50;
 					f = true;
 					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, 1)).append('\n');
 				}
@@ -129,7 +131,8 @@ public class WaifuCommand {
 				sb.append("tu as pas de waifu prete a chercher");
 			else
 				Squads.getstats(member).setSearchingtimer();
-			return new EmbedBuilder().setDescription(sb).setTitle("résultat de la recherche").setColor(Color.pink);
+			Squads.getstats(member).addPoint(pts.longValue());
+			return new EmbedBuilder().setDescription(sb).setTitle("résultat de la recherche").setFooter("tu as gagné "+ pts + "points d'escouade").setColor(Color.pink);
 		}
 		long t = Squads.getstats(member).SearchingTimeleft();
 		long th = t / HOUR;
