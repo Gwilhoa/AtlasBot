@@ -57,13 +57,12 @@ public class Gift {
         switch (ret.split(";")[0]) {
             case "coins":
                 Squads.getstats(member).addCoins(Long.parseLong(ret.split(";")[1]));
-                e.getChannel().sendMessage("tu as gagné " + ret.split(";")[1] + " B2C").queue();
+                e.reply("tu as gagné " + ret.split(";")[1] + " B2C").queue();
             case "waifu":
                 e.replyEmbeds(Squads.getstats(member).newWaifu(Integer.parseInt(ret.split(";")[1]), e.getMember().getId(), e.getGuild()).build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(ret.split(";")[1])).getProfile())).queue();
-                break;
             case "squad":
                 Squads.addPoints(member, Long.parseLong(ret.split(";")[1]));
-                e.getChannel().sendMessage("l'escouade "
+                e.reply("l'escouade "
                         + Squads.getSquadByMember(member).getName()
                         + " gagne "
                         + Long.parseLong(ret.split(";")[1])
