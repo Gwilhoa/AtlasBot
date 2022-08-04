@@ -76,7 +76,7 @@ public class WaifuCommand {
 				SearchKey = "all";
 			else
 				SearchKey = msg.getContentRaw().substring(">waifu list ".length());
-			msg.getChannel().sendMessageEmbeds(listwaifu(msg.getGuild(), msg.getMember().getId(), SearchKey).build()).setActionRows(generateButton(msg.getMember().getId(), SearchKey, 0)).queue();
+			msg.getChannel().sendMessageEmbeds(listwaifu(msg.getGuild(), msg.getMember().getId(), SearchKey).build()).setActionRows(generateButtonList(msg.getMember().getId(), SearchKey, 0)).queue();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add")) {
 			addwaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("trade")){
@@ -107,31 +107,31 @@ public class WaifuCommand {
 		}
 	}
 
-	private static Collection<? extends ActionRow> generateButton(String id, String searchKey, int i) {
+	public static Collection<? extends ActionRow> generateButtonList(String id, String searchKey, int i) {
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
 		ArrayList<ActionRow> bttns = new ArrayList<>();
 		if (!searchKey.equals("all"))
 			waifus.removeIf(waifu -> !StringExtenders.startWithIgnoreCase(waifu.getOrigin(), searchKey));
 		if (i >= 10) {
-			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-10), "10 page en arrière", ButtonStyle.SECONDARY, false, null)));
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-10)+";"+searchKey, "10 page en arrière", ButtonStyle.PRIMARY, false, null)));
 		} else {
-			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-10), "10 page en arrière", ButtonStyle.SECONDARY, true, null)));
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-10)+";"+searchKey, "10 page en arrière", ButtonStyle.PRIMARY, true, null)));
 		}
 		if (i != 0) {
-			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-1), "la page en précédente", ButtonStyle.PRIMARY, false, null)));
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-1)+";"+searchKey, "la page en précédente", ButtonStyle.SECONDARY, false, null)));
 		} else {
-			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-1), "la page précédente", ButtonStyle.PRIMARY, true, null)));
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-1)+";"+searchKey, "la page précédente", ButtonStyle.SECONDARY, true, null)));
 		}
 		if ((i+1)*10 < waifus.size()) {
-			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+1), "la page suivante", ButtonStyle.PRIMARY, false, null)));
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+1)+";"+searchKey, "la page suivante", ButtonStyle.PRIMARY, false, null)));
 		} else {
-			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+1), "la page suivante", ButtonStyle.PRIMARY, true, null)));
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+1)+";"+searchKey, "la page suivante", ButtonStyle.PRIMARY, true, null)));
 		}
 		if ((i+10)*10 < waifus.size()) {
-			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+10), "10 page en avant", ButtonStyle.SECONDARY, false, null)));
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+10)+";"+searchKey, "10 page en avant", ButtonStyle.SECONDARY, false, null)));
 		}
 		else {
-			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+10), "10 page en avant", ButtonStyle.SECONDARY, true, null)));
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+10)+";"+searchKey, "10 page en avant", ButtonStyle.SECONDARY, true, null)));
 		}
 		return bttns;
 	}
