@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 public class Gift {
-    private String id;
-    private EmbedBuilder embedBuilder;
+    private final String id;
+    private final EmbedBuilder embedBuilder;
     public Gift(String id, EmbedBuilder embedBuilder)
     {
         this.id = id;

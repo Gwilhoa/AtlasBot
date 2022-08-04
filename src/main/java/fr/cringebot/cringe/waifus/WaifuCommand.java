@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
@@ -20,10 +21,7 @@ import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -73,17 +71,12 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage")) {
 			setImage(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")) {
-			EmbedBuilder eb = new EmbedBuilder();
-			if (msg.getContentRaw().length() > "<waifu list ".length()){
-				eb.setTitle("Listes des waifus : " + msg.getContentRaw().substring("<waifu list ".length()).toLowerCase(Locale.ROOT));
-			} else {
-				eb.setTitle("Listes des waifus : all");
-			}
-			msg = msg.getChannel().sendMessageEmbeds(
-					eb.setFooter("0 " + msg.getMember().getId()).build()
-			).complete();
-					msg.addReaction(Emoji.fromFormatted("◀️")).and(msg.addReaction(Emoji.fromFormatted("▶️"))).queue();
-			listwaifu(msg);
+			String SearchKey;
+			if (msg.getContentRaw().length() <= ">waifu list ".length())
+				SearchKey = "all";
+			else
+				SearchKey = msg.getContentRaw().substring(">waifu list ".length());
+			msg.getChannel().sendMessageEmbeds(listwaifu(msg.getGuild(), msg.getMember().getId(), SearchKey).build()).setActionRows(generateButton(msg.getMember().getId(), SearchKey, 0)).queue();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add")) {
 			addwaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("trade")){
@@ -112,6 +105,35 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("search")) {
 			msg.getChannel().sendMessageEmbeds(waifuSearching(msg.getMember()).build()).queue();
 		}
+	}
+
+	private static Collection<? extends ActionRow> generateButton(String id, String searchKey, int i) {
+		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
+		ArrayList<ActionRow> bttns = new ArrayList<>();
+		if (!searchKey.equals("all"))
+			waifus.removeIf(waifu -> !StringExtenders.startWithIgnoreCase(waifu.getOrigin(), searchKey));
+		if (i >= 10) {
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-10), "10 page en arrière", ButtonStyle.SECONDARY, false, null)));
+		} else {
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-10), "10 page en arrière", ButtonStyle.SECONDARY, true, null)));
+		}
+		if (i != 0) {
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-1), "la page en précédente", ButtonStyle.PRIMARY, false, null)));
+		} else {
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i-1), "la page précédente", ButtonStyle.PRIMARY, true, null)));
+		}
+		if ((i+1)*10 < waifus.size()) {
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+1), "la page suivante", ButtonStyle.PRIMARY, false, null)));
+		} else {
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+1), "la page suivante", ButtonStyle.PRIMARY, true, null)));
+		}
+		if ((i+10)*10 < waifus.size()) {
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+10), "10 page en avant", ButtonStyle.SECONDARY, false, null)));
+		}
+		else {
+			bttns.add(ActionRow.of(new ButtonImpl("list_"+id+";"+(i+10), "10 page en avant", ButtonStyle.SECONDARY, true, null)));
+		}
+		return bttns;
 	}
 
 	private static EmbedBuilder waifuSearching(Member member) {
@@ -348,32 +370,27 @@ public class WaifuCommand {
 
 
 
-	public static void listwaifu(Message msg){
-		listwaifu(msg, 0);
+	public static EmbedBuilder listwaifu(Guild g, String MemberId, String key){
+		return listwaifu(g, MemberId, key, 0);
 	}
-	public static void listwaifu(Message tc, Integer f) {
+	public static EmbedBuilder listwaifu(Guild g, String MemberId, String key, Integer f) {
 		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
-		String id = tc.getEmbeds().get(0).getFooter().getText().split(" ")[1];
 		Waifu w;
 		int	i = f*10;
 		EmbedBuilder eb = new EmbedBuilder();
-		if (!tc.getEmbeds().get(0).getTitle().substring("Listes des waifus : ".length()).equals("all"))
-			waifus.removeIf(waifu -> !StringExtenders.startWithIgnoreCase(waifu.getOrigin(), tc.getEmbeds().get(0).getTitle().substring("Listes des waifus : ".length())));
+		if (!key.equals("all"))
+			waifus.removeIf(waifu -> !StringExtenders.startWithIgnoreCase(waifu.getOrigin(), key));
 		if (waifus.isEmpty())
 		{
-			tc.editMessageEmbeds(eb.setDescription("aucune waifu sous cette origine").build()).queue();
-			return;
+			return new EmbedBuilder().setColor(Color.RED).setTitle("Listes des waifus en "+ key).setDescription("Aucune waifu à une origine similaire");
 		}
-		if (i > waifus.size() || i < 0)
-			return;
-		eb.setTitle(tc.getEmbeds().get(0).getTitle());
-		eb.setFooter(f + " " + id);
+		eb.setTitle("Listes des waifus en "+ key);
 		StringBuilder sb = new StringBuilder();
 		while (i < (f*10)+10)
 		{
 			if (i < waifus.size()) {
 				w = waifus.get(i);
-				if (Squads.getstats(id).getWaifus().get(w.getId()) != null)
+				if (Squads.getstats(MemberId).getWaifus().get(w.getId()) != null)
 					sb.append("__").append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("__\n");
 				else
 					sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
@@ -381,7 +398,9 @@ public class WaifuCommand {
 			i++;
 		}
 		eb.setDescription(sb);
-		tc.editMessageEmbeds(eb.build()).queue();
+		eb.setColor(Squads.getSquadByMember(MemberId).getSquadRole(g).getColor());
+		eb.setFooter(f.toString());
+		return eb;
 	}
 
 	public static void setDescription(Message msg)
