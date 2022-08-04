@@ -258,7 +258,6 @@ public class BotListener implements EventListener {
 			int page = Integer.parseInt(event.getButton().getId().substring("list_".length()).split(";")[1]);
 			String key = event.getButton().getId().substring("list_".length()).split(";")[2];
 			event.editMessageEmbeds(WaifuCommand.listwaifu(event.getGuild(), memId, key, page).build()).setActionRows(WaifuCommand.generateButtonList(memId, key, page)).queue();
-			event.reply("oui").complete().deleteOriginal().queue();
 		} else {
 			event.reply("coming soon").setEphemeral(true).queue();
 		}
