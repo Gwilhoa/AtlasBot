@@ -94,6 +94,17 @@ public class SlashListener {
                 else
                     event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
             }}
+        else if (event.getName().equals("waifu_list")) {
+            String SearchKey;
+            if (event.getOption("nom") == null)
+                SearchKey = "all";
+            else
+                SearchKey = event.getOption("nom").getAsString();
+            event.replyEmbeds(WaifuCommand.listwaifu(event.getGuild(), event.getMember().getId(), SearchKey).build()).addActionRows(WaifuCommand.generateButtonList(event.getMember().getId(), SearchKey, 0)).queue();
+        }
+        else if (event.getName().equals("waifu_search")) {
+            event.replyEmbeds(WaifuCommand.waifuSearching(event.getMember()).build()).queue();
+        }
         else
             event.reply("patience ça arrive").setEphemeral(true).queue();
     }

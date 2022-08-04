@@ -89,7 +89,6 @@ public class slashCommand {
 
         jda.upsertCommand("help", "savoir les commandes")
                 .queue();
-         **/
         jda.upsertCommand("waifu_info", "savoir les informations d'une waifu")
                 .addOption(OptionType.STRING, "nom", "id ou le nom de la waifu a chercher", true)
                 .queue();
@@ -115,6 +114,9 @@ public class slashCommand {
                 .queue();
         jda.upsertCommand("waifu_release", "liberer une waifu capturé")
                 .addOption(OptionType.INTEGER, "id", "l'id de la waifu a liberer")
+                .queue();
+         **/
+        jda.upsertCommand("waifu_search", "partir à la recherche avec ses waifus")
                 .queue();
     }
 
