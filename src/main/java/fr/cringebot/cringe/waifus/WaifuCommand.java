@@ -57,7 +57,7 @@ public class WaifuCommand {
 		if (msg.getContentRaw().split(" ").length == 1) {
 			EmbedBuilder eb = capturedWaifu(msg.getMember().getId(), msg.getGuild());
 			if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
-				msg.getChannel().sendMessageEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id : ".length()))).getProfile())).queue();
+				msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 			else
 			{
 				if (Squads.getstats(msg.getMember()).getCoins() >= Shop.getCEPRICE())
@@ -268,10 +268,9 @@ public class WaifuCommand {
 	public static void sendEmbedInfo(Waifu w, TextChannel tc, Member m) throws InterruptedException {
 		EmbedBuilder eb = new EmbedBuilder();
 		boolean isCaptured = false;
-		File f = new File(w.getProfile());
 		eb.setAuthor(w.getOrigin());
 		eb.setTitle("Information : " + w.getName() + "\nIdentifiant : " + w.getId());
-		eb.setImage("attachment://"+f.getName());
+		eb.setImage(w.getProfile());
 		eb.setDescription(w.getDescription());
 		for (InvWaifu iw : Squads.getstats(m).getWaifus().values())
 		{
@@ -283,8 +282,6 @@ public class WaifuCommand {
 								+ "\naffection " + iw.getFriendlyLevel() + "%");
 			}
 		}
-		waifuLock.lock();
-		Thread.sleep(100);
 		MessageAction toSend = tc.sendMessageEmbeds(eb.build());
 		if (isCaptured)
 		{
@@ -293,7 +290,7 @@ public class WaifuCommand {
 			else
 				toSend = toSend.setActionRow(new ButtonImpl("AFF", "donner un bouquet de fleur", ButtonStyle.PRIMARY, true, null));
 		}
-		InvWaifu.downloadWaifu(f, toSend);
+		toSend.queue();
 	}
 
 	public static void infowaifu(Message msg) throws InterruptedException {

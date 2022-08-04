@@ -238,7 +238,7 @@ public class BotListener implements EventListener {
 				Squads.getstats(event.getMember()).removeCoins(Shop.getCEPRICE().longValue());
 				EmbedBuilder eb = WaifuCommand.capturedWaifu(event.getMember().getId(), event.getGuild());
 				if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
-					event.getChannel().sendMessageEmbeds(eb.build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(eb.build().getFooter().getText().substring("id : ".length()))).getProfile())).setActionRow(new ButtonImpl("CEFUBUY;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+					event.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
 				else
 				{
 					if (Squads.getstats(event.getMember()).getCoins() >= Shop.getCEPRICE())

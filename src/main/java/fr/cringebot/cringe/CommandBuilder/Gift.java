@@ -59,7 +59,7 @@ public class Gift {
                 Squads.getstats(member).addCoins(Long.parseLong(ret.split(";")[1]));
                 e.reply("tu as gagné " + ret.split(";")[1] + " B2C").queue();
             case "waifu":
-                e.replyEmbeds(Squads.getstats(member).newWaifu(Integer.parseInt(ret.split(";")[1]), e.getMember().getId(), e.getGuild()).build()).addFile(new File(Waifu.getWaifuById(Integer.parseInt(ret.split(";")[1])).getProfile())).queue();
+                e.replyEmbeds(Squads.getstats(member).newWaifu(Integer.parseInt(ret.split(";")[1]), e.getMember().getId(), e.getGuild()).build()).queue();
             case "squad":
                 Squads.addPoints(member, Long.parseLong(ret.split(";")[1]));
                 e.reply("l'escouade "

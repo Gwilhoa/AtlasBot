@@ -66,9 +66,8 @@ public class InvWaifu {
 			return new EmbedBuilder().setTitle("Mais tu es qui ?").setDescription("tu n'as pas d'escouade, c'est peut etre volontaire").setColor(Color.RED);
 		}
 		Waifu w = Waifu.getWaifuById(id);
-		File f = new File(w.getProfile());
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setImage("attachment://"+f.getName());
+		eb.setImage(w.getProfile());
 		eb.setTitle("Nouvelle Waifu !");
 		eb.setDescription("ta nouvelle Waifu est " + w.getName() + " de " + w.getOrigin());
 		eb.setFooter("id : " + w.getId());

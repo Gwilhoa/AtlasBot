@@ -19,7 +19,7 @@ public class Waifu {
 	private static final TypeToken<HashMap<Integer, Waifu>> token = new TypeToken<HashMap<Integer, Waifu>>() {
 	};
 	private static HashMap<Integer, Waifu> waifuList = new HashMap<>();
-	private final String profile;
+	private String profile;
 	private boolean legendary;
 	private boolean istaken = false;
 	private String name;
@@ -84,36 +84,9 @@ public class Waifu {
 	}
 
 	public boolean setFile(Message.Attachment f) throws IOException, JSchException {
-		String REMOTE_HOST = "45.90.161.144";
-		String USERNAME = user;
-		String PASSWORD = mdp;
-		int REMOTE_PORT = 22;
-		int SESSION_TIMEOUT = 10000;
-		int CHANNEL_TIMEOUT = 5000;
-		Session jschSession = null;
-		try {
-			JSch jsch = new JSch();
-			jsch.setKnownHosts("/home/.ssh/known_hosts");
-			jschSession = jsch.getSession(USERNAME, REMOTE_HOST, REMOTE_PORT);
-			java.util.Properties config = new java.util.Properties();
-			config.put("StrictHostKeyChecking", "no");
-			jschSession.setConfig(config);
-			jschSession.setPassword(PASSWORD);
-			jschSession.connect(SESSION_TIMEOUT);
-			Channel sftp = jschSession.openChannel("sftp");
-			sftp.connect(CHANNEL_TIMEOUT);
-			ChannelSftp channelSftp = (ChannelSftp) sftp;
-			channelSftp.put(imgExtenders.getFile(f.getUrl(),"waifu_"+this.getId(), null).getPath(), "/www/apps/waifu/waifu_"+this.getId()+".png");
-			channelSftp.exit();
-			} catch (JSchException | SftpException e) {
-				e.printStackTrace();
-			} finally {
-				if (jschSession != null) {
-					jschSession.disconnect();
-				}
-			}
-			return true;
-		}
+		imgExtenders.getFile(f.getUrl(),"waifu_"+this.getId(), "/var/www/my_webapp__2/www/apps/waifu/waifu_"+this.getId());
+		return true;
+	}
 
 	public void delwaifu()
 	{
@@ -173,6 +146,8 @@ public class Waifu {
 
 
 	public String getProfile() {
+		if (!this.profile.contains("https"))
+			this.profile = "https://cdn.bitume2000.fr/apps/waifu/waifu_"+this.getId()+".png";
 		return profile;
 	}
 
