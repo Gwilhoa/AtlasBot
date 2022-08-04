@@ -84,7 +84,7 @@ public class Waifu {
 	}
 
 	public boolean setFile(Message.Attachment f) throws IOException, JSchException {
-		String REMOTE_HOST = "1.2.3.4";
+		String REMOTE_HOST = "45.90.161.144";
 		String USERNAME = user;
 		String PASSWORD = mdp;
 		int REMOTE_PORT = 22;
@@ -95,12 +95,15 @@ public class Waifu {
 			JSch jsch = new JSch();
 			jsch.setKnownHosts("/home/.ssh/known_hosts");
 			jschSession = jsch.getSession(USERNAME, REMOTE_HOST, REMOTE_PORT);
+			java.util.Properties config = new java.util.Properties();
+			config.put("StrictHostKeyChecking", "no");
+			jschSession.setConfig(config);
 			jschSession.setPassword(PASSWORD);
 			jschSession.connect(SESSION_TIMEOUT);
 			Channel sftp = jschSession.openChannel("sftp");
 			sftp.connect(CHANNEL_TIMEOUT);
 			ChannelSftp channelSftp = (ChannelSftp) sftp;
-			channelSftp.put(imgExtenders.getFile(f.getUrl(),"waifu_"+this.getId(), null).getPath(), "/www/apps/waifu/waifu_"+this.getId());
+			channelSftp.put(imgExtenders.getFile(f.getUrl(),"waifu_"+this.getId(), null).getPath(), "/www/apps/waifu/waifu_"+this.getId()+".png");
 			channelSftp.exit();
 			} catch (JSchException | SftpException e) {
 				e.printStackTrace();
