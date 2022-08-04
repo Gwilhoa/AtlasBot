@@ -99,9 +99,12 @@ public class imgExtenders {
     
     public static File getFile(URL url, String name, String directory) throws IOException {
         BufferedInputStream bs = new BufferedInputStream(url.openStream());
-        downloadFile(name, bs);
-        if (directory == null)
+
+        if (directory == null) {
+            downloadFile(name, bs);
             return new File(name);
+        }
+        downloadFile(directory, bs);
         return new File(directory);
     }
 

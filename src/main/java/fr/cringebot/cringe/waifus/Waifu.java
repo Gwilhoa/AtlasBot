@@ -84,7 +84,7 @@ public class Waifu {
 	}
 
 	public boolean setFile(Message.Attachment f) throws IOException, JSchException {
-		imgExtenders.getFile(f.getUrl(),"waifu_"+this.getId(), "/var/www/my_webapp__2/www/apps/waifu/waifu_"+this.getId());
+		imgExtenders.getFile(f.getUrl(),"waifu_"+this.getId(), "/var/www/my_webapp__2/www/apps/waifu/waifu_"+this.getId()+".png");
 		return true;
 	}
 
