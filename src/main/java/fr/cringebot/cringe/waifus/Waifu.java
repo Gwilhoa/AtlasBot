@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.waifus;
 
 import com.google.gson.reflect.TypeToken;
+import com.jcraft.jsch.*;
 import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;
@@ -9,6 +10,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static fr.cringebot.BotDiscord.mdp;
+import static fr.cringebot.BotDiscord.user;
 import static fr.cringebot.cringe.event.BotListener.gson;
 
 public class Waifu {
@@ -65,9 +68,13 @@ public class Waifu {
 		}
 		if (this.id == -1)
 			this.id = waifuList.size();
-		this.profile = "save/waifu/waifu_"+this.id +".png";
+		this.profile = "https://cdn.bitume2000.fr/apps/waifu/waifu_"+this.getId()+".png";
 		this.origin = origin;
-		f.downloadToFile(this.profile);
+		try {
+			this.setFile(f);
+		}catch (JSchException | IOException e) {
+			e.printStackTrace();
+		}
 		waifuList.put(this.id, this);
 		save();
 	}
@@ -76,10 +83,34 @@ public class Waifu {
 		this.type = type;
 	}
 
-	public boolean setFile(Message.Attachment f) throws IOException {
-		File s = imgExtenders.getFile(f.getUrl(), this.profile, this.profile);
-		return s.length() <= 1040863;
-	}
+	public boolean setFile(Message.Attachment f) throws IOException, JSchException {
+		String REMOTE_HOST = "1.2.3.4";
+		String USERNAME = user;
+		String PASSWORD = mdp;
+		int REMOTE_PORT = 22;
+		int SESSION_TIMEOUT = 10000;
+		int CHANNEL_TIMEOUT = 5000;
+		Session jschSession = null;
+		try {
+			JSch jsch = new JSch();
+			jsch.setKnownHosts("/home/.ssh/known_hosts");
+			jschSession = jsch.getSession(USERNAME, REMOTE_HOST, REMOTE_PORT);
+			jschSession.setPassword(PASSWORD);
+			jschSession.connect(SESSION_TIMEOUT);
+			Channel sftp = jschSession.openChannel("sftp");
+			sftp.connect(CHANNEL_TIMEOUT);
+			ChannelSftp channelSftp = (ChannelSftp) sftp;
+			channelSftp.put(imgExtenders.getFile(f.getUrl(),"waifu_"+this.getId(), null).getPath(), "/www/apps/waifu/waifu_"+this.getId());
+			channelSftp.exit();
+			} catch (JSchException | SftpException e) {
+				e.printStackTrace();
+			} finally {
+				if (jschSession != null) {
+					jschSession.disconnect();
+				}
+			}
+			return true;
+		}
 
 	public void delwaifu()
 	{

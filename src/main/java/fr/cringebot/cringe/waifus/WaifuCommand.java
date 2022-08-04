@@ -1,5 +1,6 @@
 package fr.cringebot.cringe.waifus;
 
+import com.jcraft.jsch.JSchException;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.CommandBuilder.Shop;
 import fr.cringebot.cringe.escouades.SquadMember;
@@ -52,7 +53,7 @@ public class WaifuCommand {
 		}
 	}
 
-	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException, IOException {
+	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException, IOException, JSchException {
 		if (msg.getContentRaw().split(" ").length == 1) {
 			EmbedBuilder eb = capturedWaifu(msg.getMember().getId(), msg.getGuild());
 			if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
@@ -226,7 +227,7 @@ public class WaifuCommand {
 		return eb;
 	}
 
-	private static void setImage(Message msg) throws IOException {
+	private static void setImage(Message msg) throws IOException, JSchException {
 		String id = msg.getContentRaw().split(" ")[2];
 		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
 		if (w == null) {

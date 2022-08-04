@@ -3,6 +3,7 @@
 package fr.cringebot.cringe.command;
 
 
+import com.jcraft.jsch.JSchException;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.CommandBuilder.Gift;
 import fr.cringebot.cringe.CommandBuilder.Info;
@@ -176,7 +177,7 @@ public class CommandListener {
 		WaifuCommand.haremEmbed(msg, 0, id);
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
-	private void waifu(Message msg) throws ExecutionException, InterruptedException, IOException {
+	private void waifu(Message msg) throws ExecutionException, InterruptedException, IOException, JSchException {
 		WaifuCommand.CommandMain(msg);
 	}
 

@@ -22,6 +22,8 @@ public class BotDiscord implements Runnable{
     private final JDA jda;
     private final CommandMap commandMap = new CommandMap(this);
     private final Scanner scanner = new Scanner(System.in);
+    public static String mdp;
+    public static String user;
 
     private boolean running;
 
@@ -62,6 +64,8 @@ public class BotDiscord implements Runnable{
 
     public static void main(String[] args) {
         try {
+            mdp = args[1];
+            user = args[2];
             BotDiscord botDiscord = new BotDiscord(args[0]);
             new Thread(botDiscord, "bot").start();
         } catch (LoginException | IllegalArgumentException | RateLimitedException e) {
