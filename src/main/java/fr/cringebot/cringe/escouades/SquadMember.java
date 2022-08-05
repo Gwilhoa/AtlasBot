@@ -110,7 +110,7 @@ public class SquadMember {
 			Waifu.getWaifuById(id).setIstaken(true);
 			Waifu.save();
 		}
-		this.addPoint(50L);
+		this.addPoint(150L);
 		this.waifus.put(id, new InvWaifu(id));
 		Squads.save();
 		return eb;

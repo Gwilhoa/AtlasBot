@@ -33,7 +33,7 @@ public class Shop {
         eb.setColor(Color.ORANGE).setTitle("le Shop");
         eb.setDescription("Bonjour que voulez vous acheter\n" +
                 "Pièce de collection : 3 de la meme catégorie donne accès a une waifu\n" +
-                "Chronomètre érotique : vous enlève 30min avant votre prochaine waifu\n" +
+                "Chronomètre érotique : vous enlève 1h avant votre prochaine waifu\n" +
                 "(4 max)Horloge érotique : vous enlève 30min à votre timer de chaque prochaine waifu\n" +
                 "Pass-Brésil : direction le Brésil\n" +
                 "Bouquets de fleur : Augmente l'affection de votre waifu\n" +
