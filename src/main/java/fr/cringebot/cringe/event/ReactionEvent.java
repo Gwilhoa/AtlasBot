@@ -186,23 +186,20 @@ public class ReactionEvent {
                 URLConnection connection = new URL(mem.getUser().getEffectiveAvatarUrl()).openConnection();
                 connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
                 BufferedImage im = ImageIO.read(connection.getInputStream());
-                im = resize(im, 145, 134, 0, 0, true);
-                im = resize(im, 580, 134, 405, 0, false);
-
-                //g.drawImage(im,414,6 ,135,124,null);
+                im = imgExtenders.makeRoundedCorner(im, 35);
                 BufferedImage ret = imgExtenders.getImage("spacebackground.png");
                 Graphics2D g = ret.createGraphics();
-                g.drawImage(im, 0, 0, null);
+                g.drawImage(im, 350, 150,  null);
 
                 g.setColor(Color.WHITE);
-                g.setFont(new Font("Comic Sans MS", Font.PLAIN, 45));
+                g.setFont(new Font("Among Us Vector", Font.PLAIN, 20));
                 if (!issus) {
-                g.drawString(mem.getEffectiveName() + " was not the imposter", 14, 111);
+                g.drawString(mem.getEffectiveName() + " was not the imposter", 275, 300);
                 } else {
-                    g.drawString(mem.getEffectiveName() + " was the imposter", 14, 111);
+                    g.drawString(mem.getEffectiveName() + " was the imposter", 275, 300);
                 }
                 g.dispose();
-                ImageIO.write(im, "png", baos);
+                ImageIO.write(ret, "png", baos);
                 tc.sendFile(baos.toByteArray(), "sus.png").queue();
             } catch (IOException e) {
                 e.printStackTrace();
