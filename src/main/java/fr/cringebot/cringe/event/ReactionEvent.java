@@ -19,13 +19,18 @@ import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.Buffer;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -82,7 +87,7 @@ public class ReactionEvent {
         }
 
         if (StringExtenders.containsWord(msg.getContentRaw(), "sus"))
-            sus(msg);
+            sus(msg.getTextChannel(), msg.getMember(), new Random().nextInt(100) > 95);
 
         if (msg.getContentRaw().equalsIgnoreCase("ping"))
         {
@@ -174,35 +179,35 @@ public class ReactionEvent {
     }
 
 
-    public static void sus(Message msg) {
-        if (new Random().nextInt(100) < 95)
-        {
-            msg.getChannel().sendMessage(". 　　　*   。　　　　•　 　ﾟ　　。 　　. °  ,  *　　　.　　　* 　　.　　　　　。　　 。\n" +
-                    "\n" +
-                    "　　　.　　　* 　　.　　　　　。　　 。　. 　.  °  ,  *   。　　　　•　 　ﾟ　　。 　　. \n" +
-                    "\n" +
-                    ".　　 。　　　　　 ඞ 。 . 　　 • 　　   °　　•   °  .　　　.　　　* 　　.　　　　　。　　 。 \n" +
-                    "\n" +
-                    "　　ﾟ　　 " + msg.getMember().getAsMention() + " was not An Impostor.　 。　.　　　* 　　.　　　　　。　　 。\n" +
-                    "\n" +
-                    "　　'　　　 1 Impostor remains 　 　　。   . °  , 　　　.　　　* 　　.　　　　　。　　 。\n" +
-                    "\n" +
-                    "　　ﾟ　　　.　　　. ,　　　　.　 .   *  °  . °  　　　.　　　* 　　.　　　　　。　　 。").queue();
-        }
-        else
-            msg.getChannel().sendMessage(". 　　　*   。　　　　•　 　ﾟ　　。 　　. °  ,  *　　　.　　　* 　　.　　　　　。　　 。\n" +
-                    "\n" +
-                    "　　　.　　　* 　　.　　　　　。　　 。　. 　.  °  ,  *   。　　　　•　 　ﾟ　　。 　　. \n" +
-                    "\n" +
-                    ".　　 。　　　　　 ඞ 。 . 　　 • 　　   °　　•   °  .　　　.　　　* 　　.　　　　　。　　 。 \n" +
-                    "\n" +
-                    "　　ﾟ　　 " + msg.getMember().getAsMention() + " was the Impostor.　 。　.　　　* 　　.　　　　　。　　 。\n" +
-                    "\n" +
-                    "　　'　　　 　　　* 　　.　　　　　。　　 。 　 　　。   . °  , 　　　.　　　* 　　.　　　　　。　　 。\n" +
-                    "\n" +
-                    "　　ﾟ　　　.　　　. ,　　　　.　 .   *  °  . °  　　　.　　　* 　　.　　　　　。　　 。").queue();
-    }
+    public static void sus(TextChannel tc, Member mem, boolean issus) {
 
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                URLConnection connection = new URL(mem.getUser().getEffectiveAvatarUrl()).openConnection();
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
+                BufferedImage im = ImageIO.read(connection.getInputStream());
+                im = resize(im, 145, 134, 0, 0, true);
+                im = resize(im, 580, 134, 405, 0, false);
+
+                //g.drawImage(im,414,6 ,135,124,null);
+                BufferedImage ret = imgExtenders.getImage("spacebackground.png");
+                Graphics2D g = ret.createGraphics();
+                g.drawImage(im, 0, 0, null);
+
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Comic Sans MS", Font.PLAIN, 45));
+                if (!issus) {
+                g.drawString(mem.getEffectiveName() + " was not the imposter", 14, 111);
+                } else {
+                    g.drawString(mem.getEffectiveName() + " was the imposter", 14, 111);
+                }
+                g.dispose();
+                ImageIO.write(im, "png", baos);
+                tc.sendFile(baos.toByteArray(), "sus.png").queue();
+            } catch (IOException e) {
+                e.printStackTrace();
+        }
+    }
     /**
      * quelqu'un veut rendre respect ? press f to respect
      *

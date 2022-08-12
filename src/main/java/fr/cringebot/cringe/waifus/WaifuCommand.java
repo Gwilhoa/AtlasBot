@@ -260,6 +260,7 @@ public class WaifuCommand {
 		name = args[0].substring(">waifu add ".length());
 		if (!msg.getAttachments().isEmpty() && msg.getAttachments().size() == 1) {
 			Waifu waifu = new Waifu(msg.getAttachments().get(0), name, msg.getContentRaw().substring(args[0].length() + args[1].length() + 2), null, args[1], false);
+			Squads.getstats(msg.getMember()).addPoint(1000L);
 			msg.getChannel().sendMessage("waifu bien ajouté #"+ waifu.getId()).reference(msg).queue();
 		} else {
 			msg.getChannel().sendMessage("t'es une merde").queue();
