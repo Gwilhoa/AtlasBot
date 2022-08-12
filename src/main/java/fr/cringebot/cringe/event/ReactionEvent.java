@@ -86,9 +86,15 @@ public class ReactionEvent {
             }
         }
 
-        if (StringExtenders.containsWord(msg.getContentRaw(), "sus"))
-            sus(msg.getTextChannel(), msg.getMember(), new Random().nextInt(100) > 95);
-
+        if (StringExtenders.containsWord(msg.getContentRaw(), "sus")) {
+            boolean sus = new Random().nextInt(100) > 95;
+            if (msg.getReferencedMessage() != null)
+                sus(msg.getTextChannel(), msg.getReferencedMessage().getMember(), sus);
+            else if (!msg.getMentions().getMembers().isEmpty() && msg.getMentions().getMembers().get(0) != null)
+                sus(msg.getTextChannel(), msg.getMentions().getMembers().get(0), sus);
+            else
+                sus(msg.getTextChannel(), msg.getMember(), sus);
+        }
         if (msg.getContentRaw().equalsIgnoreCase("ping"))
         {
             long time = System.currentTimeMillis();
@@ -192,7 +198,7 @@ public class ReactionEvent {
                 g.drawImage(im, 350, 150,  null);
 
                 g.setColor(Color.WHITE);
-                g.setFont(new Font("Among Us Vector", Font.PLAIN, 20));
+                g.setFont(new Font("Among Us Vectorx", Font.PLAIN, 20));
                 if (!issus) {
                 g.drawString(mem.getEffectiveName() + " was not the imposter", 275, 300);
                 } else {
