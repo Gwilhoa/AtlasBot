@@ -124,11 +124,11 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("search")) {
 			msg.getChannel().sendMessageEmbeds(waifuSearching(msg.getMember()).build()).queue();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setorigin")) {
-			if (msg.getContentRaw().length() <= ">waifu setimage ".length()) {
+			if (msg.getContentRaw().split(" ").length <= 3) {
 				msg.getChannel().sendMessage("argument insuffisant").queue();
 			}
 			else {
-				String id = msg.getContentRaw().substring(">waifu setorigin ".length());
+				String id = msg.getContentRaw().split(" ")[2];
 				String text = msg.getContentRaw().substring(">waifu setorigin  ".length() + id.length());
 					try {
 						if (setOrigin(Integer.parseInt(id), text))
@@ -138,6 +138,22 @@ public class WaifuCommand {
 					} catch (NumberFormatException e) {
 						msg.reply("identifiant incorrect").queue();
 					}
+			}
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setdescription")) {
+			if (msg.getContentRaw().split(" ").length <= 3) {
+				msg.getChannel().sendMessage("argument insuffisant").queue();
+			}
+			else {
+				String id = msg.getContentRaw().split(" ")[2];
+				String text = msg.getContentRaw().substring(">waifu setdescription  ".length() + id.length());
+				try {
+					if (setDescription(Integer.parseInt(id), text))
+						msg.reply("nouvelle description pour l'id" + id).queue();
+					else
+						msg.reply("identifiant incorrect").queue();
+				} catch (NumberFormatException e) {
+					msg.reply("identifiant incorrect").queue();
+				}
 			}
 		}
 	}
@@ -426,21 +442,13 @@ public class WaifuCommand {
 		return eb;
 	}
 
-	public static void setDescription(Message msg)
+	public static boolean setDescription(Integer id, String desc)
 	{
-		if (!msg.getChannel().getId().equals("975087822618910800")) {
-			msg.getChannel().sendMessage("non").queue();
-			return;
-		}
-		String id = msg.getContentRaw().split(" ")[2];
-		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
-		if (w == null) {
-			msg.getChannel().sendMessage("id non défini").queue();
-			return;
-		}
-		String name = msg.getContentRaw().substring(">Waifu setdescription  ".length() + id.length());
-		w.setDescription(name);
-		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
+		Waifu w = Waifu.getWaifuById(id);
+		if (w == null)
+			return false;
+		w.setDescription(desc);
+		return true;
 	}
 
 	public static boolean setOrigin(Integer id, String origin)
