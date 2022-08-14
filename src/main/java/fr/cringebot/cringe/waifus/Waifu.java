@@ -72,7 +72,7 @@ public class Waifu {
 		this.origin = origin;
 		try {
 			this.setFile(f);
-		}catch (JSchException | IOException e) {
+		}catch (IOException e) {
 			e.printStackTrace();
 		}
 		waifuList.put(this.id, this);
@@ -83,7 +83,7 @@ public class Waifu {
 		this.type = type;
 	}
 
-	public boolean setFile(Message.Attachment f) throws IOException, JSchException {
+	public boolean setFile(Message.Attachment f) throws IOException {
 		imgExtenders.getFile(f.getUrl(),"waifu_"+this.getId(), "/var/www/my_webapp__2/www/apps/waifu/waifu_"+this.getId()+".png");
 		return true;
 	}

@@ -167,14 +167,15 @@ public class SquadMember {
 		return newWaifu(waifus.get(new Random().nextInt(waifus.size() - 1)).getId(), memId, g);
 	}
 
-	public void addCollection(String str, Message msg) throws InterruptedException {
+	public EmbedBuilder addCollection(String str, Message msg) throws InterruptedException {
 		if (this.collections.getOrDefault(str, 0) == 2) {
 			this.collections.put(str, 0);
-			msg.getChannel().sendMessageEmbeds(this.getWaifu(str, msg.getMember().getId(), msg.getGuild()).build()).queue();
+			return this.getWaifu(str, msg.getMember().getId(), msg.getGuild());
 		}
 		else
 			this.collections.put(str, this.collections.getOrDefault(str, 0) + 1);
 		Squads.save();
+		return null;
 	}
 
 	public Integer getCollection(String str)

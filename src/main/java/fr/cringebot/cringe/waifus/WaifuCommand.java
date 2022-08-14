@@ -53,7 +53,7 @@ public class WaifuCommand {
 		}
 	}
 
-	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException, IOException, JSchException {
+	public static void CommandMain(Message msg) throws ExecutionException, InterruptedException, IOException {
 		if (msg.getContentRaw().split(" ").length == 1) {
 			EmbedBuilder eb = capturedWaifu(msg.getMember().getId(), msg.getGuild());
 			if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
@@ -70,7 +70,20 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset")) {
 			Squads.resetWaifu();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage")) {
-			setImage(msg);
+			String text = msg.getContentRaw().substring(">waifu setimage ".length());
+			if (msg.getAttachments().isEmpty())
+				msg.getChannel().sendMessage("tu n'as pas mis d'image").queue();
+			else {
+				try {
+					if (setImage(Integer.parseInt(text), msg.getAttachments().get(0)))
+						msg.reply("nouvelle image pour l'id" + text).queue();
+					else
+						msg.reply("identifiant incorrect").queue();
+				} catch (NumberFormatException e) {
+					msg.reply("identifiant incorrect").queue();
+				}
+
+			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")) {
 			String SearchKey;
 			if (msg.getContentRaw().length() <= ">waifu list ".length())
@@ -100,11 +113,32 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("release")) {
 			if (release(msg.getMember(), Integer.parseInt(msg.getContentRaw().split(" ")[2]))) {
 				Waifu w = Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
-				Squads.getstats(msg.getMember()).addCollection(w.getOrigin(), msg);
-				msg.getChannel().sendMessage(w.getName() + " a été relaché, vous gagné une pièce de " + w.getOrigin()).queue();
+				EmbedBuilder eb = Squads.getstats(msg.getMember()).addCollection(w.getOrigin(), msg);
+				if (eb == null)
+					msg.getChannel().sendMessage(w.getName() + " a été relaché, vous gagné une pièce de " + w.getOrigin()).queue();
+				else {
+					eb.setTitle("une waifu est apparue");
+					msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+				}
 			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("search")) {
 			msg.getChannel().sendMessageEmbeds(waifuSearching(msg.getMember()).build()).queue();
+		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setorigin")) {
+			if (msg.getContentRaw().length() <= ">waifu setimage ".length()) {
+				msg.getChannel().sendMessage("argument insuffisant").queue();
+			}
+			else {
+				String id = msg.getContentRaw().substring(">waifu setorigin ".length());
+				String text = msg.getContentRaw().substring(">waifu setorigin  ".length() + id.length());
+					try {
+						if (setOrigin(Integer.parseInt(id), text))
+							msg.reply("nouvelle origine pour l'id" + id).queue();
+						else
+							msg.reply("identifiant incorrect").queue();
+					} catch (NumberFormatException e) {
+						msg.reply("identifiant incorrect").queue();
+					}
+			}
 		}
 	}
 
@@ -227,21 +261,12 @@ public class WaifuCommand {
 		return eb;
 	}
 
-	private static void setImage(Message msg) throws IOException, JSchException {
-		String id = msg.getContentRaw().split(" ")[2];
-		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
-		if (w == null) {
-			msg.getChannel().sendMessage("id non défini").queue();
-			return;
-		}
-		if (msg.getAttachments().isEmpty()){
-			msg.getChannel().sendMessage("t'es une merde").queue();
-			return;
-		}
-		if (!w.setFile(msg.getAttachments().get(0)))
-			msg.getChannel().sendMessage("l'image est trop grande").queue();
-		else
-			msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
+	private static boolean setImage(Integer id, Message.Attachment f) throws  IOException {
+		Waifu w = Waifu.getWaifuById(id);
+		if (w == null)
+			return false;
+		w.setFile(f);
+		return true;
 	}
 
 
@@ -418,21 +443,13 @@ public class WaifuCommand {
 		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
 	}
 
-	public static void setOrigin(Message msg)
+	public static boolean setOrigin(Integer id, String origin)
 	{
-		if (!msg.getChannel().getId().equals("975087822618910800")) {
-			msg.getChannel().sendMessage("non").queue();
-			return;
-		}
-		String id = msg.getContentRaw().split(" ")[2];
-		Waifu w = Waifu.getWaifuById(Integer.parseInt(id));
-		if (w == null) {
-			msg.getChannel().sendMessage("id non défini").queue();
-			return;
-		}
-		String name = msg.getContentRaw().substring(">Waifu setOrigin  ".length() + id.length());
-		w.setOrigin(name);
-		msg.addReaction(Emoji.fromFormatted("\uD83D\uDC4C")).queue();
+		Waifu w = Waifu.getWaifuById(id);
+		if (w == null)
+			return false;
+		w.setOrigin(origin);
+		return true;
 	}
 
 	public static void delwaifu(Message msg)
