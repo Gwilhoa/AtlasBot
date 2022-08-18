@@ -465,9 +465,9 @@ public class BotListener implements EventListener {
 					u = reaction.getCount() - 1;
 			}
 			if (msg.getAuthor().equals(event.getJDA().getSelfUser()))
-			if (msg.getContentRaw().startsWith("ratio") && u >= 2)
+			if (msg.getContentRaw().startsWith("Ratio") && u >= 2)
 				msg.editMessage("Turbo ratio " +msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
-			else if (msg.getContentRaw().startsWith("Turbo ratio ") && u >= 4)
+			else if (msg.getContentRaw().startsWith("Turbo ratio") && u >= 4)
 					msg.editMessage("Super ratio"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			else if (msg.getContentRaw().startsWith("Super ratio") && u >= 6)
 					msg.editMessage("Hyper ratio"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
