@@ -481,7 +481,10 @@ public class BotListener implements EventListener {
 					msg.editMessage("RATIO MYTHIQUE"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			else if (msg.getContentRaw().startsWith("RATIO MYTHIQUE") && u >= 20)
 					msg.editMessage("**RATIO LÉGENDAIRE**"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
-			return;
+			if (u == 2 || u == 4 || u == 6 || u == 8 || u == 11 || u == 14 || u == 17 || u == 20) {
+				if (Squads.getstats(msg.getReferencedMessage().getMember()) != null)
+					Squads.getstats(msg.getReferencedMessage().getMember()).removepoint(100L);
+			}
 		}
 		if (event.getChannel().getId().equals("461606547064356864")) {
 			memesEvent.addReaction(event.getChannel().retrieveMessageById(event.getMessageId()).complete(), event.getReaction());
