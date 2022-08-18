@@ -69,7 +69,7 @@ public class ReactionEvent {
         if (msg.getContentRaw().equalsIgnoreCase("ratio") )
         {
             if (msg.getReferencedMessage() != null) {
-                msg.getChannel().sendMessage("Ratio").reference(msg.getReferencedMessage()).complete().addReaction(Emoji.fromFormatted("⬆️")).queue();
+                msg.getChannel().sendMessage("Ratio by " + msg.getMember().getAsMention()).reference(msg.getReferencedMessage()).complete().addReaction(Emoji.fromFormatted("⬆️")).queue();
                 msg.delete().queue();
             }
         }

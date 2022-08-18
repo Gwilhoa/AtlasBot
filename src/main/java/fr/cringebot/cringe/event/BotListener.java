@@ -28,10 +28,7 @@ import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.lol.Champion;
-import fr.cringebot.cringe.objects.DetectorAttachment;
-import fr.cringebot.cringe.objects.Emotes;
-import fr.cringebot.cringe.objects.Item;
-import fr.cringebot.cringe.objects.activity;
+import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
@@ -468,22 +465,22 @@ public class BotListener implements EventListener {
 					u = reaction.getCount() - 1;
 			}
 			if (msg.getAuthor().equals(event.getJDA().getSelfUser()))
-			if (msg.getContentRaw().equalsIgnoreCase("ratio") && u >= 2)
-				msg.editMessage("Turbo ratio").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("Turbo ratio") && u >= 4)
-					msg.editMessage("Super ratio").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("Super ratio") && u >= 6)
-					msg.editMessage("Hyper ratio").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("Hyper ratio") && u >= 8)
-					msg.editMessage("Méga ratio").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("Méga ratio") && u >= 11)
-					msg.editMessage("Giga ratio").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("Giga ratio") && u >= 14)
-					msg.editMessage("RATIO ÉPIQUE").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("RATIO ÉPIQUE") && u >= 17)
-					msg.editMessage("RATIO MYTHIQUE").queue();
-			else if (msg.getContentRaw().equalsIgnoreCase("RATIO MYTHIQUE") && u >= 20)
-					msg.editMessage("**RATIO LÉGENDAIRE**").queue();
+			if (msg.getContentRaw().startsWith("ratio") && u >= 2)
+				msg.editMessage("Turbo ratio " +msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+			else if (msg.getContentRaw().startsWith("Turbo ratio ") && u >= 4)
+					msg.editMessage("Super ratio"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+			else if (msg.getContentRaw().startsWith("Super ratio") && u >= 6)
+					msg.editMessage("Hyper ratio"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+			else if (msg.getContentRaw().startsWith("Hyper ratio") && u >= 8)
+					msg.editMessage("Méga ratio"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+			else if (msg.getContentRaw().startsWith("Méga ratio") && u >= 11)
+					msg.editMessage("Giga ratio"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+			else if (msg.getContentRaw().startsWith("Giga ratio") && u >= 14)
+					msg.editMessage("RATIO ÉPIQUE"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+			else if (msg.getContentRaw().startsWith("RATIO ÉPIQUE") && u >= 17)
+					msg.editMessage("RATIO MYTHIQUE"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+			else if (msg.getContentRaw().startsWith("RATIO MYTHIQUE") && u >= 20)
+					msg.editMessage("**RATIO LÉGENDAIRE**"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			return;
 		}
 		if (event.getChannel().getId().equals("461606547064356864")) {
