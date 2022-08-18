@@ -70,19 +70,23 @@ public class WaifuCommand {
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset")) {
 			Squads.resetWaifu();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage")) {
-			String text = msg.getContentRaw().substring(">waifu setimage ".length());
-			if (msg.getAttachments().isEmpty())
-				msg.getChannel().sendMessage("tu n'as pas mis d'image").queue();
+			if (msg.getContentRaw().split(" ").length == 2)
+				msg.getChannel().sendMessage("argument insuffisant").queue();
 			else {
-				try {
-					if (setImage(Integer.parseInt(text), msg.getAttachments().get(0)))
-						msg.reply("nouvelle image pour l'id" + text).queue();
-					else
+				String text = msg.getContentRaw().substring(">waifu setimage ".length());
+				if (msg.getAttachments().isEmpty())
+					msg.getChannel().sendMessage("tu n'as pas mis d'image").queue();
+				else {
+					try {
+						if (setImage(Integer.parseInt(text), msg.getAttachments().get(0)))
+							msg.reply("nouvelle image pour l'id" + text).queue();
+						else
+							msg.reply("identifiant incorrect").queue();
+					} catch (NumberFormatException e) {
 						msg.reply("identifiant incorrect").queue();
-				} catch (NumberFormatException e) {
-					msg.reply("identifiant incorrect").queue();
-				}
+					}
 
+				}
 			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("list")) {
 			String SearchKey;

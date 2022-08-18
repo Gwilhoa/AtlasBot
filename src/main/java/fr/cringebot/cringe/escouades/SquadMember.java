@@ -178,6 +178,10 @@ public class SquadMember {
 		return null;
 	}
 
+	public HashMap<String, Integer> getInventory() {
+		return inventory;
+	}
+
 	public Integer getCollection(String str)
 	{
 		return this.collections.getOrDefault(str, 0);

@@ -49,18 +49,6 @@ public class ReactionEvent {
             pressf(msg);
         }
 
-        if (StringExtenders.containsWord(msg.getContentRaw(), "mdr"))
-        {
-            String[] rep = {
-                    "Hilarant...",
-                    "je suis actuellement hilare",
-                    "#jpp",
-                    "\uD83D\uDE02"
-            };
-            int r = new Random().nextInt(rep.length);
-            msg.getChannel().sendMessage(rep[r]).queue();
-        }
-
         if (StringExtenders.containsWord(msg.getContentRaw(),"lyon"))
         {
             msg.getChannel().sendMessage("les portes s'ouvriront à droite dans le sens de la circulation").queue();

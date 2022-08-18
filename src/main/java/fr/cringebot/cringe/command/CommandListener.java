@@ -5,10 +5,7 @@ package fr.cringebot.cringe.command;
 
 import com.jcraft.jsch.JSchException;
 import fr.cringebot.BotDiscord;
-import fr.cringebot.cringe.CommandBuilder.Gift;
-import fr.cringebot.cringe.CommandBuilder.Info;
-import fr.cringebot.cringe.CommandBuilder.Shop;
-import fr.cringebot.cringe.CommandBuilder.Top;
+import fr.cringebot.cringe.CommandBuilder.*;
 import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
@@ -179,6 +176,11 @@ public class CommandListener {
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException, IOException, JSchException {
 		WaifuCommand.CommandMain(msg);
+	}
+
+	@Command(name = "inventory", description = "afficher ton inventaire", type = ExecutorType.USER)
+	private void inventory(Message msg) {
+		msg.getChannel().sendMessageEmbeds(Inventory.getInventory(msg.getMember()).build()).setActionRow(new ButtonImpl("inv_"+msg.getMember().getId(), "pièce de collection", ButtonStyle.SUCCESS, true, null)).queue();
 	}
 
 	@Command(name = "cki", description = "mais qui est-il !", type = ExecutorType.USER)
