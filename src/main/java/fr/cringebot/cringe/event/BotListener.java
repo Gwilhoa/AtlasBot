@@ -466,21 +466,21 @@ public class BotListener implements EventListener {
 			}
 			if (msg.getAuthor().equals(event.getJDA().getSelfUser()))
 			if (msg.getContentRaw().startsWith("Ratio") && u >= 2)
-				msg.editMessage("Turbo ratio " +msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+				msg.editMessage("Turbo ratio by " +msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			else if (msg.getContentRaw().startsWith("Turbo ratio") && u >= 4)
-					msg.editMessage("Super ratio"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+					msg.editMessage("Super ratio by "+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			else if (msg.getContentRaw().startsWith("Super ratio") && u >= 6)
-					msg.editMessage("Hyper ratio"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+					msg.editMessage("Hyper ratio by "+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			else if (msg.getContentRaw().startsWith("Hyper ratio") && u >= 8)
-					msg.editMessage("Méga ratio"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+					msg.editMessage("Méga ratio by "+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			else if (msg.getContentRaw().startsWith("Méga ratio") && u >= 11)
-					msg.editMessage("Giga ratio"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+					msg.editMessage("Giga ratio by "+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			else if (msg.getContentRaw().startsWith("Giga ratio") && u >= 14)
-					msg.editMessage("RATIO ÉPIQUE"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+					msg.editMessage("RATIO ÉPIQUE by "+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			else if (msg.getContentRaw().startsWith("RATIO ÉPIQUE") && u >= 17)
-					msg.editMessage("RATIO MYTHIQUE"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+					msg.editMessage("RATIO MYTHIQUE by "+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			else if (msg.getContentRaw().startsWith("RATIO MYTHIQUE") && u >= 20)
-					msg.editMessage("**RATIO LÉGENDAIRE**"+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
+					msg.editMessage("**RATIO LÉGENDAIRE** by "+msg.getContentRaw().substring(StringExtenders.firstsearch(msg.getContentRaw(),"y") + 1)).queue();
 			if (u == 2 || u == 4 || u == 6 || u == 8 || u == 11 || u == 14 || u == 17 || u == 20) {
 				if (Squads.getstats(msg.getReferencedMessage().getMember()) != null)
 					Squads.getstats(msg.getReferencedMessage().getMember()).removepoint(100L);
