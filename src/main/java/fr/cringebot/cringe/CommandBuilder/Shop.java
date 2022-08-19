@@ -65,7 +65,7 @@ public class Shop {
     public static void ShopSelectMenu(SelectMenuInteraction event) {
         if (!event.getMember().getId().equals(event.getSelectMenu().getId().split(";")[1]))
             event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
-        if (event.getSelectedOptions().get(0).getValue().equals("stop")) {
+        else if (event.getSelectedOptions().get(0).getValue().equals("stop")) {
             event.getMessage().delete().queue();
             event.reply("merci, à bientot").setEphemeral(true).queue();
         }
@@ -133,7 +133,7 @@ public class Shop {
     public static void buy(Member mem, String item, int prix, int amount)
     {
         Squads.getstats(mem).addItem(item, amount);
-        Squads.getstats(mem).removeCoins(prix);
+        Squads.getstats(mem).removeCoins(prix*amount);
     }
 
     public static void panelamount(Member mem, String item, int prix, int amount, ButtonInteractionEvent event)

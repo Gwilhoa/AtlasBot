@@ -180,6 +180,25 @@ public class BotListener implements EventListener {
 				Gift.openGift(event);
 			else
 				event.reply("on vole pas le cadeau des autres").setEphemeral(true).queue();
+		} else if (event.getButton().getId().startsWith("shop")) {
+			String id = event.getButton().getId().substring("shop_".length());
+			if (!event.getMember().getId().equals(id.split(";")[0]))
+			{
+				event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
+				return;
+			}
+			String item = id.split(";")[1];
+			int prix = Integer.parseInt(id.split(";")[2]);
+			int amount = Integer.parseInt(id.split(";")[3]);
+			if (id.equals("stop")) {
+				event.reply("opération annulé").setEphemeral(true).queue();
+				event.editMessageEmbeds(Shop.ShopDisplay(event.getMember()).build()).setActionRow(Shop.PrincipalMenu(event.getMember())).queue();
+			} else if (event.getButton().getLabel().equalsIgnoreCase("acheter")){
+				Shop.buy(event.getMember(), item, prix, amount);
+				event.reply(event.getMember().getAsMention() +", tu as acheté "+ amount + " " + item).queue();
+			} else {
+				Shop.panelamount(event.getMember(), item, prix, amount, event);
+			}
 		} else if (event.getButton().getId().startsWith("trade")){
 			EmbedBuilder eb = new EmbedBuilder().setTitle("Requête d'échange").setDescription(event.getMessage().getEmbeds().get(0).getDescription());
 			ArrayList<ButtonImpl> bttn = new ArrayList<>();
