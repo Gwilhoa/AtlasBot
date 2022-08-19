@@ -86,7 +86,7 @@ public class Shop {
             event.getMessage().delete().queue();
             event.reply("merci, à bientot").setEphemeral(true).queue();
         }
-        else if (event.getSelectedOptions().get(0).getValue().equals("shop_2"))
+        else if (event.getSelectedOptions().get(0).getValue().equals("SHOP_2"))
         {
             event.editMessageEmbeds(ShopWaifuDisplay(event.getMember()).build()).setActionRow(WaifuMenu(event.getMember())).queue();
         }
