@@ -60,10 +60,10 @@ public class WaifuCommand {
 				msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 			else
 			{
-				if (Squads.getstats(msg.getMember()).getCoins() >= Shop.getCEPRICE())
-					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY;"+msg.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
+				if (Squads.getstats(msg.getMember()).getAmountItem(Item.Items.CE.getStr()) > 0)
+					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+msg.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
 				else
-					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("CEFUBUY;"+msg.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+msg.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
 			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info")) {
 			infowaifu(msg);
