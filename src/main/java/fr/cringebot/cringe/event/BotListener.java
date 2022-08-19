@@ -255,16 +255,16 @@ public class BotListener implements EventListener {
 					event.reply("ça a pas marché").setEphemeral(true).queue();
 					return;
 				}
-				Squads.getstats(event.getMember()).removeCoins(Shop.getCEPRICE().longValue());
+				Squads.getstats(event.getMember()).removeItem(Item.Items.CE.getStr());
 				EmbedBuilder eb = WaifuCommand.capturedWaifu(event.getMember().getId(), event.getGuild());
 				if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
 					event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
 				else
 				{
 					if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.CE.getStr()) > 0)
-						event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
+						event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
 					else
-						event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+						event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
 				}
 			}
 		}

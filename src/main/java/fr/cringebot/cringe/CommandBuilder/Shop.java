@@ -35,16 +35,25 @@ public class Shop {
     {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.ORANGE).setTitle("le Shop");
-        eb.setDescription("Bonjour "+mem.getAsMention()+",que voulez vous acheter\n" +
-                "Pièce de collection : 3 de la meme catégorie donne accès a une waifu\n" +
+        eb.setDescription("__Bonjour "+mem.getAsMention()+",que voulez vous acheter__\n\n" +
+                "Pass-Brésil : direction le Brésil\n" +
+                "Super bonbon : monte d'un niveau un pokemon");
+        eb.setFooter("vous avez " + Squads.getstats(mem).getCoins() + " B2C");
+        return eb;
+    }
+
+    public static EmbedBuilder ShopWaifuDisplay(Member mem)
+    {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setColor(Color.ORANGE).setTitle("le Shop");
+        eb.setDescription("__Bonjour "+mem.getAsMention()+",que voulez vous acheter__\n" +
+                "Jeton de collection : 3 de la meme catégorie donne accès a une waifu\n" +
                 "Chronomètre érotique : vous enlève 1h avant votre prochaine waifu\n" +
                 "(4 max)Horloge érotique : vous enlève 30min à votre timer de chaque prochaine waifu\n" +
-                "Pass-Brésil : direction le Brésil\n" +
                 "Bouquets de fleur : Augmente l'affection de votre waifu\n" +
                 "boite de chocolat : Augmente l'affection de votre waifu\n" +
                 "parfum : augmente l'affection de votre waifu\n" +
-                "bracelet : augmente beaucoup l'affection de votre waifu\n" +
-                "Super bonbon : monte d'un niveau un pokemon");
+                "bracelet : augmente beaucoup l'affection de votre waifu\n");
         eb.setFooter("vous avez " + Squads.getstats(mem).getCoins() + " B2C");
         return eb;
     }
@@ -52,12 +61,20 @@ public class Shop {
     public static SelectMenuImpl PrincipalMenu(Member mem)
     {
         ArrayList<SelectOption> options = new ArrayList<>();
-        options.add(new SelectOptionImpl("Pièce de collection : "+PDCPRICE+" B2C", "PDCFU"));
+        options.add(new SelectOptionImpl("pass-brésil : "+PBPRICE+ " B2C", "YAGTB"));
+        options.add(new SelectOptionImpl("Super Bonbon : " + SBPKMPRICE + " B2C", "SBPKM"));
+        options.add(new SelectOptionImpl("Shop Waifu", "SHOP_2"));
+        options.add(new SelectOptionImpl("annuler", "stop"));
+        return new SelectMenuImpl("shop;"+mem.getId(), "selectionnez un choix", 1, 1, false, options);
+    }
+
+    public static SelectMenuImpl WaifuMenu(Member mem)
+    {
+        ArrayList<SelectOption> options = new ArrayList<>();
+        options.add(new SelectOptionImpl("Jeton de collection : "+PDCPRICE+" B2C", "PDCFU"));
         options.add(new SelectOptionImpl("Chronomètre érotique : "+CEPRICE+" B2C", "RDTPFU"));
         options.add(new SelectOptionImpl("horloge érotique : "+HEPRICE+" B2C", "RDTDFU"));
-        options.add(new SelectOptionImpl("pass-brésil : "+PBPRICE+ " B2C", "YAGTB"));
         options.add(new SelectOptionImpl("Bouquet de fleur : "+ BFPRICE +" B2C", "BFFU"));
-        options.add(new SelectOptionImpl("Super Bonbon : " + SBPKMPRICE + " B2C", "SBPKM"));
         options.add(new SelectOptionImpl("annuler", "stop"));
         return new SelectMenuImpl("shop;"+mem.getId(), "selectionnez un choix", 1, 1, false, options);
     }
@@ -68,6 +85,10 @@ public class Shop {
         else if (event.getSelectedOptions().get(0).getValue().equals("stop")) {
             event.getMessage().delete().queue();
             event.reply("merci, à bientot").setEphemeral(true).queue();
+        }
+        else if (event.getSelectedOptions().get(0).getValue().equals("shop_2"))
+        {
+            event.editMessageEmbeds(ShopWaifuDisplay(event.getMember()).build()).setActionRow(WaifuMenu(event.getMember())).queue();
         }
         else if (event.getSelectedOptions().get(0).getValue().equals("YAGTB"))
         {
