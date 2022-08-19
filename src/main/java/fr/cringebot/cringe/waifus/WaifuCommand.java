@@ -228,7 +228,7 @@ public class WaifuCommand {
 				EmbedBuilder eb = Squads.getstats(member).addCollection(w.getOrigin(),member);
 				if (eb != null)
 					tc.sendMessageEmbeds(eb.build()).queue();
-				return "tu as trouvé une pièce de " +  w.getOrigin();
+				return "a trouvé un jeton de " +  w.getOrigin();
 			}
 			if (r < 30) {
 				return "a rien trouvé";

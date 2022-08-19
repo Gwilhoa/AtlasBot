@@ -196,7 +196,7 @@ public class BotListener implements EventListener {
 			} else if (event.getButton().getLabel().equalsIgnoreCase("acheter")){
 				Shop.buy(event.getMember(), item, prix, amount);
 				event.editMessageEmbeds(Shop.ShopDisplay(event.getMember()).build()).setActionRow(Shop.PrincipalMenu(event.getMember())).queue();
-				event.reply(event.getMember().getAsMention() +", tu as acheté "+ amount + " " + item).queue();
+				event.getChannel().sendMessage(event.getMember().getAsMention() +", tu as acheté "+ amount + " " + item).queue();
 			} else {
 				Shop.panelamount(event.getMember(), item, prix, amount, event);
 			}
