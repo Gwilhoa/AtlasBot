@@ -41,7 +41,7 @@ public class SlashListener {
         }
         else if (event.getName().equals("shop"))
         {
-            event.replyEmbeds(Shop.ShopDisplay(event.getMember()).build()).addActionRow(Shop.PrincipalMenu()).queue();
+            event.replyEmbeds(Shop.ShopDisplay(event.getMember()).build()).addActionRow(Shop.PrincipalMenu(event.getMember())).queue();
         }
         else if (event.getName().equals("harem"))
         {
@@ -69,8 +69,7 @@ public class SlashListener {
                 event.replyEmbeds(Top.top(null, event.getGuild()).build()).queue();
             else
                 event.replyEmbeds(Top.top(event.getOption("squadname").getAsString(), event.getGuild()).build()).queue();
-        } else if (event.getName().equals("squadname"))
-            event.replyEmbeds(Shop.ShopDisplay(event.getMember()).build()).addActionRow(Shop.PrincipalMenu()).queue();
+        }
         else if (event.getName().equals("poll"))
         {
             ArrayList<String> args = new ArrayList<>();
@@ -103,7 +102,7 @@ public class SlashListener {
             event.replyEmbeds(WaifuCommand.listwaifu(event.getGuild(), event.getMember().getId(), SearchKey).build()).addActionRows(WaifuCommand.generateButtonList(event.getMember().getId(), SearchKey, 0)).queue();
         }
         else if (event.getName().equals("waifu_search")) {
-            event.replyEmbeds(WaifuCommand.waifuSearching(event.getMember()).build()).queue();
+            event.replyEmbeds(WaifuCommand.waifuSearching(event.getMember(), event.getTextChannel()).build()).queue();
         }
         else
             event.reply("patience ça arrive").setEphemeral(true).queue();

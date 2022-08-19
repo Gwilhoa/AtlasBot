@@ -21,7 +21,7 @@ public class MenuInteract {
 		if (event.getSelectMenu().getId().startsWith("collection")){
 			Shop.CollecSelecMenu(event);
 		}
-		if (event.getSelectMenu().getId().equals("shop")) {
+		if (event.getSelectMenu().getId().startsWith("shop")) {
 			Shop.ShopSelectMenu(event);
 		}
 		if (!event.getMessage().getEmbeds().isEmpty() && event.getMessage().getEmbeds().get(0).getAuthor() != null && event.getMessage().getEmbeds().get(0).getAuthor().getName().equals("poll")) {

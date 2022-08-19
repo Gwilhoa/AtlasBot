@@ -126,7 +126,7 @@ public class WaifuCommand {
 				}
 			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("search")) {
-			msg.getChannel().sendMessageEmbeds(waifuSearching(msg.getMember()).build()).queue();
+			msg.getChannel().sendMessageEmbeds(waifuSearching(msg.getMember(), msg.getTextChannel()).build()).queue();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setorigin")) {
 			if (msg.getContentRaw().split(" ").length <= 3) {
 				msg.getChannel().sendMessage("argument insuffisant").queue();
@@ -191,7 +191,7 @@ public class WaifuCommand {
 		return bttns;
 	}
 
-	public static EmbedBuilder waifuSearching(Member member) {
+	public static EmbedBuilder waifuSearching(Member member, TextChannel tc) throws InterruptedException {
 		if (Squads.getstats(member).SearchingTimeleft() < 0) {
 			Integer pts = 0;
 			ArrayList<InvWaifu> harem = new ArrayList<>(Squads.getstats(member).getWaifus().values());
@@ -201,7 +201,7 @@ public class WaifuCommand {
 				if (w.getLevel() > 0 && w.getLevel() <= 20) {
 					pts += 20;
 					f = true;
-					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, 1)).append('\n');
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, 1, w.getWaifu(), tc)).append('\n');
 				}
 			}
 			if (!f)
@@ -221,9 +221,15 @@ public class WaifuCommand {
 
 	}
 
-	private static String getSearching(Member member, int i) {
+	private static String getSearching(Member member, int i, Waifu w, TextChannel tc) throws InterruptedException {
 		int r = new Random().nextInt(100) + 1;
 		if (i == 1) {
+			if (r < 15) {
+				EmbedBuilder eb = Squads.getstats(member).addCollection(w.getOrigin(),member);
+				if (eb != null)
+					tc.sendMessageEmbeds(eb.build()).queue();
+				return "tu as trouvé une pièce de " +  w.getOrigin();
+			}
 			if (r < 30) {
 				return "a rien trouvé";
 			} else if (r < 60) {

@@ -5,6 +5,7 @@ import fr.cringebot.cringe.waifus.InvWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.ArrayList;
@@ -47,11 +48,15 @@ public class SquadMember {
 		}
 	}
 
-	public void addItem(String item){
+	public void addItem(String item)
+	{
+		addItem(item, 0);
+	}
+	public void addItem(String item, int amount){
 		if (inventory == null)
 			inventory = new HashMap<>();
 		inventory.putIfAbsent(item, 0);
-		inventory.put(item, inventory.getOrDefault(item, 0) + 1);
+		inventory.put(item, inventory.getOrDefault(item, 0) + amount);
 		Squads.save();
 	}
 
@@ -86,6 +91,9 @@ public class SquadMember {
 		Squads.save();
 	}
 
+	public boolean removeCoins(Integer coins){
+		return removeCoins(coins.longValue());
+	}
 	public boolean removeCoins(Long coins) {
 		if (this.coins == null)
 			this.coins = 0L;
@@ -165,6 +173,17 @@ public class SquadMember {
 			waifus = Waifu.getWaifusByOrigin(str);
 		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()) || (waifu.isLegendary() && !waifu.isIstaken()));
 		return newWaifu(waifus.get(new Random().nextInt(waifus.size() - 1)).getId(), memId, g);
+	}
+
+	public EmbedBuilder addCollection(String str, Member mem) throws InterruptedException {
+		if (this.collections.getOrDefault(str, 0) == 2) {
+			this.collections.put(str, 0);
+			return this.getWaifu(str, mem.getId(), mem.getGuild());
+		}
+		else
+			this.collections.put(str, this.collections.getOrDefault(str, 0) + 1);
+		Squads.save();
+		return null;
 	}
 
 	public EmbedBuilder addCollection(String str, Message msg) throws InterruptedException {

@@ -6,7 +6,8 @@ public class Item {
         PB("Pass Brésil"),
         BF("Bouquet de fleur"),
         SB("Super Bonbon"),
-        UF("Fleur");
+        UF("Fleur"),
+        CE("Chronomètre érotique");
 
 
         private final String str;

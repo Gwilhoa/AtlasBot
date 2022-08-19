@@ -6,9 +6,13 @@ import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenuInteraction;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
 import java.awt.*;
@@ -31,18 +35,21 @@ public class Shop {
     {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.ORANGE).setTitle("le Shop");
-        eb.setDescription("Bonjour que voulez vous acheter\n" +
+        eb.setDescription("Bonjour "+mem.getAsMention()+",que voulez vous acheter\n" +
                 "Pièce de collection : 3 de la meme catégorie donne accès a une waifu\n" +
                 "Chronomètre érotique : vous enlève 1h avant votre prochaine waifu\n" +
                 "(4 max)Horloge érotique : vous enlève 30min à votre timer de chaque prochaine waifu\n" +
                 "Pass-Brésil : direction le Brésil\n" +
                 "Bouquets de fleur : Augmente l'affection de votre waifu\n" +
+                "boite de chocolat : Augmente l'affection de votre waifu\n" +
+                "parfum : augmente l'affection de votre waifu\n" +
+                "bracelet : augmente beaucoup l'affection de votre waifu\n" +
                 "Super bonbon : monte d'un niveau un pokemon");
         eb.setFooter("vous avez " + Squads.getstats(mem).getCoins() + " B2C");
         return eb;
     }
 
-    public static SelectMenuImpl PrincipalMenu()
+    public static SelectMenuImpl PrincipalMenu(Member mem)
     {
         ArrayList<SelectOption> options = new ArrayList<>();
         options.add(new SelectOptionImpl("Pièce de collection : "+PDCPRICE+" B2C", "PDCFU"));
@@ -52,10 +59,12 @@ public class Shop {
         options.add(new SelectOptionImpl("Bouquet de fleur : "+ BFPRICE +" B2C", "BFFU"));
         options.add(new SelectOptionImpl("Super Bonbon : " + SBPKMPRICE + " B2C", "SBPKM"));
         options.add(new SelectOptionImpl("annuler", "stop"));
-        return new SelectMenuImpl("shop", "selectionnez un choix", 1, 1, false, options);
+        return new SelectMenuImpl("shop;"+mem.getId(), "selectionnez un choix", 1, 1, false, options);
     }
 
     public static void ShopSelectMenu(SelectMenuInteraction event) {
+        if (!event.getMember().getId().equals(event.getSelectMenu().getId().split(";")[1]))
+            event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
         if (event.getSelectedOptions().get(0).getValue().equals("stop")) {
             event.getMessage().delete().queue();
             event.reply("merci, à bientot").setEphemeral(true).queue();
@@ -63,9 +72,7 @@ public class Shop {
         else if (event.getSelectedOptions().get(0).getValue().equals("YAGTB"))
         {
             if (Squads.getstats(event.getMember()).getCoins() >= PBPRICE) {
-                Squads.getstats(event.getMember()).removeCoins(PBPRICE.longValue());
-                Squads.getstats(event.getMember()).addItem(Item.Items.PB.getStr());
-                event.reply("tu as acheté un pass brésil tu en as désormais " + Squads.getstats(event.getMember()).getAmountItem(Item.Items.PB.getStr())).queue();
+                panelamount(event.getMember(), Item.Items.PB.getStr(), PBPRICE, 1, event);
             }
             else
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
@@ -74,7 +81,7 @@ public class Shop {
         {
             if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.HE.getStr()) >= 4)
             {
-                event.reply("désolé je n'en n'ai plus").queue();
+                event.reply("désolé je n'en n'ai plus").setEphemeral(true).queue();
             }
             else if (Squads.getstats(event.getMember()).getCoins() >= HEPRICE) {
                 Squads.getstats(event.getMember()).removeCoins(HEPRICE.longValue());
@@ -104,12 +111,7 @@ public class Shop {
         } else if (event.getSelectedOptions().get(0).getValue().equals("RDTPFU")){
             if (Squads.getstats(event.getMember()).getCoins() >= CEPRICE.longValue())
             {
-                if (Squads.getstats(event.getMember()).removeTime(1800000L)) {
-                    event.reply("Votre chronomètre a fait effet, je ressens une excitation").queue();
-                    Squads.getstats(event.getMember()).removeCoins(CEPRICE.longValue());
-                } else {
-                    event.reply("Tiens ça a pas marché, réessayez plus tard").queue();
-                }
+                panelamount(event.getMember(), Item.Items.CE.getStr(), CEPRICE, 1, event);
             } else
             {
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
@@ -117,9 +119,7 @@ public class Shop {
         } else if (event.getSelectedOptions().get(0).getValue().equals("BFFU")) {
             if (Squads.getstats(event.getMember()).getCoins() >= BFPRICE.longValue())
             {
-                Squads.getstats(event.getMember()).addItem(Item.Items.BF.getStr());
-                Squads.getstats(event.getMember()).removeCoins(BFPRICE.longValue());
-                event.reply("tu viens d'acheter un bouquet de fleurs").queue();
+                panelamount(event.getMember(), Item.Items.BF.getStr(), BFPRICE, 1, event);
             } else
             {
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
@@ -128,6 +128,53 @@ public class Shop {
         else {
             event.reply("coming soon").setEphemeral(true).queue();
         }
+    }
+
+    public static void buy(Member mem, String item, int prix, int amount)
+    {
+        Squads.getstats(mem).addItem(item, amount);
+        Squads.getstats(mem).removeCoins(prix);
+    }
+
+    public static void panelamount(Member mem, String item, int prix, int amount, ButtonInteractionEvent event)
+    {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("acheter des "+ item);
+        eb.setDescription("voulez vous acheter " + amount + " " + item + "?\nça coutera : "+ prix*amount + "B2C");
+        eb.setFooter("tu as "+ Squads.getstats(mem).getCoins() +"B2C");
+        ArrayList<ActionRow> bttns = new ArrayList<>();
+        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+amount, "acheter", ButtonStyle.SUCCESS, false, null)));
+        bttns.add(ActionRow.of(new ButtonImpl("shop_stop", "annuler l'achat", ButtonStyle.DANGER, false, null)));
+        if (amount == 1)
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+0, "-1", ButtonStyle.PRIMARY, true, null)));
+        else
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount-1), "-1", ButtonStyle.PRIMARY, false, null)));
+
+        if ((long) prix * (amount+1) > Squads.getstats(mem).getCoins())
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount+1), "+1", ButtonStyle.SECONDARY, true, null)));
+        else
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount+1), "+1", ButtonStyle.SECONDARY, false, null)));
+        event.editMessageEmbeds(eb.build()).setActionRows(bttns).queue();
+    }
+    public static void panelamount(Member mem, String item, int prix, int amount, SelectMenuInteraction event)
+    {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("acheter des "+ item);
+        eb.setDescription("voulez vous acheter " + amount + " " + item + "?\nça coutera : "+ prix*amount + "B2C");
+        eb.setFooter("tu as "+ Squads.getstats(mem).getCoins() +"B2C");
+        ArrayList<ActionRow> bttns = new ArrayList<>();
+        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+amount, "acheter", ButtonStyle.SUCCESS, false, null)));
+        bttns.add(ActionRow.of(new ButtonImpl("shop_stop", "annuler l'achat", ButtonStyle.DANGER, false, null)));
+        if (amount == 1)
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+0, "-1", ButtonStyle.PRIMARY, true, null)));
+        else
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount-1), "-1", ButtonStyle.PRIMARY, false, null)));
+
+        if ((long) prix * (amount+1) > Squads.getstats(mem).getCoins())
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount+1), "+1", ButtonStyle.SECONDARY, true, null)));
+        else
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount+1), "+1", ButtonStyle.SECONDARY, false, null)));
+        event.editMessageEmbeds(eb.build()).setActionRows(bttns).queue();
     }
 
     public static void CollecSelecMenu(SelectMenuInteractionEvent event) throws InterruptedException {

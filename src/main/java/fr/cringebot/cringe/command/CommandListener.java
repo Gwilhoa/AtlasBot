@@ -105,7 +105,7 @@ public class CommandListener {
 
 	@Command(name = "shop", description = "ouvrir le shopping")
 	private void shop(Message msg) {
-		msg.getChannel().sendMessageEmbeds(Shop.ShopDisplay(msg.getMember()).build()).setActionRow(Shop.PrincipalMenu()).queue();
+		msg.getChannel().sendMessageEmbeds(Shop.ShopDisplay(msg.getMember()).build()).setActionRow(Shop.PrincipalMenu(msg.getMember())).queue();
 	}
 
 	@Command(name = "gift", description = "des cadeaux ?", type = ExecutorType.USER)
