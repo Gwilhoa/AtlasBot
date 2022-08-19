@@ -144,7 +144,7 @@ public class Shop {
         eb.setFooter("tu as "+ Squads.getstats(mem).getCoins() +"B2C");
         ArrayList<ActionRow> bttns = new ArrayList<>();
         bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+amount, "acheter", ButtonStyle.SUCCESS, false, null)));
-        bttns.add(ActionRow.of(new ButtonImpl("shop_stop", "annuler l'achat", ButtonStyle.DANGER, false, null)));
+        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";stop", "annuler l'achat", ButtonStyle.DANGER, false, null)));
         if (amount == 1)
             bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+0, "-1", ButtonStyle.PRIMARY, true, null)));
         else
@@ -164,7 +164,7 @@ public class Shop {
         eb.setFooter("tu as "+ Squads.getstats(mem).getCoins() +"B2C");
         ArrayList<ActionRow> bttns = new ArrayList<>();
         bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+amount, "acheter", ButtonStyle.SUCCESS, false, null)));
-        bttns.add(ActionRow.of(new ButtonImpl("shop_stop", "annuler l'achat", ButtonStyle.DANGER, false, null)));
+        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";stop", "annuler l'achat", ButtonStyle.DANGER, false, null)));
         if (amount == 1)
             bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+0, "-1", ButtonStyle.PRIMARY, true, null)));
         else
@@ -185,7 +185,6 @@ public class Shop {
         }
         if (event.getSelectedOptions().get(0).getValue().equals("previous"))
         {
-            event.reply("oui").complete().deleteOriginal().queue();
             int nb = (Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) - 1) * 10;
             int i = nb;
             ArrayList<SelectOption> options = new ArrayList<>();
@@ -198,11 +197,10 @@ public class Shop {
             if (nb != 0)
                 options.add(new SelectOptionImpl("page d'avant", "previous"));
             SelectMenuImpl selectionMenu = new SelectMenuImpl("collection"+nb+"", "selectionnez un choix", 1, 1, false, options);
-            event.getMessage().editMessage(event.getMessage().getContentRaw()).setActionRow(selectionMenu).queue();
+            event.editMessage(event.getMessage().getContentRaw()).setActionRow(selectionMenu).queue();
         }
         if (event.getSelectedOptions().get(0).getValue().equals("next"))
         {
-            event.reply("oui").complete().deleteOriginal().queue();
             int nb = (Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) + 1) * 10;
             int i = nb;
             ArrayList<SelectOption> options = new ArrayList<>();
@@ -215,7 +213,7 @@ public class Shop {
                 options.add(new SelectOptionImpl("autres", "next"));
             options.add(new SelectOptionImpl("page d'avant", "previous"));
             SelectMenuImpl selectionMenu = new SelectMenuImpl("collection"+nb+"", "selectionnez un choix", 1, 1, false, options);
-            event.getMessage().editMessage(event.getMessage().getContentRaw()).setActionRow(selectionMenu).queue();
+            event.editMessage(event.getMessage().getContentRaw()).setActionRow(selectionMenu).queue();
         }
         else {
             if (event.getSelectedOptions().get(0).getValue().equals("B2K") || Squads.getstats(event.getMember()).getWaifubyOrigin(event.getSelectedOptions().get(0).getValue()).size() == Waifu.getWaifusByOrigin(event.getSelectedOptions().get(0).getValue()).size())

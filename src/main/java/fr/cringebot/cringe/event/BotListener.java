@@ -188,12 +188,15 @@ public class BotListener implements EventListener {
 				return;
 			}
 			String item = id.split(";")[1];
-			int prix = Integer.parseInt(id.split(";")[2]);
-			int amount = Integer.parseInt(id.split(";")[3]);
-			if (id.equals("stop")) {
+			if (item.equals("stop"))
+			{
 				event.editMessageEmbeds(Shop.ShopDisplay(event.getMember()).build()).setActionRow(Shop.PrincipalMenu(event.getMember())).queue();
 				event.reply("opération annulé").setEphemeral(true).queue();
-			} else if (event.getButton().getLabel().equalsIgnoreCase("acheter")){
+				return;
+			}
+			int prix = Integer.parseInt(id.split(";")[2]);
+			int amount = Integer.parseInt(id.split(";")[3]);
+			if (event.getButton().getLabel().equalsIgnoreCase("acheter")){
 				Shop.buy(event.getMember(), item, prix, amount);
 				event.editMessageEmbeds(Shop.ShopDisplay(event.getMember()).build()).setActionRow(Shop.PrincipalMenu(event.getMember())).queue();
 				event.getChannel().sendMessage(event.getMember().getAsMention() +", tu as acheté "+ amount + " " + item).queue();
@@ -255,15 +258,14 @@ public class BotListener implements EventListener {
 				Squads.getstats(event.getMember()).removeCoins(Shop.getCEPRICE().longValue());
 				EmbedBuilder eb = WaifuCommand.capturedWaifu(event.getMember().getId(), event.getGuild());
 				if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
-					event.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+					event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
 				else
 				{
-					if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.CE.getStr()) <= 0)
-						event.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
+					if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.CE.getStr()) > 0)
+						event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
 					else
-						event.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+						event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
 				}
-				event.getMessage().delete().queue();
 			}
 		}
 		else if (event.getButton().getId().startsWith("harem")){
