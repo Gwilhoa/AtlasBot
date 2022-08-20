@@ -22,7 +22,7 @@ public class Inventory {
                 i = 0;
             } else {
                 i++;
-                sb.append("  ");
+                sb.append(" | ");
             }
         }
         eb.setDescription(sb);

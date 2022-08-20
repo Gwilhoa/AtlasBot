@@ -50,7 +50,7 @@ public class SquadMember {
 
 	public void addItem(String item)
 	{
-		addItem(item, 0);
+		addItem(item, 1);
 	}
 	public void addItem(String item, int amount){
 		if (inventory == null)
