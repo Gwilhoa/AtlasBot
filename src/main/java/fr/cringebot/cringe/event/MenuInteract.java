@@ -3,23 +3,23 @@ package fr.cringebot.cringe.event;
 import fr.cringebot.cringe.CommandBuilder.Shop;
 import fr.cringebot.cringe.Polls.PollListener;
 import fr.cringebot.cringe.escouades.Squads;
-import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.reactionsrole.MessageReact;
 import fr.cringebot.cringe.reactionsrole.RoleReaction;
+import fr.cringebot.cringe.waifus.AffectionMenu;
 import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
-import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import static fr.cringebot.cringe.cki.mainCommand.MenuInteract;
 
 public class MenuInteract {
 	public static void onSelectMenu(SelectMenuInteractionEvent event) throws ExecutionException, InterruptedException {
-		if (event.getSelectMenu().getId().startsWith("collection")){
+		if (event.getSelectMenu().getId().startsWith("collection")) {
 			Shop.CollecSelecMenu(event);
+		}
+		if (event.getSelectMenu().getId().startsWith("AFF")) {
+			AffectionMenu.SelectMenu(event);
 		}
 		if (event.getSelectMenu().getId().startsWith("shop")) {
 			Shop.ShopSelectMenu(event);

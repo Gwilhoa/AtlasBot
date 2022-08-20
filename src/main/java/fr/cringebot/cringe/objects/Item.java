@@ -7,7 +7,10 @@ public class Item {
         BF("Bouquet de fleur"),
         SB("Super Bonbon"),
         UF("Fleur"),
-        CE("Chronomètre érotique");
+        CE("Chronomètre érotique"),
+        BDCFU("Boite de chocolat"),
+        PRFU("Flacon de parfum"),
+        BRFU("Bracelet");
 
 
         private final String str;

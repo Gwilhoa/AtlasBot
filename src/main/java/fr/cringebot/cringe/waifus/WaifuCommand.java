@@ -1,18 +1,13 @@
 package fr.cringebot.cringe.waifus;
 
-import com.jcraft.jsch.JSchException;
 import fr.cringebot.BotDiscord;
-import fr.cringebot.cringe.CommandBuilder.Shop;
 import fr.cringebot.cringe.escouades.SquadMember;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.Item;
 import fr.cringebot.cringe.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
@@ -20,9 +15,11 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -312,37 +309,27 @@ public class WaifuCommand {
 		if (!msg.getAttachments().isEmpty() && msg.getAttachments().size() == 1) {
 			Waifu waifu = new Waifu(msg.getAttachments().get(0), name, msg.getContentRaw().substring(args[0].length() + args[1].length() + 2), null, args[1], false);
 			Squads.getstats(msg.getMember()).addPoint(1000L);
-			msg.getChannel().sendMessage("waifu bien ajouté #"+ waifu.getId()).reference(msg).queue();
+			msg.getChannel().sendMessage("waifu bien ajouté #" + waifu.getId()).reference(msg).queue();
 		} else {
 			msg.getChannel().sendMessage("t'es une merde").queue();
 		}
 	}
-	public static void sendEmbedInfo(Waifu w, TextChannel tc, Member m) throws InterruptedException {
+
+	public static EmbedBuilder EmbedInfo(Waifu w, Member m) throws InterruptedException {
 		EmbedBuilder eb = new EmbedBuilder();
-		boolean isCaptured = false;
 		eb.setAuthor(w.getOrigin());
 		eb.setTitle("Information : " + w.getName() + "\nIdentifiant : " + w.getId());
 		eb.setImage(w.getProfile());
 		eb.setDescription(w.getDescription());
-		for (InvWaifu iw : Squads.getstats(m).getWaifus().values())
-		{
-			if (iw.getId().equals(w.getId()))
-			{
-				isCaptured = true;
+		eb.setColor(Color.black);
+		for (InvWaifu iw : Squads.getstats(m).getWaifus().values()) {
+			if (iw.getId().equals(w.getId())) {
 				eb.setColor(Squads.getSquadByMember(m).getSquadRole(m.getGuild()).getColor())
 						.setFooter("niveau : " + iw.getLevel()
 								+ "\naffection " + iw.getFriendlyLevel() + "%");
 			}
 		}
-		MessageAction toSend = tc.sendMessageEmbeds(eb.build());
-		if (isCaptured)
-		{
-			if (Squads.getstats(m).getAmountItem(Item.Items.BF.getStr()) > 0)
-				toSend = toSend.setActionRow(new ButtonImpl("AFF_"+ Item.Items.BF.getStr() + ";" + w.getId() +";"+m.getId(), "donner un bouquet de fleur", ButtonStyle.PRIMARY, false, null));
-			else
-				toSend = toSend.setActionRow(new ButtonImpl("AFF", "donner un bouquet de fleur", ButtonStyle.PRIMARY, true, null));
-		}
-		toSend.queue();
+		return eb;
 	}
 
 	public static void infowaifu(Message msg) throws InterruptedException {
@@ -353,22 +340,28 @@ public class WaifuCommand {
 		ArrayList<Waifu> w = Waifu.getWaifubyName(msg.getContentRaw().substring(">Waifu info ".length()));
 		if (w != null && !msg.getContentRaw().split(" ")[2].equals("0")) {
 			for (Waifu waif : w) {
-				sendEmbedInfo(waif, msg.getTextChannel(), msg.getMember());
+				MessageEmbed me = EmbedInfo(waif, msg.getMember()).build();
+				MessageAction ma = msg.getChannel().sendMessageEmbeds(me);
+				if (!me.getColor().equals(Color.black))
+					ma = ma.setActionRow(AffectionMenu.getMenu(msg.getMember(), waif));
+				ma.queue();
 			}
 		}
-		else
-		{
+		else {
 			Waifu wid;
 			try {
 				wid = Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
-			}
-			catch (NumberFormatException e){
+			} catch (NumberFormatException e) {
 				msg.getChannel().sendMessage("je ne connais pas de Waifu à ce nom ou cet id").queue();
 				return;
 			}
-			if (wid != null)
-				sendEmbedInfo(wid, msg.getTextChannel(), msg.getMember());
-			else {
+			if (wid != null) {
+				MessageEmbed me = EmbedInfo(wid, msg.getMember()).build();
+				MessageAction ma = msg.getChannel().sendMessageEmbeds(me);
+				if (!me.getColor().equals(Color.black))
+					ma = ma.setActionRow(AffectionMenu.getMenu(msg.getMember(), wid));
+				ma.queue();
+			} else {
 				msg.getChannel().sendMessage("je ne connais pas de Waifu à ce nom ou cet id").queue();
 			}
 		}

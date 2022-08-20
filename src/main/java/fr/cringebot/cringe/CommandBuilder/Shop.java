@@ -24,6 +24,9 @@ public class Shop {
     private final static Integer HEPRICE = 100;
     private final static Integer PBPRICE = 5;
     private final static Integer BFPRICE = 10;
+    private final static Integer BCPRICE = 40;
+    private final static Integer PRFUPRICE = 80;
+    private final static Integer BRCFUPRICE = 130;
     private final static Integer SBPKMPRICE = 0;
 
 
@@ -31,8 +34,7 @@ public class Shop {
         return CEPRICE;
     }
 
-    public static EmbedBuilder ShopDisplay(Member mem)
-    {
+    public static EmbedBuilder ShopDisplay(Member mem) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.ORANGE).setTitle("le Shop");
         eb.setDescription("__Bonjour "+mem.getAsMention()+",que voulez vous acheter__\n\n" +
@@ -68,15 +70,17 @@ public class Shop {
         return new SelectMenuImpl("shop;"+mem.getId(), "selectionnez un choix", 1, 1, false, options);
     }
 
-    public static SelectMenuImpl WaifuMenu(Member mem)
-    {
+    public static SelectMenuImpl WaifuMenu(Member mem) {
         ArrayList<SelectOption> options = new ArrayList<>();
-        options.add(new SelectOptionImpl("Jeton de collection : "+PDCPRICE+" B2C", "PDCFU"));
-        options.add(new SelectOptionImpl("Chronomètre érotique : "+CEPRICE+" B2C", "RDTPFU"));
-        options.add(new SelectOptionImpl("horloge érotique : "+HEPRICE+" B2C", "RDTDFU"));
-        options.add(new SelectOptionImpl("Bouquet de fleur : "+ BFPRICE +" B2C", "BFFU"));
+        options.add(new SelectOptionImpl("Jeton de collection : " + PDCPRICE + " B2C", "PDCFU"));
+        options.add(new SelectOptionImpl("Chronomètre érotique : " + CEPRICE + " B2C", "RDTPFU"));
+        options.add(new SelectOptionImpl("horloge érotique : " + HEPRICE + " B2C", "RDTDFU"));
+        options.add(new SelectOptionImpl("Bouquet de fleur : " + BFPRICE + " B2C", "BFFU"));
+        options.add(new SelectOptionImpl("Boite de chocolats : " + BCPRICE + " B2C", "BCFU"));
+        options.add(new SelectOptionImpl("Parfum : " + PRFUPRICE + " B2C", "PRFU"));
+        options.add(new SelectOptionImpl("Bracelet : " + BRCFUPRICE + " B2C", "BRCFU"));
         options.add(new SelectOptionImpl("annuler", "stop"));
-        return new SelectMenuImpl("shop;"+mem.getId(), "selectionnez un choix", 1, 1, false, options);
+        return new SelectMenuImpl("shop;" + mem.getId(), "selectionnez un choix", 1, 1, false, options);
     }
 
     public static void ShopSelectMenu(SelectMenuInteraction event) {
@@ -86,41 +90,44 @@ public class Shop {
             event.getMessage().delete().queue();
             event.reply("merci, à bientot").setEphemeral(true).queue();
         }
-        else if (event.getSelectedOptions().get(0).getValue().equals("SHOP_2"))
-        {
+        else if (event.getSelectedOptions().get(0).getValue().equals("SHOP_2")) {
             event.editMessageEmbeds(ShopWaifuDisplay(event.getMember()).build()).setActionRow(WaifuMenu(event.getMember())).queue();
-        }
-        else if (event.getSelectedOptions().get(0).getValue().equals("YAGTB"))
-        {
+        } else if (event.getSelectedOptions().get(0).getValue().equals("BRCFU")) {
+            if (Squads.getstats(event.getMember()).getCoins() >= BRCFUPRICE) {
+                panelamount(event.getMember(), Item.Items.BRFU.getStr(), BRCFUPRICE, 1, event);
+            } else
+                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
+        } else if (event.getSelectedOptions().get(0).getValue().equals("BCFU")) {
+            if (Squads.getstats(event.getMember()).getCoins() >= BCPRICE) {
+                panelamount(event.getMember(), Item.Items.BDCFU.getStr(), BCPRICE, 1, event);
+            } else
+                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
+        } else if (event.getSelectedOptions().get(0).getValue().equals("PRFU")) {
+            if (Squads.getstats(event.getMember()).getCoins() >= PRFUPRICE) {
+                panelamount(event.getMember(), Item.Items.PRFU.getStr(), PRFUPRICE, 1, event);
+            } else
+                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
+        } else if (event.getSelectedOptions().get(0).getValue().equals("YAGTB")) {
             if (Squads.getstats(event.getMember()).getCoins() >= PBPRICE) {
                 panelamount(event.getMember(), Item.Items.PB.getStr(), PBPRICE, 1, event);
-            }
-            else
+            } else
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
-        }
-        else if (event.getSelectedOptions().get(0).getValue().equals("RDTDFU"))
-        {
-            if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.HE.getStr()) >= 4)
-            {
+        } else if (event.getSelectedOptions().get(0).getValue().equals("RDTDFU")) {
+            if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.HE.getStr()) >= 4) {
                 event.reply("désolé je n'en n'ai plus").setEphemeral(true).queue();
-            }
-            else if (Squads.getstats(event.getMember()).getCoins() >= HEPRICE) {
+            } else if (Squads.getstats(event.getMember()).getCoins() >= HEPRICE) {
                 Squads.getstats(event.getMember()).removeCoins(HEPRICE.longValue());
                 Squads.getstats(event.getMember()).addItem(Item.Items.HE.getStr());
                 event.reply("tu as acheté une horloge érotique tu en as désormais " + Squads.getstats(event.getMember()).getAmountItem(Item.Items.HE.getStr())).queue();
-            }
-            else
+            } else
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
-        }
-        else if (event.getSelectedOptions().get(0).getValue().equals("PDCFU"))
-        {
+        } else if (event.getSelectedOptions().get(0).getValue().equals("PDCFU")) {
             if (Squads.getstats(event.getMember()).getCoins() < PDCPRICE)
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
             else {
                 ArrayList<SelectOption> options = new ArrayList<>();
                 int i = 0;
-                while (10 > i)
-                {
+                while (10 > i) {
                     options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
                     i++;
                 }
@@ -130,23 +137,18 @@ public class Shop {
                         .addActionRow(selectionMenu).queue();
             }
         } else if (event.getSelectedOptions().get(0).getValue().equals("RDTPFU")){
-            if (Squads.getstats(event.getMember()).getCoins() >= CEPRICE.longValue())
-            {
+            if (Squads.getstats(event.getMember()).getCoins() >= CEPRICE.longValue()) {
                 panelamount(event.getMember(), Item.Items.CE.getStr(), CEPRICE, 1, event);
-            } else
-            {
+            } else {
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
             }
         } else if (event.getSelectedOptions().get(0).getValue().equals("BFFU")) {
-            if (Squads.getstats(event.getMember()).getCoins() >= BFPRICE.longValue())
-            {
+            if (Squads.getstats(event.getMember()).getCoins() >= BFPRICE.longValue()) {
                 panelamount(event.getMember(), Item.Items.BF.getStr(), BFPRICE, 1, event);
-            } else
-            {
+            } else {
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
             }
-        }
-        else {
+        } else {
             event.reply("coming soon").setEphemeral(true).queue();
         }
     }

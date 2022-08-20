@@ -196,20 +196,19 @@ public class BotListener implements EventListener {
 			}
 			int prix = Integer.parseInt(id.split(";")[2]);
 			int amount = Integer.parseInt(id.split(";")[3]);
-			if (event.getButton().getLabel().equalsIgnoreCase("acheter")){
+			if (event.getButton().getLabel().equalsIgnoreCase("acheter")) {
 				Shop.buy(event.getMember(), item, prix, amount);
 				event.editMessageEmbeds(Shop.ShopDisplay(event.getMember()).build()).setActionRow(Shop.PrincipalMenu(event.getMember())).queue();
-				event.getChannel().sendMessage(event.getMember().getAsMention() +", tu as acheté "+ amount + " " + item).queue();
+				event.getChannel().sendMessage(event.getMember().getAsMention() + ", tu as acheté " + amount + " " + item).queue();
 			} else {
 				Shop.panelamount(event.getMember(), item, prix, amount, event);
 			}
-		} else if (event.getButton().getId().startsWith("trade")){
+		} else if (event.getButton().getId().startsWith("trade")) {
 			EmbedBuilder eb = new EmbedBuilder().setTitle("Requête d'échange").setDescription(event.getMessage().getEmbeds().get(0).getDescription());
 			ArrayList<ButtonImpl> bttn = new ArrayList<>();
 			bttn.add(new ButtonImpl("trade_ok", "accepter", ButtonStyle.SUCCESS, true, null));
 			bttn.add(new ButtonImpl("trade_no", "refuser", ButtonStyle.DANGER, true, null));
-			if (event.getButton().getId().contains("ok"))
-			{
+			if (event.getButton().getId().contains("ok")) {
 				if (!event.getMember().getId().equals(event.getButton().getId().split(";")[4]))
 					event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
 				Member sender = event.getGuild().getMemberById(event.getButton().getId().split(";")[3]);
@@ -223,26 +222,8 @@ public class BotListener implements EventListener {
 			} else {
 				if (!event.getMember().getId().equals(event.getButton().getId().split(";")[1]))
 					event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
-				event.editMessageEmbeds(eb.setColor(Color.red).setFooter("refusé").build()).setActionRow(bttn).queue();;
+				event.editMessageEmbeds(eb.setColor(Color.red).setFooter("refusé").build()).setActionRow(bttn).queue();
 				event.getChannel().sendMessage("échange refusé").reference(event.getMessage()).queue();
-			}
-		} else if (event.getButton().getId().startsWith("AFF")) {
-			String[] splited = event.getButton().getId().substring("AFF_".length()).split(";");
-
-			if (event.getMember().getId().equals(splited[2])) {
-				if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.BF.getStr()) <= 0) {
-					event.reply("tu as pas de bouquets de fleurs").setEphemeral(true).queue();
-					return;
-				}
-				InvWaifu iWa = Squads.getstats(event.getMember()).getWaifus().get(Integer.parseInt(splited[1]));
-				if (splited[0].equals(Item.Items.BF.getStr())) {
-					iWa.addXp(1000);
-					Squads.getstats(event.getMember()).removeItem(Item.Items.BF.getStr());
-				}
-				WaifuCommand.sendEmbedInfo(iWa.getWaifu(), event.getTextChannel(), event.getMember());
-				event.getMessage().delete().queue();
-			} else {
-				event.reply("tu es pas la personne concerné").setEphemeral(true).queue();
 			}
 		}
 		else if (event.getButton().getId().startsWith("USECE")) {
