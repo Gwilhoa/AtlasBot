@@ -145,12 +145,7 @@ public class SquadMember {
 
 	public boolean isCompleteCollection(String collection)
 	{
-		int i = 0;
-		for (InvWaifu waifu : this.waifus.values()) {
-			if (waifu.getWaifu().getOrigin().equals(collection))
-				i++;
-		}
-		return i >= getWaifubyOrigin(collection).size();
+		return Waifu.getWaifusByOrigin(collection).size() <= getWaifubyOrigin(collection).size();
 	}
 
 	public void initCollections() {
