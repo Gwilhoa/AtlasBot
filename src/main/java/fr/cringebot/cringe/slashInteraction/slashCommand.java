@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 public class slashCommand {
     public static void load(JDA jda) throws InterruptedException {
-        /**
+
         jda.updateCommands().queue();
 
         jda.upsertCommand("play", "jouer de la musique")
@@ -115,7 +115,6 @@ public class slashCommand {
         jda.upsertCommand("waifu_release", "liberer une waifu capturé")
                 .addOption(OptionType.INTEGER, "id", "l'id de la waifu a liberer")
                 .queue();
-         **/
         jda.upsertCommand("waifu_search", "partir à la recherche avec ses waifus")
                 .queue();
     }

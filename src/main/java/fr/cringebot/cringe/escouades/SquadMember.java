@@ -120,6 +120,10 @@ public class SquadMember {
 		}
 		this.addPoint(150L);
 		this.waifus.put(id, new InvWaifu(id));
+		if (isCompleteCollection(Waifu.getWaifuById(id).getOrigin())) {
+			eb.appendDescription("\nFélicitation tu as finis la collection +3000 points pour "+ Squads.getSquadByMember(memId).getSquadRole(g).getAsMention());
+			Squads.getstats(memId).addPoint(3000L);
+		}
 		Squads.save();
 		return eb;
 	}
@@ -137,6 +141,16 @@ public class SquadMember {
 			this.waifus.remove(id);
 		Squads.save();
 		return ivW;
+	}
+
+	public boolean isCompleteCollection(String collection)
+	{
+		int i = 0;
+		for (InvWaifu waifu : this.waifus.values()) {
+			if (waifu.getWaifu().getOrigin().equals(collection))
+				i++;
+		}
+		return i >= getWaifubyOrigin(collection).size();
 	}
 
 	public void initCollections() {
