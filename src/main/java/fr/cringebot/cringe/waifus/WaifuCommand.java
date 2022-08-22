@@ -222,7 +222,7 @@ public class WaifuCommand {
 		int r = new Random().nextInt(100) + 1;
 		if (i == 1) {
 			if (r < 15) {
-				if (Squads.getstats(member).isCompleteCollection(w.getOrigin()))
+				if (Squads.getstats(member).isCompleteCollection(w.getOrigin()) || w.getOrigin().equals("B2K"))
 					return "a rien trouvé";
 				EmbedBuilder eb = Squads.getstats(member).addCollection(w.getOrigin(),member);
 				if (eb != null)
