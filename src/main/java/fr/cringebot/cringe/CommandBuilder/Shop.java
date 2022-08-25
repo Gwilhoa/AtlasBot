@@ -242,6 +242,7 @@ public class Shop {
                     ArrayList<SelectOption> options = new ArrayList<>();
                     options.add(new SelectOptionImpl("0", "0"));
                     EmbedBuilder eb = Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getLabel(), event.getMember());
+                    Squads.getstats(event.getMember()).removeCoins(PDCPRICE);
                     SelectMenuImpl selectionMenu = new SelectMenuImpl("collection;"+event.getMember().getId()+";"+nb, "selectionnez un choix", 1, 1, true, options);
                     event.editMessageEmbeds(Objects.requireNonNullElseGet(eb, () -> new EmbedBuilder().setTitle("Shop").setDescription("tu as acheté un jeton " + event.getSelectedOptions().get(0).getLabel())).build()).setActionRow(selectionMenu).queue();
                 }
