@@ -224,7 +224,7 @@ public class Shop {
                 int i = (nb + 1)*10;
                 int i2 = i;
                 ArrayList<SelectOption> options = new ArrayList<>();
-                while (i2+10 > i || Waifu.getAllOrigins().size() > i ) {
+                while (i2+10 > i && Waifu.getAllOrigins().size() > i ) {
                     options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
                     i++;
                 }
