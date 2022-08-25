@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jcraft.jsch.*;
 import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.objects.imgExtenders;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.io.*;
@@ -27,7 +28,6 @@ public class Waifu {
 	private String type;
 	private Integer id;
 	private String origin;
-	private ArrayList<String> nickname;
 
 	public static ArrayList<String> getAllOrigins() {
 		ArrayList<Waifu> waifus = getAllWaifu();
@@ -57,7 +57,6 @@ public class Waifu {
 		this.description = description;
 		this.name = name;
 		this.type = type;
-		this.nickname = null;
 		while (i < waifuList.size())
 		{
 			if (waifuList.get(i) == null) {

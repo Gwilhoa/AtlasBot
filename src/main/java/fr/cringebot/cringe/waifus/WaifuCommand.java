@@ -190,13 +190,12 @@ public class WaifuCommand {
 
 	public static EmbedBuilder waifuSearching(Member member, TextChannel tc) throws InterruptedException {
 		if (Squads.getstats(member).SearchingTimeleft() < 0) {
-			Integer pts = 0;
+			Integer pts = 50;
 			ArrayList<InvWaifu> harem = new ArrayList<>(Squads.getstats(member).getWaifus().values());
 			StringBuilder sb = new StringBuilder();
 			boolean f = false;
 			for (InvWaifu w : harem) {
 				if (w.getLevel() > 0 && w.getLevel() <= 20) {
-					pts += 20;
 					f = true;
 					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, 1, w.getWaifu(), tc)).append('\n');
 				}

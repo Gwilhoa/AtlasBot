@@ -217,6 +217,22 @@ public class BotListener implements EventListener {
 				InvWaifu invWaifuReceiver = Squads.getstats(receiver).popInvWaifu(Integer.parseInt(event.getButton().getId().split(";")[2]));
 				Squads.getstats(sender).addInvWaifu(invWaifuReceiver);
 				Squads.getstats(receiver).addInvWaifu(invWaifuSender);
+				String Origin  = invWaifuSender.getWaifu().getOrigin();
+				if (Squads.getstats(receiver).isCompleteCollection(Origin) && Squads.getstats(receiver).isCompleteCollection(Origin)) {
+					Integer pts = Waifu.getWaifusByOrigin(Origin).size();
+					pts = pts*100/2;
+					eb.appendDescription("\nFélicitation, "+receiver.getAsMention()+" tu as finis la collection\n"+pts+" points pour "+ Squads.getSquadByMember(receiver).getSquadRole(receiver.getGuild()).getAsMention());
+
+					Squads.getstats(receiver).addPoint(pts.longValue());
+				}
+				Origin = invWaifuReceiver.getWaifu().getOrigin();
+				if (Squads.getstats(sender).isCompleteCollection(Origin) && Squads.getstats(sender).isCompleteCollection(Origin)) {
+					Integer pts = Waifu.getWaifusByOrigin(Origin).size();
+					pts = pts*100/2;
+					eb.appendDescription("\nFélicitation, "+sender.getAsMention()+" tu as finis la collection\n"+pts+" points pour "+ Squads.getSquadByMember(sender).getSquadRole(receiver.getGuild()).getAsMention());
+
+					Squads.getstats(sender).addPoint(pts.longValue());
+				}
 				event.editMessageEmbeds(eb.setColor(Color.green).setFooter("accepté").build()).setActionRow(bttn).queue();
 				event.getChannel().sendMessage("échange accepté").reference(event.getMessage()).queue();
 			} else {

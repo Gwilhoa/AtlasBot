@@ -14,6 +14,7 @@ import java.util.Random;
 
 public class SquadMember {
 
+	private ArrayList<String> CompleteCollection;
 	private Long points;
 	private final String id;
 	private Long timer;
@@ -91,6 +92,13 @@ public class SquadMember {
 		Squads.save();
 	}
 
+	public boolean CompleteCollection(String collection) {
+		if (CompleteCollection.contains(collection))
+			return false;
+		CompleteCollection.add(collection);
+		return true;
+	}
+
 	public boolean removeCoins(Integer coins){
 		return removeCoins(coins.longValue());
 	}
@@ -120,9 +128,12 @@ public class SquadMember {
 		}
 		this.addPoint(150L);
 		this.waifus.put(id, new InvWaifu(id));
-		if (isCompleteCollection(Waifu.getWaifuById(id).getOrigin())) {
-			eb.appendDescription("\nFélicitation tu as finis la collection +3000 points pour "+ Squads.getSquadByMember(memId).getSquadRole(g).getAsMention());
-			Squads.getstats(memId).addPoint(3000L);
+		if (isCompleteCollection(Waifu.getWaifuById(id).getOrigin()) && isCompleteCollection(Waifu.getWaifuById(id).getOrigin())) {
+			Integer pts = Waifu.getWaifusByOrigin(Waifu.getWaifuById(id).getOrigin()).size();
+			pts = pts*100/2;
+			eb.appendDescription("\nFélicitation tu as finis la collection "+pts+" points pour "+ Squads.getSquadByMember(memId).getSquadRole(g).getAsMention());
+
+			Squads.getstats(memId).addPoint(pts.longValue());
 		}
 		Squads.save();
 		return eb;

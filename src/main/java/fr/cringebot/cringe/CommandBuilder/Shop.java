@@ -17,6 +17,7 @@ import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Shop {
     private final static Integer PDCPRICE = 10;
@@ -132,9 +133,9 @@ public class Shop {
                     i++;
                 }
                 options.add(new SelectOptionImpl("autres", "next"));
-                SelectMenuImpl selectionMenu = new SelectMenuImpl("collection0", "selectionnez un choix", 1, 1, false, options);
-                event.reply("de quelle collection votre pièce ?\n"+event.getMember().getId())
-                        .addActionRow(selectionMenu).queue();
+                SelectMenuImpl selectionMenu = new SelectMenuImpl("collection;"+event.getMember().getId()+";0", "selectionnez un choix", 1, 1, false, options);
+                event.editMessageEmbeds(new EmbedBuilder().setTitle("Shop").setDescription("de quelle collection seriez vous interessé").build())
+                        .setActionRow(selectionMenu).queue();
             }
         } else if (event.getSelectedOptions().get(0).getValue().equals("RDTPFU")){
             if (Squads.getstats(event.getMember()).getCoins() >= CEPRICE.longValue()) {
@@ -201,54 +202,51 @@ public class Shop {
     }
 
     public static void CollecSelecMenu(SelectMenuInteractionEvent event) throws InterruptedException {
-        if (!event.getMember().getId().equals(event.getMessage().getContentRaw().split("\n")[1]))
+        if (!event.getSelectMenu().getId().split(";")[1].equals(event.getMember().getId()))
         {
             event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
-            return;
-        }
-        if (event.getSelectedOptions().get(0).getValue().equals("previous"))
-        {
-            int nb = (Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) - 1) * 10;
-            int i = nb;
-            ArrayList<SelectOption> options = new ArrayList<>();
-            while (i < nb + 10)
-            {
-                options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
-                i++;
+        } else {
+            int nb = Integer.parseInt(event.getSelectMenu().getId().split(";")[2]);
+            if (event.getSelectedOptions().get(0).getValue().equals("previous")) {
+                ArrayList<SelectOption> options = new ArrayList<>();
+                if (nb - 1 != 0)
+                    options.add(new SelectOptionImpl("page d'avant", "previous"));
+                int i = (nb - 1)*10;
+                int i2 = i;
+                while (i2 + 10 > i) {
+                    options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
+                    i++;
+                }
+                SelectMenuImpl selectionMenu = new SelectMenuImpl("collection;"+event.getMember().getId()+";"+(nb - 1), "selectionnez un choix", 1, 1, false, options);
+                event.editMessageEmbeds(new EmbedBuilder().setTitle("Shop").setDescription("Prenez votre temps !").build()).setActionRow(selectionMenu).queue();
             }
-            options.add(new SelectOptionImpl("autres", "next"));
-            if (nb != 0)
-                options.add(new SelectOptionImpl("page d'avant", "previous"));
-            SelectMenuImpl selectionMenu = new SelectMenuImpl("collection"+nb+"", "selectionnez un choix", 1, 1, false, options);
-            event.editMessage(event.getMessage().getContentRaw()).setActionRow(selectionMenu).queue();
-        }
-        if (event.getSelectedOptions().get(0).getValue().equals("next"))
-        {
-            int nb = (Integer.parseInt(event.getSelectMenu().getId().substring("collection".length())) + 1) * 10;
-            int i = nb;
-            ArrayList<SelectOption> options = new ArrayList<>();
-            while (i < nb + 10 && i < Waifu.getAllOrigins().size())
-            {
-                options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
-                i++;
+            else if (event.getSelectedOptions().get(0).getValue().equals("next")) {
+                int i = (nb + 1)*10;
+                int i2 = i;
+                ArrayList<SelectOption> options = new ArrayList<>();
+                while (i2+10 > i || Waifu.getAllOrigins().size() > i ) {
+                    options.add(new SelectOptionImpl(Waifu.getAllOrigins().get(i), Waifu.getAllOrigins().get(i)));
+                    i++;
+                }
+                if (i < Waifu.getAllOrigins().size())
+                    options.add(new SelectOptionImpl("page d'après", "next"));
+                SelectMenuImpl selectionMenu = new SelectMenuImpl("collection;"+event.getMember().getId()+";"+(nb + 1), "selectionnez un choix", 1, 1, false, options);
+                event.editMessageEmbeds(new EmbedBuilder().setTitle("Shop").setDescription("Prenez votre temps !").build()).setActionRow(selectionMenu).queue();
+            } else {
+                if (Squads.getstats(event.getMember()).isCompleteCollection(event.getSelectedOptions().get(0).getLabel()) || event.getSelectedOptions().get(0).getLabel().equals("B2K")) {
+                    ArrayList<SelectOption> options = new ArrayList<>();
+                    options.add(new SelectOptionImpl("0", "0"));
+                    SelectMenuImpl selectionMenu = new SelectMenuImpl("collection;"+event.getMember().getId()+";"+nb, "selectionnez un choix", 1, 1, true, options);
+                    event.editMessageEmbeds(new EmbedBuilder().setTitle("Shop").setDescription("Désolé j'en ai plus").build()).setActionRow(selectionMenu).queue();
+                } else {
+                    ArrayList<SelectOption> options = new ArrayList<>();
+                    options.add(new SelectOptionImpl("0", "0"));
+                    EmbedBuilder eb = Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getLabel(), event.getMember());
+                    SelectMenuImpl selectionMenu = new SelectMenuImpl("collection;"+event.getMember().getId()+";"+nb, "selectionnez un choix", 1, 1, true, options);
+                    event.editMessageEmbeds(Objects.requireNonNullElseGet(eb, () -> new EmbedBuilder().setTitle("Shop").setDescription("tu as acheté un jeton " + event.getSelectedOptions().get(0).getLabel())).build()).setActionRow(selectionMenu).queue();
+                }
             }
-            if (i >= Waifu.getAllOrigins().size())
-                options.add(new SelectOptionImpl("autres", "next"));
-            options.add(new SelectOptionImpl("page d'avant", "previous"));
-            SelectMenuImpl selectionMenu = new SelectMenuImpl("collection"+nb+"", "selectionnez un choix", 1, 1, false, options);
-            event.editMessage(event.getMessage().getContentRaw()).setActionRow(selectionMenu).queue();
         }
-        else {
-            if (event.getSelectedOptions().get(0).getValue().equals("B2K") || Squads.getstats(event.getMember()).getWaifubyOrigin(event.getSelectedOptions().get(0).getValue()).size() == Waifu.getWaifusByOrigin(event.getSelectedOptions().get(0).getValue()).size())
-            {
-                event.getMessage().delete().queue();
-                event.reply("désolé j'en ai plus").queue();
-                return;
-            }
-            Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getValue(), event.getMessage());
-            event.getMessage().delete().queue();
-            event.reply("tu as acheté un jeton "+ event.getSelectedOptions().get(0).getValue() + "\ntu en as " + Squads.getstats(event.getMember()).getCollection().get(event.getSelectedOptions().get(0).getValue())).queue();
-            Squads.getstats(event.getMember()).removeCoins(PDCPRICE.longValue());
-        }
+
     }
 }
