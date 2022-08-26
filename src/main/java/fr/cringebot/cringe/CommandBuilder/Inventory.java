@@ -54,7 +54,7 @@ public class Inventory {
                 }
             }
             eb.setDescription(sb);
-            event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("inv0_" + event.getMember().getId(), "retour", ButtonStyle.SUCCESS, false, null));
+            event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("inv0_" + event.getMember().getId(), "retour", ButtonStyle.SUCCESS, false, null)).queue();
         }
     }
 }
