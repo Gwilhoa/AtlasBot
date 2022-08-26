@@ -180,7 +180,7 @@ public class CommandListener {
 
 	@Command(name = "inventory", description = "afficher ton inventaire", type = ExecutorType.USER)
 	private void inventory(Message msg) {
-		msg.getChannel().sendMessageEmbeds(Inventory.getInventory(msg.getMember()).build()).setActionRow(new ButtonImpl("inv_"+msg.getMember().getId(), "pièce de collection", ButtonStyle.SUCCESS, true, null)).queue();
+		msg.getChannel().sendMessageEmbeds(Inventory.getInventory(msg.getMember()).build()).setActionRow(new ButtonImpl("inv1_"+msg.getMember().getId(), "Ouvrir le sac de jetons", ButtonStyle.SUCCESS, false, null)).queue();
 	}
 
 	@Command(name = "cki", description = "mais qui est-il !", type = ExecutorType.USER)

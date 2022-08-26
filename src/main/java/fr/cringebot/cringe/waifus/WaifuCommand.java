@@ -9,9 +9,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
 import java.awt.*;
@@ -63,7 +63,7 @@ public class WaifuCommand {
 					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+msg.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
 			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info")) {
-			infowaifu(msg);
+			Info.infowaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("reset")) {
 			Squads.resetWaifu();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("setimage")) {
@@ -91,7 +91,7 @@ public class WaifuCommand {
 				SearchKey = "all";
 			else
 				SearchKey = msg.getContentRaw().substring(">waifu list ".length());
-			msg.getChannel().sendMessageEmbeds(listwaifu(msg.getGuild(), msg.getMember().getId(), SearchKey).build()).setActionRows(generateButtonList(msg.getMember().getId(), SearchKey, 0)).queue();
+			msg.getChannel().sendMessageEmbeds(ListWaifu.listwaifu(msg.getGuild(), msg.getMember().getId(), SearchKey).build()).setActionRows(generateButtonList(msg.getMember().getId(), SearchKey, 0)).queue();
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("add")) {
 			addwaifu(msg);
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("trade")){
@@ -234,10 +234,10 @@ public class WaifuCommand {
 				Squads.getstats(member).addCoins(1L);
 				return "a trouvé 1 B2C";
 			} else {
-				Squads.getstats(member).addItem(Item.Items.UF.getStr());
-				if (Squads.getstats(member).getAmountItem(Item.Items.UF.getStr()) >= 5) {
-					Squads.getstats(member).addItem(Item.Items.BF.getStr());
-					Squads.getstats(member).removeItem(Item.Items.UF.getStr(), 5);
+				Squads.getstats(member).addItem(Item.Items.UFFU.getStr());
+				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getStr()) >= 5) {
+					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
+					Squads.getstats(member).removeItem(Item.Items.UFFU.getStr(), 5);
 					return "a trouvé une fleur, vous avez un nouveau bouquet";
 				}
 				return "a trouvé une fleur";
@@ -277,57 +277,7 @@ public class WaifuCommand {
 		}
 	}
 
-	public static EmbedBuilder EmbedInfo(Waifu w, Member m) throws InterruptedException {
-		EmbedBuilder eb = new EmbedBuilder();
-		eb.setAuthor(w.getOrigin());
-		eb.setTitle("Information : " + w.getName() + "\nIdentifiant : " + w.getId());
-		eb.setImage(w.getProfile());
-		eb.setDescription(w.getDescription());
-		eb.setColor(Color.black);
-		for (InvWaifu iw : Squads.getstats(m).getWaifus().values()) {
-			if (iw.getId().equals(w.getId())) {
-				eb.setColor(Squads.getSquadByMember(m).getSquadRole(m.getGuild()).getColor())
-						.setFooter("niveau : " + iw.getLevel()
-								+ "\naffection " + iw.getFriendlyLevel() + "%");
-			}
-		}
-		return eb;
-	}
 
-	public static void infowaifu(Message msg) throws InterruptedException {
-		if (msg.getContentRaw().split(" ").length <= 2) {
-			msg.getChannel().sendMessage(">waifu info <nom>").queue();
-			return;
-		}
-		ArrayList<Waifu> w = Waifu.getWaifubyName(msg.getContentRaw().substring(">Waifu info ".length()));
-		if (w != null && !msg.getContentRaw().split(" ")[2].equals("0")) {
-			for (Waifu waif : w) {
-				MessageEmbed me = EmbedInfo(waif, msg.getMember()).build();
-				MessageAction ma = msg.getChannel().sendMessageEmbeds(me);
-				if (!me.getColor().equals(Color.black))
-					ma = ma.setActionRow(AffectionMenu.getMenu(msg.getMember(), waif));
-				ma.queue();
-			}
-		}
-		else {
-			Waifu wid;
-			try {
-				wid = Waifu.getWaifuById(Integer.parseInt(msg.getContentRaw().split(" ")[2]));
-			} catch (NumberFormatException e) {
-				msg.getChannel().sendMessage("je ne connais pas de Waifu à ce nom ou cet id").queue();
-				return;
-			}
-			if (wid != null) {
-				MessageEmbed me = EmbedInfo(wid, msg.getMember()).build();
-				MessageAction ma = msg.getChannel().sendMessageEmbeds(me);
-				if (!me.getColor().equals(Color.black))
-					ma = ma.setActionRow(AffectionMenu.getMenu(msg.getMember(), wid));
-				ma.queue();
-			} else {
-				msg.getChannel().sendMessage("je ne connais pas de Waifu à ce nom ou cet id").queue();
-			}
-		}
-	}
 
 
 	public static void haremEmbed(Message msg, Integer f, String id) {
@@ -371,41 +321,49 @@ public class WaifuCommand {
 		msg.editMessageEmbeds(eb.build()).setActionRow(bttn).queue();
 	}
 
-
-
-
-	public static EmbedBuilder listwaifu(Guild g, String MemberId, String key){
-		return listwaifu(g, MemberId, key, 0);
-	}
-	public static EmbedBuilder listwaifu(Guild g, String MemberId, String key, Integer f) {
-		ArrayList<Waifu> waifus = Waifu.getAllWaifu();
+	public static void haremEmbed(ButtonInteractionEvent event, Integer f, String id) {
+		ArrayList<ButtonImpl> bttn = new ArrayList<>();
+		ArrayList<Waifu> waifus = new ArrayList<>();
 		Waifu w;
-		int	i = f*10;
 		EmbedBuilder eb = new EmbedBuilder();
-		if (!key.equals("all"))
-			waifus.removeIf(waifu -> !StringExtenders.startWithIgnoreCase(waifu.getOrigin(), key));
+		ArrayList<InvWaifu> invWaifus = new ArrayList<>(Squads.getstats(id).getWaifus().values());
+		for (InvWaifu inw : invWaifus)
+			waifus.add(Waifu.getWaifuById(inw.getId()));
+		int	i = f*10;
 		if (waifus.isEmpty())
 		{
-			return new EmbedBuilder().setColor(Color.RED).setTitle("Listes des waifus en "+ key).setDescription("Aucune waifu à une origine similaire");
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f-1), "page précédente",ButtonStyle.PRIMARY ,true, null));
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f+1), "page suivante",ButtonStyle.SECONDARY ,true, null));
+			event.editMessageEmbeds(eb.setDescription("tu as pas de waifu").setColor(Color.RED).build()).setActionRow(bttn).queue();
+			return;
 		}
-		eb.setTitle("Listes des waifus en "+ key);
+		if (i > waifus.size() || i < 0)
+			return;
+		eb.setFooter(f.toString()).setTitle(event.getMessage().getEmbeds().get(0).getTitle());
 		StringBuilder sb = new StringBuilder();
 		while (i < (f*10)+10)
 		{
 			if (i < waifus.size()) {
 				w = waifus.get(i);
-				if (Squads.getstats(MemberId).getWaifus().get(w.getId()) != null)
-					sb.append("__").append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("__\n");
-				else
-					sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n");
+				sb.append(w.getId()).append(" ").append(w.getName()).append(" de ").append(w.getOrigin()).append("\n    niveau : ").append(invWaifus.get(i).getLevel()).append("\n");
 			}
 			i++;
 		}
+		eb.setColor(Squads.getSquadByMember(id).getSquadRole(event.getGuild()).getColor());
 		eb.setDescription(sb);
-		eb.setColor(Squads.getSquadByMember(MemberId).getSquadRole(g).getColor());
-		eb.setFooter(f.toString());
-		return eb;
+		if (f == 0)
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f-1), "page précédente",ButtonStyle.PRIMARY ,true, null));
+		else
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f-1), "page précédente",ButtonStyle.PRIMARY ,false, null));
+		if (i >= waifus.size())
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f+1), "page suivante",ButtonStyle.SECONDARY ,true, null));
+		else
+			bttn.add(new ButtonImpl("harem_"+id+";"+(f+1), "page suivante",ButtonStyle.SECONDARY ,false, null));
+		event.editMessageEmbeds(eb.build()).setActionRow(bttn).queue();
 	}
+
+
+
 
 	public static boolean setDescription(Integer id, String desc)
 	{

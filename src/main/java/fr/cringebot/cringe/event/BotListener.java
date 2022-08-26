@@ -155,7 +155,7 @@ public class BotListener implements EventListener {
 			else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
 			else if (event instanceof MessageEmbedEvent) onEmbed((MessageEmbedEvent) event);
 			else if (event instanceof SlashCommandInteraction) SlashListener.onSlashCommand((SlashCommandInteraction) event);
-			else if (event instanceof ButtonInteractionEvent) onButton((ButtonInteractionEvent) event);
+			else if (event instanceof ButtonInteractionEvent) ButtonReaction.onButton((ButtonInteractionEvent) event);
 			else if (event instanceof GuildVoiceMoveEvent) onMove((GuildVoiceMoveEvent) event);
 			else if (event instanceof CommandAutoCompleteInteraction) SlashListener.autoComplete((CommandAutoCompleteInteraction) event);
 		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException | ExecutionException e) {
@@ -174,110 +174,7 @@ public class BotListener implements EventListener {
 			else XP.end(event.getMember());
 	}
 
-	private void onButton(ButtonInteractionEvent event) throws InterruptedException {
-		if (event.getButton().getId().startsWith("gift")) {
-			if (event.getMember().getId().equals(event.getMessage().getEmbeds().get(0).getFooter().getText()))
-				Gift.openGift(event);
-			else
-				event.reply("on vole pas le cadeau des autres").setEphemeral(true).queue();
-		} else if (event.getButton().getId().startsWith("shop")) {
-			String id = event.getButton().getId().substring("shop_".length());
-			if (!event.getMember().getId().equals(id.split(";")[0]))
-			{
-				event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
-				return;
-			}
-			String item = id.split(";")[1];
-			if (item.equals("stop"))
-			{
-				event.editMessageEmbeds(Shop.ShopDisplay(event.getMember()).build()).setActionRow(Shop.PrincipalMenu(event.getMember())).queue();
-				event.reply("opération annulé").setEphemeral(true).queue();
-				return;
-			}
-			int prix = Integer.parseInt(id.split(";")[2]);
-			int amount = Integer.parseInt(id.split(";")[3]);
-			if (event.getButton().getLabel().equalsIgnoreCase("acheter")) {
-				Shop.buy(event.getMember(), item, prix, amount);
-				event.editMessageEmbeds(Shop.ShopDisplay(event.getMember()).build()).setActionRow(Shop.PrincipalMenu(event.getMember())).queue();
-				event.getChannel().sendMessage(event.getMember().getAsMention() + ", tu as acheté " + amount + " " + item).queue();
-			} else {
-				Shop.panelamount(event.getMember(), item, prix, amount, event);
-			}
-		} else if (event.getButton().getId().startsWith("trade")) {
-			EmbedBuilder eb = new EmbedBuilder().setTitle("Requête d'échange").setDescription(event.getMessage().getEmbeds().get(0).getDescription());
-			ArrayList<ButtonImpl> bttn = new ArrayList<>();
-			bttn.add(new ButtonImpl("trade_ok", "accepter", ButtonStyle.SUCCESS, true, null));
-			bttn.add(new ButtonImpl("trade_no", "refuser", ButtonStyle.DANGER, true, null));
-			if (event.getButton().getId().contains("ok")) {
-				if (!event.getMember().getId().equals(event.getButton().getId().split(";")[4]))
-					event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
-				Member sender = event.getGuild().getMemberById(event.getButton().getId().split(";")[3]);
-				Member receiver = event.getGuild().getMemberById(event.getButton().getId().split(";")[4]);
-				InvWaifu invWaifuSender = Squads.getstats(sender).popInvWaifu(Integer.parseInt(event.getButton().getId().split(";")[1]));
-				InvWaifu invWaifuReceiver = Squads.getstats(receiver).popInvWaifu(Integer.parseInt(event.getButton().getId().split(";")[2]));
-				Squads.getstats(sender).addInvWaifu(invWaifuReceiver);
-				Squads.getstats(receiver).addInvWaifu(invWaifuSender);
-				String Origin  = invWaifuSender.getWaifu().getOrigin();
-				if (Squads.getstats(receiver).isCompleteCollection(Origin) && Squads.getstats(receiver).isCompleteCollection(Origin)) {
-					Integer pts = Waifu.getWaifusByOrigin(Origin).size();
-					pts = pts*100/2;
-					eb.appendDescription("\nFélicitation, "+receiver.getAsMention()+" tu as finis la collection\n"+pts+" points pour "+ Squads.getSquadByMember(receiver).getSquadRole(receiver.getGuild()).getAsMention());
 
-					Squads.getstats(receiver).addPoint(pts.longValue());
-				}
-				Origin = invWaifuReceiver.getWaifu().getOrigin();
-				if (Squads.getstats(sender).isCompleteCollection(Origin) && Squads.getstats(sender).isCompleteCollection(Origin)) {
-					Integer pts = Waifu.getWaifusByOrigin(Origin).size();
-					pts = pts*100/2;
-					eb.appendDescription("\nFélicitation, "+sender.getAsMention()+" tu as finis la collection\n"+pts+" points pour "+ Squads.getSquadByMember(sender).getSquadRole(receiver.getGuild()).getAsMention());
-
-					Squads.getstats(sender).addPoint(pts.longValue());
-				}
-				event.editMessageEmbeds(eb.setColor(Color.green).setFooter("accepté").build()).setActionRow(bttn).queue();
-				event.getChannel().sendMessage("échange accepté").reference(event.getMessage()).queue();
-			} else {
-				if (!event.getMember().getId().equals(event.getButton().getId().split(";")[1]))
-					event.reply("tu n'es pas la personne attendu").setEphemeral(true).queue();
-				event.editMessageEmbeds(eb.setColor(Color.red).setFooter("refusé").build()).setActionRow(bttn).queue();
-				event.getChannel().sendMessage("échange refusé").reference(event.getMessage()).queue();
-			}
-		}
-		else if (event.getButton().getId().startsWith("USECE")) {
-			if (!event.getButton().getId().split(";")[1].equals(event.getMember().getId()))
-				event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
-			else if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.CE.getStr()) <= 0)
-				event.reply("tu as pas de chronometre érotique").queue();
-			else {
-				if (!Squads.getstats(event.getMember()).removeTime(1800000L)) {
-					event.reply("ça a pas marché").setEphemeral(true).queue();
-					return;
-				}
-				Squads.getstats(event.getMember()).removeItem(Item.Items.CE.getStr());
-				EmbedBuilder eb = WaifuCommand.capturedWaifu(event.getMember().getId(), event.getGuild());
-				if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
-					event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
-				else
-				{
-					if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.CE.getStr()) > 0)
-						event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
-					else
-						event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
-				}
-			}
-		}
-		else if (event.getButton().getId().startsWith("harem")){
-			WaifuCommand.haremEmbed(event.getMessage(),Integer.parseInt(event.getButton().getId().substring("harem_".length()).split(";")[1]), event.getButton().getId().substring("harem_".length()).split(";")[0]);
-			event.reply("oui").complete().deleteOriginal().queue();
-		} else if (event.getButton().getId().startsWith("list_"))
-		{
-			String memId = event.getButton().getId().substring("list_".length()).split(";")[0];
-			int page = Integer.parseInt(event.getButton().getId().substring("list_".length()).split(";")[1]);
-			String key = event.getButton().getId().substring("list_".length()).split(";")[2];
-			event.editMessageEmbeds(WaifuCommand.listwaifu(event.getGuild(), memId, key, page).build()).setActionRows(WaifuCommand.generateButtonList(memId, key, page)).queue();
-		} else {
-			event.reply("coming soon").setEphemeral(true).queue();
-		}
-	}
 
 	private void onDisconnect(GuildVoiceLeaveEvent event) {
 		if (event.getMember().getUser().equals(event.getJDA().getSelfUser()))

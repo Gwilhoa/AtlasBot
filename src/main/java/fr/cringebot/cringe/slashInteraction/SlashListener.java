@@ -7,6 +7,7 @@ import fr.cringebot.cringe.CommandBuilder.Top;
 import fr.cringebot.cringe.Polls.PollMain;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.waifus.InvWaifu;
+import fr.cringebot.cringe.waifus.ListWaifu;
 import fr.cringebot.cringe.waifus.Waifu;
 import fr.cringebot.cringe.waifus.WaifuCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -99,7 +100,7 @@ public class SlashListener {
                 SearchKey = "all";
             else
                 SearchKey = event.getOption("nom").getAsString();
-            event.replyEmbeds(WaifuCommand.listwaifu(event.getGuild(), event.getMember().getId(), SearchKey).build()).addActionRows(WaifuCommand.generateButtonList(event.getMember().getId(), SearchKey, 0)).queue();
+            event.replyEmbeds(ListWaifu.listwaifu(event.getGuild(), event.getMember().getId(), SearchKey).build()).addActionRows(WaifuCommand.generateButtonList(event.getMember().getId(), SearchKey, 0)).queue();
         }
         else if (event.getName().equals("waifu_search")) {
             event.replyEmbeds(WaifuCommand.waifuSearching(event.getMember(), event.getTextChannel()).build()).queue();

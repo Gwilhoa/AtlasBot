@@ -13,15 +13,16 @@ import java.util.ArrayList;
 
 public class AffectionMenu {
     public static SelectMenuImpl getMenu(Member mem, Waifu w) {
+        SquadMember sm = Squads.getstats(mem);
         ArrayList<SelectOption> options = new ArrayList<>();
-        options.add(new SelectOptionImpl("Bouquet de fleur", "BFFU"));
-        options.add(new SelectOptionImpl("Boite de chocolat", "BDCFU"));
-        options.add(new SelectOptionImpl("Parfum", "PRFU"));
-        options.add(new SelectOptionImpl("Bracelet", "BRCFU"));
-        options.add(new SelectOptionImpl("Collier", "CLLFU"));
-        options.add(new SelectOptionImpl("Bague", "BGEFU"));
-        options.add(new SelectOptionImpl("Une soirée au restaurant", "RESFU"));
-        options.add(new SelectOptionImpl("nuit d'hotel", "HOFU"));
+        options.add(new SelectOptionImpl("Bouquet de fleur ("+ sm.getAmountItem(Item.Items.BFFU.getStr()) +")", "BFFU"));
+        options.add(new SelectOptionImpl("Boite de chocolat ("+ sm.getAmountItem(Item.Items.BDCFU.getStr()) +")", "BDCFU"));
+        options.add(new SelectOptionImpl("flacon de Parfum ("+ sm.getAmountItem(Item.Items.PRFU.getStr()) +")", "PRFU"));
+        options.add(new SelectOptionImpl("Bracelet ("+ sm.getAmountItem(Item.Items.BRFU.getStr()) + ")", "BRCFU"));
+        options.add(new SelectOptionImpl("Collier ("+sm.getAmountItem(Item.Items.COLLFU.getStr()) + ")", "CLLFU"));
+        options.add(new SelectOptionImpl("Bague ("+ sm.getAmountItem(Item.Items.BGEFU.getStr()) + ")", "BGEFU"));
+        options.add(new SelectOptionImpl("Une soirée au restaurant (coming soon)", "RESFU"));
+        options.add(new SelectOptionImpl("nuit d'hotel (coming soon)", "HOFU"));
         return new SelectMenuImpl("AFF;" + mem.getId() + ";" + w.getId(), "rendre heureux", 1, 1, false, options);
     }
 
@@ -31,10 +32,10 @@ public class AffectionMenu {
             SquadMember sm = Squads.getstats(event.getMember());
             InvWaifu iw = sm.getWaifus().get(Integer.parseInt(event.getSelectMenu().getId().split(";")[2]));
             if (id.equals("BFFU")) {
-                if (sm.getAmountItem(Item.Items.BF.getStr()) > 0) {
+                if (sm.getAmountItem(Item.Items.BFFU.getStr()) > 0) {
                     iw.addXp(1000);
-                    sm.removeItem(Item.Items.BF.getStr());
-                    event.editMessageEmbeds(WaifuCommand.EmbedInfo(iw.getWaifu(), event.getMember()).build()).setActionRow(getMenu(event.getMember(), iw.getWaifu())).queue();
+                    sm.removeItem(Item.Items.BFFU.getStr());
+                    event.editMessageEmbeds(Info.EmbedInfo(iw.getWaifu(), event.getMember()).build()).setActionRow(getMenu(event.getMember(), iw.getWaifu())).queue();
                 } else {
                     event.reply("tu as pas de bouquet de fleur").setEphemeral(true).queue();
                 }
@@ -42,7 +43,7 @@ public class AffectionMenu {
                 if (sm.getAmountItem(Item.Items.BDCFU.getStr()) > 0) {
                     iw.addXp(5000);
                     sm.removeItem(Item.Items.BDCFU.getStr());
-                    event.editMessageEmbeds(WaifuCommand.EmbedInfo(iw.getWaifu(), event.getMember()).build()).setActionRow(getMenu(event.getMember(), iw.getWaifu())).queue();
+                    event.editMessageEmbeds(Info.EmbedInfo(iw.getWaifu(), event.getMember()).build()).setActionRow(getMenu(event.getMember(), iw.getWaifu())).queue();
                 } else {
                     event.reply("tu as pas de boite de chocolat").setEphemeral(true).queue();
                 }
@@ -50,7 +51,7 @@ public class AffectionMenu {
                 if (sm.getAmountItem(Item.Items.PRFU.getStr()) > 0) {
                     iw.addXp(10000);
                     sm.removeItem(Item.Items.PRFU.getStr());
-                    event.editMessageEmbeds(WaifuCommand.EmbedInfo(iw.getWaifu(), event.getMember()).build()).setActionRow(getMenu(event.getMember(), iw.getWaifu())).queue();
+                    event.editMessageEmbeds(Info.EmbedInfo(iw.getWaifu(), event.getMember()).build()).setActionRow(getMenu(event.getMember(), iw.getWaifu())).queue();
                 } else {
                     event.reply("tu as pas de flacon de parfum").setEphemeral(true).queue();
                 }
@@ -58,7 +59,7 @@ public class AffectionMenu {
                 if (sm.getAmountItem(Item.Items.BRFU.getStr()) > 0) {
                     iw.addXp(16000);
                     sm.removeItem(Item.Items.BRFU.getStr());
-                    event.editMessageEmbeds(WaifuCommand.EmbedInfo(iw.getWaifu(), event.getMember()).build()).setActionRow(getMenu(event.getMember(), iw.getWaifu())).queue();
+                    event.editMessageEmbeds(Info.EmbedInfo(iw.getWaifu(), event.getMember()).build()).setActionRow(getMenu(event.getMember(), iw.getWaifu())).queue();
                 } else {
                     event.reply("tu as pas de flacon de parfum").setEphemeral(true).queue();
                 }

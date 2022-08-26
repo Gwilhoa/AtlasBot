@@ -75,10 +75,10 @@ public class Shop {
         ArrayList<SelectOption> options = new ArrayList<>();
         options.add(new SelectOptionImpl("Jeton de collection : " + PDCPRICE + " B2C", "PDCFU"));
         options.add(new SelectOptionImpl("Chronomètre érotique : " + CEPRICE + " B2C", "RDTPFU"));
-        options.add(new SelectOptionImpl("horloge érotique : " + HEPRICE + " B2C", "RDTDFU"));
+        options.add(new SelectOptionImpl("Horloge érotique : " + HEPRICE + " B2C", "RDTDFU"));
         options.add(new SelectOptionImpl("Bouquet de fleur : " + BFPRICE + " B2C", "BFFU"));
         options.add(new SelectOptionImpl("Boite de chocolats : " + BCPRICE + " B2C", "BCFU"));
-        options.add(new SelectOptionImpl("Parfum : " + PRFUPRICE + " B2C", "PRFU"));
+        options.add(new SelectOptionImpl("Flacon de parfum : " + PRFUPRICE + " B2C", "PRFU"));
         options.add(new SelectOptionImpl("Bracelet : " + BRCFUPRICE + " B2C", "BRCFU"));
         options.add(new SelectOptionImpl("annuler", "stop"));
         return new SelectMenuImpl("shop;" + mem.getId(), "selectionnez un choix", 1, 1, false, options);
@@ -145,7 +145,7 @@ public class Shop {
             }
         } else if (event.getSelectedOptions().get(0).getValue().equals("BFFU")) {
             if (Squads.getstats(event.getMember()).getCoins() >= BFPRICE.longValue()) {
-                panelamount(event.getMember(), Item.Items.BF.getStr(), BFPRICE, 1, event);
+                panelamount(event.getMember(), Item.Items.BFFU.getStr(), BFPRICE, 1, event);
             } else {
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
             }
