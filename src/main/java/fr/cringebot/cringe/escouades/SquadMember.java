@@ -191,7 +191,7 @@ public class SquadMember {
 			waifus = Waifu.getAllWaifu();
 		else
 			waifus = Waifu.getWaifusByOrigin(str);
-		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()) || (waifu.isLegendary() && !waifu.isIstaken()));
+		waifus.removeIf(waifu -> this.waifus.containsKey(waifu.getId()) || waifu.getOrigin().equals("B2K"));
 		return newWaifu(waifus.get(new Random().nextInt(waifus.size() - 1)).getId(), memId, g);
 	}
 
