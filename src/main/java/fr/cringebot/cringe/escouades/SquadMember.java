@@ -136,7 +136,7 @@ public class SquadMember {
 			Squads.getstats(memId).addPoint(pts.longValue());
 		}
 		Squads.save();
-		eb.setFooter(eb.build().getFooter().getText() +" | " + ((Squads.getstats(memId).getWaifus().values().size()/Waifu.getAllWaifu().size())*100));
+		eb.setFooter(eb.build().getFooter().getText() +" | " + ((float)(Squads.getstats(memId).getWaifus().values().size()/Waifu.getAllWaifu().size())*100));
 		return eb;
 	}
 
