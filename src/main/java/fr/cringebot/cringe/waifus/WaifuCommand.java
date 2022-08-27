@@ -205,7 +205,7 @@ public class WaifuCommand {
 			else
 				Squads.getstats(member).setSearchingtimer();
 			Squads.getstats(member).addPoint(pts.longValue());
-			return new EmbedBuilder().setDescription(sb).setTitle("résultat de la recherche").setFooter("tu as gagné "+ pts + "points d'escouade").setColor(Color.pink);
+			return new EmbedBuilder().setDescription(sb).setTitle("Résultat de la recherche...").setFooter("Tu as gagné "+ pts + "points d'escouade !").setColor(Color.pink);
 		}
 		long t = Squads.getstats(member).SearchingTimeleft();
 		long th = t / HOUR;
@@ -238,7 +238,7 @@ public class WaifuCommand {
 				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getStr()) >= 5) {
 					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
 					Squads.getstats(member).removeItem(Item.Items.UFFU.getStr(), 5);
-					return "a trouvé une fleur, vous avez un nouveau bouquet";
+					return "a trouvé une fleur, vous avez un nouveau bouquet !";
 				}
 				return "a trouvé une fleur";
 			}
