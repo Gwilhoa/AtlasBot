@@ -35,6 +35,17 @@ public class Squads {
 			this.addMember(m);
 	}
 
+	public static boolean pay(String SenderId, String ReceiverId, Integer amount)
+	{
+		SquadMember Sender = Squads.getstats(SenderId);
+		SquadMember receiver = Squads.getstats(ReceiverId);
+		if (Sender == null || receiver == null || receiver.getCoins().intValue() < amount)
+			return false;
+		Sender.removeCoins(amount);
+		receiver.addCoins(amount.longValue());
+		return true;
+	}
+
 	public Integer getRank(String id)
 	{
 		Integer ret = 1;

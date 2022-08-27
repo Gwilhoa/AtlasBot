@@ -131,6 +131,19 @@ public class CommandListener {
 			msg.getChannel().sendMessageEmbeds(Top.top(null, msg.getGuild()).build()).queue();
 	}
 
+	@Command(name = "pay", description = "payer un ami", type = ExecutorType.USER)
+	private void pay(Message msg) {
+		int amount;
+		try {
+			amount = Integer.parseInt(msg.getContentRaw().split(" ")[1]);
+		} catch (NumberFormatException e) {
+			msg.getChannel().sendMessage(">pay NOMBRE @").queue();
+			return;
+		}
+		if (Squads.pay(msg.getMember().getId(), msg.getMentions().getMembers().get(0).getId(), amount))
+			msg.getChannel().sendMessage("Tu as payé "+ amount + " à "+msg.getMentions().getMembers().get(0).getId()).queue();
+	}
+
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
 	private void poll(Message msg) {
 		String[] args = msg.getContentRaw().split("\n");

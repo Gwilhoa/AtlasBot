@@ -137,7 +137,7 @@ public class SquadMember {
 		}
 		Squads.save();
 		float fl = (float)Squads.getstats(memId).getWaifus().values().size()/(float)Waifu.getAllWaifu().size();
-		eb.setFooter(eb.build().getFooter().getText() +" | " + (fl*100));
+		eb.setFooter(eb.build().getFooter().getText() +" | " + (fl*100) + "% de waifu capturé");
 		return eb;
 	}
 

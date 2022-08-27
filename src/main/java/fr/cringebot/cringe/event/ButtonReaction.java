@@ -120,7 +120,6 @@ public class ButtonReaction {
 		}
 		else if (event.getButton().getId().startsWith("harem")){
 			WaifuCommand.haremEmbed(event,Integer.parseInt(event.getButton().getId().substring("harem_".length()).split(";")[1]), event.getButton().getId().substring("harem_".length()).split(";")[0]);
-			event.reply("oui").complete().deleteOriginal().queue();
 		} else if (event.getButton().getId().startsWith("list_"))
 		{
 			String memId = event.getButton().getId().substring("list_".length()).split(";")[0];
