@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class Inventory {
     public static EmbedBuilder getInventory(Member member)

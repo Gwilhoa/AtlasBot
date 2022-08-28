@@ -141,7 +141,7 @@ public class CommandListener {
 			return;
 		}
 		if (Squads.pay(msg.getMember().getId(), msg.getMentions().getMembers().get(0).getId(), amount))
-			msg.getChannel().sendMessage("Tu as payé "+ amount + " à "+msg.getMentions().getMembers().get(0).getId()).queue();
+			msg.getChannel().sendMessage("Tu as payé "+ amount + " B2C à "+msg.getMentions().getMembers().get(0).getAsMention()).queue();
 	}
 
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)

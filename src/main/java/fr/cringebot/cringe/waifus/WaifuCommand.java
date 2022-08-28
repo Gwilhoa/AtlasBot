@@ -195,9 +195,9 @@ public class WaifuCommand {
 			StringBuilder sb = new StringBuilder();
 			boolean f = false;
 			for (InvWaifu w : harem) {
-				if (w.getLevel() > 0 && w.getLevel() <= 20) {
+				if (w.getLevel() > 0) {
 					f = true;
-					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, 1, w.getWaifu(), tc)).append('\n');
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
 				}
 			}
 			if (!f)
@@ -219,29 +219,90 @@ public class WaifuCommand {
 
 	private static String getSearching(Member member, int i, Waifu w, TextChannel tc) throws InterruptedException {
 		int r = new Random().nextInt(100) + 1;
-		if (i == 1) {
+		int crit = new Random().nextInt(200);
+		boolean iscrit = crit < i;
+		if (i < 20) {
 			if (r < 15) {
 				if (Squads.getstats(member).isCompleteCollection(w.getOrigin()) || w.getOrigin().equals("B2K"))
 					return "a rien trouvé";
 				EmbedBuilder eb = Squads.getstats(member).addCollection(w.getOrigin(),member);
 				if (eb != null)
 					tc.sendMessageEmbeds(eb.build()).queue();
+				if (iscrit) {
+					eb = Squads.getstats(member).addCollection(w.getOrigin(), member);
+					if (eb != null)
+						tc.sendMessageEmbeds(eb.build()).queue();
+				}
+				if (iscrit)
+					return "a trouvé 2 jetons de " + w.getOrigin() + " (crit)";
 				return "a trouvé un jeton de " +  w.getOrigin();
 			}
 			if (r < 30) {
 				return "a rien trouvé";
 			} else if (r < 60) {
 				Squads.getstats(member).addCoins(1L);
+				if (iscrit) {
+					Squads.getstats(member).addCoins(1L);
+					return "a trouvé 2 B2C (crit)";
+				}
 				return "a trouvé 1 B2C";
 			} else {
-				Squads.getstats(member).addItem(Item.Items.UFFU.getStr());
+				if (iscrit)
+					Squads.getstats(member).addItem(Item.Items.UFFU.getStr(), 2);
+				else
+					Squads.getstats(member).addItem(Item.Items.UFFU.getStr());
 				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getStr()) >= 5) {
 					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
 					Squads.getstats(member).removeItem(Item.Items.UFFU.getStr(), 5);
-					return "a trouvé une fleur, vous avez un nouveau bouquet !";
+					return "a trouvé "+(iscrit ? "deux fleurs" : "une fleur")+ " , vous avez un nouveau bouquet !" + (iscrit ? "(crit)" : "");
 				}
-				return "a trouvé une fleur";
+				return "a trouvé "+(iscrit ? "deux fleurs (crit)" : "une fleurs");
 			}
+		} else if (i < 60) {
+			if (r < 20) {
+				if (iscrit)
+					Squads.getstats(member).addItem(Item.Items.CE.getStr(), 2);
+				else
+					Squads.getstats(member).addItem(Item.Items.CE.getStr());
+				return "a trouvé "+ (iscrit ? "deux chronomètres" : "un chronomètre") + " érotique "+ (iscrit ? "(crit)" : "");
+			} else if (r < 30) {
+				if (iscrit) {
+					Squads.getstats(member).addCoins(4L);
+				} else {
+					Squads.getstats(member).addCoins(2L);
+				}
+				return "a trouvé" + (iscrit ? "quatre" : "deux") + " B2C " + (iscrit ? "(crit)" : "");
+			} else if (r < 50) {
+				if (iscrit) {
+					Squads.getstats(member).addItem(Item.Items.BFFU.getStr(), 2);
+				} else {
+					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
+				}
+				return "a trouvé" + (iscrit ? "un" : "deux") + " bouquets de fleurs " + (iscrit ? "(crit)" : "");
+			}
+		} else if (r < 60) {
+			if (iscrit) {
+				Squads.getstats(member).addItem(Item.Items.PB.getStr(), 2);
+			} else {
+				Squads.getstats(member).addItem(Item.Items.PB.getStr());
+			}
+			return "a trouvé" + (iscrit ? "un" : "deux") + " Pass brésil " + (iscrit ? "(crit)" : "");
+		} else if (r < 80) {
+			if (Squads.getstats(member).isCompleteCollection(w.getOrigin()) || w.getOrigin().equals("B2K"))
+				return "a rien trouvé";
+			EmbedBuilder eb = Squads.getstats(member).addCollection(w.getOrigin(),member);
+			if (eb != null)
+				tc.sendMessageEmbeds(eb.build()).queue();
+			if (iscrit) {
+				eb = Squads.getstats(member).addCollection(w.getOrigin(), member);
+				if (eb != null)
+					tc.sendMessageEmbeds(eb.build()).queue();
+			}
+			if (iscrit)
+				return "a trouvé 2 jetons de " + w.getOrigin() + " (crit)";
+			return "a trouvé un jeton de " +  w.getOrigin();
+		} else {
+			return "a rien trouvé";
 		}
 		return "coming soon";
 	}
