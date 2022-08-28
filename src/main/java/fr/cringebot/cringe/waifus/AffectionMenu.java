@@ -15,14 +15,14 @@ public class AffectionMenu {
     public static SelectMenuImpl getMenu(Member mem, Waifu w) {
         SquadMember sm = Squads.getstats(mem);
         ArrayList<SelectOption> options = new ArrayList<>();
-        options.add(new SelectOptionImpl("Bouquet de fleur ("+ sm.getAmountItem(Item.Items.BFFU.getStr()) +")", "BFFU"));
-        options.add(new SelectOptionImpl("Boite de chocolat ("+ sm.getAmountItem(Item.Items.BDCFU.getStr()) +")", "BDCFU"));
-        options.add(new SelectOptionImpl("flacon de Parfum ("+ sm.getAmountItem(Item.Items.PRFU.getStr()) +")", "PRFU"));
-        options.add(new SelectOptionImpl("Bracelet ("+ sm.getAmountItem(Item.Items.BRFU.getStr()) + ")", "BRCFU"));
-        options.add(new SelectOptionImpl("Collier ("+sm.getAmountItem(Item.Items.COLLFU.getStr()) + ")", "CLLFU"));
-        options.add(new SelectOptionImpl("Bague ("+ sm.getAmountItem(Item.Items.BGEFU.getStr()) + ")", "BGEFU"));
-        options.add(new SelectOptionImpl("Une soirée au restaurant (coming soon)", "RESFU"));
-        options.add(new SelectOptionImpl("nuit d'hotel (coming soon)", "HOFU"));
+        options.add(new SelectOptionImpl("Bouquet de fleur +1000xp ("+ sm.getAmountItem(Item.Items.BFFU.getStr()) +")", "BFFU"));
+        options.add(new SelectOptionImpl("Boite de chocolat +5000xp ("+ sm.getAmountItem(Item.Items.BDCFU.getStr()) +")", "BDCFU"));
+        options.add(new SelectOptionImpl("flacon de Parfum +10000xp ("+ sm.getAmountItem(Item.Items.PRFU.getStr()) +")", "PRFU"));
+        options.add(new SelectOptionImpl("Bracelet +16000xp ("+ sm.getAmountItem(Item.Items.BRFU.getStr()) + ")", "BRCFU"));
+        options.add(new SelectOptionImpl("Collier +23000xp ("+sm.getAmountItem(Item.Items.COLLFU.getStr()) + ")", "CLLFU"));
+        options.add(new SelectOptionImpl("Bague +30000xp ("+ sm.getAmountItem(Item.Items.BGEFU.getStr()) + ")", "BGEFU"));
+        options.add(new SelectOptionImpl("Une soirée au restaurant +50000xp (coming soon)", "RESFU"));
+        options.add(new SelectOptionImpl("nuit d'hotel +70000xp (coming soon)", "HOFU"));
         return new SelectMenuImpl("AFF;" + mem.getId() + ";" + w.getId(), "rendre heureux", 1, 1, false, options);
     }
 

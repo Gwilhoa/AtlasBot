@@ -22,7 +22,7 @@ public class Info {
 			if (iw.getId().equals(w.getId())) {
 				eb.setColor(Squads.getSquadByMember(m).getSquadRole(m.getGuild()).getColor())
 						.setFooter("niveau : " + iw.getLevel()
-								+ "\naffection " + iw.getFriendlyLevel() + "%");
+								+ "\naffection " + iw.getFriendlyLevel() + "/" + (iw.getLevel() + 1) * 2000);
 			}
 		}
 		return eb;
