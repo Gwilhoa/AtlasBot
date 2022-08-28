@@ -180,6 +180,7 @@ public class ReactionEvent {
                 URLConnection connection = new URL(mem.getUser().getEffectiveAvatarUrl()).openConnection();
                 connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
                 BufferedImage im = ImageIO.read(connection.getInputStream());
+                im = resize(im, 64, 64, 0, 0, true);
                 im = imgExtenders.makeRoundedCorner(im, 35);
                 BufferedImage ret = imgExtenders.getImage("spacebackground.png");
                 Graphics2D g = ret.createGraphics();
