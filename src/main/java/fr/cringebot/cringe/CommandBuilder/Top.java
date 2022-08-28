@@ -26,8 +26,10 @@ public class Top {
             eb.setTitle("Classement Général :");
             int i = 1;
             for (SquadMember sm : AllSm) {
-                sb.append("#").append(i).append(" ").append(sm).append(" avec ").append(sm.getPoints()).append(" points");
+                sb.append("#").append(i).append(" ").append(sm).append(" avec ").append(sm.getPoints()).append(" points\n");
                 i++;
+                if (i == 20)
+                    break;
             }
             eb.setDescription(sb);
         } else {
