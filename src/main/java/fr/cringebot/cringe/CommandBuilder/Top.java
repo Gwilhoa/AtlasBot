@@ -26,7 +26,7 @@ public class Top {
             eb.setTitle("Classement Général :");
             int i = 1;
             for (SquadMember sm : AllSm) {
-                sb.append("#").append(i).append(" ").append(sm).append(" avec ").append(sm.getPoints()).append(" points\n");
+                sb.append("#").append(i).append(" ").append(guild.getMemberById(sm.getId()).getAsMention()).append(" avec ").append(sm.getPoints()).append(" points\n");
                 i++;
                 if (i == 20)
                     break;
