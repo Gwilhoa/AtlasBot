@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2022/07/08 10:52:14 by                  ###   ########.fr       */
+/*   Updated: 2022/08/28 20:25:35 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,18 +180,18 @@ public class ReactionEvent {
                 URLConnection connection = new URL(mem.getUser().getEffectiveAvatarUrl()).openConnection();
                 connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
                 BufferedImage im = ImageIO.read(connection.getInputStream());
-                im = resize(im, 64, 64, 0, 0, true);
-                im = imgExtenders.makeRoundedCorner(im, 35);
+                im = resize(im, 128, 128, 0, 0, true);
+                im = imgExtenders.makeRoundedCorner(im, 150);
                 BufferedImage ret = imgExtenders.getImage("spacebackground.png");
                 Graphics2D g = ret.createGraphics();
-                g.drawImage(im, 350, 150,  null);
+                g.drawImage(im, 340, 130,  null);
 
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Among Us Vectorx", Font.PLAIN, 20));
                 if (!issus) {
-                g.drawString(mem.getEffectiveName() + " was not the imposter", 275, 300);
+                g.drawString(mem.getEffectiveName() + " was not the imposter", 310 - (mem.getEffectiveName().length()*5), 300);
                 } else {
-                    g.drawString(mem.getEffectiveName() + " was the imposter", 275, 300);
+                    g.drawString(mem.getEffectiveName() + " was the imposter", 310  - (mem.getEffectiveName().length()*5), 300);
                 }
                 g.dispose();
                 ImageIO.write(ret, "png", baos);
