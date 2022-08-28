@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2022/08/28 20:25:35 by                  ###   ########.fr       */
+/*   Updated: 2022/08/28 21:46:27 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,14 +184,14 @@ public class ReactionEvent {
                 im = imgExtenders.makeRoundedCorner(im, 150);
                 BufferedImage ret = imgExtenders.getImage("spacebackground.png");
                 Graphics2D g = ret.createGraphics();
-                g.drawImage(im, 340, 130,  null);
+                g.drawImage(im, 370, 130,  null);
 
                 g.setColor(Color.WHITE);
-                g.setFont(new Font("Among Us Vectorx", Font.PLAIN, 20));
+                g.setFont(new Font("comic sans ms", Font.ITALIC, 25));
                 if (!issus) {
-                g.drawString(mem.getEffectiveName() + " was not the imposter", 310 - (mem.getEffectiveName().length()*5), 300);
+                g.drawString(mem.getEffectiveName() + " was not the imposter", 300 - (mem.getEffectiveName().length()*5), 300);
                 } else {
-                    g.drawString(mem.getEffectiveName() + " was the imposter", 310  - (mem.getEffectiveName().length()*5), 300);
+                    g.drawString(mem.getEffectiveName() + " was the imposter", 300  - (mem.getEffectiveName().length()*5), 300);
                 }
                 g.dispose();
                 ImageIO.write(ret, "png", baos);
