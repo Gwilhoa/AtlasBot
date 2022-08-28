@@ -46,6 +46,32 @@ public class Squads {
 		return true;
 	}
 
+	public static ArrayList<SquadMember> getAllSquadMember() {
+		ArrayList<SquadMember> sm = new ArrayList<>();
+		for (Squads sq : Squads.getAllSquads()) {
+			sm.addAll(sq.getSquadMembers());
+		}
+		return sm;
+	}
+
+	public static ArrayList<SquadMember> getSortedAllSquadMember() {
+		ArrayList<SquadMember> all = getAllSquadMember();
+		ArrayList<SquadMember> ret = new ArrayList<>();
+		SquadMember BestSm = null;
+		while (!all.isEmpty()) {
+			Long BestPoint = -10000000L;
+			for (SquadMember sm : all) {
+				if (sm.getPoints() > BestPoint) {
+					BestPoint = sm.getPoints();
+					BestSm = sm;
+				}
+			}
+			all.remove(BestSm);
+			ret.add(BestSm);
+		}
+		return ret;
+	}
+
 	public Integer getRank(String id)
 	{
 		Integer ret = 1;

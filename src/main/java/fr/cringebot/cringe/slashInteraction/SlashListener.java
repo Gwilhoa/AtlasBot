@@ -141,6 +141,7 @@ public class SlashListener {
             ArrayList<String> ret = new ArrayList<>();
             for (Squads sq : Squads.getAllSquads())
                 ret.add(sq.getName());
+            ret.add("general");
             event.replyChoiceStrings(ret).queue();
         }
     }

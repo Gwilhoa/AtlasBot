@@ -5,14 +5,14 @@ import fr.cringebot.cringe.escouades.Squads;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Top {
     public static EmbedBuilder top(String SquadName, Guild guild) {
         EmbedBuilder eb = new EmbedBuilder();
         StringBuilder sb = new StringBuilder();
-        if (SquadName == null)
-        {
+        if (SquadName == null) {
             List<Squads> squads = Squads.getSortedSquads();
             eb.setTitle("Classement :");
             for (Squads sq : squads)
@@ -20,6 +20,15 @@ public class Top {
                         .append(" meilleur : ").append(guild.getMemberById(sq.getBestid()).getAsMention()).append(" avec ").append(sq.getStatMember(sq.getBestid()).getPoints()).append('\n');
             eb.setFooter(squads.get(0).getName() + " a un bonus de gains d'argent");
             eb.setColor(squads.get(0).getSquadRole(guild).getColor());
+            eb.setDescription(sb);
+        } else if (SquadName.equalsIgnoreCase("general")) {
+            ArrayList<SquadMember> AllSm = Squads.getSortedAllSquadMember();
+            eb.setTitle("Classement Général :");
+            int i = 1;
+            for (SquadMember sm : AllSm) {
+                sb.append("#").append(i).append(" ").append(sm).append(" avec ").append(sm.getPoints()).append(" points");
+                i++;
+            }
             eb.setDescription(sb);
         } else {
             Squads squad = Squads.getSquadByName(SquadName);
