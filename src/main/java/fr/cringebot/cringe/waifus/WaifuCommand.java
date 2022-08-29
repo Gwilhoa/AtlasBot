@@ -196,12 +196,13 @@ public class WaifuCommand {
 			return new EmbedBuilder().setTitle("Une erreur s'est produite...").setColor(Color.RED).setDescription("tu n'as pas d'escouade, c'est peut etre volontaire...");
 		}
 		if (Squads.getstats(member).SearchingTimeleft() < 0) {
-			Integer pts = 50;
+			Integer pts = 0;
 			ArrayList<InvWaifu> harem = new ArrayList<>(Squads.getstats(member).getWaifus().values());
 			StringBuilder sb = new StringBuilder();
 			boolean f = false;
 			for (InvWaifu w : harem) {
 				if (w.getLevel() > 0) {
+					pts = 50;
 					f = true;
 					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
 				}
