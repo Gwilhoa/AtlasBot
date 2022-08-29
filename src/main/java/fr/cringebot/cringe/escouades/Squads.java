@@ -153,6 +153,8 @@ public class Squads {
 	}
 	public static SquadMember getstats(String id)
 	{
+		if (Squads.getSquadByMember(id) == null)
+			return null;
 		return Squads.getSquadByMember(id).getStatMember(id);
 	}
 

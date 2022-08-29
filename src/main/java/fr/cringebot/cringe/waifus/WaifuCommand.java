@@ -31,6 +31,9 @@ public class WaifuCommand {
 	private static final int HOUR = 60 * MINUTE;
 
 	public static EmbedBuilder capturedWaifu(String id, Guild g) throws InterruptedException {
+		if (Squads.getstats(id) == null) {
+			return new EmbedBuilder().setTitle("Une erreur s'est produite...").setColor(Color.RED).setDescription("tu n'as pas d'escouade, c'est peut etre volontaire...");
+		}
 		if (Squads.getstats(id).timeleft() > 0) {
 			long t = Squads.getstats(id).timeleft();
 			long th = t / HOUR;
@@ -189,6 +192,9 @@ public class WaifuCommand {
 	}
 
 	public static EmbedBuilder waifuSearching(Member member, TextChannel tc) throws InterruptedException {
+		if (Squads.getstats(member) == null) {
+			return new EmbedBuilder().setTitle("Une erreur s'est produite...").setColor(Color.RED).setDescription("tu n'as pas d'escouade, c'est peut etre volontaire...");
+		}
 		if (Squads.getstats(member).SearchingTimeleft() < 0) {
 			Integer pts = 50;
 			ArrayList<InvWaifu> harem = new ArrayList<>(Squads.getstats(member).getWaifus().values());
