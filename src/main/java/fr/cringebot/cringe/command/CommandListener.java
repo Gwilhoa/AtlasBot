@@ -80,6 +80,21 @@ public class CommandListener {
 		}
 	}
 
+	@Command(name = "newmember", description = "ajouter un membre inexistant à une escouade", type = ExecutorType.USER)
+	private void newMember(Message msg)
+	{
+		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getRoles().isEmpty() && !msg.getMentions().getMembers().isEmpty()) {
+			SquadMember sm = Squads.getstats(msg.getMentions().getMembers().get(0));
+			if (sm == null)
+				msg.getChannel().sendMessage("il a déja une escouade").queue();
+			else {
+				Squads sq = Squads.getSquadByRole(msg.getMentions().getRoles().get(0));
+				sq.addMember(msg.getMentions().getMembers().get(0));
+				msg.getGuild().addRoleToMember(msg.getMentions().getMembers().get(0), sq.getSquadRole(msg.getGuild())).queue();
+				Squads.save();
+			}
+		}
+	}
 	@Command(name = "changesquad", description = "changer d'escouade quelqu'un", type = ExecutorType.USER)
 	private void ChangeSquad(Message msg)
 	{
