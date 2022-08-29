@@ -332,4 +332,8 @@ public class Squads {
 	public Long getTotal() {
 		return total;
 	}
+
+	public void delete() {
+		squadsHashMap.remove(this.roleid);
+	}
 }

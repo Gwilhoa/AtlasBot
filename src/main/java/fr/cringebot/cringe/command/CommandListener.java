@@ -295,8 +295,44 @@ public class CommandListener {
 
 	}
 
+	@Command(name = "removesquad", description = "supprimer une escouade", type = ExecutorType.USER)
+	private void RemoveSquad(Message msg) {
+		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
+			Squads.getSquadByRole(msg.getMentions().getRoles().get(0)).delete();
+	}
+
+
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
 	private void test(Message msg) throws IOException, InterruptedException {
-		slashCommand.load(msg.getJDA());
+		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
+		{
+			ArrayList<SquadMember> sm = Squads.getSquadByMember("464033183613190155").getSquadMembers();
+			for (SquadMember f : sm)
+			{
+				if (msg.getGuild().getMemberById(f.getId()) != null) {
+					Squads.getSquadByMember("550382634887413761").addSquadMember(f);
+					msg.getGuild().addRoleToMember(msg.getGuild().getMemberById(f.getId()), Squads.getSquadByMember("550382634887413761").getSquadRole(msg.getGuild())).queue();
+				}
+			}
+			sm = Squads.getSquadByMember("558713255351156786").getSquadMembers();
+			for (SquadMember f : sm)
+			{
+				if (msg.getGuild().getMemberById(f.getId()) != null) {
+					Squads.getSquadByMember("279645026441625600").addSquadMember(f);
+					msg.getGuild().addRoleToMember(msg.getGuild().getMemberById(f.getId()), Squads.getSquadByMember("279645026441625600").getSquadRole(msg.getGuild())).queue();
+				}
+			}
+			 sm = Squads.getSquadByMember("474934008267014144").getSquadMembers();
+			for (SquadMember f : sm)
+			{
+				if (msg.getGuild().getMemberById(f.getId()) != null) {
+					Squads.getSquadByMember("335074908998598673").addSquadMember(f);
+					msg.getGuild().addRoleToMember(msg.getGuild().getMemberById(f.getId()), Squads.getSquadByMember("335074908998598673").getSquadRole(msg.getGuild())).queue();
+				}
+			}
+			for (Squads sq : Squads.getAllSquads())
+				for (SquadMember r : sq.getSquadMembers())
+					r.resetPoint();
+		}
 	}
 }
