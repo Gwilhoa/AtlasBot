@@ -142,6 +142,7 @@ public class SlashListener {
             for (Squads sq : Squads.getAllSquads())
                 ret.add(sq.getName());
             ret.add("general");
+            ret.add("coins");
             event.replyChoiceStrings(ret).queue();
         }
     }

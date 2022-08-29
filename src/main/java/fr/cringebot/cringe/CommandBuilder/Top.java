@@ -28,7 +28,34 @@ public class Top {
             for (SquadMember sm : AllSm) {
                 sb.append("#").append(i).append(" ").append(guild.getMemberById(sm.getId()).getAsMention()).append(" avec ").append(sm.getPoints()).append(" points\n");
                 i++;
-                if (i == 20)
+                if (i == 21)
+                    break;
+            }
+            eb.setDescription(sb);
+        } else if (SquadName.equalsIgnoreCase("coins")) {
+            ArrayList<SquadMember> sq = Squads.getAllSquadMember();
+            ArrayList<SquadMember> ret = new ArrayList<>();
+            long best;
+            SquadMember sm = null;
+            while (!sq.isEmpty())
+            {
+                best = -10000000L;
+                for (SquadMember squadmember : sq)
+                {
+                    if (squadmember.getCoins() > best) {
+                        sm = squadmember;
+                        best = sm.getCoins();
+                    }
+                }
+                ret.add(sm);
+                sq.remove(sm);
+            }
+            eb.setTitle("Classement d'argent :");
+            int i = 1;
+            for (SquadMember sm2 : ret) {
+                sb.append("#").append(i).append(" ").append(guild.getMemberById(sm2.getId()).getAsMention()).append(" avec ").append(sm2.getCoins()).append(" B2C\n");
+                i++;
+                if (i == 21)
                     break;
             }
             eb.setDescription(sb);
