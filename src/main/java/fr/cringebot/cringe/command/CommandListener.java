@@ -73,6 +73,27 @@ public class CommandListener {
 		botDiscord.setRunning(false);
 	}
 
+	@Command(name = "newsquad", description = "ajouter une escouade", type = ExecutorType.USER)
+	private void addsquad(Message msg) {
+		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getRoles().isEmpty()) {
+			new Squads(msg.getMentions().getRoles().get(0));
+		}
+	}
+
+	@Command(name = "changesquad", description = "changer d'escouade quelqu'un", type = ExecutorType.USER)
+	private void ChangeSquad(Message msg)
+	{
+		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getRoles().isEmpty() && !msg.getMentions().getMembers().isEmpty()) {
+			SquadMember sm = Squads.getstats(msg.getMentions().getMembers().get(0));
+			msg.getGuild().removeRoleFromMember(msg.getMentions().getMembers().get(0), Squads.getSquadByMember(sm.getId()).getSquadRole(msg.getGuild())).queue();
+			Squads.getSquadByMember(sm.getId()).removeMember(sm.getId());
+			sm.resetPoint();
+			Squads sq = Squads.getSquadByRole(msg.getMentions().getRoles().get(0));
+			sq.addSquadMember(sm);
+			msg.getGuild().addRoleToMember(msg.getMentions().getMembers().get(0), sq.getSquadRole(msg.getGuild()));
+		}
+	}
+
 	@Command(name = "bresil", description = "you are going to brazil", type = ExecutorType.USER)
 	private void bresil(Message msg) {
 		if (msg.getMentions().getMembers().get(0) == null)

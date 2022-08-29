@@ -31,7 +31,7 @@ public class Squads {
 		this.roleid = r.getId();
 		squadsHashMap.put(roleid, this);
 		save();
-		for ( Member m : r.getGuild().getMembersWithRoles(r))
+		for (Member m : r.getGuild().getMembersWithRoles(r))
 			this.addMember(m);
 	}
 
@@ -218,6 +218,11 @@ public class Squads {
 	public void removeMember(String id) {
 		this.MemberList.remove(id);
 		save();
+	}
+
+	public void addSquadMember(SquadMember sm)
+	{
+		this.MemberList.put(sm.getId(), sm);
 	}
 
 	public void ResetPoint() {
