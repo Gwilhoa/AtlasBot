@@ -53,10 +53,10 @@ public class Shop {
                 "Jeton de collection : 3 de la meme catégorie donne accès a une waifu\n" +
                 "Chronomètre érotique : vous enlève 1h avant votre prochaine waifu\n" +
                 "(4 max)Horloge érotique : vous enlève 30min à votre timer de chaque prochaine waifu\n" +
-                "Bouquets de fleur : Augmente l'affection de votre waifu\n" +
-                "boite de chocolat : Augmente l'affection de votre waifu\n" +
-                "parfum : augmente l'affection de votre waifu\n" +
-                "bracelet : augmente beaucoup l'affection de votre waifu\n");
+                "Bouquets de fleur : donne 1000 d'affection aux waifus\n" +
+                "boite de chocolat : donne 5000 d'affection aux waifus\n" +
+                "parfum : donne 10000 d'affection aux waifus\n" +
+                "bracelet : donne 16000 d'affection aux waifus\n");
         eb.setFooter("vous avez " + Squads.getstats(mem).getCoins() + " B2C");
         return eb;
     }
