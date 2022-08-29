@@ -17,7 +17,9 @@ public class Top {
             eb.setTitle("Classement :");
             for (Squads sq : squads)
                 sb.append(sq.getSquadRole(guild).getAsMention()).append(" : ").append(sq.getTotal()).append('\n')
-                        .append(" meilleur : ").append(guild.getMemberById(sq.getBestid()).getAsMention()).append(" avec ").append(sq.getStatMember(sq.getBestid()).getPoints()).append('\n');
+                        .append(" meilleur : ")
+                        .append(guild.getMemberById(sq.getBestid()).getAsMention())
+                        .append(" avec ").append(sq.getStatMember(sq.getBestid()).getPoints()).append('\n');
             eb.setFooter(squads.get(0).getName() + " a un bonus de gains d'argent");
             eb.setColor(squads.get(0).getSquadRole(guild).getColor());
             eb.setDescription(sb);

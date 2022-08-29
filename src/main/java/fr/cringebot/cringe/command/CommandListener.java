@@ -91,6 +91,7 @@ public class CommandListener {
 			Squads sq = Squads.getSquadByRole(msg.getMentions().getRoles().get(0));
 			sq.addSquadMember(sm);
 			msg.getGuild().addRoleToMember(msg.getMentions().getMembers().get(0), sq.getSquadRole(msg.getGuild())).queue();
+			Squads.save();
 		}
 	}
 
