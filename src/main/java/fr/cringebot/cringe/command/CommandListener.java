@@ -85,7 +85,7 @@ public class CommandListener {
 	{
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getRoles().isEmpty() && !msg.getMentions().getMembers().isEmpty()) {
 			SquadMember sm = Squads.getstats(msg.getMentions().getMembers().get(0));
-			if (sm == null)
+			if (sm != null)
 				msg.getChannel().sendMessage("il a déja une escouade").queue();
 			else {
 				Squads sq = Squads.getSquadByRole(msg.getMentions().getRoles().get(0));
