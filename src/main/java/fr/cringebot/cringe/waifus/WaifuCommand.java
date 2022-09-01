@@ -200,8 +200,45 @@ public class WaifuCommand {
 			ArrayList<InvWaifu> harem = new ArrayList<>(Squads.getstats(member).getWaifus().values());
 			StringBuilder sb = new StringBuilder();
 			boolean f = false;
+			int landing01 = 0;
+			int landing02 = 0;
+			int landing03 = 0;
+			int landing04 = 0;
+			int landing05 = 0;
+			int landing06 = 0;
 			for (InvWaifu w : harem) {
-				if (w.getLevel() > 0) {
+				if (w.getLanding() == 1 && landing01 < 10) {
+					landing01++;
+					pts = 50;
+					f = true;
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+				}
+				else if (w.getLanding() == 2 && landing02 < 10) {
+					landing02++;
+					pts = 50;
+					f = true;
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+				}
+				else if (w.getLanding() == 3 && landing03 < 10) {
+					landing03++;
+					pts = 50;
+					f = true;
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+				}
+				else if (w.getLanding() == 4 && landing04 < 10) {
+					landing04++;
+					pts = 50;
+					f = true;
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+				}
+				else if (w.getLanding() == 5 && landing05 < 10) {
+					landing05++;
+					pts = 50;
+					f = true;
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+				}
+				else if (w.getLanding() == 6 && landing06 < 10) {
+					landing06++;
 					pts = 50;
 					f = true;
 					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
@@ -226,13 +263,73 @@ public class WaifuCommand {
 
 	private static String getSearching(Member member, int i, Waifu w, TextChannel tc) throws InterruptedException {
 		int r = new Random().nextInt(100) + 1;
-		int crit = new Random().nextInt(200);
+		int crit = new Random().nextInt(w.getOrigin().equals("B2K") ? 150 : 200);
 		boolean iscrit = crit < i;
 		if (i < 20) {
-			if (r < 15) {
+			if (r < 30) {
+				long point = 100L;
+				if (iscrit)
+					point = point * 2;
+				Squads.getstats(member).addPoint(point);
+				return "a remporté un event et rapport " + point + " points a " + Squads.getSquadByMember(member).getSquadRole(tc.getGuild()).getAsMention();
+			}
+			if (r < 40) {
+				int amount = 1;
+				if (iscrit)
+					amount = amount * 2;
+				Squads.getstats(member).addItem(Item.Items.CE.getStr(), amount);
+				return "a trouvé " + amount + "chronometre érotique";
+			} else if (r < 60) {
+				Squads.getstats(member).addCoins(1L);
+				if (iscrit) {
+					Squads.getstats(member).addCoins(1L);
+					return "a trouvé 2 B2C (crit)";
+				}
+				return "a trouvé 1 B2C";
+			} else if (r < 70) {
+				if (iscrit)
+					Squads.getstats(member).addItem(Item.Items.UFFU.getStr(), 2);
+				else
+					Squads.getstats(member).addItem(Item.Items.UFFU.getStr());
+				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getStr()) >= 5) {
+					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
+					Squads.getstats(member).removeItem(Item.Items.UFFU.getStr(), 5);
+					return "a trouvé " + (iscrit ? "deux fleurs" : "une fleur") + " , vous avez un nouveau bouquet !" + (iscrit ? "(crit)" : "");
+				}
+				return "a trouvé " + (iscrit ? "deux fleurs (crit)" : "une fleur");
+			} else {
+				return "a rien trouvé";
+			}
+		} else if (i < 60) {
+			if (r < 20) {
+				Squads.getstats(member).addCoins(1L);
+				if (iscrit) {
+					Squads.getstats(member).addCoins(1L);
+					return "a trouvé 2 B2C (crit)";
+				}
+				return "a trouvé 1 B2C";
+			} else if (r < 35) {
+				if (iscrit)
+					Squads.getstats(member).addItem(Item.Items.UFFU.getStr(), 2);
+				else
+					Squads.getstats(member).addItem(Item.Items.UFFU.getStr());
+				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getStr()) >= 5) {
+					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
+					Squads.getstats(member).removeItem(Item.Items.UFFU.getStr(), 5);
+					return "a trouvé " + (iscrit ? "deux fleurs" : "une fleur") + " , vous avez un nouveau bouquet !" + (iscrit ? "(crit)" : "");
+				}
+				return "a trouvé " + (iscrit ? "deux fleurs (crit)" : "une fleur");
+			} else if (r < 40) {
+				if (iscrit) {
+					Squads.getstats(member).addItem(Item.Items.PB.getStr(), 2);
+				} else {
+					Squads.getstats(member).addItem(Item.Items.PB.getStr());
+				}
+				return "a trouvé" + (iscrit ? "un" : "deux") + " Pass brésil " + (iscrit ? "(crit)" : "");
+			} else if (r < 45) {
 				if (Squads.getstats(member).isCompleteCollection(w.getOrigin()) || w.getOrigin().equals("B2K"))
 					return "a rien trouvé";
-				EmbedBuilder eb = Squads.getstats(member).addCollection(w.getOrigin(),member);
+				EmbedBuilder eb = Squads.getstats(member).addCollection(w.getOrigin(), member);
 				if (eb != null)
 					tc.sendMessageEmbeds(eb.build()).queue();
 				if (iscrit) {
@@ -242,76 +339,24 @@ public class WaifuCommand {
 				}
 				if (iscrit)
 					return "a trouvé 2 jetons de " + w.getOrigin() + " (crit)";
-				return "a trouvé un jeton de " +  w.getOrigin();
-			}
-			if (r < 30) {
-				return "a rien trouvé";
-			} else if (r < 60) {
-				Squads.getstats(member).addCoins(1L);
-				if (iscrit) {
-					Squads.getstats(member).addCoins(1L);
-					return "a trouvé 2 B2C (crit)";
-				}
-				return "a trouvé 1 B2C";
-			} else {
+				return "a trouvé un jeton de " + w.getOrigin();
+			} else if (r < 75) {
+				long point = 100L;
 				if (iscrit)
-					Squads.getstats(member).addItem(Item.Items.UFFU.getStr(), 2);
-				else
-					Squads.getstats(member).addItem(Item.Items.UFFU.getStr());
-				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getStr()) >= 5) {
-					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
-					Squads.getstats(member).removeItem(Item.Items.UFFU.getStr(), 5);
-					return "a trouvé "+(iscrit ? "deux fleurs" : "une fleur")+ " , vous avez un nouveau bouquet !" + (iscrit ? "(crit)" : "");
-				}
-				return "a trouvé "+(iscrit ? "deux fleurs (crit)" : "une fleurs");
-			}
-		} else if (i < 60) {
-			if (r < 20) {
+					point = point * 2;
+				Squads.getstats(member).addPoint(point);
+				return "a remporté un event et rapport " + point + " points a " + Squads.getSquadByMember(member).getSquadRole(tc.getGuild()).getAsMention();
+			} else if (r < 76) {
+				int amount = 1;
 				if (iscrit)
-					Squads.getstats(member).addItem(Item.Items.CE.getStr(), 2);
-				else
-					Squads.getstats(member).addItem(Item.Items.CE.getStr());
-				return "a trouvé "+ (iscrit ? "deux chronomètres" : "un chronomètre") + " érotique "+ (iscrit ? "(crit)" : "");
-			} else if (r < 30) {
-				if (iscrit) {
-					Squads.getstats(member).addCoins(4L);
-				} else {
-					Squads.getstats(member).addCoins(2L);
-				}
-				return "a trouvé" + (iscrit ? "quatre" : "deux") + " B2C " + (iscrit ? "(crit)" : "");
-			} else if (r < 50) {
-				if (iscrit) {
-					Squads.getstats(member).addItem(Item.Items.BFFU.getStr(), 2);
-				} else {
-					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
-				}
-				return "a trouvé" + (iscrit ? "un" : "deux") + " bouquets de fleurs " + (iscrit ? "(crit)" : "");
-			}
-		} else if (r < 60) {
-			if (iscrit) {
-				Squads.getstats(member).addItem(Item.Items.PB.getStr(), 2);
+					amount = amount*2;
+				return "a récupérer "+amount+" bouquet de fleur";
 			} else {
-				Squads.getstats(member).addItem(Item.Items.PB.getStr());
-			}
-			return "a trouvé" + (iscrit ? "un" : "deux") + " Pass brésil " + (iscrit ? "(crit)" : "");
-		} else if (r < 80) {
-			if (Squads.getstats(member).isCompleteCollection(w.getOrigin()) || w.getOrigin().equals("B2K"))
 				return "a rien trouvé";
-			EmbedBuilder eb = Squads.getstats(member).addCollection(w.getOrigin(),member);
-			if (eb != null)
-				tc.sendMessageEmbeds(eb.build()).queue();
-			if (iscrit) {
-				eb = Squads.getstats(member).addCollection(w.getOrigin(), member);
-				if (eb != null)
-					tc.sendMessageEmbeds(eb.build()).queue();
 			}
-			if (iscrit)
-				return "a trouvé 2 jetons de " + w.getOrigin() + " (crit)";
-			return "a trouvé un jeton de " +  w.getOrigin();
 		} else {
-			return "a rien trouvé";
+			return "coming soon";
 		}
-		return "coming soon";
 	}
 
 	private static boolean setImage(Integer id, Message.Attachment f) throws  IOException {

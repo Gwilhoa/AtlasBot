@@ -28,6 +28,21 @@ public class InvWaifu {
 		this.FriendlyLevel = 0;
 	}
 
+	public Integer getLanding()
+	{
+		if (this.level < 20)
+			return 1;
+		else if (this.level < 60)
+			return 2;
+		else if (this.level < 100)
+			return 3;
+		else if (this.level < 150)
+			return 4;
+		else if (this.level < 200)
+			return 5;
+		return 6;
+	}
+
 	public Integer getFriendlyLevel()
 	{
 		return this.FriendlyLevel;
