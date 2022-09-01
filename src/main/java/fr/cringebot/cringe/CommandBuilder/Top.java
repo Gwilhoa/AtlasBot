@@ -64,10 +64,10 @@ public class Top {
         } else {
             Squads squad = Squads.getSquadByName(SquadName);
             if (squad == null)
-                return new EmbedBuilder().setTitle("escouade "+ SquadName).setDescription("cette escouade n'existe pas");
+                return new EmbedBuilder().setTitle("Escouade "+ SquadName).setDescription("cette escouade n'existe pas");
             List<SquadMember> sm = squad.getSortedSquadMember();
             eb.setColor(squad.getSquadRole(guild).getColor());
-            eb.setTitle("escouade "+ squad.getName());
+            eb.setTitle("Escouade "+ squad.getName());
             int i = 1;
             for (SquadMember s : sm)
             {
