@@ -30,7 +30,9 @@ public class InvWaifu {
 
 	public Integer getLanding()
 	{
-		if (this.level < 20)
+		if (this.level < 1)
+			return 0;
+		else if (this.level < 20)
 			return 1;
 		else if (this.level < 60)
 			return 2;
