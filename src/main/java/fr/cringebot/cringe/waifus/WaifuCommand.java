@@ -319,14 +319,13 @@ public class WaifuCommand {
 					return "a trouvé " + (iscrit ? "deux fleurs" : "une fleur") + " , vous avez un nouveau bouquet !" + (iscrit ? "(crit)" : "");
 				}
 				return "a trouvé " + (iscrit ? "deux fleurs (crit)" : "une fleur");
-			} else if (r < 40) {
-				if (iscrit) {
-					Squads.getstats(member).addItem(Item.Items.PB.getStr(), 2);
-				} else {
-					Squads.getstats(member).addItem(Item.Items.PB.getStr());
-				}
-				return "a trouvé" + (iscrit ? "un" : "deux") + " Pass brésil " + (iscrit ? "(crit)" : "");
-			} else if (r < 45) {
+			} else if (r < 48) {
+				int amount = 1;
+				if (iscrit)
+					amount = amount*2;
+				Squads.getstats(member).addItem(Item.Items.PB.getStr(), amount);
+				return "a trouvé" + amount+ " Pass brésil ";
+			} else if (r < 53) {
 				if (Squads.getstats(member).isCompleteCollection(w.getOrigin()) || w.getOrigin().equals("B2K"))
 					return "a rien trouvé";
 				EmbedBuilder eb = Squads.getstats(member).addCollection(w.getOrigin(), member);
@@ -340,17 +339,24 @@ public class WaifuCommand {
 				if (iscrit)
 					return "a trouvé 2 jetons de " + w.getOrigin() + " (crit)";
 				return "a trouvé un jeton de " + w.getOrigin();
-			} else if (r < 75) {
+			} else if (r < 83) {
 				long point = 100L;
 				if (iscrit)
 					point = point * 2;
 				Squads.getstats(member).addPoint(point);
 				return "a remporté un event et rapport " + point + " points a " + Squads.getSquadByMember(member).getSquadRole(tc.getGuild()).getAsMention();
-			} else if (r < 76) {
+			} else if (r < 88) {
 				int amount = 1;
 				if (iscrit)
 					amount = amount*2;
+				Squads.getstats(member).addItem(Item.Items.BFFU.getStr(), amount);
 				return "a récupérer "+amount+" bouquet de fleur";
+			} else if (r < 90) {
+				int amount = 1;
+				if (iscrit)
+					amount = amount*2;
+				Squads.getstats(member).addItem(Item.Items.BDCFU.getStr(), amount);
+				return "a récupérer "+amount+" boite de chocolat";
 			} else {
 				return "a rien trouvé";
 			}
