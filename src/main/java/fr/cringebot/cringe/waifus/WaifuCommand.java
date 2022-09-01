@@ -197,7 +197,7 @@ public class WaifuCommand {
 		}
 		if (Squads.getstats(member).SearchingTimeleft() < 0) {
 			Integer pts = 0;
-			ArrayList<InvWaifu> harem = new ArrayList<>(Squads.getstats(member).getWaifus().values());
+			ArrayList<InvWaifu> harem = Squads.getstats(member).getWaifusByLevel();
 			StringBuilder sb = new StringBuilder();
 			boolean f = false;
 			int landing01 = 0;

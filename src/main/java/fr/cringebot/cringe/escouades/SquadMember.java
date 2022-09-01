@@ -120,6 +120,25 @@ public class SquadMember {
 
 	//---waifu---//
 
+	public ArrayList<InvWaifu> getWaifusByLevel()
+	{
+		ArrayList<InvWaifu> init = new ArrayList<>(this.getWaifus().values());
+		ArrayList<InvWaifu> ret = new ArrayList<>();
+		while (!init.isEmpty()) {
+			long levelMax = -1;
+			InvWaifu iwMax = null;
+			for (InvWaifu iw : init) {
+				if (iw.getLevel() > levelMax) {
+					levelMax = iw.getLevel();
+					iwMax = iw;
+				}
+			}
+			ret.add(iwMax);
+			init.remove(iwMax);
+		}
+		return ret;
+	}
+
 	public EmbedBuilder newWaifu(Integer id, String memId, Guild g) throws InterruptedException {
 		EmbedBuilder eb = InvWaifu.catchWaifu(id, memId, g);
 		if (Waifu.getWaifuById(id).isLegendary()) {
@@ -246,6 +265,7 @@ public class SquadMember {
 		addBank(nb.intValue());
 		this.points = this.points + nb;
 	}
+
 
 	public void resetPoint()
 	{
