@@ -271,14 +271,14 @@ public class WaifuCommand {
 				if (iscrit)
 					point = point * 2;
 				Squads.getstats(member).addPoint(point);
-				return "a remporté un event et rapport " + point + " points a " + Squads.getSquadByMember(member).getSquadRole(tc.getGuild()).getAsMention();
+				return "a remporté un event et rapporte " + point + " points a " + Squads.getSquadByMember(member).getSquadRole(tc.getGuild()).getAsMention();
 			}
 			if (r < 40) {
 				int amount = 1;
 				if (iscrit)
 					amount = amount * 2;
 				Squads.getstats(member).addItem(Item.Items.CE.getStr(), amount);
-				return "a trouvé " + amount + "chronometre érotique";
+				return "a trouvé " + amount + " chronometre érotique";
 			} else if (r < 60) {
 				Squads.getstats(member).addCoins(1L);
 				if (iscrit) {
@@ -294,7 +294,7 @@ public class WaifuCommand {
 				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getStr()) >= 5) {
 					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
 					Squads.getstats(member).removeItem(Item.Items.UFFU.getStr(), 5);
-					return "a trouvé " + (iscrit ? "deux fleurs" : "une fleur") + " , vous avez un nouveau bouquet !" + (iscrit ? "(crit)" : "");
+					return "a trouvé " + (iscrit ? "deux fleurs" : "une fleur") + ", vous avez un nouveau bouquet !" + (iscrit ? "(crit)" : "");
 				}
 				return "a trouvé " + (iscrit ? "deux fleurs (crit)" : "une fleur");
 			} else {
@@ -344,7 +344,7 @@ public class WaifuCommand {
 				if (iscrit)
 					point = point * 2;
 				Squads.getstats(member).addPoint(point);
-				return "a remporté un event et rapport " + point + " points a " + Squads.getSquadByMember(member).getSquadRole(tc.getGuild()).getAsMention();
+				return "rapporte " + point + " points a " + Squads.getSquadByMember(member).getSquadRole(tc.getGuild()).getAsMention();
 			} else if (r < 88) {
 				int amount = 1;
 				if (iscrit)
