@@ -211,37 +211,37 @@ public class WaifuCommand {
 					landing01++;
 					pts = 50;
 					f = true;
-					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w, tc)).append('\n');
 				}
 				else if (w.getLanding() == 2 && landing02 < 10) {
 					landing02++;
 					pts = 50;
 					f = true;
-					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w, tc)).append('\n');
 				}
 				else if (w.getLanding() == 3 && landing03 < 10) {
 					landing03++;
 					pts = 50;
 					f = true;
-					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w, tc)).append('\n');
 				}
 				else if (w.getLanding() == 4 && landing04 < 10) {
 					landing04++;
 					pts = 50;
 					f = true;
-					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w, tc)).append('\n');
 				}
 				else if (w.getLanding() == 5 && landing05 < 10) {
 					landing05++;
 					pts = 50;
 					f = true;
-					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w, tc)).append('\n');
 				}
 				else if (w.getLanding() == 6 && landing06 < 10) {
 					landing06++;
 					pts = 50;
 					f = true;
-					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w.getWaifu(), tc)).append('\n');
+					sb.append(w.getWaifu().getName()).append(" ").append(getSearching(member, w.getLevel().intValue(), w, tc)).append('\n');
 				}
 			}
 			if (!f)
@@ -261,25 +261,25 @@ public class WaifuCommand {
 
 	}
 
-	private static String getSearching(Member member, int i, Waifu w, TextChannel tc) throws InterruptedException {
+	private static String getSearching(Member member, int i, InvWaifu w, TextChannel tc) throws InterruptedException {
 		int r = new Random().nextInt(100) + 1;
-		int crit = new Random().nextInt(w.getOrigin().equals("B2K") ? 150 : 200);
+		int crit = new Random().nextInt(w.getWaifu().getOrigin().equals("B2K") ? 150 : 200);
 		boolean iscrit = crit < i;
 		if (i < 20) {
-			if (r < 30) {
+			if (r < 15) {
 				long point = 100L;
 				if (iscrit)
 					point = point * 2;
 				Squads.getstats(member).addPoint(point);
-				return "a remporté un event et rapporte " + point + " points a " + Squads.getSquadByMember(member).getSquadRole(tc.getGuild()).getAsMention();
+				return "rapporte " + point + " points a " + Squads.getSquadByMember(member).getSquadRole(tc.getGuild()).getAsMention();
 			}
-			if (r < 40) {
+			if (r < 20) {
 				int amount = 1;
 				if (iscrit)
 					amount = amount * 2;
 				Squads.getstats(member).addItem(Item.Items.CE.getStr(), amount);
 				return "a trouvé " + amount + " chronometre érotique";
-			} else if (r < 60) {
+			} else if (r < 40) {
 				Squads.getstats(member).addCoins(1L);
 				if (iscrit) {
 					Squads.getstats(member).addCoins(1L);
@@ -298,7 +298,8 @@ public class WaifuCommand {
 				}
 				return "a trouvé " + (iscrit ? "deux fleurs (crit)" : "une fleur");
 			} else {
-				return "a rien trouvé";
+				w.addXp(500);
+				return "a bien aimé ce moment, elle gagne 500 pts d'affection";
 			}
 		} else if (i < 60) {
 			if (r < 20) {
@@ -326,19 +327,19 @@ public class WaifuCommand {
 				Squads.getstats(member).addItem(Item.Items.PB.getStr(), amount);
 				return "a trouvé" + amount+ " Pass brésil ";
 			} else if (r < 53) {
-				if (Squads.getstats(member).isCompleteCollection(w.getOrigin()) || w.getOrigin().equals("B2K"))
+				if (Squads.getstats(member).isCompleteCollection(w.getWaifu().getOrigin()) || w.getWaifu().getOrigin().equals("B2K"))
 					return "a rien trouvé";
-				EmbedBuilder eb = Squads.getstats(member).addCollection(w.getOrigin(), member);
+				EmbedBuilder eb = Squads.getstats(member).addCollection(w.getWaifu().getOrigin(), member);
 				if (eb != null)
 					tc.sendMessageEmbeds(eb.build()).queue();
 				if (iscrit) {
-					eb = Squads.getstats(member).addCollection(w.getOrigin(), member);
+					eb = Squads.getstats(member).addCollection(w.getWaifu().getOrigin(), member);
 					if (eb != null)
 						tc.sendMessageEmbeds(eb.build()).queue();
 				}
 				if (iscrit)
-					return "a trouvé 2 jetons de " + w.getOrigin() + " (crit)";
-				return "a trouvé un jeton de " + w.getOrigin();
+					return "a trouvé 2 jetons de " + w.getWaifu().getOrigin() + " (crit)";
+				return "a trouvé un jeton de " + w.getWaifu().getOrigin();
 			} else if (r < 83) {
 				long point = 100L;
 				if (iscrit)
@@ -358,7 +359,8 @@ public class WaifuCommand {
 				Squads.getstats(member).addItem(Item.Items.BDCFU.getStr(), amount);
 				return "a récupérer "+amount+" boite de chocolat";
 			} else {
-				return "a rien trouvé";
+				w.addXp(500);
+				return "a bien aimé ce moment, elle gagne 500 pts d'affection";
 			}
 		} else {
 			return "coming soon";
