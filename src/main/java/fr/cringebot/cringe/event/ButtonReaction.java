@@ -41,8 +41,8 @@ public class ButtonReaction {
 				event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
 				return;
 			}
-			String item = id.split(";")[1];
-			if (item.equals("stop"))
+			Integer itemId = Integer.parseInt(id.split(";")[1]);
+			if (itemId.equals(0))
 			{
 				event.editMessageEmbeds(Shop.ShopDisplay(event.getMember()).build()).setActionRow(Shop.PrincipalMenu(event.getMember())).queue();
 				event.reply("opération annulé").setEphemeral(true).queue();
@@ -51,11 +51,11 @@ public class ButtonReaction {
 			int prix = Integer.parseInt(id.split(";")[2]);
 			int amount = Integer.parseInt(id.split(";")[3]);
 			if (event.getButton().getLabel().equalsIgnoreCase("acheter")) {
-				Shop.buy(event.getMember(), item, prix, amount);
+				Shop.buy(event.getMember(), itemId, prix, amount);
 				event.editMessageEmbeds(Shop.ShopDisplay(event.getMember()).build()).setActionRow(Shop.PrincipalMenu(event.getMember())).queue();
-				event.getChannel().sendMessage(event.getMember().getAsMention() + ", tu as acheté " + amount + " " + item).queue();
+				event.getChannel().sendMessage(event.getMember().getAsMention() + ", tu as acheté " + amount + " " + itemId).queue();
 			} else {
-				Shop.panelamount(event.getMember(), item, prix, amount, event);
+				Shop.panelamount(event.getMember(), Item.Items.getItemById(itemId), amount, event);
 			}
 		} else if (event.getButton().getId().startsWith("trade")) {
 			EmbedBuilder eb = new EmbedBuilder().setTitle("Requête d'échange").setDescription(event.getMessage().getEmbeds().get(0).getDescription());
@@ -87,20 +87,20 @@ public class ButtonReaction {
 		else if (event.getButton().getId().startsWith("USECE")) {
 			if (!event.getButton().getId().split(";")[1].equals(event.getMember().getId()))
 				event.reply("tu es pas la personne attendu").setEphemeral(true).queue();
-			else if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.CE.getStr()) <= 0)
+			else if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.CEFU.getId()) <= 0)
 				event.reply("tu as pas de chronometre érotique").queue();
 			else {
 				if (!Squads.getstats(event.getMember()).removeTime(1800000L)) {
 					event.reply("ça a pas marché").setEphemeral(true).queue();
 					return;
 				}
-				Squads.getstats(event.getMember()).removeItem(Item.Items.CE.getStr());
+				Squads.getstats(event.getMember()).removeItem(Item.Items.CEFU.getId());
 				EmbedBuilder eb = WaifuCommand.capturedWaifu(event.getMember().getId(), event.getGuild());
 				if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
 					event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
 				else
 				{
-					if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.CE.getStr()) > 0)
+					if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.CEFU.getId()) > 0)
 						event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
 					else
 						event.editMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+event.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();

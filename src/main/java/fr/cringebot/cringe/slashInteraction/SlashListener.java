@@ -83,17 +83,6 @@ public class SlashListener {
                 args.add(event.getOption("arg04").getAsString());
             PollMain.PollMain(args.toArray(new String[0]), name, event.getTextChannel(), event.getMember());
         }
-        else if (event.getName().equals("waifu")){
-            EmbedBuilder eb = capturedWaifu(event.getMember().getId(), event.getGuild());
-            if (!Objects.equals(eb.build().getColor(), Color.black) && !Objects.equals(eb.build().getColor(), Color.WHITE))
-                event.replyEmbeds(eb.build()).queue();
-            else
-            {
-                if (Squads.getstats(event.getMember()).getCoins() >= Shop.getCEPRICE())
-                    event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
-                else
-                    event.replyEmbeds(eb.build()).addActionRow(new ButtonImpl("CEFUBUY;"+event.getMember().getId(), "Acheter un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
-            }}
         else if (event.getName().equals("waifu_list")) {
             String SearchKey;
             if (event.getOption("nom") == null)

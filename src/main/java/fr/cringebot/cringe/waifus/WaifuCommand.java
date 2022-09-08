@@ -60,10 +60,10 @@ public class WaifuCommand {
 				msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 			else
 			{
-				if (Squads.getstats(msg.getMember()).getAmountItem(Item.Items.CE.getStr()) > 0)
-					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+msg.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,false, null)).queue();
+				if (Squads.getstats(msg.getMember()).getAmountItem(Item.Items.CEFU.getId()) > 0)
+					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+msg.getMember().getId(), "utiliser un Chronomètre érotique ("+Squads.getstats(msg.getMember()).getAmountItem(Item.Items.CEFU.getId())+")", ButtonStyle.SUCCESS,false, null)).queue();
 				else
-					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+msg.getMember().getId(), "utiliser un Chronomètre érotique", ButtonStyle.SUCCESS,true, null)).queue();
+					msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(new ButtonImpl("USECE;"+msg.getMember().getId(), "utiliser un Chronomètre érotique (0)", ButtonStyle.SUCCESS,true, null)).queue();
 			}
 		} else if (msg.getContentRaw().split(" ")[1].equalsIgnoreCase("info")) {
 			Info.infowaifu(msg);
@@ -277,7 +277,7 @@ public class WaifuCommand {
 				int amount = 1;
 				if (iscrit)
 					amount = amount * 2;
-				Squads.getstats(member).addItem(Item.Items.CE.getStr(), amount);
+				Squads.getstats(member).addItem(Item.Items.CEFU.getId(), amount);
 				return "a trouvé " + amount + " chronometre érotique";
 			} else if (r < 40) {
 				Squads.getstats(member).addCoins(1L);
@@ -288,12 +288,12 @@ public class WaifuCommand {
 				return "a trouvé 1 B2C";
 			} else if (r < 70) {
 				if (iscrit)
-					Squads.getstats(member).addItem(Item.Items.UFFU.getStr(), 2);
+					Squads.getstats(member).addItem(Item.Items.UFFU.getId(), 2);
 				else
-					Squads.getstats(member).addItem(Item.Items.UFFU.getStr());
-				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getStr()) >= 5) {
-					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
-					Squads.getstats(member).removeItem(Item.Items.UFFU.getStr(), 5);
+					Squads.getstats(member).addItem(Item.Items.UFFU.getId());
+				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getId()) >= 5) {
+					Squads.getstats(member).addItem(Item.Items.BFFU.getId());
+					Squads.getstats(member).removeItem(Item.Items.UFFU.getId(), 5);
 					return "a trouvé " + (iscrit ? "deux fleurs" : "une fleur") + ", vous avez un nouveau bouquet !" + (iscrit ? "(crit)" : "");
 				}
 				return "a trouvé " + (iscrit ? "deux fleurs (crit)" : "une fleur");
@@ -311,12 +311,12 @@ public class WaifuCommand {
 				return "a trouvé 1 B2C";
 			} else if (r < 35) {
 				if (iscrit)
-					Squads.getstats(member).addItem(Item.Items.UFFU.getStr(), 2);
+					Squads.getstats(member).addItem(Item.Items.UFFU.getId(), 2);
 				else
-					Squads.getstats(member).addItem(Item.Items.UFFU.getStr());
-				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getStr()) >= 5) {
-					Squads.getstats(member).addItem(Item.Items.BFFU.getStr());
-					Squads.getstats(member).removeItem(Item.Items.UFFU.getStr(), 5);
+					Squads.getstats(member).addItem(Item.Items.UFFU.getId());
+				if (Squads.getstats(member).getAmountItem(Item.Items.UFFU.getId()) >= 5) {
+					Squads.getstats(member).addItem(Item.Items.BFFU.getId());
+					Squads.getstats(member).removeItem(Item.Items.UFFU.getId(), 5);
 					return "a trouvé " + (iscrit ? "deux fleurs" : "une fleur") + " , vous avez un nouveau bouquet !" + (iscrit ? "(crit)" : "");
 				}
 				return "a trouvé " + (iscrit ? "deux fleurs (crit)" : "une fleur");
@@ -324,7 +324,7 @@ public class WaifuCommand {
 				int amount = 1;
 				if (iscrit)
 					amount = amount*2;
-				Squads.getstats(member).addItem(Item.Items.PB.getStr(), amount);
+				Squads.getstats(member).addItem(Item.Items.PB.getId(), amount);
 				return "a trouvé" + amount+ " Pass brésil ";
 			} else if (r < 53) {
 				if (Squads.getstats(member).isCompleteCollection(w.getWaifu().getOrigin()) || w.getWaifu().getOrigin().equals("B2K"))
@@ -350,13 +350,13 @@ public class WaifuCommand {
 				int amount = 1;
 				if (iscrit)
 					amount = amount*2;
-				Squads.getstats(member).addItem(Item.Items.BFFU.getStr(), amount);
+				Squads.getstats(member).addItem(Item.Items.BFFU.getId(), amount);
 				return "a récupérer "+amount+" bouquet de fleur";
 			} else if (r < 90) {
 				int amount = 1;
 				if (iscrit)
 					amount = amount*2;
-				Squads.getstats(member).addItem(Item.Items.BDCFU.getStr(), amount);
+				Squads.getstats(member).addItem(Item.Items.BDCFU.getId(), amount);
 				return "a récupérer "+amount+" boite de chocolat";
 			} else {
 				w.addXp(500);

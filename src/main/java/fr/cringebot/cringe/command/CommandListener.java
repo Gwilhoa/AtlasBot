@@ -117,14 +117,14 @@ public class CommandListener {
 			msg.getChannel().sendMessage("tu veux emmener qui ?").queue();
 		} else {
 			Member member = msg.getMentions().getMembers().get(0);
-			if (Squads.getstats(msg.getMember()).getAmountItem(Item.Items.PB.getStr()) > 0)
+			if (Squads.getstats(msg.getMember()).getAmountItem(Item.Items.PB.getId()) > 0)
 			{
 				if (msg.getMember().getVoiceState().inAudioChannel() && member.getVoiceState().inAudioChannel())
 				{
 					msg.getChannel().sendMessage(member.getAsMention() + " you are going to brazil with "+ msg.getMember().getAsMention()).queue();
 					msg.getGuild().moveVoiceMember(member, msg.getGuild().getVoiceChannelById("974740318413025340")).queue();
 					msg.getGuild().moveVoiceMember(msg.getMember(), msg.getGuild().getVoiceChannelById("974740318413025340")).queue();
-					Squads.getstats(msg.getMember()).removeItem(Item.Items.PB.getStr());
+					Squads.getstats(msg.getMember()).removeItem(Item.Items.PB.getId());
 				}
 			} else {
 				msg.getChannel().sendMessage("tu n'as pas de ticket").queue();

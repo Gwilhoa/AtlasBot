@@ -20,7 +20,7 @@ public class SquadMember {
 	private Long timer;
 	private Long searchingtimer;
 	private HashMap<String, Integer> collections;
-	private HashMap<String, Integer> inventory;
+	private HashMap<Integer, Integer> inventory;
 	private HashMap<Integer, InvWaifu> waifus;
 	private Long coins;
 	private Integer bank;
@@ -32,6 +32,7 @@ public class SquadMember {
 		this.waifus = new HashMap<>();
 		this.coins = 0L;
 		this.bank = 0;
+		this.CompleteCollection = new ArrayList<>();
 	}
 
 	//---coins---//
@@ -49,36 +50,36 @@ public class SquadMember {
 		}
 	}
 
-	public void addItem(String item)
+	public void addItem(Integer itemId)
 	{
-		addItem(item, 1);
+		addItem(itemId, 1);
 	}
-	public void addItem(String item, int amount){
+	public void addItem(Integer itemId, int amount){
 		if (inventory == null)
 			inventory = new HashMap<>();
-		inventory.putIfAbsent(item, 0);
-		inventory.put(item, inventory.getOrDefault(item, 0) + amount);
+		inventory.putIfAbsent(itemId, 0);
+		inventory.put(itemId, inventory.getOrDefault(itemId, 0) + amount);
 		Squads.save();
 	}
 
-	public Integer getAmountItem(String item)
+	public Integer getAmountItem(Integer itemId)
 	{
 		if (inventory == null)
 			inventory = new HashMap<>();
-		inventory.putIfAbsent(item, 0);
-		return inventory.getOrDefault(item, 0);
+		inventory.putIfAbsent(itemId, 0);
+		return inventory.getOrDefault(itemId, 0);
 	}
 
-	public Boolean removeItem(String item) {
-		return removeItem(item, 1);
+	public Boolean removeItem(Integer itemId) {
+		return removeItem(itemId, 1);
 	}
 
-	public Boolean removeItem(String item, int i) {
+	public Boolean removeItem(Integer itemId, int i) {
 		if (inventory == null)
 			inventory = new HashMap<>();
-		inventory.putIfAbsent(item, 0);
-		if (inventory.getOrDefault(item, 0) > 0) {
-			inventory.put(item, inventory.get(item) - i);
+		inventory.putIfAbsent(itemId, 0);
+		if (inventory.getOrDefault(itemId, 0) > 0) {
+			inventory.put(itemId, inventory.get(itemId) - i);
 			Squads.save();
 			return true;
 		}
@@ -238,7 +239,7 @@ public class SquadMember {
 		return null;
 	}
 
-	public HashMap<String, Integer> getInventory() {
+	public HashMap<Integer, Integer> getInventory() {
 		return inventory;
 	}
 
@@ -262,6 +263,7 @@ public class SquadMember {
 
 	//---squads---//
 	public void addPoint(Long nb) {
+
 		addBank(nb.intValue());
 		this.points = this.points + nb;
 	}
@@ -298,7 +300,7 @@ public class SquadMember {
 
 	public void setTime() {
 		timer = System.currentTimeMillis();
-		removeTime(1800000L * (this.getAmountItem(Item.Items.HE.getStr())).longValue());
+		removeTime(1800000L * (this.getAmountItem(Item.Items.HEFU.getId())).longValue());
 		Squads.save();
 	}
 
