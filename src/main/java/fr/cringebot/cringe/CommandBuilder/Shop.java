@@ -92,7 +92,7 @@ public class Shop {
             }
         } else if (event.getSelectedOptions().get(0).getValue().startsWith("buyItem")) {
             if (Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])) == null || (Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])).getPrice() < Squads.getstats(event.getMember()).getCoins()))
-                event.reply("tu as pas assez d'argent").queue();
+                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
             else
                 panelamount(event.getMember(),Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])), 1, event);
         } else if (event.getSelectedOptions().get(0).getValue().startsWith("shop")) {
