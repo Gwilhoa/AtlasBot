@@ -35,11 +35,11 @@ public class Info {
 		}
 		ArrayList<Waifu> w = Waifu.getWaifubyName(msg.getContentRaw().substring(">Waifu info ".length()));
 		if (w != null && !msg.getContentRaw().split(" ")[2].equals("0")) {
-			for (Waifu waif : w) {
-				MessageEmbed me = EmbedInfo(waif, msg.getMember()).build();
+			for (Waifu waifu : w) {
+				MessageEmbed me = EmbedInfo(waifu, msg.getMember()).build();
 				MessageAction ma = msg.getChannel().sendMessageEmbeds(me);
 				if (!me.getColor().equals(Color.black))
-					ma = ma.setActionRow(AffectionMenu.getMenu(msg.getMember(), waif));
+					ma = ma.setActionRow(AffectionMenu.getMenu(msg.getMember(), waifu));
 				ma.queue();
 			}
 		}

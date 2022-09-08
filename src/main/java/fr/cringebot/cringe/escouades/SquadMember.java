@@ -319,4 +319,8 @@ public class SquadMember {
 			timer = 0L;
 		return ((System.currentTimeMillis() - (timer + 25200000L)) * -1);
 	}
+
+	public void setInventory(HashMap<String, Integer> i) {
+		this.inventory = i;
+	}
 }

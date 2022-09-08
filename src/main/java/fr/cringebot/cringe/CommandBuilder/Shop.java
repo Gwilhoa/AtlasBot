@@ -62,7 +62,8 @@ public class Shop {
     public static SelectMenuImpl ItemMenu(Member mem, Item.type tpe) {
         ArrayList<SelectOption> options = new ArrayList<>();
         for (Item.Items item : Item.Items.getItemByType(tpe)) {
-            options.add(new SelectOptionImpl(item.getName() +" : " + item.getPrice() + " B2C", "buyItem;"+item.getId()));
+            if (item.getPrice() != -1)
+                options.add(new SelectOptionImpl(item.getName() +" : " + item.getPrice() + " B2C", "buyItem;"+item.getId()));
         }
         options.add(new SelectOptionImpl("annuler", "stop"));
         return new SelectMenuImpl("shop;" + mem.getId(), "selectionnez un choix", 1, 1, false, options);
@@ -91,7 +92,7 @@ public class Shop {
                         .setActionRow(selectionMenu).queue();
             }
         } else if (event.getSelectedOptions().get(0).getValue().startsWith("buyItem")) {
-            if (Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])) == null || (Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])).getPrice() < Squads.getstats(event.getMember()).getCoins()))
+            if (Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])).getPrice() > Squads.getstats(event.getMember()).getCoins())
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
             else
                 panelamount(event.getMember(),Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])), 1, event);
@@ -103,7 +104,7 @@ public class Shop {
             eb.setDescription("__shop "+tpe.getName() + "__\n\n");
             for (Item.Items item : Item.Items.getItemByType(tpe))
             {
-                eb.appendDescription(item.name()).appendDescription(" ").appendDescription(item.getPrice()+" B2C\n");
+                eb.appendDescription(item.getName()).appendDescription(" ").appendDescription(item.getPrice()+" B2C\n");
             }
             event.editMessageEmbeds(eb.build()).setActionRow(ItemMenu(event.getMember(), tpe)).queue();
         }
@@ -139,7 +140,7 @@ public class Shop {
     {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("acheter des "+ item.getName());
-        eb.setDescription("voulez vous acheter " + amount + " " + item.getId() + "?\nça coutera : "+ item.getPrice()*amount + "B2C");
+        eb.setDescription("voulez vous acheter " + amount + " " + item.getName() + "?\nça coutera : "+ item.getPrice()*amount + "B2C");
         eb.setFooter("tu as "+ Squads.getstats(mem).getCoins() +"B2C");
         ArrayList<ActionRow> bttns = new ArrayList<>();
         bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+amount, "acheter", ButtonStyle.SUCCESS, false, null)));

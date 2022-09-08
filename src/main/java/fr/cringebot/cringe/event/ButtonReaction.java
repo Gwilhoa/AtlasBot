@@ -53,7 +53,7 @@ public class ButtonReaction {
 			if (event.getButton().getLabel().equalsIgnoreCase("acheter")) {
 				Shop.buy(event.getMember(), itemId, prix, amount);
 				event.editMessageEmbeds(Shop.ShopDisplay(event.getMember()).build()).setActionRow(Shop.PrincipalMenu(event.getMember())).queue();
-				event.getChannel().sendMessage(event.getMember().getAsMention() + ", tu as acheté " + amount + " " + itemId).queue();
+				event.getChannel().sendMessage(event.getMember().getAsMention() + ", tu as acheté " + amount + " " + Item.Items.getItemById(itemId).getName()).queue();
 			} else {
 				Shop.panelamount(event.getMember(), Item.Items.getItemById(itemId), amount, event);
 			}

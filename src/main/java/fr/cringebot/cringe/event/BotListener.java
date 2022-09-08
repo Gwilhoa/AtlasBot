@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/09/08 23:51:41 by                  ###   ########.fr       */
+/*   Updated: 2022/09/09 00:23:26 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ public class BotListener implements EventListener {
 			else if (event instanceof GuildVoiceMoveEvent) onMove((GuildVoiceMoveEvent) event);
 			else if (event instanceof CommandAutoCompleteInteraction) SlashListener.autoComplete((CommandAutoCompleteInteraction) event);
 		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException | ExecutionException e) {
+
 			e.printStackTrace();
 			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
 		}
@@ -299,7 +300,13 @@ public class BotListener implements EventListener {
 		new Thread(() -> {
 			for (Member mem : event.getJDA().getGuildById("382938797442334720").getMembers()) {
 				if (mem.getRoles().get(0).getPosition() < mem.getGuild().getRoleById("734011696242360331").getPosition())
-					event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734011696242360331")).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619"))).and(event.getJDA().getGuildById("382938797442334720").addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
+					event.getJDA().getGuildById("382938797442334720")
+							.addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720")
+									.getRoleById("734011696242360331"))
+							.and(event.getJDA().getGuildById("382938797442334720")
+									.addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("634839000644845619")))
+							.and(event.getJDA().getGuildById("382938797442334720")
+									.addRoleToMember(mem, event.getJDA().getGuildById("382938797442334720").getRoleById("734012661494317077"))).queue();
 			}
 		}).start();
 		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();

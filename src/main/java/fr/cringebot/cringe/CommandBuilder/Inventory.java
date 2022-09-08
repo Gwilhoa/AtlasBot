@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class Inventory {
     public static EmbedBuilder getInventory(Member member)
@@ -19,8 +19,10 @@ public class Inventory {
         StringBuilder sb = new StringBuilder();
         eb.setTitle("Inventaire de " + member.getEffectiveName());
         eb.setColor(Squads.getSquadByMember(member).getSquadRole(member.getGuild()).getColor());
-        for (int id : inv.keySet()) {
-            sb.append(Item.Items.getItemById(id)).append(" x").append(inv.get(id));
+        int[] items = inv.keySet().stream().mapToInt(Number::intValue).toArray();
+        Arrays.sort(items);
+        for (int id : items) {
+            sb.append(Item.Items.getItemById(id).getName()).append(" x").append(inv.get(id));
             if (i == 2) {
                 sb.append('\n');
                 i = 0;
