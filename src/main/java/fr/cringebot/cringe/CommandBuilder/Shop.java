@@ -91,7 +91,10 @@ public class Shop {
                         .setActionRow(selectionMenu).queue();
             }
         } else if (event.getSelectedOptions().get(0).getValue().startsWith("buyItem")) {
-            panelamount(event.getMember(),Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])), 1, event);
+            if (Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])) == null || (Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])).getPrice() < Squads.getstats(event.getMember()).getCoins()))
+                event.reply("tu as pas assez d'argent").queue();
+            else
+                panelamount(event.getMember(),Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])), 1, event);
         } else if (event.getSelectedOptions().get(0).getValue().startsWith("shop")) {
             Item.type tpe = Item.type.getTypeById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1]));
             EmbedBuilder eb = new EmbedBuilder();
