@@ -20,7 +20,8 @@ public class SquadMember {
 	private Long timer;
 	private Long searchingtimer;
 	private HashMap<String, Integer> collections;
-	private HashMap<Integer, Integer> inventory;
+	private HashMap<String, Integer> inventory;
+	private HashMap<Integer, Integer> inventory02;
 	private HashMap<Integer, InvWaifu> waifus;
 	private Long coins;
 	private Integer bank;
@@ -55,19 +56,19 @@ public class SquadMember {
 		addItem(itemId, 1);
 	}
 	public void addItem(Integer itemId, int amount){
-		if (inventory == null)
-			inventory = new HashMap<>();
-		inventory.putIfAbsent(itemId, 0);
-		inventory.put(itemId, inventory.getOrDefault(itemId, 0) + amount);
+		if (inventory02 == null)
+			inventory02 = new HashMap<>();
+		inventory02.putIfAbsent(itemId, 0);
+		inventory02.put(itemId, inventory02.getOrDefault(itemId, 0) + amount);
 		Squads.save();
 	}
 
 	public Integer getAmountItem(Integer itemId)
 	{
-		if (inventory == null)
-			inventory = new HashMap<>();
-		inventory.putIfAbsent(itemId, 0);
-		return inventory.getOrDefault(itemId, 0);
+		if (inventory02 == null)
+			inventory02 = new HashMap<>();
+		inventory02.putIfAbsent(itemId, 0);
+		return inventory02.getOrDefault(itemId, 0);
 	}
 
 	public Boolean removeItem(Integer itemId) {
@@ -75,11 +76,11 @@ public class SquadMember {
 	}
 
 	public Boolean removeItem(Integer itemId, int i) {
-		if (inventory == null)
-			inventory = new HashMap<>();
-		inventory.putIfAbsent(itemId, 0);
-		if (inventory.getOrDefault(itemId, 0) > 0) {
-			inventory.put(itemId, inventory.get(itemId) - i);
+		if (inventory02 == null)
+			inventory02 = new HashMap<>();
+		inventory02.putIfAbsent(itemId, 0);
+		if (inventory02.getOrDefault(itemId, 0) > 0) {
+			inventory02.put(itemId, inventory02.get(itemId) - i);
 			Squads.save();
 			return true;
 		}
@@ -239,8 +240,8 @@ public class SquadMember {
 		return null;
 	}
 
-	public HashMap<Integer, Integer> getInventory() {
-		return inventory;
+	public HashMap<Integer, Integer> getInventory02() {
+		return inventory02;
 	}
 
 	public Integer getCollection(String str)
