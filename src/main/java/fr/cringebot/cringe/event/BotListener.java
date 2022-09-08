@@ -6,13 +6,14 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/07/05 20:26:02 by                  ###   ########.fr       */
+/*   Updated: 2022/09/08 23:51:41 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 package fr.cringebot.cringe.event;
 
+import com.diogonunes.jcolor.Attribute;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -78,6 +79,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import static com.diogonunes.jcolor.Ansi.colorize;
 import static fr.cringebot.BotDiscord.isMaintenance;
 import static fr.cringebot.cringe.event.MembersQuotes.MemberReact;
 import static fr.cringebot.cringe.event.MenuInteract.onSelectMenu;
@@ -138,7 +140,7 @@ public class BotListener implements EventListener {
 	}
 	@Override
 	public void onEvent(GenericEvent event) {
-		System.out.println(event.getClass().getSimpleName());
+		System.out.println(colorize(event.getClass().getSimpleName(), Attribute.TEXT_COLOR(169, 169, 169)));
 		try {
 			if (event instanceof ReadyEvent) onEnable((ReadyEvent) event);
 			else if (event instanceof MessageReceivedEvent) onMessage((MessageReceivedEvent) event);
