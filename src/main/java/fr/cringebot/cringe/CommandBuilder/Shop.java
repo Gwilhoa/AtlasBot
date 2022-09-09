@@ -104,7 +104,8 @@ public class Shop {
             eb.setDescription("__shop "+tpe.getName() + "__\n\n");
             for (Item.Items item : Item.Items.getItemByType(tpe))
             {
-                eb.appendDescription(item.getName()).appendDescription(" ").appendDescription(item.getPrice()+" B2C\n");
+                if (item.getPrice() != -1)
+                    eb.appendDescription(item.getName()).appendDescription(" ").appendDescription(item.getPrice()+" B2C\n");
             }
             event.editMessageEmbeds(eb.build()).setActionRow(ItemMenu(event.getMember(), tpe)).queue();
         }
@@ -120,7 +121,7 @@ public class Shop {
     {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("acheter des "+ item.getName());
-        eb.setDescription("voulez vous acheter " + amount + " " + item + "?\nça coutera : "+ item.getPrice()*amount + "B2C");
+        eb.setDescription("voulez vous acheter " + amount + " " + item.getName() + "?\nça coutera : "+ item.getPrice()*amount + "B2C");
         eb.setFooter("tu as "+ Squads.getstats(mem).getCoins() +"B2C");
         ArrayList<ActionRow> bttns = new ArrayList<>();
         bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+amount, "acheter", ButtonStyle.SUCCESS, false, null)));

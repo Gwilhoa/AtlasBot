@@ -46,7 +46,7 @@ public class Item {
         BRFU("Bracelet", 8, 130, Item.type.WaifuConsumable),
         COLLFU("Collier", 9, -1, Item.type.WaifuConsumable),
         BGEFU("Bague", 10, -1, Item.type.WaifuConsumable),
-        SBPKM("Super bonbon", 11, -1, Item.type.WaifuConsumable);
+        SBPKM("Super bonbon", 11, -1, Item.type.PokemonItem);
 
 
         private final String name;
