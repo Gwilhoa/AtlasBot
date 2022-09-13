@@ -28,7 +28,6 @@ import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.cki.cki;
 import fr.cringebot.cringe.cki.ckiListener;
 import fr.cringebot.cringe.escouades.Squads;
-import fr.cringebot.cringe.lol.Champion;
 import fr.cringebot.cringe.objects.*;
 import fr.cringebot.cringe.pokemon.objects.Attacks;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
@@ -311,9 +310,6 @@ public class BotListener implements EventListener {
 		}).start();
 		new Thread(() -> recupMeme(event.getJDA().getGuildById("382938797442334720"))).start();
 		Pokemon.pok = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("pokemons.json"))), new TypeToken<Collection<Pokemon>>() {
-		}.getType());
-
-		Champion.champions = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("Champions.json"))), new TypeToken<HashMap<String, Champion>>() {
 		}.getType());
 
 		Attacks.capa = gson.fromJson(new BufferedReader(new InputStreamReader(BotListener.class.getClassLoader().getResourceAsStream("attacks.json"))), new TypeToken<Collection<Attacks>>() {
