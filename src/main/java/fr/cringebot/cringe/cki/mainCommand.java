@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.cki;
 
-import fr.cringebot.cringe.lol.Champion;
+import com.merakianalytics.orianna.types.core.staticdata.Champion;
+import com.merakianalytics.orianna.types.core.staticdata.Champions;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -63,7 +64,8 @@ public class mainCommand {
     public static void wtcmain(Message msg) {
         new Thread(() -> {
             msg.getChannel().sendTyping().queue();
-            Champion c = Champion.getRandomChampion();
+            Champions ChampionList = Champions.get();
+            Champion c = ChampionList.get(new Random().nextInt(ChampionList.size()) - 1);
             String name = c.getName();
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("CKI - [League of Legends]");

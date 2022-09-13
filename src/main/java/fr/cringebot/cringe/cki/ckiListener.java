@@ -1,5 +1,6 @@
 package fr.cringebot.cringe.cki;
 
+import com.merakianalytics.orianna.types.core.staticdata.Champions;
 import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import fr.cringebot.cringe.pokemon.objects.Type;
@@ -10,6 +11,7 @@ import org.jsoup.nodes.Document;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ckiListener {
 
@@ -34,8 +36,15 @@ public class ckiListener {
         }
         else
         {
-            msg.getChannel().sendMessage("raté").reference(msg).queue();
-            object.addAction();
+            if (object.getType().equals(cki.Type.LOL))
+            {
+
+                msg.getChannel().sendMessage(Champions.Champion.named(object.getName()).get().getImage().getURL() + "," + Champions.Champion.named(object.getName()).get().getTags().toString() + "," + Champions.Champion.named(object.getName()).get().getRegion() + "," + Champions.Champion.named(object.getName()).get().getResource()).queue();
+            }
+            else {
+                msg.getChannel().sendMessage("raté").reference(msg).queue();
+                object.addAction();
+            }
         }
     }
 
@@ -64,7 +73,7 @@ public class ckiListener {
             StringBuilder sb = new StringBuilder();
             sb.append(object.getName().charAt(0));
             int	i = 1;
-            while (i++ < object.getName().length() - 1) {
+            while (i++ < object.getName().length()) {
                 if (object.getName().charAt(i) == ' ')
                     sb.append("   ");
                 else

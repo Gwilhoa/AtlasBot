@@ -51,11 +51,6 @@
       <version>youtube_details_parse_bug-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>com.github.taycaldwell</groupId>
-      <artifactId>riot-api-java</artifactId>
-      <version>4.2.0</version>
-    </dependency>
-    <dependency>
       <groupId>com.jcraft</groupId>
       <artifactId>jsch</artifactId>
       <version>0.1.55</version>
@@ -71,6 +66,12 @@
       <version>5.5.1</version>
       <scope>compile</scope>
     </dependency>
+      <dependency>
+          <groupId>com.merakianalytics.orianna</groupId>
+          <artifactId>orianna</artifactId>
+          <version>3.0.4</version>
+          <scope>compile</scope>
+      </dependency>
   </dependencies>
 
   <build>
