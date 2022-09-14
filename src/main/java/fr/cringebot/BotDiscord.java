@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class BotDiscord implements Runnable{
@@ -32,6 +33,7 @@ public class BotDiscord implements Runnable{
     public BotDiscord(String token) throws LoginException, IllegalArgumentException, RateLimitedException {
         Orianna.setRiotAPIKey("RGAPI-2e977103-c601-4803-9f93-98e058b48168");
         Orianna.setDefaultRegion(Region.EUROPE_WEST);
+        Orianna.setDefaultLocale("fr_FR");
         jda = JDABuilder.create(token, GatewayIntent.getIntents(GatewayIntent.DEFAULT | GatewayIntent.getRaw(GatewayIntent.GUILD_MEMBERS) | GatewayIntent.getRaw(GatewayIntent.GUILD_PRESENCES)))
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setChunkingFilter(ChunkingFilter.ALL)
