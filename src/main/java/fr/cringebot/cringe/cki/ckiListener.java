@@ -41,7 +41,7 @@ public class ckiListener {
             if (object.getType().equals(cki.Type.LOL))
             {
                 Champion response = Champions.Champion.named(object.getName()).get();
-                Champion requested = Champions.Champion.named(msg.getContentRaw().toLowerCase(Locale.ROOT)).get();
+                Champion requested = Champions.Champion.named(msg.getContentRaw()).get();
                 if (requested != null)
                 {
                     int i = 0;
@@ -85,7 +85,7 @@ public class ckiListener {
                         eb.setColor(Color.GREEN);
                     else
                         eb.setColor(Color.red);
-                    eb.setDescription(requested.getResource());
+                    eb.setDescription(requested.getStats().getAttackRange() + "");
                     msg.getChannel().sendMessageEmbeds(eb.build()).queue();
                 }
             }
