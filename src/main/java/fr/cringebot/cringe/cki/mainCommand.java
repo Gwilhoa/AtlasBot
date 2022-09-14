@@ -69,7 +69,7 @@ public class mainCommand {
             String name = c.getName();
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("CKI - [League of Legends]");
-            eb.setDescription(c.getBlurb().replace(name, "<ce champion>").replace("Sarah Fortune", "<ce champion>"));
+            eb.setDescription("c'est parti !");
             Message message = msg.getChannel().sendMessageEmbeds(eb.build()).complete();
             msg.delete().queue();
             ThreadChannel tc = message.createThreadChannel("Quel est ce champion ?").complete();

@@ -13,7 +13,7 @@ import java.util.List;
 public class CommandLol {
     @Command(name = "getprofil_lol", type = Command.ExecutorType.USER, description = "récupère les donnée d'un summoner")
     private void getstats(Message msg) {
-        final Summoner summoner = Summoner.named(msg.getContentRaw().substring(">getprofil_lol".length())).get();
+        final Summoner summoner = Summoner.named(msg.getContentRaw().substring(">getprofil_lol ".length())).get();
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("profil de " + summoner.getName());
         eb.setFooter("id : "+ summoner.getId());

@@ -39,7 +39,7 @@ public class ckiListener {
             if (object.getType().equals(cki.Type.LOL))
             {
 
-                msg.getChannel().sendMessage(Champions.Champion.named(object.getName()).get().getImage().getURL() + "," + Champions.Champion.named(object.getName()).get().getTags().toString() + "," + Champions.Champion.named(object.getName()).get().getRegion() + "," + Champions.Champion.named(object.getName()).get().getResource()).queue();
+                msg.getChannel().sendMessage(Champions.Champion.named(object.getName()).get().getImage().getURL() + " , " + Champions.Champion.named(object.getName()).get().getTags().toString() + " , " + Champions.Champion.named(object.getName()).get().getResource() + " , " + Champions.Champion.named(object.getName()).get().getIncludedData().toString()).queue();
             }
             else {
                 msg.getChannel().sendMessage("raté").reference(msg).queue();
