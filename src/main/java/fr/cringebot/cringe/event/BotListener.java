@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/09/09 00:23:26 by                  ###   ########.fr       */
+/*   Updated: 2022/09/25 22:19:41 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,7 +316,7 @@ public class BotListener implements EventListener {
 		}.getType());
 
 		if (isMaintenance) {
-			act = new activity(", je suis en maintenance", null, Activity.ActivityType.LISTENING);
+			act = new activity(", Enki démission \uD83E\uDDBA \uD83D\uDE21", null, Activity.ActivityType.LISTENING);
 			bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);
 
 		}
@@ -434,9 +434,17 @@ public class BotListener implements EventListener {
 	 *
 	 */
 	private void onMessage(MessageReceivedEvent event) throws IOException, InterruptedException {
+		Message msg = event.getMessage();
+		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {
+			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
+			return;
+		}
+		else if (isMaintenance)
+		{
+			return;
+		}
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		if (!event.getGuild().getId().equals("382938797442334720")) return;
-		Message msg = event.getMessage();
 		if (msg.getChannel().getId().equals("912092369292263534"))
 			msg.createThreadChannel("requete n°" + msg.getId()).complete().addThreadMember(event.getGuild().getMemberById("315431392789921793"))
 					.and(msg.addReaction(Emoji.fromFormatted("⬆️")))
@@ -444,10 +452,6 @@ public class BotListener implements EventListener {
 					.queue();
 		if (msg.getMentions().getMembers().contains(msg.getGuild().getMemberById(event.getJDA().getSelfUser().getId())) && msg.getReferencedMessage() == null)
 			msg.getChannel().sendMessage("Hé oh t'es qui a me ping, tu veux te battre ?\nfais un ping everyone pendant que t'y est").queue();
-		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {
-			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
-			return;
-		}
 		TextuelXp.addmsg(event.getMember());
 		if (cki.wtpThreads.containsKey(msg.getChannel().getId()))
 			new ckiListener(msg, cki.wtpThreads.get(msg.getChannel().getId()));
