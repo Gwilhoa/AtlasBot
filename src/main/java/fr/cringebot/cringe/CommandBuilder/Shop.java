@@ -3,6 +3,7 @@ package fr.cringebot.cringe.CommandBuilder;
 import fr.cringebot.cringe.escouades.Squads;
 import fr.cringebot.cringe.objects.Item;
 import fr.cringebot.cringe.objects.SelectOptionImpl;
+import fr.cringebot.cringe.pokemon.objects.Type;
 import fr.cringebot.cringe.waifus.Waifu;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -20,27 +21,12 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Shop {
-    private final static Integer PDCPRICE = 10;
-    private final static Integer CEPRICE = 20;
-    private final static Integer HEPRICE = 100;
-    private final static Integer PBPRICE = 5;
-    private final static Integer BFPRICE = 10;
-    private final static Integer BCPRICE = 40;
-    private final static Integer PRFUPRICE = 80;
-    private final static Integer BRCFUPRICE = 130;
-    private final static Integer SBPKMPRICE = 0;
-
-
-    public static Integer getCEPRICE() {
-        return CEPRICE;
-    }
 
     public static EmbedBuilder ShopDisplay(Member mem) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.ORANGE).setTitle("le Shop");
-        eb.setDescription("__Bonjour "+mem.getAsMention()+",que voulez vous acheter__\n\n" +
-                "Pass-Brésil : direction le Brésil\n" +
-                "Super bonbon : monte d'un niveau un pokemon");
+        eb.setDescription("__Bonjour "+mem.getAsMention()+",que voulez vous acheter ?__\n\n" +
+                "dans quelle catégorie voulez-vous rechercher...");
         eb.setFooter("vous avez " + Squads.getstats(mem).getCoins() + " B2C");
         return eb;
     }
@@ -64,22 +50,21 @@ public class Shop {
     public static SelectMenuImpl PrincipalMenu(Member mem)
     {
         ArrayList<SelectOption> options = new ArrayList<>();
-        options.add(new SelectOptionImpl("pass-brésil : "+PBPRICE+ " B2C", "YAGTB"));
-        options.add(new SelectOptionImpl("Super Bonbon : " + SBPKMPRICE + " B2C", "SBPKM"));
-        options.add(new SelectOptionImpl("Shop Waifu", "SHOP_2"));
+        options.add(new SelectOptionImpl("Jeton de collection : " + 10 + " B2C", "PDCFU"));
+        for (Item.type tpe : Item.type.values())
+        {
+            options.add(new SelectOptionImpl("shop "+tpe.getName(), "shop;"+tpe.getId()));
+        }
         options.add(new SelectOptionImpl("annuler", "stop"));
         return new SelectMenuImpl("shop;"+mem.getId(), "selectionnez un choix", 1, 1, false, options);
     }
 
-    public static SelectMenuImpl WaifuMenu(Member mem) {
+    public static SelectMenuImpl ItemMenu(Member mem, Item.type tpe) {
         ArrayList<SelectOption> options = new ArrayList<>();
-        options.add(new SelectOptionImpl("Jeton de collection : " + PDCPRICE + " B2C", "PDCFU"));
-        options.add(new SelectOptionImpl("Chronomètre érotique : " + CEPRICE + " B2C", "RDTPFU"));
-        options.add(new SelectOptionImpl("Horloge érotique : " + HEPRICE + " B2C", "RDTDFU"));
-        options.add(new SelectOptionImpl("Bouquet de fleur : " + BFPRICE + " B2C", "BFFU"));
-        options.add(new SelectOptionImpl("Boite de chocolats : " + BCPRICE + " B2C", "BCFU"));
-        options.add(new SelectOptionImpl("Flacon de parfum : " + PRFUPRICE + " B2C", "PRFU"));
-        options.add(new SelectOptionImpl("Bracelet : " + BRCFUPRICE + " B2C", "BRCFU"));
+        for (Item.Items item : Item.Items.getItemByType(tpe)) {
+            if (item.getPrice() != -1)
+                options.add(new SelectOptionImpl(item.getName() +" : " + item.getPrice() + " B2C", "buyItem;"+item.getId()));
+        }
         options.add(new SelectOptionImpl("annuler", "stop"));
         return new SelectMenuImpl("shop;" + mem.getId(), "selectionnez un choix", 1, 1, false, options);
     }
@@ -91,39 +76,8 @@ public class Shop {
             event.getMessage().delete().queue();
             event.reply("merci, à bientot").setEphemeral(true).queue();
         }
-        else if (event.getSelectedOptions().get(0).getValue().equals("SHOP_2")) {
-            event.editMessageEmbeds(ShopWaifuDisplay(event.getMember()).build()).setActionRow(WaifuMenu(event.getMember())).queue();
-        } else if (event.getSelectedOptions().get(0).getValue().equals("BRCFU")) {
-            if (Squads.getstats(event.getMember()).getCoins() >= BRCFUPRICE) {
-                panelamount(event.getMember(), Item.Items.BRFU.getStr(), BRCFUPRICE, 1, event);
-            } else
-                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
-        } else if (event.getSelectedOptions().get(0).getValue().equals("BCFU")) {
-            if (Squads.getstats(event.getMember()).getCoins() >= BCPRICE) {
-                panelamount(event.getMember(), Item.Items.BDCFU.getStr(), BCPRICE, 1, event);
-            } else
-                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
-        } else if (event.getSelectedOptions().get(0).getValue().equals("PRFU")) {
-            if (Squads.getstats(event.getMember()).getCoins() >= PRFUPRICE) {
-                panelamount(event.getMember(), Item.Items.PRFU.getStr(), PRFUPRICE, 1, event);
-            } else
-                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
-        } else if (event.getSelectedOptions().get(0).getValue().equals("YAGTB")) {
-            if (Squads.getstats(event.getMember()).getCoins() >= PBPRICE) {
-                panelamount(event.getMember(), Item.Items.PB.getStr(), PBPRICE, 1, event);
-            } else
-                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
-        } else if (event.getSelectedOptions().get(0).getValue().equals("RDTDFU")) {
-            if (Squads.getstats(event.getMember()).getAmountItem(Item.Items.HE.getStr()) >= 4) {
-                event.reply("désolé je n'en n'ai plus").setEphemeral(true).queue();
-            } else if (Squads.getstats(event.getMember()).getCoins() >= HEPRICE) {
-                Squads.getstats(event.getMember()).removeCoins(HEPRICE.longValue());
-                Squads.getstats(event.getMember()).addItem(Item.Items.HE.getStr());
-                event.reply("tu as acheté une horloge érotique tu en as désormais " + Squads.getstats(event.getMember()).getAmountItem(Item.Items.HE.getStr())).queue();
-            } else
-                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
-        } else if (event.getSelectedOptions().get(0).getValue().equals("PDCFU")) {
-            if (Squads.getstats(event.getMember()).getCoins() < PDCPRICE)
+        else if (event.getSelectedOptions().get(0).getValue().equals("PDCFU")) {
+            if (Squads.getstats(event.getMember()).getCoins() < 10)
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
             else {
                 ArrayList<SelectOption> options = new ArrayList<>();
@@ -137,67 +91,70 @@ public class Shop {
                 event.editMessageEmbeds(new EmbedBuilder().setTitle("Shop").setDescription("de quelle collection seriez vous interessé").build())
                         .setActionRow(selectionMenu).queue();
             }
-        } else if (event.getSelectedOptions().get(0).getValue().equals("RDTPFU")){
-            if (Squads.getstats(event.getMember()).getCoins() >= CEPRICE.longValue()) {
-                panelamount(event.getMember(), Item.Items.CE.getStr(), CEPRICE, 1, event);
-            } else {
+        } else if (event.getSelectedOptions().get(0).getValue().startsWith("buyItem")) {
+            if (Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])).getPrice() > Squads.getstats(event.getMember()).getCoins())
                 event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
+            else
+                panelamount(event.getMember(),Item.Items.getItemById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1])), 1, event);
+        } else if (event.getSelectedOptions().get(0).getValue().startsWith("shop")) {
+            Item.type tpe = Item.type.getTypeById(Integer.parseInt(event.getSelectedOptions().get(0).getValue().split(";")[1]));
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setTitle("Shop");
+            eb.setFooter("vous avez " + Squads.getstats(event.getMember()).getCoins() + " B2C");
+            eb.setDescription("__shop "+tpe.getName() + "__\n\n");
+            for (Item.Items item : Item.Items.getItemByType(tpe))
+            {
+                if (item.getPrice() != -1)
+                    eb.appendDescription(item.getName()).appendDescription(" ").appendDescription(item.getPrice()+" B2C\n");
             }
-        } else if (event.getSelectedOptions().get(0).getValue().equals("BFFU")) {
-            if (Squads.getstats(event.getMember()).getCoins() >= BFPRICE.longValue()) {
-                panelamount(event.getMember(), Item.Items.BFFU.getStr(), BFPRICE, 1, event);
-            } else {
-                event.reply("tu as pas assez d'argent").setEphemeral(true).queue();
-            }
-        } else {
-            event.reply("coming soon").setEphemeral(true).queue();
+            event.editMessageEmbeds(eb.build()).setActionRow(ItemMenu(event.getMember(), tpe)).queue();
         }
     }
 
-    public static void buy(Member mem, String item, int prix, int amount)
+    public static void buy(Member mem, Integer itemId, int prix, int amount)
     {
-        Squads.getstats(mem).addItem(item, amount);
+        Squads.getstats(mem).addItem(itemId, amount);
         Squads.getstats(mem).removeCoins(prix*amount);
     }
 
-    public static void panelamount(Member mem, String item, int prix, int amount, ButtonInteractionEvent event)
+    public static void panelamount(Member mem, Item.Items item, int amount, ButtonInteractionEvent event)
     {
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("acheter des "+ item);
-        eb.setDescription("voulez vous acheter " + amount + " " + item + "?\nça coutera : "+ prix*amount + "B2C");
+        eb.setTitle("acheter des "+ item.getName());
+        eb.setDescription("voulez vous acheter " + amount + " " + item.getName() + "?\nça coutera : "+ item.getPrice()*amount + "B2C");
         eb.setFooter("tu as "+ Squads.getstats(mem).getCoins() +"B2C");
         ArrayList<ActionRow> bttns = new ArrayList<>();
-        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+amount, "acheter", ButtonStyle.SUCCESS, false, null)));
-        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";stop", "annuler l'achat", ButtonStyle.DANGER, false, null)));
+        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+amount, "acheter", ButtonStyle.SUCCESS, false, null)));
+        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";0", "annuler l'achat", ButtonStyle.DANGER, false, null)));
         if (amount == 1)
-            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+0, "-1", ButtonStyle.PRIMARY, true, null)));
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+0, "-1", ButtonStyle.PRIMARY, true, null)));
         else
-            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount-1), "-1", ButtonStyle.PRIMARY, false, null)));
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+(amount-1), "-1", ButtonStyle.PRIMARY, false, null)));
 
-        if ((long) prix * (amount+1) > Squads.getstats(mem).getCoins())
-            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount+1), "+1", ButtonStyle.SECONDARY, true, null)));
+        if ((long) item.getPrice() * (amount+1) > Squads.getstats(mem).getCoins())
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+(amount+1), "+1", ButtonStyle.SECONDARY, true, null)));
         else
-            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount+1), "+1", ButtonStyle.SECONDARY, false, null)));
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+(amount+1), "+1", ButtonStyle.SECONDARY, false, null)));
         event.editMessageEmbeds(eb.build()).setActionRows(bttns).queue();
     }
-    public static void panelamount(Member mem, String item, int prix, int amount, SelectMenuInteraction event)
+    public static void panelamount(Member mem,  Item.Items item, int amount, SelectMenuInteraction event)
     {
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("acheter des "+ item);
-        eb.setDescription("voulez vous acheter " + amount + " " + item + "?\nça coutera : "+ prix*amount + "B2C");
+        eb.setTitle("acheter des "+ item.getName());
+        eb.setDescription("voulez vous acheter " + amount + " " + item.getName() + "?\nça coutera : "+ item.getPrice()*amount + "B2C");
         eb.setFooter("tu as "+ Squads.getstats(mem).getCoins() +"B2C");
         ArrayList<ActionRow> bttns = new ArrayList<>();
-        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+amount, "acheter", ButtonStyle.SUCCESS, false, null)));
-        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";stop", "annuler l'achat", ButtonStyle.DANGER, false, null)));
+        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+amount, "acheter", ButtonStyle.SUCCESS, false, null)));
+        bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";0", "annuler l'achat", ButtonStyle.DANGER, false, null)));
         if (amount == 1)
-            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+0, "-1", ButtonStyle.PRIMARY, true, null)));
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+0, "-1", ButtonStyle.PRIMARY, true, null)));
         else
-            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount-1), "-1", ButtonStyle.PRIMARY, false, null)));
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+(amount-1), "-1", ButtonStyle.PRIMARY, false, null)));
 
-        if ((long) prix * (amount+1) > Squads.getstats(mem).getCoins())
-            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount+1), "+1", ButtonStyle.SECONDARY, true, null)));
+        if ((long) item.getPrice() * (amount+1) > Squads.getstats(mem).getCoins())
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+(amount+1), "+1", ButtonStyle.SECONDARY, true, null)));
         else
-            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item+";"+prix+";"+(amount+1), "+1", ButtonStyle.SECONDARY, false, null)));
+            bttns.add(ActionRow.of(new ButtonImpl("shop_"+mem.getId()+";"+item.getId()+";"+item.getPrice()+";"+(amount+1), "+1", ButtonStyle.SECONDARY, false, null)));
         event.editMessageEmbeds(eb.build()).setActionRows(bttns).queue();
     }
 
@@ -242,7 +199,7 @@ public class Shop {
                     ArrayList<SelectOption> options = new ArrayList<>();
                     options.add(new SelectOptionImpl("0", "0"));
                     EmbedBuilder eb = Squads.getstats(event.getMember()).addCollection(event.getSelectedOptions().get(0).getLabel(), event.getMember());
-                    Squads.getstats(event.getMember()).removeCoins(PDCPRICE);
+                    Squads.getstats(event.getMember()).removeCoins(10);
                     SelectMenuImpl selectionMenu = new SelectMenuImpl("collection;"+event.getMember().getId()+";"+nb, "selectionnez un choix", 1, 1, true, options);
                     event.editMessageEmbeds(Objects.requireNonNullElseGet(eb, () -> new EmbedBuilder().setTitle("Shop").setDescription("tu as acheté un jeton " + event.getSelectedOptions().get(0).getLabel())).build()).setActionRow(selectionMenu).queue();
                 }

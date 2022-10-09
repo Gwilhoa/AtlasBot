@@ -168,6 +168,11 @@ public final class CommandMap {
 	 * @param message       messages d'utilisateur
 	 */
 	private void execute(SimpleCommand simpleCommand, String command, String[] args, Message message) throws Exception {
+		if (BotDiscord.isMaintenance)
+		{
+			message.getChannel().sendMessage("je fais grève, je veux mon api et ma base de donnée").queue();
+			return;
+		}
 		Parameter[] parameters = simpleCommand.getMethod().getParameters();
 		Object[] objects = new Object[parameters.length];
 		for (int i = 0; i < parameters.length; i++) {

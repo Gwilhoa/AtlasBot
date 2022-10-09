@@ -117,14 +117,14 @@ public class CommandListener {
 			msg.getChannel().sendMessage("tu veux emmener qui ?").queue();
 		} else {
 			Member member = msg.getMentions().getMembers().get(0);
-			if (Squads.getstats(msg.getMember()).getAmountItem(Item.Items.PB.getStr()) > 0)
+			if (Squads.getstats(msg.getMember()).getAmountItem(Item.Items.PB.getId()) > 0)
 			{
 				if (msg.getMember().getVoiceState().inAudioChannel() && member.getVoiceState().inAudioChannel())
 				{
 					msg.getChannel().sendMessage(member.getAsMention() + " you are going to brazil with "+ msg.getMember().getAsMention()).queue();
 					msg.getGuild().moveVoiceMember(member, msg.getGuild().getVoiceChannelById("974740318413025340")).queue();
 					msg.getGuild().moveVoiceMember(msg.getMember(), msg.getGuild().getVoiceChannelById("974740318413025340")).queue();
-					Squads.getstats(msg.getMember()).removeItem(Item.Items.PB.getStr());
+					Squads.getstats(msg.getMember()).removeItem(Item.Items.PB.getId());
 				}
 			} else {
 				msg.getChannel().sendMessage("tu n'as pas de ticket").queue();
@@ -306,33 +306,11 @@ public class CommandListener {
 	private void test(Message msg) throws IOException, InterruptedException {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
 		{
-			ArrayList<SquadMember> sm = Squads.getSquadByMember("464033183613190155").getSquadMembers();
-			for (SquadMember f : sm)
-			{
-				if (msg.getGuild().getMemberById(f.getId()) != null) {
-					Squads.getSquadByMember("550382634887413761").addSquadMember(f);
-					msg.getGuild().addRoleToMember(msg.getGuild().getMemberById(f.getId()), Squads.getSquadByMember("550382634887413761").getSquadRole(msg.getGuild())).queue();
+			for (Squads sq : Squads.getAllSquads()) {
+				for (SquadMember sm : sq.getSquadMembers()) {
+					sm.setInventory(null);
 				}
 			}
-			sm = Squads.getSquadByMember("558713255351156786").getSquadMembers();
-			for (SquadMember f : sm)
-			{
-				if (msg.getGuild().getMemberById(f.getId()) != null) {
-					Squads.getSquadByMember("279645026441625600").addSquadMember(f);
-					msg.getGuild().addRoleToMember(msg.getGuild().getMemberById(f.getId()), Squads.getSquadByMember("279645026441625600").getSquadRole(msg.getGuild())).queue();
-				}
-			}
-			 sm = Squads.getSquadByMember("474934008267014144").getSquadMembers();
-			for (SquadMember f : sm)
-			{
-				if (msg.getGuild().getMemberById(f.getId()) != null) {
-					Squads.getSquadByMember("335074908998598673").addSquadMember(f);
-					msg.getGuild().addRoleToMember(msg.getGuild().getMemberById(f.getId()), Squads.getSquadByMember("335074908998598673").getSquadRole(msg.getGuild())).queue();
-				}
-			}
-			for (Squads sq : Squads.getAllSquads())
-				for (SquadMember r : sq.getSquadMembers())
-					r.resetPoint();
 		}
 	}
 }

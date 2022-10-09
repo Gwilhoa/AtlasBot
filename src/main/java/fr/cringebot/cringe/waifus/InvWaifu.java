@@ -67,10 +67,10 @@ public class InvWaifu {
 		if (this.FriendlyLevel == null)
 			this.FriendlyLevel = 0;
 		this.FriendlyLevel = this.FriendlyLevel + xp;
-		if (this.FriendlyLevel >= 2000 * (this.level + 1))
+		while (this.FriendlyLevel >= 2000 * (this.level + 1))
 		{
+			this.FriendlyLevel = Math.toIntExact(this.FriendlyLevel - 2000 * (this.level + 1));
 			this.level++;
-			this.FriendlyLevel = 0;
 		}
 		Squads.save();
 	}

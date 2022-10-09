@@ -1,5 +1,7 @@
 package fr.cringebot.cringe.cki;
 
+import com.merakianalytics.orianna.types.core.staticdata.Champion;
+import com.merakianalytics.orianna.types.core.staticdata.Champions;
 import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.pokemon.objects.Pokemon;
 import fr.cringebot.cringe.pokemon.objects.Type;
@@ -10,6 +12,8 @@ import org.jsoup.nodes.Document;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class ckiListener {
 
@@ -34,8 +38,61 @@ public class ckiListener {
         }
         else
         {
-            msg.getChannel().sendMessage("raté").reference(msg).queue();
-            object.addAction();
+            if (object.getType().equals(cki.Type.LOL))
+            {
+                Champion response = Champions.Champion.named(object.getName()).get();
+                Champion requested = Champions.Champion.named(msg.getContentRaw()).get();
+                if (requested != null)
+                {
+                    int i = 0;
+                    EmbedBuilder eb = new EmbedBuilder();
+                    eb.setTitle("tags :");
+                    for (String tag: response.getTags())
+                    {
+                        if (requested.getTags().contains(tag))
+                        {
+                            i++;
+                        }
+                    }
+                    if (response.getTags().size() == i)
+                    {
+                        eb.setColor(Color.GREEN);
+                    }
+                    else if (i != 0)
+                    {
+                        eb.setColor(Color.ORANGE);
+                    }
+                    else
+                        eb.setColor(Color.red);
+                    StringBuilder sb = new StringBuilder();
+                    for (String tag: requested.getTags())
+                    {
+                       sb.append(tag).append("\n");
+                    }
+                    eb.setDescription(sb);
+                    msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+                    eb = new EmbedBuilder();
+                    eb.setTitle("ressource :");
+                    if (requested.getResource().equals(response.getResource()))
+                        eb.setColor(Color.GREEN);
+                    else
+                        eb.setColor(Color.red);
+                    eb.setDescription(requested.getResource());
+                    msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+                    eb = new EmbedBuilder();
+                    eb.setTitle("range :");
+                    if (requested.getStats().getAttackRange() == response.getStats().getAttackRange())
+                        eb.setColor(Color.GREEN);
+                    else
+                        eb.setColor(Color.red);
+                    eb.setDescription(requested.getStats().getAttackRange() + "");
+                    msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+                }
+            }
+            else {
+                msg.getChannel().sendMessage("raté").reference(msg).queue();
+                object.addAction();
+            }
         }
     }
 
@@ -44,7 +101,7 @@ public class ckiListener {
         if (object.getType().equals(cki.Type.POKEMON))
             eb.setTitle("Le pokémon à été trouvé !").setImage("https://assets.pokemon.com/assets/cms2/img/pokedex/detail/" + String.format("%03d", Pokemon.getByRealName(object.getName()).getId()) + ".png");
         else if (object.getType().equals(cki.Type.LOL))
-            eb.setTitle("Le champion de League of Legends à été trouvé").setImage("https://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+ object.getName().replace(' ','\0')+"_0.jpg");
+            eb.setTitle("Le champion de League of Legends à été trouvé").setImage(Champion.named(object.getName()).get().getImage().getURL());
         eb.setFooter("Trouvé par " + msg.getAuthor().getName(), msg.getAuthor().getEffectiveAvatarUrl());
         eb.setColor(Color.green);
         sendresponse(msg, eb);
@@ -64,7 +121,7 @@ public class ckiListener {
             StringBuilder sb = new StringBuilder();
             sb.append(object.getName().charAt(0));
             int	i = 1;
-            while (i++ < object.getName().length() - 1) {
+            while (i++ < object.getName().length()) {
                 if (object.getName().charAt(i) == ' ')
                     sb.append("   ");
                 else
