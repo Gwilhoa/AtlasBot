@@ -150,7 +150,6 @@ public class BotListener implements EventListener {
 			else if (event instanceof RoleCreateEvent) onCreateRole((RoleCreateEvent) event);
 			else if (event instanceof RoleDeleteEvent) onDeleteRole((RoleDeleteEvent) event);
 			else if (event instanceof MessageReactionRemoveEvent) onRemoveReact((MessageReactionRemoveEvent) event);
-			else if (event instanceof GuildUpdateNameEvent) onChangeServerName((GuildUpdateNameEvent) event);
 			else if (event instanceof GuildVoiceJoinEvent) onConnect((GuildVoiceJoinEvent) event);
 			else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
 			else if (event instanceof MessageEmbedEvent) onEmbed((MessageEmbedEvent) event);
@@ -194,10 +193,6 @@ public class BotListener implements EventListener {
 		XP.start(event.getMember());
 	}
 
-	private void onChangeServerName(GuildUpdateNameEvent event) {
-		if (event.getGuild().getId().equals("382938797442334720"))
-			Request.sendRequest(Request.Type.SETSEASON, event.getNewName());
-	}
 
 	private void onRemoveReact(MessageReactionRemoveEvent event) {
 		if (event.getChannel().getId().equals("853210283480055809")) {
@@ -271,6 +266,10 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onEnable(ReadyEvent event) throws InterruptedException {
+		Request.addManualPoint("1013766309156233236",150);
+		System.out.println(Request.getSquads());
+		if (true)
+			return;
 		Activity act;
 		act = new activity("Analyse en cours", null, Activity.ActivityType.WATCHING);
 		bot.getJda().getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, act);
@@ -280,7 +279,6 @@ public class BotListener implements EventListener {
 			System.out.println("CADO");
 		if (new File("save/waifu").mkdir())
 			System.out.println("création du directory Waifu");
-		Request.sendRequest(Request.Type.SETSEASON, event.getJDA().getGuildById("382938797442334720").getName());
 		Squads.load();
 		MessageReact.load();
 		PollMessage.load();
