@@ -3,38 +3,29 @@
 package fr.cringebot.cringe.command;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.jcraft.jsch.JSchException;
 import fr.cringebot.BotDiscord;
-import fr.cringebot.cringe.CommandBuilder.*;
-import fr.cringebot.cringe.Polls.PollMain;
+import fr.cringebot.cringe.CommandBuilder.top;
+import fr.cringebot.cringe.Request.Members;
+import fr.cringebot.cringe.Request.Squads;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
-import fr.cringebot.cringe.escouades.SquadMember;
-import fr.cringebot.cringe.escouades.Squads;
-import fr.cringebot.cringe.objects.Item;
-import fr.cringebot.cringe.objects.SelectOptionImpl;
-import fr.cringebot.cringe.reactionsrole.MessageReact;
-import fr.cringebot.cringe.slashInteraction.slashCommand;
-import fr.cringebot.cringe.waifus.Waifu;
-import fr.cringebot.cringe.waifus.WaifuCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
-import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
-import net.dv8tion.jda.internal.interactions.component.ButtonInteractionImpl;
-import net.dv8tion.jda.internal.interactions.component.SelectMenuImpl;
+
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
@@ -43,7 +34,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static fr.cringebot.cringe.cki.mainCommand.ckimain;
 import static fr.cringebot.cringe.objects.imgExtenders.resize;
 
 /**
@@ -76,176 +66,100 @@ public class CommandListener {
 	@Command(name = "newsquad", description = "ajouter une escouade", type = ExecutorType.USER)
 	private void addsquad(Message msg) {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getRoles().isEmpty()) {
-			new Squads(msg.getMentions().getRoles().get(0));
+			try {
+				Squads.newSquads(msg.getMentions().getRoles().get(0).getName(), msg.getMentions().getRoles().get(0).getId(), msg.getMentions().getRoles().get(0).getColor());
+			} catch (ConnectException e) {
+				msg.getChannel().sendMessage("disconnected").queue();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	@Command(name = "newmember", description = "ajouter un membre inexistant à une escouade", type = ExecutorType.USER)
 	private void newMember(Message msg)
 	{
-		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getRoles().isEmpty() && !msg.getMentions().getMembers().isEmpty()) {
-			SquadMember sm = Squads.getstats(msg.getMentions().getMembers().get(0));
-			if (sm != null)
-				msg.getChannel().sendMessage("il a déja une escouade").queue();
-			else {
-				Squads sq = Squads.getSquadByRole(msg.getMentions().getRoles().get(0));
-				sq.addMember(msg.getMentions().getMembers().get(0));
-				msg.getGuild().addRoleToMember(msg.getMentions().getMembers().get(0), sq.getSquadRole(msg.getGuild())).queue();
-				Squads.save();
-			}
-		}
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 	@Command(name = "changesquad", description = "changer d'escouade quelqu'un", type = ExecutorType.USER)
 	private void ChangeSquad(Message msg)
 	{
-		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getRoles().isEmpty() && !msg.getMentions().getMembers().isEmpty()) {
-			SquadMember sm = Squads.getstats(msg.getMentions().getMembers().get(0));
-			msg.getGuild().removeRoleFromMember(msg.getMentions().getMembers().get(0), Squads.getSquadByMember(sm.getId()).getSquadRole(msg.getGuild())).queue();
-			Squads.getSquadByMember(sm.getId()).removeMember(sm.getId());
-			sm.resetPoint();
-			Squads sq = Squads.getSquadByRole(msg.getMentions().getRoles().get(0));
-			sq.addSquadMember(sm);
-			msg.getGuild().addRoleToMember(msg.getMentions().getMembers().get(0), sq.getSquadRole(msg.getGuild())).queue();
-			Squads.save();
-		}
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
-	@Command(name = "bresil", description = "you are going to brazil", type = ExecutorType.USER)
+	@Command(name = "bresil", description= "you are going to brazil", type = ExecutorType.USER)
 	private void bresil(Message msg) {
-		if (msg.getMentions().getMembers().get(0) == null)
-		{
-			msg.getChannel().sendMessage("tu veux emmener qui ?").queue();
-		} else {
-			Member member = msg.getMentions().getMembers().get(0);
-			if (Squads.getstats(msg.getMember()).getAmountItem(Item.Items.PB.getId()) > 0)
-			{
-				if (msg.getMember().getVoiceState().inAudioChannel() && member.getVoiceState().inAudioChannel())
-				{
-					msg.getChannel().sendMessage(member.getAsMention() + " you are going to brazil with "+ msg.getMember().getAsMention()).queue();
-					msg.getGuild().moveVoiceMember(member, msg.getGuild().getVoiceChannelById("974740318413025340")).queue();
-					msg.getGuild().moveVoiceMember(msg.getMember(), msg.getGuild().getVoiceChannelById("974740318413025340")).queue();
-					Squads.getstats(msg.getMember()).removeItem(Item.Items.PB.getId());
-				}
-			} else {
-				msg.getChannel().sendMessage("tu n'as pas de ticket").queue();
-			}
-		}
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
 	@Command(name = "info", description = "information sur un joueur", type = ExecutorType.USER)
 	private void info(MessageChannel channel, Message msg) {
-		Member mem = msg.getMember();
-		if (msg.getMentions().getMembers().size() != 0)
-			mem = msg.getMentions().getMembers().get(0);
-		channel.sendMessageEmbeds(Info.info(mem).build()).queue();
+		Member member = msg.getMember();
+		if (msg.getMentions().getMembers().size() > 0) {
+			member = msg.getMentions().getMembers().get(0);
+		}
+		try {
+			Members.getMember(member);
+		} catch (ConnectException e) {
+			channel.sendMessageEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Déconnecté").build()).queue();
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
 	@Command(name = "shop", description = "ouvrir le shopping")
 	private void shop(Message msg) {
-		msg.getChannel().sendMessageEmbeds(Shop.ShopDisplay(msg.getMember()).build()).setActionRow(Shop.PrincipalMenu(msg.getMember())).queue();
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
 	@Command(name = "gift", description = "des cadeaux ?", type = ExecutorType.USER)
 	private void gift(Message msg) throws InterruptedException, IOException {
-		if (msg.getContentRaw().split(" ").length <= 1)
-			return;
-		String code = msg.getContentRaw().substring(">gift ".length());
-		Gift ret = Gift.sendGift(code, msg.getMember());
-		EmbedBuilder eb = ret.getEmbedBuilder();
-		if (ret.getId() == null)
-			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
-		else {
-			ButtonImpl bttn = new ButtonImpl("gift_" + ret.getId(), "ouvrir", ButtonStyle.SUCCESS, false, null);
-			msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(bttn).queue();
-		}
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
 	@Command(name = "top", description = "regarder le classement des escouades")
 	private void top(Message msg){
-		if (msg.getContentRaw().length() > ">top ".length())
-			msg.getChannel().sendMessageEmbeds(Top.top(msg.getContentRaw().substring(">top ".length()), msg.getGuild()).build()).queue();
-		else
-			msg.getChannel().sendMessageEmbeds(Top.top(null, msg.getGuild()).build()).queue();
+		top.CommandTop(msg);
 	}
 
 	@Command(name = "pay", description = "payer un ami", type = ExecutorType.USER)
 	private void pay(Message msg) {
-		int amount;
-		try {
-			amount = Integer.parseInt(msg.getContentRaw().split(" ")[1]);
-		} catch (NumberFormatException e) {
-			msg.getChannel().sendMessage(">pay NOMBRE @").queue();
-			return;
-		}
-		if (Squads.pay(msg.getMember().getId(), msg.getMentions().getMembers().get(0).getId(), amount))
-			msg.getChannel().sendMessage("Tu as payé "+ amount + " B2C à "+msg.getMentions().getMembers().get(0).getAsMention()).queue();
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
 	@Command(name = "poll", description = "faites des sondages rapidements", type = ExecutorType.USER)
 	private void poll(Message msg) {
-		String[] args = msg.getContentRaw().split("\n");
-		String name = args[0].substring(">poll ".length());
-		args = msg.getContentRaw().substring(name.length() + 1).split("\n");
-		PollMain.PollMain(args, name, msg.getTextChannel(), msg.getMember());
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
 	@Command(name = "role", description = "permettre de creer un role", type = ExecutorType.USER)
 	private void role(Message msg) {
-		String[] args = msg.getContentRaw().split(" ");
-		ArrayList<SelectOption> options = new ArrayList<>();
-		if (args.length == 3) {
-			msg.addReaction(Emoji.fromFormatted(args[2])).queue();
-			Role r = msg.getGuild().createRole().setName("©◊ß" + args[1]).setMentionable(true).setColor(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255))).complete();
-			EmbedBuilder eb = new EmbedBuilder()
-					.setTitle("nouveau role")
-					.setDescription(r.getName().replace("©◊ß", "") + "\n" + args[2])
-					.setFooter(r.getId());
-			for (MessageReact mr : MessageReact.message)
-				options.add(new SelectOptionImpl(mr.getTitle(), mr.getTitle()));
-			SelectMenuImpl selectionMenu = new SelectMenuImpl("role", "catégorie", 1, 1, false, options);
-			msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(selectionMenu).complete();
-		} else {
-			msg.getChannel().sendMessage("erreur argument >role <nom> <emote>").queue();
-		}
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
 	@Command(name = "harem", description = "la listes des waifus", type = ExecutorType.USER)
 	private void harem(Message msg){
-		String id = msg.getMember().getId();
-		if (!msg.getMentions().getMembers().isEmpty())
-			id = msg.getMentions().getMembers().get(0).getId();
-		EmbedBuilder eb = new EmbedBuilder();
-		eb.setTitle("Waifu de " + msg.getGuild().getMemberById(id).getEffectiveName());
-		eb.setDescription("chargement...");
-		ArrayList<ButtonImpl> bttn = new ArrayList<>();
-		bttn.add(new ButtonImpl("harem_"+msg.getMember().getId()+";"+"-1", "page précédente",ButtonStyle.PRIMARY ,true, null));
-		bttn.add(new ButtonImpl("harem_"+msg.getMember().getId()+";"+"1", "page suivante",ButtonStyle.SECONDARY ,true, null));
-		msg = msg.getChannel().sendMessageEmbeds(eb.build()).setActionRow(bttn).complete();
-		WaifuCommand.haremEmbed(msg, 0, id);
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException, IOException, JSchException {
-		WaifuCommand.CommandMain(msg);
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
 	@Command(name = "inventory", description = "afficher ton inventaire", type = ExecutorType.USER)
 	private void inventory(Message msg) {
-		msg.getChannel().sendMessageEmbeds(Inventory.getInventory(msg.getMember()).build()).setActionRow(new ButtonImpl("inv1_"+msg.getMember().getId(), "Ouvrir le sac de jetons", ButtonStyle.SUCCESS, false, null)).queue();
-	}
+		msg.getChannel().sendMessage("coming soon").queue();}
 
 	@Command(name = "cki", description = "mais qui est-il !", type = ExecutorType.USER)
 	private void cki(Message msg){
-		ckimain(msg);
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
 	@Command(name = "reset", type = Command.ExecutorType.USER)
 	private void reset(Message msg) throws IOException {
-		if (msg.getMember().getId().equals("315431392789921793"))
-		{
-			ArrayList<Squads> squads = Squads.getAllSquads();
-			for (Squads squad : squads)
-				squad.ResetPoint();
-		}
+		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
 	@Command(name = "clear", description = "let's clean", type = ExecutorType.USER)
@@ -297,20 +211,11 @@ public class CommandListener {
 
 	@Command(name = "removesquad", description = "supprimer une escouade", type = ExecutorType.USER)
 	private void RemoveSquad(Message msg) {
-		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
-			Squads.getSquadByRole(msg.getMentions().getRoles().get(0)).delete();
+		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR)) {
+		}
 	}
 
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
-	private void test(Message msg) throws IOException, InterruptedException {
-		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
-		{
-			for (Squads sq : Squads.getAllSquads()) {
-				for (SquadMember sm : sq.getSquadMembers()) {
-					sm.setInventory(null);
-				}
-			}
-		}
-	}
+	private void test(Message msg) throws IOException, InterruptedException {}
 }

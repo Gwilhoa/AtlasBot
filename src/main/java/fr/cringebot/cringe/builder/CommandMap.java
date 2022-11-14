@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 12:09:51 by gchatain          #+#    #+#             */
-/*   Updated: 2022/08/25 18:00:24 by                  ###   ########.fr       */
+/*   Updated: 2022/10/09 19:56:43 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.command.CommandAdmin;
 import fr.cringebot.cringe.command.CommandListener;
 import fr.cringebot.cringe.command.HelpCommand;
-import fr.cringebot.cringe.lol.CommandLol;
-import fr.cringebot.cringe.pokemon.Commands;
 import fr.cringebot.music.MusicCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -55,7 +53,7 @@ public final class CommandMap {
 	 */
 	public CommandMap(BotDiscord botDiscord) {
 		this.botDiscord = botDiscord;
-		registerCommands(new CommandListener(botDiscord, this), new HelpCommand(this), MusicCommand.INSTANCE, new Commands(), new CommandLol(), new CommandAdmin());
+		registerCommands(new CommandListener(botDiscord, this), new HelpCommand(this), MusicCommand.INSTANCE, new CommandAdmin());
 	}
 
 	/**

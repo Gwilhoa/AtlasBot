@@ -1,12 +1,7 @@
-package fr.cringebot.cringe.siterequest;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+package fr.cringebot.cringe.Request;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Request {
@@ -24,9 +19,9 @@ public class Request {
         }
     }
 
-    public static String GetRequest(String route)
+    public static String GetRequest(String route) throws IOException
     {
-        try {
+            System.out.println("http://api.bitume2000.fr:5000/v1/" + route);
             URL url = new URL("http://api.bitume2000.fr:5000/v1/" + route);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
@@ -36,15 +31,10 @@ public class Request {
                 throw new RuntimeException("Failed : HTTP error code : " + con.getResponseCode());
             }
             return new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
-    public static boolean PostRequest(String route, String content)
+    public static boolean PostRequest(String route, String content) throws IOException
     {
-        try {
             URL url = new URL("http://api.bitume2000.fr:5000/v1/" + route);
             System.out.println(url);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -62,34 +52,5 @@ public class Request {
                 return false;
             }
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public static boolean RemoveSquads(String id)
-    {
-        return PostRequest("squads/remove", "id="+id);
-    }
-
-    public static boolean newSquads(String name, String id)
-    {
-        return PostRequest("squads","name="+name+"&id="+id);
-    }
-
-    public static String getSquads()
-    {
-        return GetRequest("squads");
-    }
-
-    public static String getSquads(String id)
-    {
-        return GetRequest("squads/"+id);
-    }
-
-    public static boolean addManualPoint(String id, Integer number)
-    {
-        return PostRequest("squads/"+id, "points="+number);
     }
 }
