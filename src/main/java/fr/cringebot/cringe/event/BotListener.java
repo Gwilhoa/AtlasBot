@@ -145,7 +145,11 @@ public class BotListener implements EventListener {
 	}
 
 	private void onSlashCommand(SlashCommandInteraction event) {
-		event.reply("coming soon").queue();
+		if (event.getName().equals("top")) {
+			event.reply("top").queue();
+		}
+		else
+			event.reply("coming soon").queue();
 	}
 
 	private void onMove(GuildVoiceMoveEvent event) {

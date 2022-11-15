@@ -120,8 +120,13 @@ public class CommandListener {
 	}
 
 	@Command(name = "top", description = "regarder le classement des escouades")
-	private void top(Message msg){
-		top.CommandTop(msg);
+	private void top(Message msg, String[] args) {
+		if (args.length == 0)
+			msg.replyEmbeds(top.CommandTop(null, msg.getGuild()).build()).queue();
+		else if (args.length == 1)
+			msg.getChannel().sendMessageEmbeds(top.CommandTop(args[0], msg.getGuild()).build()).queue();
+		else
+			msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Nombre d'arguments incorrect").build()).queue();
 	}
 
 	@Command(name = "pay", description = "payer un ami", type = ExecutorType.USER)

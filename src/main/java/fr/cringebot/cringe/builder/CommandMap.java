@@ -17,6 +17,7 @@ import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.command.CommandAdmin;
 import fr.cringebot.cringe.command.CommandListener;
 import fr.cringebot.cringe.command.HelpCommand;
+import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.music.MusicCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;

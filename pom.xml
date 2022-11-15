@@ -26,11 +26,6 @@
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
     </repository>
-      <repository>
-        <id>com.springsource.repository.maven.release</id>
-        <url>http://maven.springframework.org/release/</url>
-        <snapshots><enabled>false</enabled></snapshots>
-      </repository>
   </repositories>
   <dependencies>
 

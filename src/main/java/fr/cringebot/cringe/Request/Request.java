@@ -1,5 +1,8 @@
 package fr.cringebot.cringe.Request;
 
+import net.dv8tion.jda.api.EmbedBuilder;
+
+import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -52,5 +55,13 @@ public class Request {
                 return false;
             }
             return true;
+    }
+
+    public static EmbedBuilder DisconnectedEmbed(){
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setTitle("Erreur");
+        embed.setDescription("Le serveur est actuellement indisponible");
+        embed.setColor(Color.RED);
+        return embed;
     }
 }
