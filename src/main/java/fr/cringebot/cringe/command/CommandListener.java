@@ -124,9 +124,9 @@ public class CommandListener {
 		if (args.length == 0)
 			msg.replyEmbeds(top.CommandTop(null, msg.getGuild()).build()).queue();
 		else if (args.length == 1)
-			msg.getChannel().sendMessageEmbeds(top.CommandTop(args[0], msg.getGuild()).build()).queue();
+			msg.replyEmbeds(top.CommandTop(args[0], msg.getGuild()).build()).queue();
 		else
-			msg.getChannel().sendMessageEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Nombre d'arguments incorrect").build()).queue();
+			msg.replyEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Nombre d'arguments incorrect").build()).queue();
 	}
 
 	@Command(name = "pay", description = "payer un ami", type = ExecutorType.USER)

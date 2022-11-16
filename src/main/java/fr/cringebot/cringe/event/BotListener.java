@@ -47,6 +47,7 @@ import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -135,7 +136,20 @@ public class BotListener implements EventListener {
 		}
 	}
 
-	private void onButton(ButtonInteractionEvent event) {
+	private void onButton(ButtonInteractionEvent event) throws IOException {
+		if (event.getComponentId().startsWith("squads")) {
+			if (event.getMember().equals(event.getComponentId().split(";")[2])) {
+				event.reply("ce message ne vous concernes pas").setEphemeral(true).queue();
+			} else {
+				event.getGuild().getTextChannelById("947564791759777792").sendMessage(event.getMember().getAsMention() + " a rejoint l'escouade "+ event.getGuild().getRoleById(event.getComponentId().split(";")[1]).getName()).queue();
+				event.getGuild().retrieveMemberById(event.getComponentId().split(";")[2]).queue(member -> {
+					event.getGuild().addRoleToMember(member, event.getGuild().getRoleById(event.getComponentId().split(";")[1])).queue();
+				});
+				event.reply("vous avez rejoint la squad").setEphemeral(true).queue();
+				Members.newMembers(event.getMember(), event.getComponentId().split(";")[1]);
+			}
+
+		}
 	}
 
 	private void onSelectMenu(SelectMenuInteractionEvent event) {
@@ -221,7 +235,13 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onGuildMemberJoin(GuildMemberJoinEvent event) {
-		event.getGuild().getTextChannelById("947564791759777792").sendMessage(event.getUser().getAsMention() + " a rejoint la Guild.").queue();
+		ArrayList<net.dv8tion.jda.api.interactions.components.buttons.Button> buttons = new ArrayList<>();
+		try {
+			Squads.getSquads().forEach(squad -> buttons.add(Button.primary("squad;"+squad.getId() +";" + event.getMember().getId(), squad.getName())));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		event.getGuild().getTextChannelById("947564791759777792").sendMessage("Bonjour "+ event.getMember() + "Bienvenue dans le monde du bitume, choisis ton escouade !").setActionRow(buttons).queue();
 		event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("734011696242360331")).and(event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("634839000644845619"))).and(event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("734012661494317077"))).queue();
 	}
 
