@@ -29,6 +29,7 @@ public class Members extends Squads {
     }
 
     public static List<Members> getObjMembers(String data) {
+
         ArrayList<Members> members = new ArrayList<>();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
@@ -36,7 +37,8 @@ public class Members extends Squads {
         try {
             array = gson.fromJson(data, JsonArray.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            data = "["+data+"]";
+            array = gson.fromJson(data, JsonArray.class);
         }
         array.forEach(jsonElement -> {
             members.add(
@@ -86,12 +88,12 @@ public class Members extends Squads {
 
     //------------------------------------------------------------//
 
-    public static String getMember(String id) throws IOException
+    public static Members getMember(String id) throws IOException
     {
-        return GetRequest("members/id/"+id);
+        return getObjMembers(Request.GetRequest("members/id/"+id)).get(0);
     }
 
-    public static String getMember(Member mem) throws IOException
+    public static Members getMember(Member mem) throws IOException
     {
         return getMember(mem.getId());
     }

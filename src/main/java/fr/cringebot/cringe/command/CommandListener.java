@@ -105,7 +105,7 @@ public class CommandListener {
 	@Command(name = "profil", description = "information sur un joueur", type = ExecutorType.USER)
 	private void profil(MessageChannel channel, Message msg) {
 		Member member = msg.getMember();
-		String mem = null;
+		Members mem = null;
 		if (msg.getMentions().getMembers().size() > 0) {
 			member = msg.getMentions().getMembers().get(0);
 		}
@@ -121,14 +121,18 @@ public class CommandListener {
 			channel.sendMessageEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Membre non intégré dans le serveur").build()).queue();
 			return;
 		}
-		JsonArray array = gson.fromJson(mem, JsonArray.class);
-
-		channel.sendMessageEmbeds(new EmbedBuilder().setColor(member.getColor())
-				.setTitle("Profil de " + member.getEffectiveName())
-				.setDescription("squads : " + array.get(0).getAsJsonObject().get("id").getAsString())
-						.appendDescription("\narrivé sur le serveur le : " + member.getTimeJoined().toString())
-						.appendDescription("\narrivé sur discord le : " + member.getTimeCreated().toString())
-				.build()).queue();
+		channel.sendMessageEmbeds(new EmbedBuilder().setColor(mem.getColor())
+				.setTitle("Profil de " + member.getUser().getName())
+				.setThumbnail(member.getUser().getAvatarUrl())
+						.addField("> Surnom :", member.getEffectiveName(), true)
+						.addField("> escouade :", mem.getSquad().getName(), true)
+						.addField("> Points :", String.valueOf(mem.getPoints()), true)
+						.addField("> Coins :", mem.getCoins().toString(), true)
+						.addField("> Harem :", "coming soon", true)
+						.addField("> Pokedex :", "coming soon", true)
+						.addField("> Date d'entrée sur le serveur : ", String.format("%02d", member.getTimeJoined().getDayOfMonth()) + "/" + String.format("%02d", member.getTimeJoined().getMonthValue()) + "/" + member.getTimeJoined().getYear(), false)
+						.addField("> Date de création du compte : ", String.format("%02d", member.getTimeCreated().getDayOfMonth()) + "/" + String.format("%02d", member.getTimeCreated().getMonthValue()) + "/" + member.getTimeCreated().getYear(), false)
+						.setFooter("rang : coming soon").build()).queue();
 	}
 
 	@Command(name = "shop", description = "ouvrir le shopping")
