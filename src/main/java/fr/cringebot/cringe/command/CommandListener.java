@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static fr.cringebot.cringe.event.BotListener.gson;
 import static fr.cringebot.cringe.objects.imgExtenders.resize;
 
 /**
@@ -76,9 +77,18 @@ public class CommandListener {
 		}
 	}
 
-	@Command(name = "newmember", description = "ajouter un membre inexistant à une escouade", type = ExecutorType.USER)
-	private void newMember(Message msg)
+	@Command(name = "addmember", description = "ajouter un membre inexistant à une escouade", type = ExecutorType.USER)
+	private void addMember(Message msg)
 	{
+		msg.getMentions().getMembers().get(0).getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("vous avez été ajouté à l'escouade " + msg.getMentions().getRoles().get(0).getName()).queue());
+		msg.getGuild().addRoleToMember(msg.getMentions().getMembers().get(0), msg.getMentions().getRoles().get(0)).queue();
+		try {
+			Members.newMembers(msg.getMentions().getMembers().get(0), msg.getMentions().getRoles().get(0).getId());
+		} catch (ConnectException e) {
+			msg.getChannel().sendMessage("disconnected").queue();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		msg.getChannel().sendMessage("coming soon").queue();
 	}
 	@Command(name = "changesquad", description = "changer d'escouade quelqu'un", type = ExecutorType.USER)
@@ -92,21 +102,33 @@ public class CommandListener {
 		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
-	@Command(name = "info", description = "information sur un joueur", type = ExecutorType.USER)
-	private void info(MessageChannel channel, Message msg) {
+	@Command(name = "profil", description = "information sur un joueur", type = ExecutorType.USER)
+	private void profil(MessageChannel channel, Message msg) {
 		Member member = msg.getMember();
+		String mem = null;
 		if (msg.getMentions().getMembers().size() > 0) {
 			member = msg.getMentions().getMembers().get(0);
 		}
 		try {
-			Members.getMember(member);
+			mem = Members.getMember(member);
 		} catch (ConnectException e) {
 			channel.sendMessageEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Déconnecté").build()).queue();
 			return;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		msg.getChannel().sendMessage("coming soon").queue();
+		if (mem == null) {
+			channel.sendMessageEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Membre non intégré dans le serveur").build()).queue();
+			return;
+		}
+		JsonArray array = gson.fromJson(mem, JsonArray.class);
+
+		channel.sendMessageEmbeds(new EmbedBuilder().setColor(member.getColor())
+				.setTitle("Profil de " + member.getEffectiveName())
+				.setDescription("squads : " + array.get(0).getAsJsonObject().get("id").getAsString())
+						.appendDescription("\narrivé sur le serveur le : " + member.getTimeJoined().toString())
+						.appendDescription("\narrivé sur discord le : " + member.getTimeCreated().toString())
+				.build()).queue();
 	}
 
 	@Command(name = "shop", description = "ouvrir le shopping")

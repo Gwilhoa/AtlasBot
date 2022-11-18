@@ -138,7 +138,7 @@ public class BotListener implements EventListener {
 
 	private void onButton(ButtonInteractionEvent event) throws IOException {
 		if (event.getComponentId().startsWith("squads")) {
-			if (event.getMember().equals(event.getComponentId().split(";")[2])) {
+			if (!event.getMember().getId().equals(event.getComponentId().split(";")[2])) {
 				event.reply("ce message ne vous concernes pas").setEphemeral(true).queue();
 			} else {
 				event.getGuild().getTextChannelById("947564791759777792").sendMessage(event.getMember().getAsMention() + " a rejoint l'escouade "+ event.getGuild().getRoleById(event.getComponentId().split(";")[1]).getName()).queue();
@@ -220,11 +220,10 @@ public class BotListener implements EventListener {
 		event.getJDA().getPresence().setActivity(Activity.playing("cringe"));
 		event.getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
 		try {
-			System.out.println(Squads.getMembers("1013766309156233236"));
+			System.out.println(Members.getMember("315431392789921793"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 
@@ -237,11 +236,11 @@ public class BotListener implements EventListener {
 	private void onGuildMemberJoin(GuildMemberJoinEvent event) {
 		ArrayList<net.dv8tion.jda.api.interactions.components.buttons.Button> buttons = new ArrayList<>();
 		try {
-			Squads.getSquads().forEach(squad -> buttons.add(Button.primary("squad;"+squad.getId() +";" + event.getMember().getId(), squad.getName())));
+			Squads.getSquads().forEach(squad -> buttons.add(Button.primary("squads;"+squad.getId() +";" + event.getMember().getId(), squad.getName())));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		event.getGuild().getTextChannelById("947564791759777792").sendMessage("Bonjour "+ event.getMember() + "Bienvenue dans le monde du bitume, choisis ton escouade !").setActionRow(buttons).queue();
+		event.getGuild().getTextChannelById("947564791759777792").sendMessage("Bonjour "+ event.getMember().getAsMention() + "Bienvenue dans le monde du bitume, choisis ton escouade !").setActionRow(buttons).queue();
 		event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("734011696242360331")).and(event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("634839000644845619"))).and(event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("734012661494317077"))).queue();
 	}
 
