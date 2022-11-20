@@ -148,7 +148,7 @@ public class MembersQuotes {
 					"",
 					"des montages de qualités, ça c'est sur",
 					"qu'est ce que poutine fait au collet d'allevard ?",
-					"bourré en 30 min top chrono"
+					"bourré en 30 min TopCommand chrono"
 			};
 
 	static String[] yann =

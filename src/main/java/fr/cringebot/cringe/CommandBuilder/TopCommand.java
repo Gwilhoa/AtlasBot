@@ -10,11 +10,14 @@ import net.dv8tion.jda.api.entities.Role;
 import java.awt.*;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class top {
+public class TopCommand {
     public static EmbedBuilder CommandTop(String name, Guild guild) {
+        if (name != null && name.equals("scoreboard"))
+            name = null;
         EmbedBuilder embedBuilder = new EmbedBuilder();
         if (name == null) {
             embedBuilder.setTitle("Classement des escouades");
@@ -95,4 +98,9 @@ public class top {
         }
         return embedBuilder;
     }
+    public ArrayList<Button> getButtons(String name, Integer page) {
+        ArrayList<Button> buttons = new ArrayList<>();
+        return buttons;
+    }
 }
+

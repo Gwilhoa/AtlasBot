@@ -137,7 +137,7 @@ public class imgExtenders {
         g2.setColor(Color.WHITE);
         g2.fill(new RoundRectangle2D.Float(0, 0, w, h, cornerRadius, cornerRadius));
 
-        //... then compositing the image on top,
+        //... then compositing the image on TopCommand,
         //using the white shape from above as alpha source
         g2.setComposite(AlphaComposite.SrcAtop);
         g2.drawImage(image, 0, 0, null);

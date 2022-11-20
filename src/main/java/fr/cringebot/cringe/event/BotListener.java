@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/11/18 10:39:28 by                  ###   ########.fr       */
+/*   Updated: 2022/11/20 17:48:37 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
-import com.google.gson.reflect.TypeToken;
 import fr.cringebot.BotDiscord;
+import fr.cringebot.cringe.CommandBuilder.TopCommand;
 import fr.cringebot.cringe.Request.Members;
 import fr.cringebot.cringe.Request.Squads;
 import fr.cringebot.cringe.builder.CommandMap;
@@ -27,7 +27,6 @@ import fr.cringebot.cringe.objects.*;
 import fr.cringebot.music.MusicCommand;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -49,20 +48,12 @@ import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 import static com.diogonunes.jcolor.Ansi.colorize;
-import static fr.cringebot.BotDiscord.isMaintenance;
-import static fr.cringebot.cringe.event.MembersQuotes.MemberReact;
 
 
 /**
@@ -155,12 +146,31 @@ public class BotListener implements EventListener {
 	private void onSelectMenu(SelectMenuInteractionEvent event) {
 	}
 
-	private void onAutoComplete(CommandAutoCompleteInteraction event) {
+	private void onAutoComplete(CommandAutoCompleteInteraction event) throws IOException {
+		if (event.getOptions().get(0).getName().equals("squad"))
+		{
+			List<Squads> squads = null;
+			ArrayList<String> ret = new ArrayList<>();
+			try {
+				 squads = Squads.getSquads();
+			} catch (ConnectException e) {
+				event.replyChoiceStrings(List.of("erreur de connection")).queue();
+				return;
+			} catch (IOException e) {
+				event.replyChoiceStrings(List.of("erreur de lecture")).queue();
+				return;
+			}
+			ret.add("scoreboard");
+			for (Squads squad : squads) {
+				ret.add(squad.getName());
+			}
+			event.replyChoiceStrings(ret).queue();
+		}
 	}
 
 	private void onSlashCommand(SlashCommandInteraction event) {
-		if (event.getName().equals("top")) {
-			event.reply("top").queue();
+		if (event.getName().equals("TopCommand")) {
+			event.replyEmbeds(TopCommand.CommandTop(event.getOption("squad").getAsString(), event.getGuild()).build()).queue();
 		}
 		else
 			event.reply("coming soon").queue();
@@ -217,14 +227,8 @@ public class BotListener implements EventListener {
 	 */
 	private void onEnable(ReadyEvent event) throws IOException {
 		System.out.println("bot ready");
-		event.getJDA().getPresence().setActivity(Activity.playing("cringe"));
+		event.getJDA().getPresence().setActivity(Activity.playing("en dev"));
 		event.getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
-		try {
-			System.out.println(Squads.getMembers("1013766309156233236"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 	}
 
 

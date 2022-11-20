@@ -3,12 +3,9 @@
 package fr.cringebot.cringe.command;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.jcraft.jsch.JSchException;
 import fr.cringebot.BotDiscord;
-import fr.cringebot.cringe.CommandBuilder.top;
+import fr.cringebot.cringe.CommandBuilder.TopCommand;
 import fr.cringebot.cringe.Request.Members;
 import fr.cringebot.cringe.Request.Squads;
 import fr.cringebot.cringe.builder.Command;
@@ -19,6 +16,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 
 import javax.imageio.ImageIO;
@@ -28,13 +26,11 @@ import java.io.*;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static fr.cringebot.cringe.event.BotListener.gson;
 import static fr.cringebot.cringe.objects.imgExtenders.resize;
 
 /**
@@ -64,6 +60,14 @@ public class CommandListener {
 		botDiscord.setRunning(false);
 	}
 
+	@Command(name = "slashupdate", description = "affiche le classement des escouades", type = ExecutorType.USER)
+	private void slashupdate(Message message) {
+		message.getJDA().updateCommands().queue();
+		message.getJDA().upsertCommand("TopCommand", "voir le TopCommand des joueurs")
+				.addOption(OptionType.STRING, "squad", "voir les scoreboards des escouades", true, true)
+				.queue();
+	}
+
 	@Command(name = "newsquad", description = "ajouter une escouade", type = ExecutorType.USER)
 	private void addsquad(Message msg) {
 		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getRoles().isEmpty()) {
@@ -89,7 +93,7 @@ public class CommandListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		msg.getChannel().sendMessage("coming soon").queue();
+		msg.getChannel().sendMessage(msg.getMentions().getMembers().get(0).getNickname() + "a rejoit l'équipe "+ msg.getMentions().getRoles().get(0).getName()).queue();
 	}
 	@Command(name = "changesquad", description = "changer d'escouade quelqu'un", type = ExecutorType.USER)
 	private void ChangeSquad(Message msg)
@@ -145,12 +149,12 @@ public class CommandListener {
 		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
-	@Command(name = "top", description = "regarder le classement des escouades")
+	@Command(name = "TopCommand", description = "regarder le classement des escouades")
 	private void top(Message msg, String[] args) {
 		if (args.length == 0)
-			msg.replyEmbeds(top.CommandTop(null, msg.getGuild()).build()).queue();
+			msg.replyEmbeds(TopCommand.CommandTop(null, msg.getGuild()).build()).queue();
 		else if (args.length == 1)
-			msg.replyEmbeds(top.CommandTop(args[0], msg.getGuild()).build()).queue();
+			msg.replyEmbeds(TopCommand.CommandTop(args[0], msg.getGuild()).build()).queue();
 		else
 			msg.replyEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Nombre d'arguments incorrect").build()).queue();
 	}
