@@ -5,6 +5,7 @@ package fr.cringebot.cringe.command;
 
 import com.jcraft.jsch.JSchException;
 import fr.cringebot.BotDiscord;
+import fr.cringebot.cringe.CommandBuilder.ProfilCommand;
 import fr.cringebot.cringe.CommandBuilder.TopCommand;
 import fr.cringebot.cringe.Request.Members;
 import fr.cringebot.cringe.Request.Squads;
@@ -18,11 +19,11 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -62,10 +63,14 @@ public class CommandListener {
 
 	@Command(name = "slashupdate", description = "affiche le classement des escouades", type = ExecutorType.USER)
 	private void slashupdate(Message message) {
+		/*
 		message.getJDA().updateCommands().queue();
-		message.getJDA().upsertCommand("TopCommand", "voir le TopCommand des joueurs")
+		message.getJDA().upsertCommand("top", "voir le soreboard des escouades")
 				.addOption(OptionType.STRING, "squad", "voir les scoreboards des escouades", true, true)
 				.queue();
+		message.getJDA().upsertCommand("profil", "voir le profil d'un joueur")
+				.addOption(OptionType.USER, "pseudo", "voir le profil d'un joueur", false, false)
+				.queue();*/
 	}
 
 	@Command(name = "newsquad", description = "ajouter une escouade", type = ExecutorType.USER)
@@ -109,34 +114,10 @@ public class CommandListener {
 	@Command(name = "profil", description = "information sur un joueur", type = ExecutorType.USER)
 	private void profil(MessageChannel channel, Message msg) {
 		Member member = msg.getMember();
-		Members mem = null;
 		if (msg.getMentions().getMembers().size() > 0) {
 			member = msg.getMentions().getMembers().get(0);
 		}
-		try {
-			mem = Members.getMember(member);
-		} catch (ConnectException e) {
-			channel.sendMessageEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Déconnecté").build()).queue();
-			return;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (mem == null) {
-			channel.sendMessageEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Membre non intégré dans le serveur").build()).queue();
-			return;
-		}
-		channel.sendMessageEmbeds(new EmbedBuilder().setColor(mem.getColor())
-				.setTitle("Profil de " + member.getUser().getName())
-				.setThumbnail(member.getUser().getAvatarUrl())
-						.addField("> Surnom :", member.getEffectiveName(), true)
-						.addField("> escouade :", mem.getSquad().getName(), true)
-						.addField("> Points :", String.valueOf(mem.getPoints()), true)
-						.addField("> Coins :", mem.getCoins().toString(), true)
-						.addField("> Harem :", "coming soon", true)
-						.addField("> Pokedex :", "coming soon", true)
-						.addField("> Date d'entrée sur le serveur : ", String.format("%02d", member.getTimeJoined().getDayOfMonth()) + "/" + String.format("%02d", member.getTimeJoined().getMonthValue()) + "/" + member.getTimeJoined().getYear(), false)
-						.addField("> Date de création du compte : ", String.format("%02d", member.getTimeCreated().getDayOfMonth()) + "/" + String.format("%02d", member.getTimeCreated().getMonthValue()) + "/" + member.getTimeCreated().getYear(), false)
-						.setFooter("rang : coming soon").build()).queue();
+		msg.replyEmbeds(ProfilCommand.CommandProfil(member).build()).queue();
 	}
 
 	@Command(name = "shop", description = "ouvrir le shopping")
@@ -149,12 +130,12 @@ public class CommandListener {
 		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
-	@Command(name = "TopCommand", description = "regarder le classement des escouades")
+	@Command(name = "top", description = "regarder le classement des escouades")
 	private void top(Message msg, String[] args) {
 		if (args.length == 0)
-			msg.replyEmbeds(TopCommand.CommandTop(null, msg.getGuild()).build()).queue();
+			msg.replyEmbeds(TopCommand.CommandTop(null, msg.getGuild(), msg.getMember()).build()).queue();
 		else if (args.length == 1)
-			msg.replyEmbeds(TopCommand.CommandTop(args[0], msg.getGuild()).build()).queue();
+			msg.replyEmbeds(TopCommand.CommandTop(args[0], msg.getGuild(), msg.getMember()).build()).queue();
 		else
 			msg.replyEmbeds(new EmbedBuilder().setColor(Color.RED).setTitle("Erreur").setDescription("Nombre d'arguments incorrect").build()).queue();
 	}

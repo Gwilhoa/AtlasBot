@@ -5,6 +5,7 @@ import fr.cringebot.cringe.Request.Request;
 import fr.cringebot.cringe.Request.Squads;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.awt.*;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TopCommand {
-    public static EmbedBuilder CommandTop(String name, Guild guild) {
+    public static EmbedBuilder CommandTop(String name, Guild guild, Member sender) {
         if (name != null && name.equals("scoreboard"))
             name = null;
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -85,7 +86,10 @@ public class TopCommand {
                     AtomicInteger i = new AtomicInteger(1);
                     mem.forEach(members -> {
                         if (i.get() <= 10) {
-                            finalEmbedBuilder.addField("#" + i.get() + " " + members.getName(), "Points : " + members.getPoints(), false);
+                            if (members.getId().equals(sender.getId()))
+                                finalEmbedBuilder.addField("▶️  "+i.get() + " - " + members.getName() + "  ◀️", "**Points : " + members.getPoints() + "**", false);
+                            else
+                                finalEmbedBuilder.addField(i.get() + " - " + members.getName(), "Points : " + members.getPoints(), false);
                             i.getAndIncrement();
                         }
                     });
@@ -97,10 +101,6 @@ public class TopCommand {
             }
         }
         return embedBuilder;
-    }
-    public ArrayList<Button> getButtons(String name, Integer page) {
-        ArrayList<Button> buttons = new ArrayList<>();
-        return buttons;
     }
 }
 

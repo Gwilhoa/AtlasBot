@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/11/20 17:48:37 by                  ###   ########.fr       */
+/*   Updated: 2022/11/21 11:04:22 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,18 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import fr.cringebot.BotDiscord;
+import fr.cringebot.cringe.CommandBuilder.ProfilCommand;
 import fr.cringebot.cringe.CommandBuilder.TopCommand;
 import fr.cringebot.cringe.Request.Members;
 import fr.cringebot.cringe.Request.Squads;
 import fr.cringebot.cringe.builder.CommandMap;
-import fr.cringebot.cringe.objects.*;
+import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.music.MusicCommand;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -50,8 +54,8 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
 
 import static com.diogonunes.jcolor.Ansi.colorize;
 
@@ -169,10 +173,15 @@ public class BotListener implements EventListener {
 	}
 
 	private void onSlashCommand(SlashCommandInteraction event) {
-		if (event.getName().equals("TopCommand")) {
-			event.replyEmbeds(TopCommand.CommandTop(event.getOption("squad").getAsString(), event.getGuild()).build()).queue();
+		if (event.getName().equals("top")) {
+			event.replyEmbeds(TopCommand.CommandTop(event.getOption("squad").getAsString(), event.getGuild(), event.getMember()).build()).queue();
 		}
-		else
+		else if (event.getName().equals("profil")) {
+			if (event.getOption("pseudo") == null)
+				event.replyEmbeds(ProfilCommand.CommandProfil(event.getMember()).build()).queue();
+			else
+				event.replyEmbeds(ProfilCommand.CommandProfil(event.getGuild().getMemberById(event.getOption("pseudo").getAsUser().getId())).build()).queue();
+		} else
 			event.reply("coming soon").queue();
 	}
 
