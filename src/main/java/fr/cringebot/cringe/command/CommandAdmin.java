@@ -11,7 +11,7 @@ public class CommandAdmin {
     @Command(name = "removepoints", description = "enlever des points", type = Command.ExecutorType.USER)
     private void removepoints(Message msg)
     {
-        if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR) && !msg.getMentions().getRoles().isEmpty())
+        if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR))
         {
             try {
                 Squads.addManualPoint(msg.getMentions().getRoles().get(0).getId(), (Integer.parseInt(msg.getContentRaw().split(" ")[1])) * -1);

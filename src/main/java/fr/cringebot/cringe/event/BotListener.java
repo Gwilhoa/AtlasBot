@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 11:45:58 by gchatain          #+#    #+#             */
-/*   Updated: 2022/11/21 11:04:22 by                  ###   ########.fr       */
+/*   Updated: 2022/12/10 23:56:01 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ import fr.cringebot.cringe.Request.Members;
 import fr.cringebot.cringe.Request.Squads;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.StringExtenders;
+import fr.cringebot.cringe.objects.XpManager;
 import fr.cringebot.music.MusicCommand;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -55,6 +56,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.diogonunes.jcolor.Ansi.colorize;
@@ -67,6 +69,7 @@ public class BotListener implements EventListener {
 
 	private final CommandMap commandMap;
 	private final BotDiscord bot;
+
 
 	public BotListener(CommandMap cmd, BotDiscord bot) {
 		this.commandMap = cmd;
@@ -314,12 +317,14 @@ public class BotListener implements EventListener {
 	 */
 	private void onMessage(MessageReceivedEvent event) throws IOException, InterruptedException {
 		Message msg = event.getMessage();
+		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
+		if (!event.getGuild().getId().equals("382938797442334720")) return;
+		XpManager.sendMessage(event.getMember().getId());
 		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {
 			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
 			return;
 		}
-		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
-		if (!event.getGuild().getId().equals("382938797442334720")) return;
+
 
 		ReactionEvent.reactionevent(msg, msg.getJDA());
 		//tous les events mis sans le prefix les reactions en gros
