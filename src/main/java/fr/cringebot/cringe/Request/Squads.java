@@ -119,6 +119,9 @@ public class Squads extends Request {
     public static boolean addManualPoint(String id, Integer number) throws IOException {
         return PostRequest("squads/id/" + id, "points=" + number);
     }
+    public static boolean addManualPoint(String id, Double number) throws IOException {
+        return PostRequest("squads/id/" + id, "points=" + number.intValue());
+    }
 
     public static boolean removeManualPoint(String id, Integer number) throws IOException {
         return PostRequest("squads/id/" + id, "points=" + number * -1);

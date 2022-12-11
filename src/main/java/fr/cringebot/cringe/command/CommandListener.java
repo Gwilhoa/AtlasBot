@@ -89,6 +89,10 @@ public class CommandListener {
 	@Command(name = "addmember", description = "ajouter un membre inexistant à une escouade", type = ExecutorType.USER)
 	private void addMember(Message msg)
 	{
+		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR)) {
+			msg.getChannel().sendMessage("vous n'avez pas les droits").queue();
+			return;
+		}
 		msg.getMentions().getMembers().get(0).getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("vous avez été ajouté à l'escouade " + msg.getMentions().getRoles().get(0).getName()).queue());
 		msg.getGuild().addRoleToMember(msg.getMentions().getMembers().get(0), msg.getMentions().getRoles().get(0)).queue();
 		try {
@@ -98,12 +102,7 @@ public class CommandListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		msg.getChannel().sendMessage(msg.getMentions().getMembers().get(0).getNickname() + "a rejoit l'équipe "+ msg.getMentions().getRoles().get(0).getName()).queue();
-	}
-	@Command(name = "changesquad", description = "changer d'escouade quelqu'un", type = ExecutorType.USER)
-	private void ChangeSquad(Message msg)
-	{
-		msg.getChannel().sendMessage("coming soon").queue();
+		msg.getChannel().sendMessage(msg.getMentions().getMembers().get(0).getNickname() + "a rejoint l'équipe "+ msg.getMentions().getRoles().get(0).getName()).queue();
 	}
 
 	@Command(name = "bresil", description= "you are going to brazil", type = ExecutorType.USER)
@@ -112,7 +111,7 @@ public class CommandListener {
 	}
 
 	@Command(name = "profil", description = "information sur un joueur", type = ExecutorType.USER)
-	private void profil(MessageChannel channel, Message msg) {
+	private void profil(Message msg) {
 		Member member = msg.getMember();
 		if (msg.getMentions().getMembers().size() > 0) {
 			member = msg.getMentions().getMembers().get(0);
@@ -126,7 +125,7 @@ public class CommandListener {
 	}
 
 	@Command(name = "gift", description = "des cadeaux ?", type = ExecutorType.USER)
-	private void gift(Message msg) throws InterruptedException, IOException {
+	private void gift(Message msg) {
 		msg.getChannel().sendMessage("coming soon").queue();
 	}
 
