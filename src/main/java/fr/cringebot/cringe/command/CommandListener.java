@@ -7,6 +7,7 @@ import com.jcraft.jsch.JSchException;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.CommandBuilder.ProfilCommand;
 import fr.cringebot.cringe.CommandBuilder.TopCommand;
+import fr.cringebot.cringe.Request.Achievement;
 import fr.cringebot.cringe.Request.Members;
 import fr.cringebot.cringe.Request.Squads;
 import fr.cringebot.cringe.builder.Command;
@@ -231,6 +232,19 @@ public class CommandListener {
 		}
 	}
 
+	@Command(name = "createachievement", description = "créer un achievement", type = ExecutorType.USER)
+	private void createAchievement(Message msg) throws IOException {
+		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR)) {
+			Achievement.createAchievement("ceci est un test", "rien de mieux que un test", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/42_Logo.svg/2048px-42_Logo.svg.png", 100, 0, null);
+		}
+	}
+	@Command(name = "achievement", description = "listes des succès", type = ExecutorType.USER)
+	private void Achievement(Message msg) throws IOException {
+		List<Achievement> achievement = Achievement.getAchievements();
+		for (Achievement a : achievement) {
+			msg.getChannel().sendMessage(a.toString()).queue();
+		}
+	}
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
 	private void test(Message msg) throws IOException, InterruptedException {}
