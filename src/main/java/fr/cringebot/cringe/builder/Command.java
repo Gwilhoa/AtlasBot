@@ -12,6 +12,8 @@
 
 package fr.cringebot.cringe.builder;
 
+import net.dv8tion.jda.api.Permission;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,6 +35,8 @@ public @interface Command {
     String description() default "Sans description.";
 
     ExecutorType type() default ExecutorType.ALL;
+
+    Permission permission() default Permission.MESSAGE_SEND;
 
     enum ExecutorType{
         ALL, USER, CONSOLE

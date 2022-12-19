@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -132,4 +134,24 @@ public class Members extends Squads {
         PostRequest("members/points/"+id,"points="+number);
     }
 
+    public static void addAchievement(Member mem, String achievement, MessageChannel announcechannel) throws IOException
+    {
+
+        try {
+            PostRequest("members/achievements/" + mem.getId(), "achievement=" + achievement);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        if (announcechannel != null)
+        {
+            achievement = Achievement.getAchievement(achievement).getName();
+            announcechannel.sendMessage(mem.getAsMention()+" a débloqué l'achievement **"+achievement+"** !").queue();
+        }
+    }
+
+    public static List<Achievement> getAchievements(Member mem) throws IOException
+    {
+        return Achievement.getObjAchievement(GetRequest("members/achievements/"+mem.getId()));
+    }
 }

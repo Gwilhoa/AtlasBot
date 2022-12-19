@@ -95,7 +95,7 @@ public final class CommandMap {
 			if (method.isAnnotationPresent(Command.class)) {
 				Command command = method.getAnnotation(Command.class);
 				method.setAccessible(true);
-				SimpleCommand simpleCommand = new SimpleCommand(command.name(), command.description(), command.type(), object, method);
+				SimpleCommand simpleCommand = new SimpleCommand(command.name(), command.description(), command.type(), object, method, command.permission());
 				commands.put(command.name(), simpleCommand);
 			}
 		}
@@ -188,6 +188,9 @@ public final class CommandMap {
 			else if (parameters[i].getType() == MessageChannel.class)
 				objects[i] = message == null ? null : message.getChannel();
 		}
-		simpleCommand.getMethod().invoke(simpleCommand.getObject(), objects);
+		if (message.getMember().hasPermission(simpleCommand.getPermission()))
+			simpleCommand.getMethod().invoke(simpleCommand.getObject(), objects);
+		else
+			message.getChannel().sendMessage("Vous n'avez pas la permission d'utiliser cette commande").queue();
 	}
 }

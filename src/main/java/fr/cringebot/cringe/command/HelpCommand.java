@@ -18,6 +18,7 @@ import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.builder.SimpleCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.internal.entities.UserImpl;
@@ -33,7 +34,7 @@ public class HelpCommand {
     }
 
     @Command(name = "help", type = ExecutorType.USER, description = "affiche la liste des commandes.")
-    private void help(User user, MessageChannel channel, Guild guild){
+    private void help(User user, MessageChannel channel, Guild guild, Member mem){
 
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle("Liste des commandes.");
@@ -41,6 +42,7 @@ public class HelpCommand {
 
         for(SimpleCommand command : commandMap.getCommands()){
             if(command.getExecutorType() == ExecutorType.CONSOLE) continue;
+            if (!mem.hasPermission(command.getPermission())) continue;
             builder.addField(command.getName(), command.getDescription(), false);
         }
 

@@ -13,6 +13,7 @@
 package fr.cringebot.cringe.builder;
 
 import fr.cringebot.cringe.builder.Command.ExecutorType;
+import net.dv8tion.jda.api.Permission;
 
 import java.lang.reflect.Method;
 
@@ -23,14 +24,16 @@ public final class SimpleCommand {
     private final ExecutorType executorType;
     private final Object object;
     private final Method method;
+    private final Permission permission;
 
-    public SimpleCommand(String name, String description, ExecutorType executorType, Object object, Method method) {
+    public SimpleCommand(String name, String description, ExecutorType executorType, Object object, Method method, Permission permission) {
         super();
         this.name = name;
         this.description = description;
         this.executorType = executorType;
         this.object = object;
         this.method = method;
+        this.permission = permission;
     }
 
     public String getName() {
@@ -51,6 +54,10 @@ public final class SimpleCommand {
 
     public Method getMethod() {
         return method;
+    }
+
+    public Permission getPermission() {
+        return permission;
     }
 
 }

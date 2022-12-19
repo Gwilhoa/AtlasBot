@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -62,6 +63,17 @@ public class CommandListener {
 		botDiscord.setRunning(false);
 	}
 
+	@Command(name = "removeachievement", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
+	private void removeAchievement(Message msg, MessageChannel channel, String[] args) {
+		try {
+			Achievement.removeAchievement(args[0]);
+			channel.sendMessage("L'achievement " + args[0] + " a bien été supprimé.").queue();
+		} catch (IOException e) {
+			e.printStackTrace();
+			channel.sendMessage("Une erreur est survenue lors de la suppression de l'achievement.").queue();
+		}
+	}
+
 	@Command(name = "slashupdate", description = "affiche le classement des escouades", type = ExecutorType.USER)
 	private void slashupdate(Message message) {
 		/*
@@ -87,13 +99,9 @@ public class CommandListener {
 		}
 	}
 
-	@Command(name = "addmember", description = "ajouter un membre inexistant à une escouade", type = ExecutorType.USER)
+	@Command(name = "addmember", description = "ajouter un membre inexistant à une escouade", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
 	private void addMember(Message msg)
 	{
-		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR)) {
-			msg.getChannel().sendMessage("vous n'avez pas les droits").queue();
-			return;
-		}
 		msg.getMentions().getMembers().get(0).getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("vous avez été ajouté à l'escouade " + msg.getMentions().getRoles().get(0).getName()).queue());
 		msg.getGuild().addRoleToMember(msg.getMentions().getMembers().get(0), msg.getMentions().getRoles().get(0)).queue();
 		try {
@@ -103,7 +111,8 @@ public class CommandListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		msg.getChannel().sendMessage(msg.getMentions().getMembers().get(0).getNickname() + "a rejoint l'équipe "+ msg.getMentions().getRoles().get(0).getName()).queue();
+		TextChannel tc = msg.getGuild().getTextChannelById("947564791759777792");
+		tc.sendMessage(msg.getMentions().getMembers().get(0).getAsMention() + "a rejoint l'équipe "+ msg.getMentions().getRoles().get(0).getName()).queue();
 	}
 
 	@Command(name = "bresil", description= "you are going to brazil", type = ExecutorType.USER)
@@ -231,20 +240,43 @@ public class CommandListener {
 		}
 	}
 
-	@Command(name = "createachievement", description = "créer un achievement", type = ExecutorType.USER)
+	@Command(name = "createachievement", description = "créer un achievement", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
 	private void createAchievement(Message msg) throws IOException {
-		if (msg.getMember().getPermissions().contains(Permission.ADMINISTRATOR)) {
-			Achievement.createAchievement("ceci est un test", "rien de mieux que un test", "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/42_Logo.svg/2048px-42_Logo.svg.png", 100, 0, null);
-		}
+		Achievement.createAchievement("Pentagenaire", "etre là pendant les 5 ans du B2K", 0,10, null);
 	}
-	@Command(name = "achievement", description = "listes des succès", type = ExecutorType.USER)
+	@Command(name = "achievements", description = "listes des succès", type = ExecutorType.USER)
 	private void Achievement(Message msg) throws IOException {
 		List<Achievement> achievement = Achievement.getAchievements();
+		List<Achievement> memAchievement = Members.getAchievements(msg.getMember());
+		List<String> id = new ArrayList<>();
+		for (Achievement a : memAchievement) {
+			id.add(a.getId());
+		}
 		for (Achievement a : achievement) {
-			msg.getChannel().sendMessage(a.toString()).queue();
+			EmbedBuilder eb = new EmbedBuilder().setTitle(a.getName() +" - id : "+ a.getId()).setDescription(a.getDescription()).setThumbnail(a.getImage());
+			if (id.contains(a.getId()))
+				eb.setColor(Color.GREEN);
+			else
+				eb.setColor(Color.RED);
+			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}
 	}
 
-	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER)
+	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
 	private void test(Message msg) throws IOException, InterruptedException {}
+
+	@Command(name = "giveachievement", description = "donner un succès", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
+	private void giveAchievement(String[] args, Message msg)
+	{
+		if (args.length == 2)
+		{
+			try {
+				Members.addAchievement(msg.getMentions().getMembers().get(0), args[1], msg.getChannel());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else
+			msg.getChannel().sendMessage("mauvais usage de la commande").queue();
+	}
 }
