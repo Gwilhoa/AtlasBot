@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class Members extends Squads {
@@ -136,7 +136,21 @@ public class Members extends Squads {
 
     public static void addAchievement(Member mem, String achievement, MessageChannel announcechannel) throws IOException
     {
-
+        AtomicBoolean b = new AtomicBoolean(false);
+        getAchievements(mem).forEach(
+                ach -> {
+                    if(ach.getId().equals(achievement))
+                    {
+                        if (announcechannel != null)
+                        {
+                            announcechannel.sendMessage("L'utilisateur "+mem.getAsMention()+" a déjà l'achievement "+ach.getName()).queue();
+                            b.set(true);
+                        }
+                    }
+                }
+        );
+        if (b.get())
+            return;
         try {
             PostRequest("members/achievements/" + mem.getId(), "achievement=" + achievement);
         } catch (IOException e) {
@@ -145,13 +159,20 @@ public class Members extends Squads {
         }
         if (announcechannel != null)
         {
-            achievement = Achievement.getAchievement(achievement).getName();
-            announcechannel.sendMessage(mem.getAsMention()+" a débloqué l'achievement **"+achievement+"** !").queue();
+            Achievement ach = Achievement.getAchievement(achievement);
+            Members.addPoints(mem.getId(), ach.getPoints());
+            Members.addCoins(mem.getId(), ach.getCoins());
+            announcechannel.sendMessage(mem.getAsMention()+" a débloqué l'achievement **"+ach.getName()+"** !").queue();
         }
     }
 
     public static List<Achievement> getAchievements(Member mem) throws IOException
     {
         return Achievement.getObjAchievement(GetRequest("members/achievements/"+mem.getId()));
+    }
+
+    public static void revokeAchievement(Member mem, String achievement) throws IOException
+    {
+        PostRequest("members/achievements/revoke/"+mem.getId(),"achievement="+achievement);
     }
 }

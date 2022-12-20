@@ -262,6 +262,15 @@ public class CommandListener {
 		}
 	}
 
+	@Command(name = "revokeachievement", description = "révoquer un succès", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
+	private void revokeAchievement(Message msg, String[] args) throws IOException {
+		if (args.length == 2) {
+			Members.revokeAchievement(msg.getMentions().getMembers().get(0), args[1]);
+			msg.getChannel().sendMessage("succès révoqué").queue();
+		} else {
+			msg.getChannel().sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : >revokeachievement @user id").queue();
+		}
+	}
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
 	private void test(Message msg) throws IOException, InterruptedException {}
 
