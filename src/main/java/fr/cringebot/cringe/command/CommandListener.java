@@ -242,7 +242,16 @@ public class CommandListener {
 
 	@Command(name = "createachievement", description = "créer un achievement", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
 	private void createAchievement(Message msg) throws IOException {
-		Achievement.createAchievement("Pentagenaire", "etre là pendant les 5 ans du B2K", 0,10, null);
+		Achievement.createAchievement("Pentagenaire", "Être sur le serveur Discord au 5ans du B2K", 1000, 0, null);
+		Achievement.createAchievement("Bienvenue dans la grande famille I", "Avoir quitté la pleb", 0,15, null);
+		Achievement.createAchievement("Bienvenue dans la grande famille II", "Avoir rejoint l’élite", 0,0, "Bithuméen");
+		Achievement.createAchievement("Ah c'est marrant", "Avoir 1 meme passé dans “meilleurs memes”", 100, 1, null);
+		Achievement.createAchievement("Ah c'est marrant II", "Avoir 10 meme passé dans “meilleurs memes”", 500, 3, null);
+		Achievement.createAchievement("Ah c'est marrant III", "Avoir 25 meme passé dans “meilleurs memes”", 1000, 7, null);
+		Achievement.createAchievement("Ah c'est marrant IV", "Avoir 50 meme passé dans “meilleurs memes”", 2000, 10, null);
+		Achievement.createAchievement("Ah c'est marrant V", "Avoir 100 meme passé dans “meilleurs memes”", 5000, 15, "Marrakech du rire");
+		Achievement.createAchievement("Ratio légendaire", "Se prendre un ratio maximal", 1000, 0, "Victime");
+		Achievement.createAchievement("Dormir c'est pour les PD", "Rester en voc pendant 24h sans AFK", 5000, 5, "Insomniaque");
 	}
 	@Command(name = "achievements", description = "listes des succès", type = ExecutorType.USER)
 	private void Achievement(Message msg) throws IOException {
@@ -253,7 +262,7 @@ public class CommandListener {
 			id.add(a.getId());
 		}
 		for (Achievement a : achievement) {
-			EmbedBuilder eb = new EmbedBuilder().setTitle(a.getName() +" - id : "+ a.getId()).setDescription(a.getDescription()).setThumbnail(a.getImage());
+			EmbedBuilder eb = new EmbedBuilder().setTitle(a.getName()).setDescription(a.getDescription()).setThumbnail(a.getImage()).setFooter("Points : " + a.getPoints() + " | coins : " + a.getPoints() + " | titre : " + a.getTitle());
 			if (id.contains(a.getId()))
 				eb.setColor(Color.GREEN);
 			else
@@ -271,8 +280,12 @@ public class CommandListener {
 			msg.getChannel().sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : >revokeachievement @user id").queue();
 		}
 	}
+
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
-	private void test(Message msg) throws IOException, InterruptedException {}
+	private void test(Message msg) throws IOException, InterruptedException {
+		Members.addTitle(msg.getMember(), "test");
+		System.out.println(Members.getTitles(msg.getMember()));
+	}
 
 	@Command(name = "giveachievement", description = "donner un succès", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
 	private void giveAchievement(String[] args, Message msg)
@@ -281,6 +294,24 @@ public class CommandListener {
 		{
 			try {
 				Members.addAchievement(msg.getMentions().getMembers().get(0), args[1], msg.getChannel());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else
+			msg.getChannel().sendMessage("mauvais usage de la commande").queue();
+	}
+
+	@Command(name = "settitle", description = "définir son titre principal", type = ExecutorType.USER)
+	private void setTitle(String[] args, Message msg)
+	{
+		if (args.length == 1)
+		{
+			try {
+				if (Members.setTitle(msg.getMember(), args[0]))
+					msg.getChannel().sendMessage("titre défini").queue();
+				else
+					msg.getChannel().sendMessage("vous n'avez pas ce titre").queue();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

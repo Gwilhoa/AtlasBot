@@ -4,6 +4,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +23,18 @@ public class Achievement {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.image = "https://cdn.bitume2000.fr/achievement/" + id + ".png";
         this.points = points;
         this.coins = coins;
         this.title = title;
+
+        try {
+            URL url = new URL("https://cdn.bitume2000.fr/achievement/" + id + ".png");
+            url.openConnection();
+        } catch (IOException e) {
+            this.image = "https://cdn.bitume2000.fr/achievement/0.png";
+            return;
+        }
+        this.image = "https://cdn.bitume2000.fr/achievement/" + id + ".png";
     }
 
     public static List<Achievement> getObjAchievement(String data) throws IOException {

@@ -21,6 +21,7 @@ import com.google.gson.JsonDeserializer;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.CommandBuilder.ProfilCommand;
 import fr.cringebot.cringe.CommandBuilder.TopCommand;
+import fr.cringebot.cringe.Request.Achievement;
 import fr.cringebot.cringe.Request.Members;
 import fr.cringebot.cringe.Request.Squads;
 import fr.cringebot.cringe.builder.CommandMap;
@@ -56,6 +57,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -228,8 +230,20 @@ public class BotListener implements EventListener {
 	 * evenement quand discord cherche si le bot existe encore
 	 * @param event
 	 */
-	private void onPing(GatewayPingEvent event) {
-
+	private void onPing(GatewayPingEvent event) throws IOException {
+		if (!bot.is2023)
+		{
+			System.out.println(java.time.LocalDate.now());
+			if (java.time.LocalDate.now().toString().split("-")[0].equals("2023"))
+			{
+				bot.is2023 = true;
+				for (Members membrs: Members.getMembers())
+				{
+					membrs.addAchievement("1", event.getJDA().getGuilds().get(0).getTextChannelById(BotDiscord.AnnounceSalonId), event.getJDA().getGuilds().get(0));
+				}
+				event.getJDA().getGuilds().get(0).getTextChannelById("461604519533608960").sendMessage("@everyone Bonne année \uD83E\uDD73 \uD83E\uDD73").queue();
+			}
+		}
 	}
 
 	/**

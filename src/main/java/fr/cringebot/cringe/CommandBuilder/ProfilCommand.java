@@ -20,7 +20,9 @@ public class ProfilCommand {
         Members mem = null;
         List<Members> lst = null;
         List<Achievement> ach = null;
+        List<Achievement> achs = null;
         try {
+            achs = Achievement.getAchievements();
             mem = Members.getMember(member);
             lst = Squads.getMembers(mem.getSquad().getId());
             ach = Members.getAchievements(member);
@@ -40,18 +42,24 @@ public class ProfilCommand {
                 break;
             }
         }
-        return new EmbedBuilder().setColor(mem.getColor())
-                .setTitle("Profil de " + member.getUser().getName())
+        EmbedBuilder eb = new EmbedBuilder().setColor(mem.getColor())
                 .setThumbnail(member.getUser().getAvatarUrl())
                 .addField("> Surnom :", member.getEffectiveName(), true)
                 .addField("> escouade :", mem.getSquad().getName(), true)
                 .addField("> Points :", String.valueOf(mem.getPoints()), true)
                 .addField("> Coins :", mem.getCoins().toString(), true)
-                .addField("> achievements :", ach.size() +"", true)
+                .addField("> achievements :", ach.size() +" / " + achs.size(), true)
                 .addField("> coming soon :", "coming soon", true)
                 .addField("> Date d'entrée sur le serveur : ", String.format("%02d", member.getTimeJoined().getDayOfMonth()) + "/" + String.format("%02d", member.getTimeJoined().getMonthValue()) + "/" + member.getTimeJoined().getYear(), false)
                 .addField("> Date de création du compte : ", String.format("%02d", member.getTimeCreated().getDayOfMonth()) + "/" + String.format("%02d", member.getTimeCreated().getMonthValue()) + "/" + member.getTimeCreated().getYear(), false)
                 .setFooter("rang : "+ i);
+        System.out.println("\""+mem.getTitle()+"\"");
+        if (!mem.getTitle().equals("0")) {
+            eb.setTitle("Profil de " + mem.getTitle() + " " + member.getUser().getName());
+        } else {
+            eb.setTitle("Profil de " + member.getUser().getName());
+        }
+        return eb;
     }
 
 }

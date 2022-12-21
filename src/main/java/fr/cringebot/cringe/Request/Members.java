@@ -3,6 +3,7 @@ package fr.cringebot.cringe.Request;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
@@ -19,15 +20,17 @@ public class Members extends Squads {
     private  Integer points;
     private  Integer coins;
     private  Squads squad;
+    private  String title;
 
 
-    Members (String id, String name, Integer points, Integer coins, Squads squad) {
+    Members (String id, String name, Integer points, Integer coins, String title,Squads squad) {
         super(squad.getId(), squad.getName(), squad.getPointsGiven(), squad.getPointsTotal(), squad.getColor());
         this.id = id;
         this.name = name;
         this.points = points;
         this.coins = coins;
         this.squad = squad;
+        this.title = title;
     }
 
     public static List<Members> getObjMembers(String data) {
@@ -49,6 +52,7 @@ public class Members extends Squads {
                             jsonElement.getAsJsonObject().get("name").getAsString(),
                             jsonElement.getAsJsonObject().get("points").getAsInt(),
                             jsonElement.getAsJsonObject().get("coins").getAsInt(),
+                            jsonElement.getAsJsonObject().get("title").getAsString(),
                             new Squads(
                                     jsonElement.getAsJsonObject().get("squad").getAsJsonObject().get("id").getAsString(),
                                     jsonElement.getAsJsonObject().get("squad").getAsJsonObject().get("name").getAsString(),
@@ -110,9 +114,9 @@ public class Members extends Squads {
         return PostRequest("members/squads/"+member.getId(),"squadid="+id);
     }
 
-    public static String getMembers() throws IOException
+    public static List<Members> getMembers() throws IOException
     {
-        return GetRequest("members");
+        return getObjMembers(GetRequest("members"));
     }
 
     public static boolean newMembers(String id, String name, String squad) throws IOException
@@ -132,6 +136,12 @@ public class Members extends Squads {
     public static void addPoints(String id, Integer number) throws IOException
     {
         PostRequest("members/points/"+id,"points="+number);
+    }
+
+    public void addAchievement(String id, MessageChannel announce, Guild guild) throws IOException
+    {
+        Member member = guild.getMemberById(this.id);
+        addAchievement(member, id, announce);
     }
 
     public static void addAchievement(Member mem, String achievement, MessageChannel announcechannel) throws IOException
@@ -162,6 +172,7 @@ public class Members extends Squads {
             Achievement ach = Achievement.getAchievement(achievement);
             Members.addPoints(mem.getId(), ach.getPoints());
             Members.addCoins(mem.getId(), ach.getCoins());
+            Members.addTitle(mem, ach.getTitle());
             announcechannel.sendMessage(mem.getAsMention()+" a débloqué l'achievement **"+ach.getName()+"** !").queue();
         }
     }
@@ -174,5 +185,43 @@ public class Members extends Squads {
     public static void revokeAchievement(Member mem, String achievement) throws IOException
     {
         PostRequest("members/achievements/revoke/"+mem.getId(),"achievement="+achievement);
+    }
+
+    public static void addTitle(Member mem, String title) throws IOException
+    {
+        if (title == null)
+            return;
+        PostRequest("members/title/add/"+mem.getId(),"title="+title);
+    }
+
+    public static boolean setTitle(Member mem, String title) throws IOException
+    {
+        if (title == null)
+            return false;
+        if (!getTitles(mem).contains(title))
+            return false;
+        PostRequest("members/title/set/"+mem.getId(),"title="+title);
+        return true;
+    }
+
+    public static List<String> getTitles(Member mem) throws IOException
+    {
+        String data = GetRequest("members/title/get/"+mem.getId());
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        JsonArray array = null;
+        try {
+            array = gson.fromJson(data, JsonArray.class);
+        } catch (Exception e) {
+            data = "["+data+"]";
+            array = gson.fromJson(data, JsonArray.class);
+        }
+        ArrayList<String> titles = new ArrayList<>();
+        array.forEach(jsonElement -> titles.add(jsonElement.getAsJsonObject().get("name").getAsString()));
+        return titles;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
