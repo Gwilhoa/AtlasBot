@@ -59,7 +59,23 @@ public class TopCommand {
                 embedBuilder.setDescription("aucune escouade n'a été trouvée");
                 embedBuilder.setColor(Color.RED);
             }
-        } else {
+        } else if (name.equalsIgnoreCase("general")) {
+            List<Members> mem = null;
+            try {
+                mem = Members.getMembers();
+            } catch (ConnectException e) {
+                return Request.DisconnectedEmbed();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mem.sort((o1, o2) -> o2.getPoints() - o1.getPoints());
+            embedBuilder.setTitle("Classement général");
+            AtomicInteger i = new AtomicInteger(1);
+            EmbedBuilder finalEmbedBuilder1 = embedBuilder;
+            displaymember(sender, mem, i, finalEmbedBuilder1);
+            embedBuilder.setColor(mem.get(0).getColor());
+            return embedBuilder;
+        }  else {
             List<Role> roleList = guild.getRolesByName(name, true);
             if (roleList.size() != 1)
             {
@@ -84,15 +100,7 @@ public class TopCommand {
                     embedBuilder.setColor(role.getColor());
                     EmbedBuilder finalEmbedBuilder = embedBuilder;
                     AtomicInteger i = new AtomicInteger(1);
-                    mem.forEach(members -> {
-                        if (i.get() <= 10) {
-                            if (members.getId().equals(sender.getId()))
-                                finalEmbedBuilder.addField("▶️  "+i.get() + " - " + members.getName() + "  ◀️", "**Points : " + members.getPoints() + "**", false);
-                            else
-                                finalEmbedBuilder.addField(i.get() + " - " + members.getName(), "Points : " + members.getPoints(), false);
-                            i.getAndIncrement();
-                        }
-                    });
+                    displaymember(sender, mem, i, finalEmbedBuilder);
                 } else {
                     embedBuilder.setTitle("Classement de l'escouade " + name);
                     embedBuilder.setDescription("aucun membre n'a été trouvé");
@@ -101,6 +109,18 @@ public class TopCommand {
             }
         }
         return embedBuilder;
+    }
+
+    private static void displaymember(Member sender, List<Members> mem, AtomicInteger i, EmbedBuilder finalEmbedBuilder1) {
+        mem.forEach(members -> {
+            if (i.get() <= 10) {
+                if (members.getId().equals(sender.getId()))
+                    finalEmbedBuilder1.addField("▶️  "+i.get() + " - " + members.getName() + "  ◀️", "**Points : " + members.getPoints() + "**", false);
+                else
+                    finalEmbedBuilder1.addField(i.get() + " - " + members.getName(), "Points : " + members.getPoints(), false);
+                i.getAndIncrement();
+            }
+        });
     }
 }
 
