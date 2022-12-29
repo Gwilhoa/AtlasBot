@@ -127,4 +127,7 @@ public class Squads extends Request {
         return PostRequest("squads/id/" + id, "points=" + number * -1);
     }
 
+    public static String updateSquad() throws IOException {
+        return GetRequest("squads/update");
+    }
 }
