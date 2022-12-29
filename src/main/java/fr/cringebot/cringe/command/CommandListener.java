@@ -283,8 +283,9 @@ public class CommandListener {
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
 	private void test(Message msg) throws IOException, InterruptedException {
-		Members.addTitle(msg.getMember(), "test");
-		System.out.println(Members.getTitles(msg.getMember()));
+		List<Members> mems = Members.getMembers();
+		for (Members mem : mems)
+			mem.resetPoints();
 	}
 
 	@Command(name = "giveachievement", description = "donner un succès", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)

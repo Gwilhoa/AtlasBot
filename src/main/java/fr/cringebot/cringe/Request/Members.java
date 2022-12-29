@@ -144,6 +144,11 @@ public class Members extends Squads {
         addAchievement(member, id, announce);
     }
 
+    public void resetPoints() throws IOException
+    {
+        addPoints(this.id, -this.points);
+    }
+
     public static void addAchievement(Member mem, String achievement, MessageChannel announcechannel) throws IOException
     {
         AtomicBoolean b = new AtomicBoolean(false);

@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.util.HashMap;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 public class XpManager {
     private final static Long t = System.currentTimeMillis();
     public static HashMap<String, Long> lastMessage = new HashMap<>();
@@ -31,11 +34,9 @@ public class XpManager {
 
     private static Double getTextualPoint(Long time)
     {
-        System.out.println(time);
-        if (time < 60000)
-            return 0D;
-        Double ret = (100 - Math.exp((double)(-time - 60000)/ 702000));
-        System.out.println(ret);
+        double ret = (750000/(6000 * sqrt(2* Math.PI)))*Math.exp((-1/2) * pow(((time-60000)/(6000)), 2)) + 7.61 * pow(10, -12) * pow(time, 2);
+        if (ret > 100)
+            return 100.0;
         return ret;
     }
 }
