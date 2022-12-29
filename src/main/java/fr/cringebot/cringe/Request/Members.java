@@ -13,18 +13,16 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class Members extends Squads {
+public class Members extends Request {
 
     private  String id;
     private  String name;
     private  Integer points;
     private  Integer coins;
-    private  Squads squad;
+    private final Squads squad;
     private  String title;
 
-
-    Members (String id, String name, Integer points, Integer coins, String title,Squads squad) {
-        super(squad.getId(), squad.getName(), squad.getPointsGiven(), squad.getPointsTotal(), squad.getColor());
+    Members (String id, String name, Integer points, Integer coins, String title, Squads squad) {
         this.id = id;
         this.name = name;
         this.points = points;
@@ -33,7 +31,17 @@ public class Members extends Squads {
         this.title = title;
     }
 
-    public static List<Members> getObjMembers(String data) {
+    Members (String id, String name, Integer points, Integer coins, String title) throws IOException {
+        this.id = id;
+        this.name = name;
+        this.points = points;
+        this.coins = coins;
+        this.title = title;
+        System.out.println(id);
+        this.squad = Squads.getSquadByMember(id);
+    }
+
+    public static List<Members> getObjMembers(String data, Squads sq) {
 
         ArrayList<Members> members = new ArrayList<>();
         GsonBuilder builder = new GsonBuilder();
@@ -45,33 +53,43 @@ public class Members extends Squads {
             data = "["+data+"]";
             array = gson.fromJson(data, JsonArray.class);
         }
-        array.forEach(jsonElement -> {
-            members.add(
-                    new Members(
-                            jsonElement.getAsJsonObject().get("id").getAsString(),
-                            jsonElement.getAsJsonObject().get("name").getAsString(),
-                            jsonElement.getAsJsonObject().get("points").getAsInt(),
-                            jsonElement.getAsJsonObject().get("coins").getAsInt(),
-                            jsonElement.getAsJsonObject().get("title").getAsString(),
-                            new Squads(
-                                    jsonElement.getAsJsonObject().get("squad").getAsJsonObject().get("id").getAsString(),
-                                    jsonElement.getAsJsonObject().get("squad").getAsJsonObject().get("name").getAsString(),
-                                    jsonElement.getAsJsonObject().get("squad").getAsJsonObject().get("PointsGiven").getAsInt(),
-                                    jsonElement.getAsJsonObject().get("squad").getAsJsonObject().get("PointsTotal").getAsInt(),
-                                    jsonElement.getAsJsonObject().get("squad").getAsJsonObject().get("color").getAsInt()
-                            )));
-        });
+        if (sq == null) {
+            array.forEach(jsonElement -> {
+                try {
+                    members.add(
+                            new Members(
+                                    jsonElement.getAsJsonObject().get("id").getAsString(),
+                                    jsonElement.getAsJsonObject().get("name").getAsString(),
+                                    jsonElement.getAsJsonObject().get("points").getAsInt(),
+                                    jsonElement.getAsJsonObject().get("coins").getAsInt(),
+                                    jsonElement.getAsJsonObject().get("title").getAsString()
+                            ));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } else {
+            array.forEach(jsonElement -> {
+                members.add(
+                        new Members(
+                                jsonElement.getAsJsonObject().get("id").getAsString(),
+                                jsonElement.getAsJsonObject().get("name").getAsString(),
+                                jsonElement.getAsJsonObject().get("points").getAsInt(),
+                                jsonElement.getAsJsonObject().get("coins").getAsInt(),
+                                jsonElement.getAsJsonObject().get("title").getAsString(),
+                                sq
+                        ));
+            });
+        }
         return members;
     }
 
     //------------------------------------------------------------//
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public String getId() {
         return id;
     }
@@ -96,7 +114,7 @@ public class Members extends Squads {
 
     public static Members getMember(String id) throws IOException
     {
-        return getObjMembers(Request.GetRequest("members/id/"+id)).get(0);
+        return getObjMembers(Request.GetRequest("members/id/"+id), null).get(0);
     }
 
     public static Members getMember(Member mem) throws IOException
@@ -116,7 +134,7 @@ public class Members extends Squads {
 
     public static List<Members> getMembers() throws IOException
     {
-        return getObjMembers(GetRequest("members"));
+        return getObjMembers(GetRequest("members"), null);
     }
 
     public static boolean newMembers(String id, String name, String squad) throws IOException

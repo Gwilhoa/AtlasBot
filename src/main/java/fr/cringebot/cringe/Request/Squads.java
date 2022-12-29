@@ -59,8 +59,8 @@ public class Squads extends Request {
 
     //------------------------------------------------------------//
 
-    public static List<Members> getMembers(String id) throws IOException {
-        return Members.getObjMembers(Request.GetRequest("squads/members/"+id));
+    public static List<Members> getMembers(Squads sq) throws IOException {
+        return Members.getObjMembers(Request.GetRequest("squads/members/"+sq.id), sq);
     }
 
     public String getName() {
@@ -113,7 +113,7 @@ public class Squads extends Request {
     public static Squads getSquads(String id) throws IOException
     {
 
-        return getObjSquads(GetRequest("squads/id/"+id)).get(0);
+        return getObjSquads('['+GetRequest("squads/id/"+id) + ']').get(0);
     }
 
     public static boolean addManualPoint(String id, Integer number) throws IOException {
@@ -129,5 +129,9 @@ public class Squads extends Request {
 
     public static String updateSquad() throws IOException {
         return GetRequest("squads/update");
+    }
+
+    public static Squads getSquadByMember(String id) throws IOException {
+        return getObjSquads('['+GetRequest("squads/member/"+id)+ ']').get(0);
     }
 }

@@ -36,7 +36,7 @@ public class TopCommand {
                 sq.forEach(squads -> {
                     List<Members> mem = null;
                     try {
-                        mem = Squads.getMembers(squads.getId());
+                        mem = Squads.getMembers(squads);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -73,7 +73,7 @@ public class TopCommand {
             AtomicInteger i = new AtomicInteger(1);
             EmbedBuilder finalEmbedBuilder1 = embedBuilder;
             displaymember(sender, mem, i, finalEmbedBuilder1);
-            embedBuilder.setColor(mem.get(0).getColor());
+            embedBuilder.setColor(mem.get(0).getSquad().getColor());
             return embedBuilder;
         }  else {
             List<Role> roleList = guild.getRolesByName(name, true);
@@ -88,7 +88,7 @@ public class TopCommand {
                 Role role = roleList.get(0);
                 List<Members> mem = null;
                 try {
-                    mem = Squads.getMembers(role.getId());
+                    mem = Squads.getMembers(Squads.getSquads(role.getId()));
                 } catch (ConnectException e) {
                     return Request.DisconnectedEmbed();
                 } catch (IOException e) {

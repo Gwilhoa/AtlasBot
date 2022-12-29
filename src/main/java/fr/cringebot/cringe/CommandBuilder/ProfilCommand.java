@@ -24,7 +24,8 @@ public class ProfilCommand {
         try {
             achs = Achievement.getAchievements();
             mem = Members.getMember(member);
-            lst = Squads.getMembers(mem.getSquad().getId());
+            System.out.println(mem.getSquad());
+            lst = Squads.getMembers(mem.getSquad());
             ach = Members.getAchievements(member);
         } catch (ConnectException e) {
             return Request.DisconnectedEmbed();
@@ -42,7 +43,7 @@ public class ProfilCommand {
                 break;
             }
         }
-        EmbedBuilder eb = new EmbedBuilder().setColor(mem.getColor())
+        EmbedBuilder eb = new EmbedBuilder().setColor(mem.getSquad().getColor())
                 .setThumbnail(member.getUser().getAvatarUrl())
                 .addField("> Surnom :", member.getEffectiveName(), true)
                 .addField("> escouade :", mem.getSquad().getName(), true)
