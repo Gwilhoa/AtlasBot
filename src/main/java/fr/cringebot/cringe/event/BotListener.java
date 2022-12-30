@@ -111,11 +111,7 @@ public class BotListener implements EventListener {
 	@Override
 	public void onEvent(GenericEvent event) {
 		System.out.println(colorize(event.getClass().getSimpleName(), Attribute.TEXT_COLOR(169, 169, 169)));
-		try {
-			Squads.updateSquad();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 		try {
 			if (event instanceof ReadyEvent) onEnable((ReadyEvent) event);
 			else if (event instanceof MessageReceivedEvent) onMessage((MessageReceivedEvent) event);

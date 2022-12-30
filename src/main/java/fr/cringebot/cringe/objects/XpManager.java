@@ -34,9 +34,11 @@ public class XpManager {
 
     private static Double getTextualPoint(Long time)
     {
-        double ret = (750000/(6000 * sqrt(2* Math.PI)))*Math.exp((-1/2) * pow(((time-60000)/(6000)), 2)) + 7.61 * pow(10, -12) * pow(time, 2);
+        System.out.println(time);
+        double ret = (750000/(6000 * sqrt(2* Math.PI)))*Math.exp((-0.5) * pow((double)((time-60000)/(6000)), 2)) + 7.61 * pow(10, -12) * pow(time, 2);
         if (ret > 100)
             return 100.0;
+        System.out.println(ret);
         return ret;
     }
 }
