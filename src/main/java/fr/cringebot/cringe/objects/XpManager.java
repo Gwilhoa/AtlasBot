@@ -37,6 +37,6 @@ public class XpManager {
         System.out.println(time);
         double ret = Math.round((125/sqrt(2* Math.PI)) * Math.exp(pow((time-60000),2)/-72000000) + 7.61 * pow(10, -12) * pow(time, 2));
         System.out.println(ret);
-        return Math.min(ret, 100.0);
+        return Math.min(ret, 395.0);
     }
 }
