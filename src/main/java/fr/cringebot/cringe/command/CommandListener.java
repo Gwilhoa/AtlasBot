@@ -267,6 +267,7 @@ public class CommandListener {
 		List<Achievement> achievement = Achievement.getAchievements();
 		List<Achievement> memAchievement = Members.getAchievements(msg.getMember());
 		List<String> id = new ArrayList<>();
+		ArrayList<MessageEmbed> ret = new ArrayList<>();
 		for (Achievement a : memAchievement) {
 			id.add(a.getId());
 		}
@@ -277,8 +278,13 @@ public class CommandListener {
 				eb.setColor(Color.GREEN);
 			else
 				eb.setColor(Color.RED);
-			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+			ret.add(eb.build());
+			if (ret.size() == 10) {
+				msg.getChannel().sendMessageEmbeds(ret).queue();
+				ret.clear();
+			}
 		}
+		msg.getChannel().sendMessageEmbeds(ret).queue();
 	}
 
 	@Command(name = "revokeachievement", description = "révoquer un succès", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)

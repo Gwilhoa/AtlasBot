@@ -252,6 +252,8 @@ public class Members extends Request {
     }
 
     public String getTitle() {
+        if (title.equals("0"))
+            return null;
         return title;
     }
 }

@@ -46,7 +46,10 @@ public class TopCommand {
                             finalEmbedBuilder.addField(squads.getName() + " - Top 1 : ---", "Points : pas encore de point | Points d'équipe : " + squads.getPointsGiven(), false);
 
                         } else {
-                            finalEmbedBuilder.addField(squads.getName() + " - Top 1 : " + mem.get(0).getName(), "Points : " + squads.getPointsTotal() + " | Points d'équipe : " + squads.getPointsGiven(), false);
+                            if (mem.get(0).getTitle() != null)
+                                finalEmbedBuilder.addField(squads.getName() + " - Top 1 : "  + mem.get(0).getTitle() + " " + mem.get(0).getName(), "Points : " + squads.getPointsTotal() + " | Points d'équipe : " + squads.getPointsGiven(), false);
+                            else
+                                finalEmbedBuilder.addField(squads.getName() + " - Top 1 : " + mem.get(0).getName(), "Points : " + squads.getPointsTotal() + " | Points d'équipe : " + squads.getPointsGiven(), false);
                         }
                     } else {
                         finalEmbedBuilder.addField(squads.getName(), "Points : " + squads.getPointsTotal() + " | Points d'équipe : " + squads.getPointsGiven(), false);
@@ -114,10 +117,13 @@ public class TopCommand {
     private static void displaymember(Member sender, List<Members> mem, AtomicInteger i, EmbedBuilder finalEmbedBuilder1) {
         mem.forEach(members -> {
             if (i.get() <= 10) {
+                String name = members.getName();
+                if (members.getTitle() != null)
+                    name = "__" + members.getTitle() + "__ " + name;
                 if (members.getId().equals(sender.getId()))
-                    finalEmbedBuilder1.addField("▶️  "+i.get() + " - " + members.getName() + "  ◀️", "**Points : " + members.getPoints() + "**", false);
+                    finalEmbedBuilder1.addField("▶️  "+i.get() + " - " + name + "  ◀️", "**Points : " + members.getPoints() + "**", false);
                 else
-                    finalEmbedBuilder1.addField(i.get() + " - " + members.getName(), "Points : " + members.getPoints(), false);
+                    finalEmbedBuilder1.addField(i.get() + " - " + name, "Points : " + members.getPoints(), false);
                 i.getAndIncrement();
             }
         });
