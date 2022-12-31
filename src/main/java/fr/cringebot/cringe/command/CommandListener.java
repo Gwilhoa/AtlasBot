@@ -240,19 +240,28 @@ public class CommandListener {
 		}
 	}
 
-	@Command(name = "createachievement", description = "créer un achievement", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
-	private void createAchievement(Message msg) throws IOException {
-		Achievement.createAchievement("Pentagenaire", "Être sur le serveur Discord au 5ans du B2K", 1000, 0, null);
-		Achievement.createAchievement("Bienvenue dans la grande famille I", "Avoir quitté la pleb", 0,15, null);
-		Achievement.createAchievement("Bienvenue dans la grande famille II", "Avoir rejoint l’élite", 0,0, "Bithuméen");
-		Achievement.createAchievement("Ah c'est marrant", "Avoir 1 meme passé dans “meilleurs memes”", 100, 1, null);
-		Achievement.createAchievement("Ah c'est marrant II", "Avoir 10 meme passé dans “meilleurs memes”", 500, 3, null);
-		Achievement.createAchievement("Ah c'est marrant III", "Avoir 25 meme passé dans “meilleurs memes”", 1000, 7, null);
-		Achievement.createAchievement("Ah c'est marrant IV", "Avoir 50 meme passé dans “meilleurs memes”", 2000, 10, null);
-		Achievement.createAchievement("Ah c'est marrant V", "Avoir 100 meme passé dans “meilleurs memes”", 5000, 15, "Marrakech du rire");
-		Achievement.createAchievement("Ratio légendaire", "Se prendre un ratio maximal", 1000, 0, "Victime");
-		Achievement.createAchievement("Dormir c'est pour les PD", "Rester en voc pendant 24h sans AFK", 5000, 5, "Insomniaque");
+	@Command(name = "gettitles", description = "afficher les titres", type = ExecutorType.USER)
+	private void getTitles(Message msg) {
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setTitle("Titres disponibles");
+		eb.setColor(Color.GREEN);
+		StringBuilder sb = new StringBuilder();
+		List<String> titles = new ArrayList<>();
+		try {
+			titles = Members.getTitles(msg.getMember());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (titles.isEmpty()) {
+			eb.setDescription("Vous n'avez aucun titre");
+			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
+		}
+		for (String s : titles) {
+			sb.append(s).append("\n");
+		}
+		msg.getChannel().sendMessageEmbeds(eb.setDescription(sb.toString()).build()).queue();
 	}
+
 	@Command(name = "achievements", description = "listes des succès", type = ExecutorType.USER)
 	private void Achievement(Message msg) throws IOException {
 		List<Achievement> achievement = Achievement.getAchievements();
@@ -262,7 +271,8 @@ public class CommandListener {
 			id.add(a.getId());
 		}
 		for (Achievement a : achievement) {
-			EmbedBuilder eb = new EmbedBuilder().setTitle(a.getName()).setDescription(a.getDescription()).setThumbnail(a.getImage()).setFooter("Points : " + a.getPoints() + " | coins : " + a.getPoints() + " | titre : " + a.getTitle());
+			System.out.println(a.getImage());
+			EmbedBuilder eb = new EmbedBuilder().setTitle(a.getName()).setDescription(a.getDescription()).setThumbnail(a.getImage()).setFooter("Points : " + a.getPoints() + " | coins : " + a.getCoins()+ " | titre : " + a.getTitle());
 			if (id.contains(a.getId()))
 				eb.setColor(Color.GREEN);
 			else

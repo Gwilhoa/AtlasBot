@@ -176,7 +176,7 @@ public class Members extends Request {
                     {
                         if (announcechannel != null)
                         {
-                            announcechannel.sendMessage("L'utilisateur "+mem.getAsMention()+" a déjà l'achievement "+ach.getName()).queue();
+                            //announcechannel.sendMessage("L'utilisateur "+mem.getAsMention()+" a déjà l'achievement "+ach.getName()).queue();
                             b.set(true);
                         }
                     }

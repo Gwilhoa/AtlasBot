@@ -30,6 +30,7 @@ public class Achievement {
         try {
             URL url = new URL("https://cdn.bitume2000.fr/achievement/" + id + ".png");
             url.openConnection();
+            url.getContent();
         } catch (IOException e) {
             this.image = "https://cdn.bitume2000.fr/achievement/0.png";
             return;
