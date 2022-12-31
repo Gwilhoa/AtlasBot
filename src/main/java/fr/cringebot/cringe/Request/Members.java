@@ -3,10 +3,12 @@ package fr.cringebot.cringe.Request;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -196,7 +198,12 @@ public class Members extends Request {
             Members.addPoints(mem.getId(), ach.getPoints());
             Members.addCoins(mem.getId(), ach.getCoins());
             Members.addTitle(mem, ach.getTitle());
-            announcechannel.sendMessage(mem.getAsMention()+" a débloqué l'achievement **"+ach.getName()+"** !").queue();
+            announcechannel.sendMessage(mem.getAsMention()+" a débloqué l'achievement **"+ach.getName()+"** !").setEmbeds(new EmbedBuilder()
+                    .setTitle(ach.getName())
+                    .setDescription(ach.getDescription())
+                    .setThumbnail(ach.getImage())
+                    .setColor(Color.GREEN)
+                    .build()).queue();
         }
     }
 
