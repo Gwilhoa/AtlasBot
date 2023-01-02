@@ -298,10 +298,20 @@ public class CommandListener {
 	}
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
-	private void test(Message msg) throws IOException, InterruptedException {
+	private void test(Message msg, Guild guild) throws IOException, InterruptedException {
 		List<Members> mems = Members.getMembers();
 		for (Members mem : mems)
-			mem.resetPoints();
+		{
+			if (mem.getMember(guild).getRoles().contains(guild.getRoleById("680431143283458077")))
+			{
+				mem.addAchievement("3", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+			}
+			if (mem.getMember(guild).getRoles().contains(guild.getRoleById("849925828069687296")))
+			{
+				mem.addAchievement("2", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+			}
+
+		}
 	}
 
 	@Command(name = "giveachievement", description = "donner un succès", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)

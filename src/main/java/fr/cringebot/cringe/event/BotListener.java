@@ -29,15 +29,13 @@ import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.objects.XpManager;
 import fr.cringebot.music.MusicCommand;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
@@ -130,10 +128,24 @@ public class BotListener implements EventListener {
 			else if (event instanceof CommandAutoCompleteInteraction) onAutoComplete((CommandAutoCompleteInteraction) event);
 			else if (event instanceof SelectMenuInteractionEvent) onSelectMenu((SelectMenuInteractionEvent) event);
 			else if (event instanceof ButtonInteractionEvent) onButton((ButtonInteractionEvent) event);
+			else if (event instanceof GuildMemberRoleAddEvent) onRoleAdd((GuildMemberRoleAddEvent) event);
 		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException e) {
 
 			e.printStackTrace();
 			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
+		}
+	}
+
+	private void onRoleAdd(GuildMemberRoleAddEvent event) throws IOException {
+		Guild guild = event.getGuild();
+		Members mem = Members.getMember(event.getMember());
+		if (event.getRoles().contains(event.getGuild().getRoleById("680431143283458077")))
+		{
+			mem.addAchievement("3", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+		}
+		if (mem.getMember(guild).getRoles().contains(guild.getRoleById("849925828069687296")))
+		{
+			mem.addAchievement("2", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
 		}
 	}
 
@@ -202,7 +214,6 @@ public class BotListener implements EventListener {
 	}
 
 	private void onConnect(GuildVoiceJoinEvent event) {
-
 	}
 
 
@@ -232,19 +243,7 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onPing(GatewayPingEvent event) throws IOException {
-		if (!bot.is2023)
-		{
-			System.out.println(java.time.LocalDate.now());
-			if (java.time.LocalDate.now().toString().split("-")[0].equals("2023"))
-			{
-				bot.is2023 = true;
-				for (Members membrs: Members.getMembers())
-				{
-					membrs.addAchievement("1", event.getJDA().getGuilds().get(0).getTextChannelById(BotDiscord.AnnounceSalonId), event.getJDA().getGuilds().get(0));
-				}
-				event.getJDA().getGuilds().get(0).getTextChannelById("461604519533608960").sendMessage("@everyone Bonne année \uD83E\uDD73 \uD83E\uDD73").queue();
-			}
-		}
+
 	}
 
 	/**

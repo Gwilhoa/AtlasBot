@@ -3,6 +3,7 @@ package fr.cringebot.cringe.Request;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import fr.cringebot.BotDiscord;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -88,6 +89,10 @@ public class Members extends Request {
 
     //------------------------------------------------------------//
 
+    public Member getMember(Guild guild) {
+        return guild.getMemberById(this.id);
+    }
+
     public String getName() {
         return name;
     }
@@ -151,6 +156,26 @@ public class Members extends Request {
     public static boolean addCoins(String id, Integer number) throws IOException
     {
         return PostRequest("members/coins/"+id,"coins="+number);
+    }
+
+    public static void addPoints(String id, Integer number, Guild guild) throws IOException {
+        Members mem = getMember(id);
+        Integer Points = getMember(id).getPoints();
+        if (Points >= 1000000) {
+            mem.addAchievement("14", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+        }
+        else if (Points >= 500000) {
+            mem.addAchievement("13", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+        }
+
+        else if (Points >= 100000) {
+            mem.addAchievement("12", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+        }
+        else if (Points >= 50000) {
+            mem.addAchievement("11", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+        }
+
+
     }
 
     public static void addPoints(String id, Integer number) throws IOException
