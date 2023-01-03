@@ -273,6 +273,7 @@ public class Members extends Request {
         }
         ArrayList<String> titles = new ArrayList<>();
         array.forEach(jsonElement -> titles.add(jsonElement.getAsJsonObject().get("name").getAsString()));
+        titles.remove("null");
         return titles;
     }
 

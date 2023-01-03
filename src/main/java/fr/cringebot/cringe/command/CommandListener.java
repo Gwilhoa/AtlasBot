@@ -254,10 +254,10 @@ public class CommandListener {
 		}
 		if (titles.isEmpty()) {
 			eb.setDescription("Vous n'avez aucun titre");
-			msg.getChannel().sendMessageEmbeds(eb.build()).queue();
-		}
-		for (String s : titles) {
-			sb.append(s).append("\n");
+		} else {
+			for (String s : titles) {
+				sb.append(s).append("\n");
+			}
 		}
 		msg.getChannel().sendMessageEmbeds(eb.setDescription(sb.toString()).build()).queue();
 	}
