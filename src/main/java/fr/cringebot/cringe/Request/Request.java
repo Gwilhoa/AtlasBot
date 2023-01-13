@@ -22,7 +22,7 @@ public class Request {
         return new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
     }
 
-    public static boolean PostRequest(String route, String content) throws IOException {
+    public static String PostRequest(String route, String content) throws IOException {
         URL url = new URL("http://api.bitume2000.fr:5000/v1/" + route);
         System.out.println(url);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -35,11 +35,10 @@ public class Request {
         writer.close();
         stream.close();
         con.connect();
-        if (con.getResponseCode() != 200) {
-            System.out.println("Failed : HTTP error code : " + con.getResponseCode() + "," + con.getResponseMessage());
-            return false;
+        if (con.getResponseCode() == 500) {
+            throw new RuntimeException("Failed : HTTP error code : " + con.getResponseCode());
         }
-        return true;
+        return con.getResponseMessage();
     }
 
     public static EmbedBuilder DisconnectedEmbed() {

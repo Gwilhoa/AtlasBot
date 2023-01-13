@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.objects;
 
 import fr.cringebot.cringe.Request.Members;
+import net.dv8tion.jda.api.entities.Guild;
 
 
 import java.io.IOException;
@@ -14,17 +15,17 @@ public class XpManager {
     private final static Long t = System.currentTimeMillis();
     public static HashMap<String, Long> lastMessage = new HashMap<>();
 
-    public static void sendMessage(String id) {
+    public static void sendMessage(String id, Guild guild) {
         if (lastMessage.get(id) == null) {
             try {
-                Members.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue());
+                Members.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue(), guild);
             } catch (IOException e) {
                 return;
             }
             lastMessage.put(id, System.currentTimeMillis());
         } else {
             try {
-                Members.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue());
+                Members.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue(), guild);
             } catch (IOException e) {
                 return;
             }

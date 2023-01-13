@@ -69,11 +69,13 @@ public class BotListener implements EventListener {
 
 	private final CommandMap commandMap;
 	private final BotDiscord bot;
+	private final HashMap<String, Long> connectedUsers;
 
 
 	public BotListener(CommandMap cmd, BotDiscord bot) {
 		this.commandMap = cmd;
 		this.bot = bot;
+		this.connectedUsers = new HashMap<>();
 	}
 
 	public static class ArrayNumber<E extends Number> {
@@ -203,17 +205,27 @@ public class BotListener implements EventListener {
 			event.reply("coming soon").queue();
 	}
 
-	private void onMove(GuildVoiceMoveEvent event) {
-
+	private void onMove(GuildVoiceMoveEvent event) throws IOException {
+		if (event.getChannelJoined().getId().equals(BotDiscord.AFKSalonId) && connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
+		{
+			Members.addAchievement(event.getMember(), "10", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+		}
+		connectedUsers.remove(event.getMember().getId());
 	}
 
 
 
-	private void onDisconnect(GuildVoiceLeaveEvent event) {
-
+	private void onDisconnect(GuildVoiceLeaveEvent event) throws IOException {
+		if (connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
+		{
+			Members.addAchievement(event.getMember(), "10", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+		}
+		connectedUsers.remove(event.getMember().getId());
 	}
 
 	private void onConnect(GuildVoiceJoinEvent event) {
+		if (!event.getChannelJoined().getId().equals(BotDiscord.AFKSalonId))
+			connectedUsers.put(event.getMember().getId(), System.currentTimeMillis());
 	}
 
 
@@ -333,7 +345,7 @@ public class BotListener implements EventListener {
 		Message msg = event.getMessage();
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		if (!event.getGuild().getId().equals("382938797442334720")) return;
-		XpManager.sendMessage(event.getMember().getId());
+		XpManager.sendMessage(event.getMember().getId(), event.getGuild());
 		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {
 			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
 			return;

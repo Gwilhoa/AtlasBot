@@ -100,7 +100,7 @@ public class Squads extends Request {
         return GetRequest("squads/remove/"+id);
     }
 
-    public static boolean newSquads(String name, String id, Color color) throws IOException
+    public static String newSquads(String name, String id, Color color) throws IOException
     {
         return PostRequest("squads","name="+name+"&id="+id+"&color="+color.getRGB());
     }
@@ -116,14 +116,14 @@ public class Squads extends Request {
         return getObjSquads('['+GetRequest("squads/id/"+id) + ']').get(0);
     }
 
-    public static boolean addManualPoint(String id, Integer number) throws IOException {
+    public static String addManualPoint(String id, Integer number) throws IOException {
         return PostRequest("squads/id/" + id, "points=" + number);
     }
-    public static boolean addManualPoint(String id, Double number) throws IOException {
+    public static String addManualPoint(String id, Double number) throws IOException {
         return PostRequest("squads/id/" + id, "points=" + number.intValue());
     }
 
-    public static boolean removeManualPoint(String id, Integer number) throws IOException {
+    public static String removeManualPoint(String id, Integer number) throws IOException {
         return PostRequest("squads/id/" + id, "points=" + number * -1);
     }
 

@@ -134,7 +134,7 @@ public class Members extends Request {
         return GetRequest("members/squad/"+id);
     }
 
-    public static boolean setSquad(Member member, String id) throws IOException
+    public static String setSquad(Member member, String id) throws IOException
     {
         return PostRequest("members/squads/"+member.getId(),"squadid="+id);
     }
@@ -144,16 +144,16 @@ public class Members extends Request {
         return getObjMembers(GetRequest("members"), null);
     }
 
-    public static boolean newMembers(String id, String name, String squad) throws IOException
+    public static String newMembers(String id, String name, String squad) throws IOException
     {
         return PostRequest("members","id="+id+"&name="+name+"&squadid="+squad);
     }
-    public static boolean newMembers(Member mem, String squad) throws IOException
+    public static String newMembers(Member mem, String squad) throws IOException
     {
         return PostRequest("members","id="+mem.getId()+"&name="+mem.getUser().getName()+"&squadid="+squad);
     }
 
-    public static boolean addCoins(String id, Integer number) throws IOException
+    public static String addCoins(String id, Integer number) throws IOException
     {
         return PostRequest("members/coins/"+id,"coins="+number);
     }
@@ -178,9 +178,9 @@ public class Members extends Request {
 
     }
 
-    public static void addPoints(String id, Integer number) throws IOException
+    private static void addPoints(String id, Integer number) throws IOException
     {
-        PostRequest("members/points/"+id,"points="+number);
+        System.out.println(PostRequest("members/points/"+id,"points="+number));
     }
 
     public void addAchievement(String id, MessageChannel announce, Guild guild) throws IOException
@@ -220,7 +220,7 @@ public class Members extends Request {
         if (announcechannel != null)
         {
             Achievement ach = Achievement.getAchievement(achievement);
-            Members.addPoints(mem.getId(), ach.getPoints());
+            Members.addPoints(mem.getId(), ach.getPoints(), mem.getGuild());
             Members.addCoins(mem.getId(), ach.getCoins());
             Members.addTitle(mem, ach.getTitle());
             announcechannel.sendMessage(mem.getAsMention()+" a débloqué l'achievement **"+ach.getName()+"** !").setEmbeds(new EmbedBuilder()
