@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2022/08/28 21:46:27 by                  ###   ########.fr       */
+/*   Updated: 2023/01/15 21:27:18 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,10 @@ public class ReactionEvent {
         String s = msg.getContentRaw().replace("?","").replace(".","").replace(" ","");
         if ( s.substring(Math.max(0, s.length() - 4)).equalsIgnoreCase("quoi")){
             feur(msg);
+        }
+
+        if ( s.substring(Math.max(0, s.length() - 4)).equalsIgnoreCase("what")){
+            msg.getChannel().sendMessage("ibulle").queue();
         }
 
         if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))
