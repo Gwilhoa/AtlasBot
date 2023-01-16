@@ -6,7 +6,7 @@
 /*   By: gchatain <gchatain@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 13:00:42 by gchatain          #+#    #+#             */
-/*   Updated: 2023/01/15 21:27:18 by                  ###   ########.fr       */
+/*   Updated: 2023/01/16 23:38:35 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.Buffer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -90,13 +91,22 @@ public class ReactionEvent {
         }
 
         String s = msg.getContentRaw().replace("?","").replace(".","").replace(" ","");
-        if ( s.substring(Math.max(0, s.length() - 4)).equalsIgnoreCase("quoi")){
-            feur(msg);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("quoi", "feur");
+        map.put("what", "ibulle");
+        map.put("oui", "stiti");
+        map.put("non", "bril");
+        map.put("ouais", "stern");
+
+
+        for (String str : map.keySet()) {
+            if (s.substring(Math.max(0, s.length() - str.length())).equalsIgnoreCase(str)) {
+                msg.getChannel().sendMessage(map.get(str)).queue();
+                return;
+            }
         }
 
-        if ( s.substring(Math.max(0, s.length() - 4)).equalsIgnoreCase("what")){
-            msg.getChannel().sendMessage("ibulle").queue();
-        }
+
 
         if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))
             msg.getChannel().sendFile(imgExtenders.getFile("societer.png")).queue();
