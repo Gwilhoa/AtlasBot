@@ -279,9 +279,7 @@ public class ReactionEvent {
      * va te coiffer, tu me fais peur
      * @param msg
      */
-    public static void feur(Message msg){
-        msg.getTextChannel().sendMessage("feur").queue();
-    }
+
 
     /**
      * hmmm dépend du nombre de m
