@@ -45,7 +45,7 @@ public class Members extends Request {
     }
 
     public static List<Members> getObjMembers(String data, Squads sq) {
-
+        if (data == null) return null;
         ArrayList<Members> members = new ArrayList<>();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
@@ -121,7 +121,10 @@ public class Members extends Request {
 
     public static Members getMember(String id) throws IOException
     {
-        return getObjMembers(Request.GetRequest("members/id/"+id), null).get(0);
+
+        List<Members> mbrs = getObjMembers(Request.GetRequest("members/id/"+id), null);
+        if (mbrs == null) return null;
+        return mbrs.get(0);
     }
 
     public static Members getMember(Member mem) throws IOException
@@ -160,6 +163,9 @@ public class Members extends Request {
 
     public static void addPoints(String id, Integer number, Guild guild) throws IOException {
         Members mem = getMember(id);
+        if (mem == null) {
+            return;
+        }
         Integer Points = getMember(id).getPoints();
         if (Points >= 1000000) {
             mem.addAchievement("13", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);

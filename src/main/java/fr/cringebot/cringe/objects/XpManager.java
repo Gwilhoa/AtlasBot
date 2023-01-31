@@ -16,6 +16,7 @@ public class XpManager {
     public static HashMap<String, Long> lastMessage = new HashMap<>();
 
     public static void sendMessage(String id, Guild guild) throws IOException {
+        if (Members.getMember(id) == null) return;
         if (lastMessage.get(id) == null) {
                 Members.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue(), guild);
             lastMessage.put(id, System.currentTimeMillis());
