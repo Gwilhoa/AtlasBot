@@ -313,6 +313,7 @@ public class CommandListener {
 		Squads.newSquads("Feu", "1013766252461838506", guild.getRoleById("1013766252461838506").getColor());
 		Squads.newSquads("Air", "1013766463204642897", guild.getRoleById("1013766463204642897").getColor());
 		for (Member mem : guild.getMembers()) {
+			System.out.println(mem.getUser().getName());
 			if (mem.getRoles().contains(eau))
 				Members.newMembers(mem, eau.getId());
 			else if (mem.getRoles().contains(feu))
@@ -323,6 +324,7 @@ public class CommandListener {
 		List<Members> mems = Members.getMembers();
 		for (Members mem : mems)
 		{
+			mem.addAchievement("1", null, guild);
 			if (mem.getMember(guild).getRoles().contains(guild.getRoleById("680431143283458077")))
 			{
 				mem.addAchievement("2", null, guild);
