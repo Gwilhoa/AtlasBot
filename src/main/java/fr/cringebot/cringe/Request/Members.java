@@ -223,12 +223,12 @@ public class Members extends Request {
             e.printStackTrace();
             return;
         }
+        Achievement ach = Achievement.getAchievement(achievement);
+        Members.addTitle(mem, ach.getTitle());
         if (announcechannel != null)
         {
-            Achievement ach = Achievement.getAchievement(achievement);
             Members.addPoints(mem.getId(), ach.getPoints(), mem.getGuild());
             Members.addCoins(mem.getId(), ach.getCoins());
-            Members.addTitle(mem, ach.getTitle());
             announcechannel.sendMessage(mem.getAsMention()+" a débloqué l'achievement **"+ach.getName()+"** !").setEmbeds(new EmbedBuilder()
                     .setTitle(ach.getName())
                     .setDescription(ach.getDescription())
