@@ -218,7 +218,7 @@ public class BotListener implements EventListener {
 	private void onDisconnect(GuildVoiceLeaveEvent event) throws IOException {
 		if (connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
 		{
-			Members.addAchievement(event.getMember(), "10", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+			Members.addAchievement(event.getMember(), "9", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
 		}
 		connectedUsers.remove(event.getMember().getId());
 	}
@@ -345,7 +345,11 @@ public class BotListener implements EventListener {
 		Message msg = event.getMessage();
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		if (!event.getGuild().getId().equals("382938797442334720")) return;
-		XpManager.sendMessage(event.getMember().getId(), event.getGuild());
+		try {
+			XpManager.sendMessage(event.getMember().getId(), event.getGuild());
+		} catch (IOException e) {
+			System.out.println("erreur d'écriture");
+		}
 		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {
 			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());
 			return;

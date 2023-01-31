@@ -15,20 +15,12 @@ public class XpManager {
     private final static Long t = System.currentTimeMillis();
     public static HashMap<String, Long> lastMessage = new HashMap<>();
 
-    public static void sendMessage(String id, Guild guild) {
+    public static void sendMessage(String id, Guild guild) throws IOException {
         if (lastMessage.get(id) == null) {
-            try {
                 Members.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue(), guild);
-            } catch (IOException e) {
-                return;
-            }
             lastMessage.put(id, System.currentTimeMillis());
         } else {
-            try {
                 Members.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue(), guild);
-            } catch (IOException e) {
-                return;
-            }
             lastMessage.replace(id, System.currentTimeMillis());
         }
     }

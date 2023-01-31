@@ -162,17 +162,17 @@ public class Members extends Request {
         Members mem = getMember(id);
         Integer Points = getMember(id).getPoints();
         if (Points >= 1000000) {
-            mem.addAchievement("14", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+            mem.addAchievement("13", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
         }
         else if (Points >= 500000) {
-            mem.addAchievement("13", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+            mem.addAchievement("12", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
         }
 
         else if (Points >= 100000) {
-            mem.addAchievement("12", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+            mem.addAchievement("11", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
         }
         else if (Points >= 50000) {
-            mem.addAchievement("11", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+            mem.addAchievement("10", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
         }
 
 

@@ -250,7 +250,7 @@ public class CommandListener {
 		try {
 			titles = Members.getTitles(msg.getMember());
 		} catch (IOException e) {
-			e.printStackTrace();
+			msg.getChannel().sendMessage("erreur de connexion").queue();
 		}
 		if (titles.isEmpty()) {
 			eb.setDescription("Vous n'avez aucun titre");
@@ -263,9 +263,16 @@ public class CommandListener {
 	}
 
 	@Command(name = "achievements", description = "listes des succès", type = ExecutorType.USER)
-	private void Achievement(Message msg) throws IOException {
-		List<Achievement> achievement = Achievement.getAchievements();
-		List<Achievement> memAchievement = Members.getAchievements(msg.getMember());
+	private void Achievement(Message msg) {
+		List<Achievement> achievement;
+		List<Achievement> memAchievement;
+		try {
+			achievement = Achievement.getAchievements();
+			memAchievement = Members.getAchievements(msg.getMember());
+		} catch (IOException e) {
+			msg.getChannel().sendMessage("erreur de connexion").queue();
+			return;
+		}
 		List<String> id = new ArrayList<>();
 		ArrayList<MessageEmbed> ret = new ArrayList<>();
 		for (Achievement a : memAchievement) {
@@ -299,16 +306,31 @@ public class CommandListener {
 
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
 	private void test(Message msg, Guild guild) throws IOException, InterruptedException {
+		Role eau =  guild.getRoleById("1013766309156233236");
+		Role feu =  guild.getRoleById("1013766309156233236");
+		Role air =  guild.getRoleById("1013766309156233236");
+		Squads.newSquads("Eau", "1013766309156233236", guild.getRoleById("1013766309156233236").getColor());
+		Squads.newSquads("Feu", "1013766252461838506", guild.getRoleById("1013766252461838506").getColor());
+		Squads.newSquads("Air", "1013766463204642897", guild.getRoleById("1013766463204642897").getColor());
+		for (Member mem : guild.getMembers()) {
+			if (mem.getRoles().contains(eau))
+				Members.newMembers(mem, eau.getId());
+			else if (mem.getRoles().contains(feu))
+				Members.newMembers(mem, feu.getId());
+			else if (mem.getRoles().contains(air))
+				Members.newMembers(mem, air.getId());
+		}
 		List<Members> mems = Members.getMembers();
 		for (Members mem : mems)
 		{
 			if (mem.getMember(guild).getRoles().contains(guild.getRoleById("680431143283458077")))
 			{
-				mem.addAchievement("3", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+				mem.addAchievement("2", null, guild);
+				mem.addAchievement("3", null, guild);
 			}
 			if (mem.getMember(guild).getRoles().contains(guild.getRoleById("849925828069687296")))
 			{
-				mem.addAchievement("2", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+				mem.addAchievement("2", null, guild);
 			}
 
 		}

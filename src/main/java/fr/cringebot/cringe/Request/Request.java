@@ -16,9 +16,6 @@ public class Request {
         con.setRequestMethod("GET");
         con.setRequestProperty("token", "b2k-admin205.1-2022-gwil42lyon-nekixilam");
         con.connect();
-        if (con.getResponseCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + con.getResponseCode());
-        }
         return new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
     }
 
