@@ -308,7 +308,7 @@ public class CommandListener {
 	private void test(Message msg, Guild guild) throws IOException, InterruptedException {
 		Role eau =  guild.getRoleById("1013766309156233236");
 		Role feu =  guild.getRoleById("1013766252461838506");
-		Role air =  guild.getRoleById("680431143283458077");
+		Role air =  guild.getRoleById("1013766463204642897");
 		Squads.newSquads("Eau", "1013766309156233236", eau.getColor());
 		Squads.newSquads("Feu", "1013766252461838506", feu.getColor());
 		Squads.newSquads("Air", "1013766463204642897", air.getColor());
