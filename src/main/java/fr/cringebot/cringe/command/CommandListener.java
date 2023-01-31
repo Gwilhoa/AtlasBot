@@ -307,13 +307,12 @@ public class CommandListener {
 	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
 	private void test(Message msg, Guild guild) throws IOException, InterruptedException {
 		Role eau =  guild.getRoleById("1013766309156233236");
-		Role feu =  guild.getRoleById("1013766309156233236");
-		Role air =  guild.getRoleById("1013766309156233236");
-		Squads.newSquads("Eau", "1013766309156233236", guild.getRoleById("1013766309156233236").getColor());
-		Squads.newSquads("Feu", "1013766252461838506", guild.getRoleById("1013766252461838506").getColor());
-		Squads.newSquads("Air", "1013766463204642897", guild.getRoleById("1013766463204642897").getColor());
+		Role feu =  guild.getRoleById("1013766252461838506");
+		Role air =  guild.getRoleById("680431143283458077");
+		Squads.newSquads("Eau", "1013766309156233236", eau.getColor());
+		Squads.newSquads("Feu", "1013766252461838506", feu.getColor());
+		Squads.newSquads("Air", "1013766463204642897", air.getColor());
 		for (Member mem : guild.getMembers()) {
-			System.out.println(mem.getUser().getName());
 			if (mem.getRoles().contains(eau))
 				Members.newMembers(mem, eau.getId());
 			else if (mem.getRoles().contains(feu))
