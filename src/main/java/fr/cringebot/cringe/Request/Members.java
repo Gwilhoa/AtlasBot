@@ -163,6 +163,7 @@ public class Members extends Request {
 
     public static void addPoints(String id, Integer number, Guild guild) throws IOException {
         Members mem = getMember(id);
+        addPoints(id, number);
         if (mem == null) {
             return;
         }
