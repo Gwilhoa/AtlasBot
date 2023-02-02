@@ -211,7 +211,7 @@ public class BotListener implements EventListener {
 				}
 				event.getMessage().editMessageComponents(ActionRow.of(buttons)).queue();
 				event.reply("tu as bien voté pour ce meme\n il te reste " + Members.getMemeVote(event.getMember().getId()) + " super vote").setEphemeral(true).queue();
-				if (Integer.parseInt(did.split(";")[1]) >= 1) {
+				if (Integer.parseInt(did.split(";")[1]) >= 5) {
 					Message message = event.getMessage();
 					if (message.getEmbeds().isEmpty()) {
 						File f = imgExtenders.getFile(message.getAttachments().get(0).getProxyUrl(), message.getAttachments().get(0).getFileName(), null);

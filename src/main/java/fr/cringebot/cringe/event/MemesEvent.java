@@ -28,7 +28,7 @@ public class MemesEvent {
     }
 
     public static String res(Integer progress) {
-        StringBuilder res = new StringBuilder("Popularité du meme : \n");
+        StringBuilder res = new StringBuilder();
         res.append("|");
         int i = 0;
         while (i < 10) {

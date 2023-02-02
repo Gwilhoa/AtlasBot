@@ -149,7 +149,7 @@ public class Members extends Request {
 
     public static String addMemeVote(String id) throws IOException
     {
-        return PostRequest("members/memevote/"+id,"");
+        return PostRequest("members/memevote/"+id,"add=1");
     }
 
     public static Integer getBestMemes(String id) throws IOException
@@ -159,7 +159,7 @@ public class Members extends Request {
 
     public static String addBestMemes(String id) throws IOException
     {
-        return PostRequest("members/bestmeme/"+id,"");
+        return PostRequest("members/bestmeme/"+id,"bestmeme=1");
     }
 
     public static String addBestMemes(Member mem) throws IOException
