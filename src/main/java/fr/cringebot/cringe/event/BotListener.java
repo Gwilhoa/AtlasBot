@@ -27,7 +27,9 @@ import fr.cringebot.cringe.Request.Squads;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.objects.XpManager;
+import fr.cringebot.cringe.objects.imgExtenders;
 import fr.cringebot.music.MusicCommand;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
@@ -50,16 +52,23 @@ import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
+import java.awt.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import static com.diogonunes.jcolor.Ansi.colorize;
+import static fr.cringebot.cringe.event.MemesEvent.*;
 
 
 /**
@@ -163,7 +172,101 @@ public class BotListener implements EventListener {
 				event.reply("vous avez rejoint la squad").setEphemeral(true).queue();
 				Members.newMembers(event.getMember(), event.getComponentId().split(";")[1]);
 			}
-
+		} else if (event.getComponentId().substring(2).startsWith("memes")) {
+			ArrayList<String> ids = new ArrayList<>(List.of(event.getComponentId().split(";")));
+			if (ids.contains(event.getMember().getId())) {
+				event.reply("tu as déjà voté ceci").setEphemeral(true).queue();
+			} else {
+				String bid = event.getMessage().getActionRows().get(0).getButtons().get(0).getId();
+				String nid = event.getMessage().getActionRows().get(0).getButtons().get(1).getId();
+				String gid = event.getMessage().getActionRows().get(0).getButtons().get(2).getId();
+				String did = event.getMessage().getActionRows().get(0).getButtons().get(3).getId();
+				ArrayList<net.dv8tion.jda.api.interactions.components.buttons.Button> buttons = new ArrayList<>();
+				if (event.getComponentId().contains("b")) {
+					bid = bid + ";" + event.getMember().getId();
+					did = "d_memes;" + (Integer.parseInt(did.split(";")[1]) - 1);
+					buttons.add(Button.danger(bid, "bof..."));
+					buttons.add(Button.success(nid, "bien"));
+					buttons.add(Button.primary(gid, "super"));
+					buttons.add(Button.danger(did, MemesEvent.res(Integer.parseInt(did.split(";")[1]))).asDisabled());
+				} else if (event.getComponentId().contains("n")) {
+					nid = nid + ";" + event.getMember().getId();
+					did = "d_memes;" + (Integer.parseInt(did.split(";")[1]) + 1);
+					buttons.add(Button.danger(bid, "bof..."));
+					buttons.add(Button.success(nid, "bien"));
+					buttons.add(Button.primary(gid, "super"));
+					buttons.add(Button.danger(did, MemesEvent.res(Integer.parseInt(did.split(";")[1]))).asDisabled());
+				} else if (event.getComponentId().contains("g")) {
+					if (Integer.parseInt(Members.getMemeVote(event.getMember().getId())) <= 0) {
+						event.reply("tu n'as plus de vote").setEphemeral(true).queue();
+						return;
+					}
+					Members.addMemeVote(event.getMember().getId());
+					gid = gid + ";" + event.getMember().getId();
+					did = "d_memes;" + (Integer.parseInt(did.split(";")[1]) + 2);
+					buttons.add(Button.danger(bid, "bof..."));
+					buttons.add(Button.success(nid, "bien"));
+					buttons.add(Button.primary(gid, "super"));
+					buttons.add(Button.danger(did, MemesEvent.res(Integer.parseInt(did.split(";")[1]))).asDisabled());
+				}
+				event.getMessage().editMessageComponents(ActionRow.of(buttons)).queue();
+				event.reply("tu as bien voté pour ce meme\n il te reste " + Members.getMemeVote(event.getMember().getId()) + " super vote").setEphemeral(true).queue();
+				if (Integer.parseInt(did.split(";")[1]) >= 1) {
+					Message message = event.getMessage();
+					if (message.getEmbeds().isEmpty()) {
+						File f = imgExtenders.getFile(message.getAttachments().get(0).getProxyUrl(), message.getAttachments().get(0).getFileName(), null);
+						message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(f).queue();
+						f.delete();
+						Members.addBestMemes(message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0));
+						message.delete().queue();
+						return;
+					} else {
+						if (message.getEmbeds().get(0).getAuthor() != null && message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("reddit")) {
+							repostReddit(message, null, message.getGuild().getTextChannelById("911549374696411156"));
+							Members.addBestMemes(message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0));
+							message.delete().queue();
+							return;
+						}
+						else if (message.getEmbeds().get(0).getAuthor() != null && message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("twitter")) {
+							repostTwitter(message, null, message.getGuild().getTextChannelById("911549374696411156"));
+							Members.addBestMemes(message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0));
+							message.delete().queue();
+							return;
+						}
+						else if (!message.getContentRaw().isEmpty()) {
+							message.getGuild().getTextChannelById("911549374696411156").sendMessage(message.getContentRaw()).queue();
+							Members.addBestMemes(message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0));
+							message.delete().queue();
+							return;
+						} else {
+							String name = message.getEmbeds().get(0).getImage().getUrl().split(" ")[0].split("/")[message.getEmbeds().get(0).getImage().getUrl().split("/").length - 1];
+							try (BufferedInputStream bis = new BufferedInputStream(new URL(message.getEmbeds().get(0).getImage().getUrl()).openStream());
+								 FileOutputStream fos = new FileOutputStream(name)) {
+								byte[] data = new byte[1024];
+								int byteContent;
+								while ((byteContent = bis.read(data, 0, 1024)) != -1) {
+									fos.write(data, 0, byteContent);
+								}
+							} catch (IOException e) {
+								e.printStackTrace(System.out);
+							}
+							File f = new File(name);
+							message.getGuild().getTextChannelById("911549374696411156").sendFile(f).setEmbeds(
+									new EmbedBuilder()
+											.setDescription(message.getEmbeds().get(0).getDescription())
+											.setImage("attachment://" + f.getName())
+											.setFooter(message.getEmbeds().get(0).getFooter().getText(), message.getEmbeds().get(0).getFooter().getIconUrl())
+											.setColor(Color.GREEN)
+											.build()
+							).queue();
+							f.delete();
+							Members.addBestMemes(message.getGuild().getMembersByName(message.getEmbeds().get(0).getFooter().getText(), false).get(0));
+							message.delete().queue();
+							return;
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -267,6 +370,14 @@ public class BotListener implements EventListener {
 		System.out.println("bot ready");
 		event.getJDA().getPresence().setActivity(Activity.playing("en dev"));
 		event.getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
+		new Thread(() -> {
+			try {
+				recupMeme(event.getJDA().getGuildById("382938797442334720"));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}).start();
+
 	}
 
 
@@ -349,6 +460,9 @@ public class BotListener implements EventListener {
 			XpManager.sendMessage(event.getMember().getId(), event.getGuild());
 		} catch (IOException e) {
 			System.out.println("erreur d'écriture");
+		}
+		if (msg.getChannel().getId().equals("461606547064356864")) {
+			postmeme(msg);
 		}
 		if (msg.getContentRaw().startsWith(CommandMap.getTag())) {
 			commandMap.commandUser(msg.getContentRaw().replaceFirst(CommandMap.getTag(), ""), event.getMessage());

@@ -142,6 +142,43 @@ public class Members extends Request {
         return PostRequest("members/squads/"+member.getId(),"squadid="+id);
     }
 
+    public static String getMemeVote(String id) throws IOException
+    {
+        return GetRequest("members/memevote/"+id);
+    }
+
+    public static String addMemeVote(String id) throws IOException
+    {
+        return PostRequest("members/memevote/"+id,"");
+    }
+
+    public static Integer getBestMemes(String id) throws IOException
+    {
+        return Integer.parseInt(GetRequest("members/bestmeme/"+id));
+    }
+
+    public static String addBestMemes(String id) throws IOException
+    {
+        return PostRequest("members/bestmeme/"+id,"");
+    }
+
+    public static String addBestMemes(Member mem) throws IOException
+    {
+        int nb = getBestMemes(mem.getId() + 1);
+        if ( nb >= 100)
+            addAchievement(mem, "8", mem.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+        else if (nb >= 50)
+            addAchievement(mem, "7", mem.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+        else if (nb >= 25)
+            addAchievement(mem, "6", mem.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+        else if (nb >= 10)
+            addAchievement(mem, "5", mem.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+        else if (nb >= 1)
+            addAchievement(mem, "4", mem.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+        addBestMemes(mem.getId());
+        return "ok";
+    }
+
     public static List<Members> getMembers() throws IOException
     {
         return getObjMembers(GetRequest("members"), null);
