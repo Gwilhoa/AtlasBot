@@ -40,7 +40,7 @@ public class MemesEvent {
             if (i < progress)
                 res.append("-");
             else
-                res.append(".");
+                res.append(" .");
             i++;
         }
         res.append("|");
