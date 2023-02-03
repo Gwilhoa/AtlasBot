@@ -28,6 +28,7 @@ public class MemesEvent {
     }
 
     public static String res(Integer progress) {
+        progress = progress *2;
         StringBuilder res = new StringBuilder();
         res.append("|");
         int i = 0;

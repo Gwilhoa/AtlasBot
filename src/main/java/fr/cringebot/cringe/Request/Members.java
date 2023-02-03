@@ -164,7 +164,7 @@ public class Members extends Request {
 
     public static String addBestMemes(Member mem) throws IOException
     {
-        int nb = getBestMemes(mem.getId() + 1);
+        int nb = getBestMemes(mem.getId()) + 1;
         if ( nb >= 100)
             addAchievement(mem, "8", mem.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
         else if (nb >= 50)
