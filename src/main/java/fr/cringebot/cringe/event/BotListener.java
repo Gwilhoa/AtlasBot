@@ -173,6 +173,11 @@ public class BotListener implements EventListener {
 				Members.newMembers(event.getMember(), event.getComponentId().split(";")[1]);
 			}
 		} else if (event.getComponentId().substring(2).startsWith("memes")) {
+			if (getMemeAuthor(event.getMessage()).getId().equals(event.getMember().getId()))
+			{
+				event.reply("tu ne peux pas voter pour tes propres memes").setEphemeral(true).queue();
+				return;
+			}
 			ArrayList<String> ids = new ArrayList<>(List.of(event.getComponentId().split(";")));
 			if (ids.contains(event.getMember().getId())) {
 				event.reply("tu as déjà voté ceci").setEphemeral(true).queue();
@@ -185,59 +190,47 @@ public class BotListener implements EventListener {
 				if (event.getComponentId().contains("b")) {
 					bid = bid + ";" + event.getMember().getId();
 					did = "d_memes;" + (Integer.parseInt(did.split(";")[1]) - 1);
-					buttons.add(Button.danger(bid, "bof..."));
-					buttons.add(Button.success(nid, "bien"));
-					buttons.add(Button.primary(gid, "super"));
-					buttons.add(Button.danger(did, MemesEvent.res(Integer.parseInt(did.split(";")[1]))).asDisabled());
 				} else if (event.getComponentId().contains("n")) {
 					nid = nid + ";" + event.getMember().getId();
 					did = "d_memes;" + (Integer.parseInt(did.split(";")[1]) + 1);
-					buttons.add(Button.danger(bid, "bof..."));
-					buttons.add(Button.success(nid, "bien"));
-					buttons.add(Button.primary(gid, "super"));
-					buttons.add(Button.danger(did, MemesEvent.res(Integer.parseInt(did.split(";")[1]))).asDisabled());
 				} else if (event.getComponentId().contains("g")) {
 					if (Integer.parseInt(Members.getMemeVote(event.getMember().getId())) <= 0) {
-						event.reply("tu n'as plus de vote").setEphemeral(true).queue();
+						event.reply("tu n'as plus de super vote").setEphemeral(true).queue();
 						return;
 					}
 					Members.addMemeVote(event.getMember().getId());
 					gid = gid + ";" + event.getMember().getId();
 					did = "d_memes;" + (Integer.parseInt(did.split(";")[1]) + 2);
-					buttons.add(Button.danger(bid, "bof..."));
-					buttons.add(Button.success(nid, "bien"));
-					buttons.add(Button.primary(gid, "super"));
-					buttons.add(Button.danger(did, MemesEvent.res(Integer.parseInt(did.split(";")[1]))).asDisabled());
 				}
+				buttons.add(Button.danger(bid, DownvoteLabel));
+				buttons.add(Button.success(nid, UpvoteLabel));
+				buttons.add(Button.primary(gid, supervoteLabel));
+				buttons.add(Button.danger(did, MemesEvent.res(Integer.parseInt(did.split(";")[1]))).asDisabled());
 				event.getMessage().editMessageComponents(ActionRow.of(buttons)).queue();
 				event.reply("tu as bien voté pour ce meme\n il te reste " + Members.getMemeVote(event.getMember().getId()) + " super vote").setEphemeral(true).queue();
-				if (Integer.parseInt(did.split(";")[1]) >= 5) {
+				if (Integer.parseInt(did.split(";")[1]) >= UpvoteRequired * 2) {
 					Message message = event.getMessage();
 					if (message.getEmbeds().isEmpty()) {
 						File f = imgExtenders.getFile(message.getAttachments().get(0).getProxyUrl(), message.getAttachments().get(0).getFileName(), null);
 						message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(f).queue();
 						f.delete();
-						Members.addBestMemes(message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0));
+						Members.addBestMemes(getMemeAuthor(message));
 						message.delete().queue();
-						return;
 					} else {
 						if (message.getEmbeds().get(0).getAuthor() != null && message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("reddit")) {
 							repostReddit(message, null, message.getGuild().getTextChannelById("911549374696411156"));
-							Members.addBestMemes(message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0));
+							Members.addBestMemes(getMemeAuthor(message));
 							message.delete().queue();
-							return;
 						}
 						else if (message.getEmbeds().get(0).getAuthor() != null && message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("twitter")) {
 							repostTwitter(message, null, message.getGuild().getTextChannelById("911549374696411156"));
-							Members.addBestMemes(message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0));
+							Members.addBestMemes(getMemeAuthor(message));
 							message.delete().queue();
-							return;
 						}
 						else if (!message.getContentRaw().isEmpty()) {
 							message.getGuild().getTextChannelById("911549374696411156").sendMessage(message.getContentRaw()).queue();
-							Members.addBestMemes(message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0));
+							Members.addBestMemes(getMemeAuthor(message));
 							message.delete().queue();
-							return;
 						} else {
 							String name = message.getEmbeds().get(0).getImage().getUrl().split(" ")[0].split("/")[message.getEmbeds().get(0).getImage().getUrl().split("/").length - 1];
 							try (BufferedInputStream bis = new BufferedInputStream(new URL(message.getEmbeds().get(0).getImage().getUrl()).openStream());
@@ -260,7 +253,7 @@ public class BotListener implements EventListener {
 											.build()
 							).queue();
 							f.delete();
-							Members.addBestMemes(message.getGuild().getMembersByName(message.getEmbeds().get(0).getFooter().getText(), false).get(0));
+							Members.addBestMemes(getMemeAuthor(message));
 							message.delete().queue();
 							return;
 						}

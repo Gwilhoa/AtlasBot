@@ -1,13 +1,11 @@
 package fr.cringebot.cringe.event;
 
+import fr.cringebot.cringe.Request.Members;
 import fr.cringebot.cringe.Request.Squads;
 import fr.cringebot.cringe.objects.DetectorAttachment;
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import org.apache.commons.io.FilenameUtils;
@@ -18,25 +16,31 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class MemesEvent {
+
+    public static Integer UpvoteRequired = 7;
+    public static String DownvoteLabel = "bof...";
+    public static String UpvoteLabel = "bien";
+    public static String supervoteLabel = "super";
+
+
     public static ArrayList<net.dv8tion.jda.api.interactions.components.buttons.Button> addButtonBuilder() {
         ArrayList<net.dv8tion.jda.api.interactions.components.buttons.Button> buttons = new ArrayList<>();
-        buttons.add(Button.danger("b_memes;", "bof..."));
-        buttons.add(Button.success("n_memes;", "bien"));
-        buttons.add(Button.primary("g_memes;", "super"));
-        buttons.add(Button.danger("d_memes;0", res(0)).asDisabled());
+        buttons.add(Button.danger("b_memes;", DownvoteLabel));
+        buttons.add(Button.success("n_memes;", UpvoteLabel));
+        buttons.add(Button.primary("g_memes;", supervoteLabel));
+        buttons.add(Button.danger("d_memes;0", res(UpvoteRequired)).asDisabled());
         return buttons;
     }
 
     public static String res(Integer progress) {
-        progress = progress *2;
         StringBuilder res = new StringBuilder();
         res.append("|");
         int i = 0;
-        while (i < 10) {
+        while (i < UpvoteRequired * 2) {
             if (i < progress)
-                res.append(" - ");
+                res.append("-");
             else
-                res.append(" . ");
+                res.append(".");
             i++;
         }
         res.append("|");
@@ -57,11 +61,8 @@ public class MemesEvent {
     private static void processmeme(Message msg) throws Exception {
         String channel = "461606547064356864";
         String[] args = msg.getContentRaw().split("\\s");
-        Message ret = null;
         String Content = null;
-        String ext = null;
         File f = null;
-        int i = 0;
         if (DetectorAttachment.isTenor(msg.getContentRaw())) {
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setImage(msg.getContentRaw());
@@ -94,20 +95,18 @@ public class MemesEvent {
             if (f == null)
                 return;
         }
-        ext = FilenameUtils.getExtension(f.getName());
-        if (ext.equals("fr") || ext.equals("com") || ext.equals("net") || ext.equals("org"))
-            return;
+        if (DetectorAttachment.isNetExtension(f.getName())) return;
         if (f.length() >= 8000000) {
             f.delete();
             msg.delete().queue();
             msg.getChannel().sendMessage("> "+ msg.getMember().getUser().getName() + "\n" +msg.getContentRaw()).setActionRow(addButtonBuilder()).queue();
             return;
         }
+        String ext = FilenameUtils.getExtension(f.getName());
         if ((ext.equals("mp4") || ext.equals("mov") || ext.equals("webm"))) {
                 msg.getGuild().getTextChannelById(channel).sendMessage("> " + msg.getMember().getUser().getName() + "\n\n" + Content).addFile(f).setActionRow(addButtonBuilder()).queue();
                 msg.delete().queue();
                 f.delete();
-                return;
         } else {
             EmbedBuilder eb = new EmbedBuilder()
                     .setImage("attachment://" + f.getName())
@@ -118,7 +117,6 @@ public class MemesEvent {
             msg.getGuild().getTextChannelById(channel).sendFile(f).setEmbeds(eb.build()).setActionRow(addButtonBuilder()).queue();
             msg.delete().queue();
             f.delete();
-            return;
         }
     }
 
@@ -202,5 +200,14 @@ public class MemesEvent {
                 msgs.get(i).delete().queue();
             i++;
         }
+    }
+
+    public static Member getMemeAuthor(Message message) {
+        if (message.getEmbeds().isEmpty())
+            return message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0);
+        else if (message.getEmbeds().get(0).getAuthor() != null || !message.getContentRaw().isEmpty())
+            return message.getGuild().getMembersByName(message.getContentRaw().substring(2).split("\n")[0], false).get(0);
+        else
+            return message.getGuild().getMembersByName(message.getEmbeds().get(0).getFooter().getText(), false).get(0);
     }
 }

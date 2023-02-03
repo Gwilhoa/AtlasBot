@@ -304,8 +304,8 @@ public class CommandListener {
 		}
 	}
 
-	@Command(name = "test", description = "commande provisoire", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
-	private void test(Message msg, Guild guild) throws IOException, InterruptedException {
+	@Command(name = "resetapi", description = "commande provisoire", type = ExecutorType.USER, permission = Permission.ADMINISTRATOR)
+	private void resetapi(Message msg, Guild guild) throws IOException, InterruptedException {
 		Role eau =  guild.getRoleById("1013766309156233236");
 		Role feu =  guild.getRoleById("1013766252461838506");
 		Role air =  guild.getRoleById("1013766463204642897");

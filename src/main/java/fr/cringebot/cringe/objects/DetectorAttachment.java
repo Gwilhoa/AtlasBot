@@ -1,6 +1,7 @@
 package fr.cringebot.cringe.objects;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
@@ -140,5 +141,10 @@ public class DetectorAttachment {
                 || (msg.getAttachments().size() >= 1 && msg.getAttachments().get(0).getHeight() != -1) // image/video added test
                 || DetectorAttachment.isVideo(msg.getContentRaw().split(" ")[0]) //video link
                 || DetectorAttachment.isImage(msg.getContentRaw().split(" ")[0]);
+    }
+
+    public static boolean isNetExtension(String filename) {
+        String ext = FilenameUtils.getExtension(filename);
+        return ext.equals("fr") || ext.equals("com") || ext.equals("net") || ext.equals("org");
     }
 }
