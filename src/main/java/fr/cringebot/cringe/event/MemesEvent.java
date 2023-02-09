@@ -6,6 +6,7 @@ import fr.cringebot.cringe.objects.DetectorAttachment;
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import org.apache.commons.io.FilenameUtils;
@@ -28,7 +29,7 @@ public class MemesEvent {
         buttons.add(Button.danger("b_memes;", DownvoteLabel));
         buttons.add(Button.success("n_memes;", UpvoteLabel));
         buttons.add(Button.primary("g_memes;", supervoteLabel));
-        buttons.add(Button.danger("d_memes;0", res(UpvoteRequired)).asDisabled());
+        buttons.add(Button.danger("d_memes;" + UpvoteRequired/2, res(UpvoteRequired)).asDisabled());
         return buttons;
     }
 
@@ -198,6 +199,11 @@ public class MemesEvent {
             }
             else if (!msgs.get(i).getAuthor().isBot())
                 msgs.get(i).delete().queue();
+            else if (msgs.get(i).getAuthor().isBot())
+            {
+                msgs.get(i).editMessageComponents(ActionRow.of(addButtonBuilder())).queue();
+                Thread.sleep(1000);
+            }
             i++;
         }
     }
