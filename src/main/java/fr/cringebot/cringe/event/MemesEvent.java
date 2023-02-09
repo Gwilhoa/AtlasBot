@@ -199,11 +199,6 @@ public class MemesEvent {
             }
             else if (!msgs.get(i).getAuthor().isBot())
                 msgs.get(i).delete().queue();
-            else if (msgs.get(i).getAuthor().isBot())
-            {
-                msgs.get(i).editMessageComponents(ActionRow.of(addButtonBuilder())).queue();
-                Thread.sleep(1000);
-            }
             i++;
         }
     }
