@@ -29,7 +29,7 @@ public class MemesEvent {
         buttons.add(Button.danger("b_memes;", DownvoteLabel));
         buttons.add(Button.success("n_memes;", UpvoteLabel));
         buttons.add(Button.primary("g_memes;", supervoteLabel));
-        buttons.add(Button.danger("d_memes;" + UpvoteRequired/2, res(UpvoteRequired)).asDisabled());
+        buttons.add(Button.danger("d_memes;" + UpvoteRequired, res(UpvoteRequired)).asDisabled());
         return buttons;
     }
 
@@ -64,7 +64,7 @@ public class MemesEvent {
         String[] args = msg.getContentRaw().split("\\s");
         String Content = null;
         File f = null;
-        if (DetectorAttachment.isTenor(msg.getContentRaw())) {
+        if (DetectorAttachment.isTenor(msg.getContentRaw()) || DetectorAttachment.isYoutube(msg.getContentRaw())) {
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setImage(msg.getContentRaw());
             msg.getChannel().sendMessage("> " + msg.getMember().getUser().getName() + "\n" + msg.getContentRaw()).setActionRow(addButtonBuilder()).queue();
@@ -193,12 +193,12 @@ public class MemesEvent {
         while(i < 100)
         {
             if (!msgs.get(i).getAuthor().isBot())
-            {
                     postmeme(msgs.get(i));
-                    Thread.sleep(1000);
-            }
             else if (!msgs.get(i).getAuthor().isBot())
                 msgs.get(i).delete().queue();
+//            else if (msgs.get(i).getAuthor().isBot())
+//                msgs.get(i).editMessageComponents(ActionRow.of(addButtonBuilder())).queue();
+//            Thread.sleep(2000);
             i++;
         }
     }
