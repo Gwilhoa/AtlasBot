@@ -321,6 +321,11 @@ public class Members extends Request {
         return titles;
     }
 
+    public String getWaifuMembers() throws IOException {
+        String data = GetRequest("members/waifus/"+this.getId());
+        return data;
+    }
+
     public String getTitle() {
         if (title.equals("0"))
             return null;
