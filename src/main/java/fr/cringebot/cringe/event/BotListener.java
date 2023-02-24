@@ -119,7 +119,7 @@ public class BotListener implements EventListener {
 
 	@Override
 	public void onEvent(GenericEvent event) {
-		System.out.println(colorize(event.getClass().getSimpleName(), Attribute.TEXT_COLOR(169, 169, 169)));
+		System.out.println(colorize( "[Event] "+ event.getClass().getSimpleName(), Attribute.TEXT_COLOR(169, 169, 169)));
 
 		try {
 			if (event instanceof ReadyEvent) onEnable((ReadyEvent) event);
@@ -360,7 +360,6 @@ public class BotListener implements EventListener {
 	 * @param event
 	 */
 	private void onEnable(ReadyEvent event) throws IOException {
-		System.out.println("bot ready");
 		event.getJDA().getPresence().setActivity(Activity.playing("en dev"));
 		event.getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
 		new Thread(() -> {

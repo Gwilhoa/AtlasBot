@@ -2,8 +2,6 @@ package fr.cringebot.cringe.event;
 
 import fr.cringebot.cringe.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.Random;
@@ -196,8 +194,7 @@ public class MembersQuotes {
 	static void Virgile(Message msg) throws IOException {
 		int r = new Random().nextInt(virgile.length);
 		if (r == 7) {
-			Document doc = Jsoup.connect("https://www.leagueofgraphs.com/fr/summoner/euw/Celtigare#championsData-all-queues").get();
-			msg.getChannel().sendMessage("Cette saison il a fait : " + doc.select("#graphDD8").text()+ " games en normal").queue();
+			msg.getChannel().sendMessage("il a juste fait 2147483647 game,\nen vrai il en a peut etre fait plus mais j'arrive plus a compter");
 		} else {
 			msg.getChannel().sendMessage(virgile[r]).queue();
 		}

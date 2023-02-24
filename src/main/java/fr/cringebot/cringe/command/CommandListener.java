@@ -167,7 +167,7 @@ public class CommandListener {
 	@Command(name = "harem", description = "la listes des waifus", type = ExecutorType.USER)
 	private void harem(Message msg) throws IOException {
 		Members mem = Members.getMember(msg.getMember());
-		msg.getChannel().sendMessage(mem.getWaifuMembers()).queue();
+		msg.getChannel().sendMessageEmbeds(mem.getWaifuMembers().get(0).getEmbed().build()).queue();
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException, IOException, JSchException {

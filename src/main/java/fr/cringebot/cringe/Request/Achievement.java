@@ -39,7 +39,6 @@ public class Achievement {
     }
 
     public static List<Achievement> getObjAchievement(String data) throws IOException {
-        System.out.println(data);
         ArrayList<Achievement> achievements = new ArrayList<>();
         GsonBuilder builder = new GsonBuilder();
         builder.create().fromJson(data, JsonArray.class).forEach(jsonElement -> {

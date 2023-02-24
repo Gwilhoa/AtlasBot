@@ -40,7 +40,6 @@ public class Members extends Request {
         this.points = points;
         this.coins = coins;
         this.title = title;
-        System.out.println(id);
         this.squad = Squads.getSquadByMember(id);
     }
 
@@ -204,7 +203,7 @@ public class Members extends Request {
         if (mem == null) {
             return;
         }
-        Integer Points = getMember(id).getPoints();
+        int Points = mem.getPoints() + number;
         if (Points >= 1000000) {
             mem.addAchievement("13", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
         }
@@ -224,7 +223,7 @@ public class Members extends Request {
 
     private static void addPoints(String id, Integer number) throws IOException
     {
-        System.out.println(PostRequest("members/points/"+id,"points="+number));
+        PostRequest("members/points/"+id,"points="+number);
     }
 
     public void addAchievement(String id, MessageChannel announce, Guild guild) throws IOException
@@ -321,10 +320,14 @@ public class Members extends Request {
         return titles;
     }
 
-    public String getWaifuMembers() throws IOException {
+    public List<WaifuMembers> getWaifuMembers() throws IOException {
+
         String data = GetRequest("members/waifus/"+this.getId());
-        return data;
+        List<WaifuMembers> waifus = WaifuMembers.getObjWaifuMembers(data);
+        return waifus;
     }
+
+
 
     public String getTitle() {
         if (title.equals("0"))
