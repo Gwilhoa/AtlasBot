@@ -60,21 +60,21 @@ public class WaifuMembers {
                 "XP: " + this.xp + "\n" +
                 "Rareté: " + this.getRarity());
         eb.setThumbnail(this.waifu.getImageurl());
+        eb.setColor(this.getColor());
+        return eb;
+    }
+
+    public Color getColor() {
         switch (this.rarity) {
             case 1:
-                eb.setColor(Rare);
-                break;
+                return Rare;
             case 2:
-                eb.setColor(Epic);
-                break;
+                return Epic;
             case 3:
-                eb.setColor(Legendary);
-                break;
+                return Legendary;
             default:
-                eb.setColor(Common);
-                break;
+                return Common;
         }
-        return eb;
     }
 
     public Waifu getWaifu() {

@@ -86,6 +86,18 @@ public class Members extends Request {
         return members;
     }
 
+    public static WaifuMembers catchwaifu(Member member) throws IOException {
+        WaifuMembers waifu = null;
+        String data = Request.GetRequest("members/catchwaifu/" + member.getId());
+        try {
+            System.out.println("Error catch waifu : " + data);
+            waifu = WaifuMembers.getObjWaifuMembers("[" + data + "]").get(0);
+        } catch (Exception e) {
+            throw new IOException(data);
+        }
+        return waifu;
+    }
+
     //------------------------------------------------------------//
 
     public Member getMember(Guild guild) {

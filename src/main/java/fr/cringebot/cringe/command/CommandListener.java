@@ -10,6 +10,7 @@ import fr.cringebot.cringe.CommandBuilder.TopCommand;
 import fr.cringebot.cringe.Request.Achievement;
 import fr.cringebot.cringe.Request.Members;
 import fr.cringebot.cringe.Request.Squads;
+import fr.cringebot.cringe.Request.WaifuMembers;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
@@ -167,11 +168,37 @@ public class CommandListener {
 	@Command(name = "harem", description = "la listes des waifus", type = ExecutorType.USER)
 	private void harem(Message msg) throws IOException {
 		Members mem = Members.getMember(msg.getMember());
-		msg.getChannel().sendMessageEmbeds(mem.getWaifuMembers().get(0).getEmbed().build()).queue();
+		List<WaifuMembers> waifuMembers = mem.getWaifuMembers();
+		ArrayList<MessageEmbed> embeds = new ArrayList<>();
+		int i = 0;
+		while (i < 10 && i < waifuMembers.size())
+		{
+			embeds.add(waifuMembers.get(i).getEmbed().build());
+			i++;
+		}
+		msg.getChannel().sendMessageEmbeds(embeds).queue();
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException, IOException, JSchException {
-		msg.getChannel().sendMessage("coming soon").queue();
+		String args[] = msg.getContentRaw().split(" ");
+		if (args.length == 1)
+		{
+			WaifuMembers w = null;
+			try {
+				w = Members.catchwaifu(msg.getMember());
+			} catch (IOException error) {
+				msg.getChannel().sendMessage(error.getMessage()).queue();
+				return;
+			}
+			EmbedBuilder embedBuilder = new EmbedBuilder();
+			embedBuilder.setAuthor(msg.getMember().getEffectiveName(), null, msg.getMember().getUser().getAvatarUrl());
+			embedBuilder.setTitle("Nouvelle Waifu ! : " + w.getWaifu().getName());
+			embedBuilder.setDescription(w.getWaifu().getDescription());
+			embedBuilder.setThumbnail(w.getWaifu().getImageurl());
+			embedBuilder.setColor(w.getColor());
+			embedBuilder.setFooter("from " + w.getWaifu().getOrigin());
+			msg.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
+		}
 	}
 
 	@Command(name = "inventory", description = "afficher ton inventaire", type = ExecutorType.USER)
