@@ -99,11 +99,11 @@ public class WaifuMembers {
             case 1:
                 return "Rare";
             case 2:
-                return "Epic";
+                return "Épic";
             case 3:
-                return "Legendary";
+                return "Légendaire";
             default:
-                return "Unknown";
+                return "Common";
         }
     }
 

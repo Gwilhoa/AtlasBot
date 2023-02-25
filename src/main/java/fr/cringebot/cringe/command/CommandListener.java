@@ -75,6 +75,30 @@ public class CommandListener {
 		}
 	}
 
+	@Command(name = "setactivity", type = ExecutorType.USER, description = "changer l'activité du bot", permission = Permission.ADMINISTRATOR)
+	private void setactivity(Message msg) {
+		String args[] = msg.getContentRaw().split(" ");
+		if (args.length > 2) {
+			switch (args[1]) {
+				case "playing":
+					msg.getJDA().getPresence().setActivity(Activity.playing(args[2]));
+					break;
+				case "listening":
+					msg.getJDA().getPresence().setActivity(Activity.listening(args[2]));
+					break;
+				case "watching":
+					msg.getJDA().getPresence().setActivity(Activity.watching(args[2]));
+					break;
+				case "streaming":
+					msg.getJDA().getPresence().setActivity(Activity.streaming(args[2], "https://www.twitch.tv/"));
+					break;
+				default:
+					msg.getJDA().getPresence().setActivity(Activity.playing(args[2]));
+					break;
+			}
+		}
+	}
+
 	@Command(name = "slashupdate", description = "affiche le classement des escouades", type = ExecutorType.USER)
 	private void slashupdate(Message message) {
 		/*
@@ -169,8 +193,14 @@ public class CommandListener {
 	private void harem(Message msg) throws IOException {
 		Members mem = Members.getMember(msg.getMember());
 		List<WaifuMembers> waifuMembers = mem.getWaifuMembers();
+		System.out.println(waifuMembers);
 		ArrayList<MessageEmbed> embeds = new ArrayList<>();
 		int i = 0;
+		if (waifuMembers.size() == 0)
+		{
+			msg.getChannel().sendMessage("vous n'avez pas de waifu").queue();
+			return;
+		}
 		while (i < 10 && i < waifuMembers.size())
 		{
 			embeds.add(waifuMembers.get(i).getEmbed().build());
