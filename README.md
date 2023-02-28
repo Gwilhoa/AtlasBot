@@ -1,3 +1,11 @@
 # CringeBot
-repo du CringeBot, bot a multifonction servant a un groupe privé.
-développé par @Gwilhoa, aidé de près par @error7404
+A Personal bot for a private server Discord.
+
+### Directed by Gwilhoa
+### Developed by Gwilhoa
+### Feature idea found by LaVacheSacreeSurUnTelesiege
+##### Language used : Java
+##### Dependence : 
+###### https://github.com/Gwilhoa/apib2k
+###### https://github.com/DV8FromTheWorld/JDA
+######### 
