@@ -3,6 +3,9 @@ package fr.cringebot.cringe.Request;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import net.dv8tion.jda.api.EmbedBuilder;
+
+import java.io.IOException;
 
 public class Waifu {
     private final String name;
@@ -72,6 +75,22 @@ public class Waifu {
 
     public int getLegendary() {
         return legendary;
+    }
+
+    public static Waifu getWaifuById(int id) throws IOException {
+        return getWaifuObj("[" + Request.GetRequest("waifus/id/" + id) + "]");
+    }
+
+    public EmbedBuilder getEmbed() {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle(this.name + " de " + this.origin);
+        eb.setDescription(this.description);
+        eb.appendDescription("\n\nRare trouvée: " + this.rare + "\n" +
+                "Epic trouvée: " + this.epic + "\n" +
+                "Legendaire trouvée: " + this.legendary);
+        eb.setFooter("ID: " + this.id);
+        eb.setImage(this.imageurl);
+        return eb;
     }
 
     @Override

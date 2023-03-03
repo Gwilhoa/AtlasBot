@@ -7,10 +7,7 @@ import com.jcraft.jsch.JSchException;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.CommandBuilder.ProfilCommand;
 import fr.cringebot.cringe.CommandBuilder.TopCommand;
-import fr.cringebot.cringe.Request.Achievement;
-import fr.cringebot.cringe.Request.Members;
-import fr.cringebot.cringe.Request.Squads;
-import fr.cringebot.cringe.Request.WaifuMembers;
+import fr.cringebot.cringe.Request.*;
 import fr.cringebot.cringe.builder.Command;
 import fr.cringebot.cringe.builder.Command.ExecutorType;
 import fr.cringebot.cringe.builder.CommandMap;
@@ -222,12 +219,16 @@ public class CommandListener {
 			}
 			EmbedBuilder embedBuilder = new EmbedBuilder();
 			embedBuilder.setAuthor(msg.getMember().getEffectiveName(), null, msg.getMember().getUser().getAvatarUrl());
-			embedBuilder.setTitle("Nouvelle Waifu ! : " + w.getWaifu().getName());
+			embedBuilder.setTitle("Nouvelle Waifu ! : " + w.getWaifu().getName() + " Debug mode : ID " + w.getWaifu().getId());
 			embedBuilder.setDescription(w.getWaifu().getDescription());
 			embedBuilder.setThumbnail(w.getWaifu().getImageurl());
 			embedBuilder.setColor(w.getColor());
-			embedBuilder.setFooter("from " + w.getWaifu().getOrigin());
+			embedBuilder.setFooter("Origine de " + w.getWaifu().getOrigin());
 			msg.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
+		}
+		else if (args.length == 2)
+		{
+			msg.getChannel().sendMessageEmbeds(Waifu.getWaifuById(Integer.parseInt(args[1])).getEmbed().build()).queue();
 		}
 	}
 

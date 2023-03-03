@@ -12,7 +12,7 @@ import static com.diogonunes.jcolor.Ansi.colorize;
 import static fr.cringebot.BotDiscord.token;
 
 public class Request {
-    private static final String apiurl = "https://api.bitume2000.fr:5000/v1/";
+    private static final String apiurl = "https://api.bitume2000.fr/v1/";
 
     public static String GetRequest(String route) throws IOException {
         System.out.println(colorize("[API] GET "+ apiurl + route, Attribute.TEXT_COLOR(25,99, 100)));
