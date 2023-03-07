@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Waifu {
     private final String name;
@@ -30,19 +31,33 @@ public class Waifu {
     }
 
     public static Waifu getWaifuObj(String data) {
+        return getWaifusObj(data).get(0);
+    }
+
+    public static ArrayList<Waifu> getWaifusObj(String data) {
+        ArrayList<Waifu> ret = new ArrayList<>();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         JsonArray array = null;
         array = gson.fromJson(data, JsonArray.class);
-        return new Waifu(
-                array.get(0).getAsJsonObject().get("name").getAsString(),
-                array.get(0).getAsJsonObject().get("id").getAsInt(),
-                array.get(0).getAsJsonObject().get("description").getAsString(),
-                array.get(0).getAsJsonObject().get("origin").getAsString(),
-                array.get(0).getAsJsonObject().get("rare").getAsInt(),
-                array.get(0).getAsJsonObject().get("epic").getAsInt(),
-                array.get(0).getAsJsonObject().get("legendary").getAsInt()
-        );
+        array.forEach(jsonElement -> {
+            ret.add(
+                    new Waifu(
+                            jsonElement.getAsJsonObject().get("name").getAsString(),
+                            jsonElement.getAsJsonObject().get("id").getAsInt(),
+                            jsonElement.getAsJsonObject().get("description").getAsString(),
+                            jsonElement.getAsJsonObject().get("origin").getAsString(),
+                            jsonElement.getAsJsonObject().get("rare").getAsInt(),
+                            jsonElement.getAsJsonObject().get("epic").getAsInt(),
+                            jsonElement.getAsJsonObject().get("legendary").getAsInt()
+                    )
+            );
+        });
+        return ret;
+    }
+
+    public static ArrayList<Waifu> getWaifus() throws IOException {
+        return getWaifusObj(Request.GetRequest("waifus"));
     }
 
     public String getName() {

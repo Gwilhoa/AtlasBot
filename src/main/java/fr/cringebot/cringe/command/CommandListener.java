@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -198,12 +199,13 @@ public class CommandListener {
 			msg.getChannel().sendMessage("vous n'avez pas de waifu").queue();
 			return;
 		}
-		while (i < 10 && i < waifuMembers.size())
+		while (i < 5 && i < waifuMembers.size())
 		{
 			embeds.add(waifuMembers.get(i).getEmbed().build());
 			i++;
 		}
-		msg.getChannel().sendMessageEmbeds(embeds).queue();
+		Button button = Button.primary("harem;next;0;"+mem.getId(), "page suivante");
+		msg.getChannel().sendMessageEmbeds(embeds).setActionRow(button).queue();
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException, IOException, JSchException {
@@ -228,7 +230,17 @@ public class CommandListener {
 		}
 		else if (args.length == 2)
 		{
-			msg.getChannel().sendMessageEmbeds(Waifu.getWaifuById(Integer.parseInt(args[1])).getEmbed().build()).queue();
+			ArrayList<MessageEmbed> embeds = new ArrayList<>();
+			Waifu.getWaifus();
+			List<Waifu> waifus = Waifu.getWaifus();
+			int i = 0;
+			while (i < 5 && i < waifus.size())
+			{
+				embeds.add(waifus.get(i).getEmbed().build());
+				i++;
+			}
+			net.dv8tion.jda.api.interactions.components.buttons.Button button = net.dv8tion.jda.api.interactions.components.buttons.Button.primary("waifu;next;0", "Suivant");
+			msg.getChannel().sendMessageEmbeds(embeds).setActionRow(button).queue();
 		}
 	}
 

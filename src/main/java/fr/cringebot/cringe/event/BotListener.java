@@ -21,9 +21,7 @@ import com.google.gson.JsonDeserializer;
 import fr.cringebot.BotDiscord;
 import fr.cringebot.cringe.CommandBuilder.ProfilCommand;
 import fr.cringebot.cringe.CommandBuilder.TopCommand;
-import fr.cringebot.cringe.Request.Achievement;
-import fr.cringebot.cringe.Request.Members;
-import fr.cringebot.cringe.Request.Squads;
+import fr.cringebot.cringe.Request.*;
 import fr.cringebot.cringe.builder.CommandMap;
 import fr.cringebot.cringe.objects.StringExtenders;
 import fr.cringebot.cringe.objects.XpManager;
@@ -260,6 +258,55 @@ public class BotListener implements EventListener {
 					}
 				}
 			}
+		}
+		else if (event.getComponentId().startsWith("waifu")) {
+			int page = Integer.parseInt(event.getComponentId().split(";")[2]);
+			if (event.getComponentId().contains("next")) {
+				page++;
+			} else if (event.getComponentId().contains("prev")) {
+				page--;
+			}
+			ArrayList<Button> buttons = new ArrayList<>();
+			ArrayList<MessageEmbed> embeds = new ArrayList<>();
+			List<Waifu> waifus = Waifu.getWaifus();
+			if (page != 0)
+				buttons.add(Button.primary("waifu;prev;" + page, "page précédents"));
+			int i = page * 5;
+			while (i < page * 5 + 5 && i < waifus.size()) {
+				embeds.add(waifus.get(i).getEmbed().build());
+				i++;
+			}
+			if (page * 5 + 5 < waifus.size())
+				buttons.add(Button.primary("waifu;next;" + page, "page suivante"));
+			event.editMessageEmbeds(embeds).setActionRows(ActionRow.of(buttons)).queue();
+		}
+		else if (event.getComponentId().startsWith("harem")) {
+			String id = event.getComponentId().split(";")[3];
+			Members mem = Members.getMember(id);
+			int page = Integer.parseInt(event.getComponentId().split(";")[2]);
+			if (event.getComponentId().contains("next")) {
+				page++;
+			} else if (event.getComponentId().contains("prev")) {
+				page--;
+			}
+			ArrayList<Button> buttons = new ArrayList<>();
+			ArrayList<MessageEmbed> embeds = new ArrayList<>();
+			List<WaifuMembers> waifus = mem.getWaifuMembers();
+			if (page != 0)
+				buttons.add(Button.primary("harem;prev;" + page + ";" + id, "page précédents"));
+
+			int i = page * 5;
+			while (i < page * 5 + 5 && i < waifus.size()) {
+				embeds.add(waifus.get(i).getEmbed().build());
+				i++;
+			}
+			if (page * 5 + 5 < waifus.size())
+				buttons.add(Button.primary("harem;next;" + page + ";" + id, "page suivante"));
+			event.editMessageEmbeds(embeds).setActionRows(ActionRow.of(buttons)).queue();
+		}
+		else
+		{
+			event.reply("button not implemented").setEphemeral(true).queue();
 		}
 	}
 
