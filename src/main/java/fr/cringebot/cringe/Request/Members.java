@@ -90,7 +90,7 @@ public class Members extends Request {
         WaifuMembers waifu = null;
         String data = Request.GetRequest("members/catchwaifu/" + member.getId());
         try {
-            System.out.println("Error catch waifu : " + data);
+            System.out.println("[WAIFU] new catch by "+member.getUser().getName()+" : " + data);
             waifu = WaifuMembers.getObjWaifuMembers("[" + data + "]").get(0);
         } catch (Exception e) {
             throw new IOException(data);

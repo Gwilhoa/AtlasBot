@@ -35,6 +35,7 @@ public class Waifu {
     }
 
     public static ArrayList<Waifu> getWaifusObj(String data) {
+        System.out.println(data);
         ArrayList<Waifu> ret = new ArrayList<>();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
@@ -94,6 +95,11 @@ public class Waifu {
 
     public static Waifu getWaifuById(int id) throws IOException {
         return getWaifuObj("[" + Request.GetRequest("waifus/id/" + id) + "]");
+    }
+
+    public static ArrayList<Waifu> getWaifuByName(String name) throws IOException {
+        System.out.println(Request.GetRequest("waifus/search/" + name));
+        return getWaifusObj(Request.GetRequest("waifus/search/" + name));
     }
 
     public EmbedBuilder getEmbed() {

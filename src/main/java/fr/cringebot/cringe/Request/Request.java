@@ -21,7 +21,11 @@ public class Request {
         con.setRequestMethod("GET");
         con.setRequestProperty("token", token);
         con.connect();
-        return new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
+        String response = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
+        if (response == null) {
+            throw new IOException("null response");
+        }
+        return response;
     }
 
     public static String PostRequest(String route, String content) throws IOException {

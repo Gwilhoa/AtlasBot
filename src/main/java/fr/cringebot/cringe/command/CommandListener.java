@@ -216,7 +216,12 @@ public class CommandListener {
 			try {
 				w = Members.catchwaifu(msg.getMember());
 			} catch (IOException error) {
-				msg.getChannel().sendMessage(error.getMessage()).queue();
+				try {
+					long waitingTime = Long.parseLong(error.getMessage()) - System.currentTimeMillis();
+					msg.getChannel().sendMessage("vous devez attendre " + waitingTime/1000 + " secondes avant de pouvoir récuperer une nouvelle waifu").queue();
+				} catch (NumberFormatException e) {
+					msg.getChannel().sendMessage(error.getMessage()).queue();
+				}
 				return;
 			}
 			EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -228,19 +233,58 @@ public class CommandListener {
 			embedBuilder.setFooter("Origine de " + w.getWaifu().getOrigin());
 			msg.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
 		}
-		else if (args.length == 2)
-		{
-			ArrayList<MessageEmbed> embeds = new ArrayList<>();
-			Waifu.getWaifus();
-			List<Waifu> waifus = Waifu.getWaifus();
-			int i = 0;
-			while (i < 5 && i < waifus.size())
-			{
-				embeds.add(waifus.get(i).getEmbed().build());
-				i++;
+		else if (args.length == 2) {
+			if (args[1].equalsIgnoreCase("list")) {
+				ArrayList<MessageEmbed> embeds = new ArrayList<>();
+				List<Waifu> waifus = Waifu.getWaifus();
+				int i = 0;
+				while (i < 5 && i < waifus.size()) {
+					embeds.add(waifus.get(i).getEmbed().build());
+					i++;
+				}
+				net.dv8tion.jda.api.interactions.components.buttons.Button button = net.dv8tion.jda.api.interactions.components.buttons.Button.primary("waifu;next;0", "Suivant");
+				msg.getChannel().sendMessageEmbeds(embeds).setActionRow(button).queue();
 			}
-			net.dv8tion.jda.api.interactions.components.buttons.Button button = net.dv8tion.jda.api.interactions.components.buttons.Button.primary("waifu;next;0", "Suivant");
-			msg.getChannel().sendMessageEmbeds(embeds).setActionRow(button).queue();
+		}
+		else if (args.length == 3) {
+			if (args[1].equalsIgnoreCase("id")) {
+				Waifu waifu = null;
+				try {
+					waifu = Waifu.getWaifuById(Integer.parseInt(args[2]));
+				} catch (NumberFormatException e) {
+					msg.getChannel().sendMessage("L'ID doit être un nombre").queue();
+					return;
+				} catch (IOException e) {
+					if (e.getMessage().equals("null response"))
+						msg.getChannel().sendMessage("Cette waifu n'existe pas").queue();
+					else
+						msg.getChannel().sendMessage("Une erreur est survenue").queue();
+					return;
+				}
+				if (waifu == null) {
+					msg.getChannel().sendMessage("Cette waifu n'existe pas").queue();
+					return;
+				}
+				msg.getChannel().sendMessageEmbeds(waifu.getEmbed().build()).queue();
+			}
+			if (args[1].equalsIgnoreCase("search")) {
+				ArrayList<MessageEmbed> embeds = new ArrayList<>();
+				List<Waifu> waifus = Waifu.getWaifuByName(args[2]);
+				System.out.println(waifus);
+				if (waifus.isEmpty())
+				{
+					msg.getChannel().sendMessage("Aucune waifu ne correspond à votre recherche").queue();
+					return;
+				}
+				int i = 0;
+				while (i < 5 && i < waifus.size()) {
+					embeds.add(waifus.get(i).getEmbed().build());
+					i++;
+				}
+				msg.getChannel().sendMessageEmbeds(embeds).queue();
+			}
+		} else {
+			msg.getChannel().sendMessage("mauvaise utilisation de la commande\n>waifu [list|id|search] [id|name]").queue();
 		}
 	}
 
