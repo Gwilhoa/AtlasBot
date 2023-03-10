@@ -18,16 +18,20 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import org.joda.time.Instant;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,6 +45,7 @@ import static fr.cringebot.cringe.objects.imgExtenders.resize;
 public class CommandListener {
 
 	private final BotDiscord botDiscord;
+	public static boolean isArchived = false;
 	/**
 	 * intialisation de l'objet
 	 *
@@ -206,6 +211,53 @@ public class CommandListener {
 		}
 		Button button = Button.primary("harem;next;0;"+mem.getId(), "page suivante");
 		msg.getChannel().sendMessageEmbeds(embeds).setActionRow(button).queue();
+	}
+
+	@Command(name="archive", description = "archiver un salon", type = ExecutorType.USER, permission = Permission.MESSAGE_SEND)
+	private void archive(Message msg) throws IOException {
+		File directory = new File("archive");
+		if (directory.mkdir())
+			System.out.println("[EVENT] directory created");
+		else
+			System.out.println("[DEBUG] directory already exist");
+		File file = new File("archive/" + msg.getChannel().getName() + "_" + new Date(System.currentTimeMillis()).getDay() + "_" + new Date(System.currentTimeMillis()).getMonth() + "_" + new Date(System.currentTimeMillis()).getMonth()  + ".txt");
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (isArchived) {
+			msg.getChannel().sendMessage("un archivage est déjà en cours").queue();
+			return;
+		}
+		msg.getChannel().sendMessage("archive en cours").queue();
+		isArchived = true;
+		new Thread(() -> {
+			try {
+				FileWriter fileWriter = new FileWriter(file);
+				boolean finish = true;
+				Message pin = msg.getChannel().getHistoryFromBeginning(1).complete().getRetrievedHistory().get(0);
+				String endid = msg.getId();
+				while (finish) {
+					Thread.sleep(1000);
+					for (Message message : msg.getChannel().getHistoryAfter(pin, 100).complete().getRetrievedHistory()) {
+						fileWriter.write(message.getAuthor().getName() + " : " + message.getContentRaw() + "\n\n");
+						if (message.getId().equals(endid)) {
+							finish = false;
+							break;
+						}
+						pin = message;
+					}
+				}
+				fileWriter.close();
+				msg.getChannel().sendMessage("archivage terminée").queue();
+				isArchived = false;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}).start();
 	}
 	@Command(name = "waifu", description = "instance des waifus", type = ExecutorType.USER)
 	private void waifu(Message msg) throws ExecutionException, InterruptedException, IOException, JSchException {

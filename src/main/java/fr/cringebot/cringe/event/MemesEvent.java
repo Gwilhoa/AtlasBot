@@ -84,7 +84,7 @@ public class MemesEvent {
             }
         }
         if (!msg.getAttachments().isEmpty()) {
-            f = imgExtenders.getFile(msg.getAttachments().get(0).getProxyUrl(),msg.getAttachments().get(0).getFileName(), null);
+            f = imgExtenders.getFile(msg.getAttachments().get(0).getProxyUrl(),"meme.png", null);
             Content = msg.getContentRaw();
         } else {
             for (String mot : args) {
@@ -112,8 +112,11 @@ public class MemesEvent {
             EmbedBuilder eb = new EmbedBuilder()
                     .setImage("attachment://" + f.getName())
                     .setFooter(msg.getAuthor().getName(), msg.getAuthor().getAvatarUrl());
-            if (Squads.getSquadByMember(msg.getMember().getId()) != null)
+            try {
                 eb.setColor(Squads.getSquadByMember(msg.getMember().getId()).getColor());
+            } catch (Exception e) {
+                eb.setColor(msg.getMember().getColor());
+            }
             eb.setDescription(Content);
             msg.getGuild().getTextChannelById(channel).sendFile(f).setEmbeds(eb.build()).setActionRow(addButtonBuilder()).queue();
             msg.delete().queue();
