@@ -9,3 +9,6 @@ A Personal bot for a private server Discord.
 ###### https://github.com/Gwilhoa/apib2k
 ###### https://github.com/DV8FromTheWorld/JDA
 ######### 
+
+Copyright © 2023 MediaPi - Bitume2000 - Tous droits réservés.
+gchatain@bitume2000.fr
