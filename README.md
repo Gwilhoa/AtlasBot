@@ -4,7 +4,7 @@ A Personal bot for a private server Discord.
 ### Directed by Gwilhoa
 ### Developed by Gwilhoa
 ### Feature idea found by Matasalivo
-### infrastructure management by elio612, Gwilhoa
+### infrastructure management by Elio612, Gwilhoa
 ##### Language used : Java
 ##### Dependence : 
 ###### https://github.com/Gwilhoa/apib2k
@@ -15,3 +15,4 @@ Copyright © 2023 MediaPi - Bitume2000 - Tous droits réservés.
 # Contacts
 ##### Gwilhoa: gchatain@bitume2000.fr
 ##### Elio612: eliotard@mediapi.org
+##### Matasalivo: jguiget@bitume2000.fr
