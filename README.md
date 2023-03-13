@@ -13,5 +13,5 @@ A Personal bot for a private server Discord.
 Copyright © 2023 MediaPi - Bitume2000 - Tous droits réservés.
 
 # Contacts
-Gwilhoa: gchatain@bitume2000.fr
-Elio612: eliotard@mediapi.org
+##### Gwilhoa: gchatain@bitume2000.fr
+##### Elio612: eliotard@mediapi.org
