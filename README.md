@@ -3,7 +3,7 @@ A Personal bot for a private server Discord.
 
 ### Directed by Gwilhoa
 ### Developed by Gwilhoa
-### Feature idea found by LaVacheSacreeSurUnTelesiege
+### Feature idea found by Matasalivo
 ### infrastructure management by elio612, Gwilhoa
 ##### Language used : Java
 ##### Dependence : 
