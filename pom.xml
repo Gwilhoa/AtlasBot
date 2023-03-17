@@ -130,7 +130,7 @@
                 <transformer
                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
-                    <Main-Class>fr.cringebot.BotDiscord</Main-Class>
+                    <Main-Class>fr.atlas.BotDiscord</Main-Class>
                   </manifestEntries>
                 </transformer>
               </transformers>
