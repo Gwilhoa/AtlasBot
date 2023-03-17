@@ -1,4 +1,4 @@
-# CringeBot
+# AtlasBot
 A Personal bot for a private server Discord.
 
 ### Directed by Gwilhoa
