@@ -55,8 +55,10 @@ public class Music {
         }
         if (str.split(" ").length == 1 && str.split(" ")[0].equalsIgnoreCase(">play"))
             MusicManager.getMusicManager().loadTrack(textChannel, null, random);
-        else
+        else {
+            str = str.replace(">play ", "");
             MusicManager.getMusicManager().loadTrack(textChannel, str, random);
+        }
     }
 
 
