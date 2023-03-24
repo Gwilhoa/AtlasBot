@@ -5,7 +5,9 @@ import fr.atlas.objects.DetectorAttachment;
 import fr.atlas.objects.imgExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.apache.commons.io.FilenameUtils;
 
 import java.awt.*;
@@ -102,7 +104,7 @@ public class MemesEvent {
         }
         String ext = FilenameUtils.getExtension(f.getName());
         if ((ext.equals("mp4") || ext.equals("mov") || ext.equals("webm"))) {
-                msg.getGuild().getTextChannelById(channel).sendMessage("> " + msg.getMember().getUser().getName() + "\n\n" + Content).addFile(f).setActionRow(addButtonBuilder()).queue();
+                msg.getGuild().getTextChannelById(channel).sendMessage("> " + msg.getMember().getUser().getName() + "\n\n" + Content).setFiles(FileUpload.fromData(f)).setActionRow(addButtonBuilder()).queue();
                 msg.delete().queue();
                 f.delete();
         } else {
@@ -115,7 +117,7 @@ public class MemesEvent {
                 eb.setColor(msg.getMember().getColor());
             }
             eb.setDescription(Content);
-            msg.getGuild().getTextChannelById(channel).sendFile(f).setEmbeds(eb.build()).setActionRow(addButtonBuilder()).queue();
+            msg.getGuild().getTextChannelById(channel).sendFiles(FileUpload.fromData(f)).setEmbeds(eb.build()).setActionRow(addButtonBuilder()).queue();
             msg.delete().queue();
             f.delete();
         }

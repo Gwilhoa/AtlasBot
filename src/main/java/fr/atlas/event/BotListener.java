@@ -35,15 +35,11 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GatewayPingEvent;
 import net.dv8tion.jda.api.events.GenericEvent;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -51,11 +47,14 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.events.role.RoleCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.FileUpload;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 import java.awt.*;
 import java.io.BufferedInputStream;
@@ -65,6 +64,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -132,13 +132,14 @@ public class BotListener implements EventListener {
 			else if (event instanceof RoleCreateEvent) onCreateRole((RoleCreateEvent) event);
 			else if (event instanceof RoleDeleteEvent) onDeleteRole((RoleDeleteEvent) event);
 			else if (event instanceof MessageReactionRemoveEvent) onRemoveReact((MessageReactionRemoveEvent) event);
-			else if (event instanceof GuildVoiceJoinEvent) onConnect((GuildVoiceJoinEvent) event);
-			else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
+			else if (event instanceof GuildVoiceUpdateEvent) onVoiceUpdate((GuildVoiceUpdateEvent) event);
+//			else if (event instanceof GuildMemberJoinEvent) onConnect((GuildVoiceJoinEvent) event);
+//			else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
 			else if (event instanceof MessageEmbedEvent) onEmbed((MessageEmbedEvent) event);
-			else if (event instanceof GuildVoiceMoveEvent) onMove((GuildVoiceMoveEvent) event);
+//			else if (event instanceof GuildVoiceMoveEvent) onMove((GuildVoiceMoveEvent) event);
 			else if (event instanceof SlashCommandInteraction) onSlashCommand((SlashCommandInteraction) event);
 			else if (event instanceof CommandAutoCompleteInteraction) onAutoComplete((CommandAutoCompleteInteraction) event);
-			else if (event instanceof SelectMenuInteractionEvent) onSelectMenu((SelectMenuInteractionEvent) event);
+//			else if (event instanceof SelectMenuInteractionEvent) onSelectMenu((SelectMenuInteractionEvent) event);
 			else if (event instanceof ButtonInteractionEvent) onButton((ButtonInteractionEvent) event);
 			else if (event instanceof GuildMemberRoleAddEvent) onRoleAdd((GuildMemberRoleAddEvent) event);
 			else if (event instanceof MessageDeleteEvent) onDeleteMessage((MessageDeleteEvent) event);
@@ -146,6 +147,20 @@ public class BotListener implements EventListener {
 
 			e.printStackTrace();
 			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
+		}
+	}
+
+	private void onVoiceUpdate(GuildVoiceUpdateEvent event) throws IOException {
+		if (event.getOldValue() == null) {
+			connectedUsers.put(event.getMember().getId(), System.currentTimeMillis());
+		} else if (event.getNewValue() == null) {
+			if (connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
+			{
+				Members.addAchievement(event.getMember(), "9", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+			}
+			connectedUsers.remove(event.getMember().getId());
+		} else {
+
 		}
 	}
 
@@ -217,7 +232,7 @@ public class BotListener implements EventListener {
 					Message message = event.getMessage();
 					if (message.getEmbeds().isEmpty()) {
 						File f = imgExtenders.getFile(message.getAttachments().get(0).getProxyUrl(), message.getAttachments().get(0).getFileName(), null);
-						message.getGuild().getTextChannelById("911549374696411156").sendMessage(message).addFile(f).queue();
+						message.getGuild().getTextChannelById("911549374696411156").sendMessage(MessageCreateData.fromMessage(message)).setFiles(FileUpload.fromData(f)).queue();
 						f.delete();
 						Members.addBestMemes(getMemeAuthor(message));
 						message.delete().queue();
@@ -249,7 +264,7 @@ public class BotListener implements EventListener {
 								e.printStackTrace(System.out);
 							}
 							File f = new File(name);
-							message.getGuild().getTextChannelById("911549374696411156").sendFile(f).setEmbeds(
+							message.getGuild().getTextChannelById("911549374696411156").sendFiles(FileUpload.fromData(f)).setEmbeds(
 									new EmbedBuilder()
 											.setDescription(message.getEmbeds().get(0).getDescription())
 											.setImage("attachment://" + f.getName())
@@ -285,7 +300,7 @@ public class BotListener implements EventListener {
 			}
 			if (page * 5 + 5 < waifus.size())
 				buttons.add(Button.primary("waifu;next;" + page, "page suivante"));
-			event.editMessageEmbeds(embeds).setActionRows(ActionRow.of(buttons)).queue();
+			event.editMessageEmbeds(embeds).setActionRow(buttons).queue();
 		}
 		else if (event.getComponentId().startsWith("harem")) {
 			String id = event.getComponentId().split(";")[3];
@@ -309,7 +324,7 @@ public class BotListener implements EventListener {
 			}
 			if (page * 5 + 5 < waifus.size())
 				buttons.add(Button.primary("harem;next;" + page + ";" + id, "page suivante"));
-			event.editMessageEmbeds(embeds).setActionRows(ActionRow.of(buttons)).queue();
+			event.editMessageEmbeds(embeds).setActionRow(buttons).queue();
 		}
 		else if (event.getComponentId().startsWith("zik")){
 			String args[] = event.getComponentId().split(";");
@@ -348,7 +363,7 @@ public class BotListener implements EventListener {
 					}
 
 				}
-				event.editMessageEmbeds(player.getListener().getVolumeEmbed().build()).setActionRows(player.getListener().getVolumeButtons()).queue();
+				event.editMessageEmbeds(player.getListener().getVolumeEmbed().build()).setActionRow(player.getListener().getVolumeButtons()).queue();
 			}
 
 		}
@@ -356,9 +371,6 @@ public class BotListener implements EventListener {
 		{
 			event.reply("button not implemented").setEphemeral(true).queue();
 		}
-	}
-
-	private void onSelectMenu(SelectMenuInteractionEvent event) {
 	}
 
 	private void onAutoComplete(CommandAutoCompleteInteraction event) throws IOException {
@@ -396,28 +408,28 @@ public class BotListener implements EventListener {
 			event.reply("coming soon").queue();
 	}
 
-	private void onMove(GuildVoiceMoveEvent event) throws IOException {
-		if (event.getChannelJoined().getId().equals(BotDiscord.AFKSalonId) && connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
-		{
-			Members.addAchievement(event.getMember(), "10", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
-		}
-		connectedUsers.remove(event.getMember().getId());
-	}
+//	private void onMove(GuildVoiceMoveEvent event) throws IOException {
+//		if (event.getChannelJoined().getId().equals(BotDiscord.AFKSalonId) && connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
+//		{
+//			Members.addAchievement(event.getMember(), "10", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+//		}
+//		connectedUsers.remove(event.getMember().getId());
+//	}
 
 
 
-	private void onDisconnect(GuildVoiceLeaveEvent event) throws IOException {
-		if (connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
-		{
-			Members.addAchievement(event.getMember(), "9", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
-		}
-		connectedUsers.remove(event.getMember().getId());
-	}
+//	private void onDisconnect(GuildVoiceLeaveEvent event) throws IOException {
+//		if (connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
+//		{
+//			Members.addAchievement(event.getMember(), "9", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+//		}
+//		connectedUsers.remove(event.getMember().getId());
+//	}
 
-	private void onConnect(GuildVoiceJoinEvent event) {
-		if (!event.getChannelJoined().getId().equals(BotDiscord.AFKSalonId))
-			connectedUsers.put(event.getMember().getId(), System.currentTimeMillis());
-	}
+//	private void onConnect(GuildVoiceJoinEvent event) {
+//		if (!event.getChannelJoined().getId().equals(BotDiscord.AFKSalonId))
+//			connectedUsers.put(event.getMember().getId(), System.currentTimeMillis());
+//	}
 
 
 	private void onRemoveReact(MessageReactionRemoveEvent event) {

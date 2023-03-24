@@ -6,6 +6,8 @@ import fr.atlas.music.MusicManager;
 import fr.atlas.music.MusicPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 
 import java.awt.*;
 

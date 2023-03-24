@@ -18,6 +18,9 @@ import fr.atlas.command.*;
 import fr.atlas.command.CommandBuilder.HelpCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -185,9 +188,9 @@ public final class CommandMap {
 			if (parameters[i].getType() == String[].class) objects[i] = args;
 			else if (parameters[i].getType() == User.class) objects[i] = message == null ? null : message.getAuthor();
 			else if (parameters[i].getType() == TextChannel.class)
-				objects[i] = message == null ? null : message.getTextChannel();
+				objects[i] = message == null ? null : message.getChannel();
 			else if (parameters[i].getType() == PrivateChannel.class)
-				objects[i] = message == null ? null : message.getPrivateChannel();
+				objects[i] = message == null ? null : message.getAuthor().openPrivateChannel().complete();
 			else if (parameters[i].getType() == Guild.class) objects[i] = message == null ? null : message.getGuild();
 			else if (parameters[i].getType() == String.class) objects[i] = command;
 			else if (parameters[i].getType() == Message.class) objects[i] = message;

@@ -19,8 +19,9 @@ import fr.atlas.objects.imgExtenders;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -69,7 +70,7 @@ public class ReactionEvent {
         if (msg.getContentRaw().equalsIgnoreCase("ratio") )
         {
             if (msg.getReferencedMessage() != null) {
-                msg.getChannel().sendMessage("Ratio by " + msg.getMember().getAsMention()).reference(msg.getReferencedMessage()).complete().addReaction(Emoji.fromFormatted("⬆️")).queue();
+                msg.getChannel().sendMessage("Ratio by " + msg.getMember().getAsMention()).setMessageReference(msg.getReferencedMessage()).complete().addReaction(Emoji.fromFormatted("⬆️")).queue();
                 msg.delete().queue();
             }
         }
@@ -77,11 +78,11 @@ public class ReactionEvent {
         if (StringExtenders.containsWord(msg.getContentRaw(), "sus")) {
             boolean sus = new Random().nextInt(100) > 95;
             if (msg.getReferencedMessage() != null)
-                sus(msg.getTextChannel(), msg.getReferencedMessage().getMember(), sus);
+                sus(msg.getChannel().asTextChannel(), msg.getReferencedMessage().getMember(), sus);
             else if (!msg.getMentions().getMembers().isEmpty() && msg.getMentions().getMembers().get(0) != null)
-                sus(msg.getTextChannel(), msg.getMentions().getMembers().get(0), sus);
+                sus(msg.getChannel().asTextChannel(), msg.getMentions().getMembers().get(0), sus);
             else
-                sus(msg.getTextChannel(), msg.getMember(), sus);
+                sus(msg.getChannel().asTextChannel(), msg.getMember(), sus);
         }
         if (msg.getContentRaw().equalsIgnoreCase("ping"))
         {
@@ -108,7 +109,7 @@ public class ReactionEvent {
 
 
         if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))
-            msg.getChannel().sendFile(imgExtenders.getFile("societer.png")).queue();
+            msg.getChannel().sendFiles(FileUpload.fromData(imgExtenders.getFile("societer.png"))).queue();
         if (containsIgnoreCase(msg.getContentRaw(), "putain")) {
             putain(msg);
         }
@@ -122,13 +123,13 @@ public class ReactionEvent {
         if (containsIgnoreCase(msg.getContentRaw(), "je lag"))
         {
             File f = imgExtenders.getFile("internet.png");
-            msg.getChannel().sendFile(f).queue();
+            msg.getChannel().sendFiles(FileUpload.fromData(f)).queue();
             f.delete();
         }
 
         if (containsIgnoreCase(msg.getContentRaw(), "cringe")) {
             if (!DetectorAttachment.isAnyLink(msg))
-                msg.getTextChannel().sendMessage("https://tenor.com/view/oh-no-cringe-cringe-oh-no-kimo-kimmo-gif-23168319").queue();
+                msg.getChannel().sendMessage("https://tenor.com/view/oh-no-cringe-cringe-oh-no-kimo-kimmo-gif-23168319").queue();
         }
 
         if (containsIgnoreCase(msg.getContentRaw(), "stonks")) {
@@ -137,11 +138,11 @@ public class ReactionEvent {
                 BufferedImage bi = imgExtenders.getImage("not stonks.png");
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write(bi, "gif", baos);
-                msg.getChannel().sendFile(baos.toByteArray(), "not stonks.png").queue();
+                msg.getChannel().sendFiles(FileUpload.fromData(baos.toByteArray(), "not stonks.png")).queue();
                 return;
             }
             File f = imgExtenders.getFile("stonks.gif");
-            msg.getChannel().sendFile(f).queue();
+            msg.getChannel().sendFiles(FileUpload.fromData(f)).queue();
         }
 
         if (startWithIgnoreCase(msg.getContentRaw(), "daronned") || startWithIgnoreCase(msg.getContentRaw(), "daronné"))
@@ -166,7 +167,7 @@ public class ReactionEvent {
         if (containsIgnoreCase(msg.getContentRaw(), "michel"))
             msg.getChannel().sendMessage( msg.getGuild().getMemberById("282859044593598464").getAsMention()+ ", eh oh je crois qu'on parle de toi").queue();
         if (containsIgnoreCase(msg.getContentRaw(), "shadow hunter"))
-            msg.getChannel().sendMessage("*shadow **in**ter*").reference(msg).queue();
+            msg.getChannel().sendMessage("*shadow **in**ter*").setMessageReference(msg).queue();
         if (msg.getContentRaw().equalsIgnoreCase("creeper"))
             msg.getChannel().sendMessage("Aww man").queue();
         if (msg.getContentRaw().equalsIgnoreCase("i am a dwarf"))
@@ -208,7 +209,7 @@ public class ReactionEvent {
                 }
                 g.dispose();
                 ImageIO.write(ret, "png", baos);
-                tc.sendFile(baos.toByteArray(), "sus.png").queue();
+                tc.sendFiles(FileUpload.fromData(baos.toByteArray(), "sus.png")).queue();
             } catch (IOException e) {
                 e.printStackTrace();
         }
@@ -252,9 +253,9 @@ public class ReactionEvent {
      */
     public static void rage(Message msg) {
         if (msg.getAuthor().getId().equals("358659144330248193")) {
-            msg.getTextChannel().sendMessage("aaaaah on le reconnait bien").reference(msg).queue();
+            msg.getChannel().sendMessage("aaaaah on le reconnait bien").setMessageReference(msg).queue();
         } else {
-            msg.getTextChannel().sendMessage("oula on va se calmer tu vas détroner le ROI DU SEL").reference(msg).queue();
+            msg.getChannel().sendMessage("oula on va se calmer tu vas détroner le ROI DU SEL").setMessageReference(msg).queue();
         }
     }
 
@@ -301,7 +302,7 @@ public class ReactionEvent {
             im = resize(im, w, h, 0, 0, true);
             im = resize(im, w, h, 0, 0, false);
             ImageIO.write(im, "png", baos);
-            msg.getTextChannel().sendFile(baos.toByteArray(), "thunk.png").queue();
+            msg.getChannel().sendFiles(FileUpload.fromData(baos.toByteArray(), "thunk.png")).queue();
         } catch (IOException e) {
             e.printStackTrace();
         }

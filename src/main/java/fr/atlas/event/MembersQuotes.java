@@ -2,6 +2,7 @@ package fr.atlas.event;
 
 import fr.atlas.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.io.IOException;
 import java.util.Random;
@@ -204,7 +205,7 @@ public class MembersQuotes {
 
         int r = new Random().nextInt(jojo.length);
 		if (r == 3) {
-			msg.getChannel().sendFile(imgExtenders.getFile("jojo.png")).queue();
+			msg.getChannel().sendFiles(FileUpload.fromData(imgExtenders.getFile("jojo.png"))).queue();
 		} else {
 			msg.getChannel().sendMessage(jojo[r]).queue();
 		}
@@ -212,9 +213,9 @@ public class MembersQuotes {
 	static void Jules(Message msg) throws IOException {
 		int r = new Random().nextInt(jules.length);
 		if (r == 1) {
-			msg.getChannel().sendFile(imgExtenders.getFile("jules_1.jpg")).queue();
+			msg.getChannel().sendFiles(FileUpload.fromData(imgExtenders.getFile("jules_1.jpg"))).queue();
 		} if (r == 2){
-			msg.getChannel().sendFile(imgExtenders.getFile("jules_2.jpeg")).queue();
+			msg.getChannel().sendFiles(FileUpload.fromData(imgExtenders.getFile("jules_2.jpeg"))).queue();
 		}
 		else {
 			msg.getChannel().sendMessage(jules[r]).queue();

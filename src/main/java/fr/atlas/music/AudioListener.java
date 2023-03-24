@@ -10,8 +10,10 @@ import fr.atlas.BotDiscord;
 import fr.atlas.objects.activity;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.util.*;
@@ -243,12 +245,12 @@ public class AudioListener extends AudioEventAdapter {
         return (buttons);
     }
 
-    public Collection<? extends ActionRow> getVolumeButtons() {
+    public ArrayList<Button> getVolumeButtons() {
         ArrayList<net.dv8tion.jda.api.interactions.components.buttons.Button> buttons = new ArrayList<>();
         buttons.add(primary("zik;volume;-", "-10"));
         buttons.add(primary("zik;volume;reset", "par défaut"));
         buttons.add(primary("zik;volume;+", "+10"));
         buttons.add(primary("zik;volume;quit", "quitter"));
-        return (Collections.singletonList(ActionRow.of(buttons)));
+        return (buttons);
     }
 }

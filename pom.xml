@@ -32,12 +32,12 @@
     <dependency>
       <groupId>net.dv8tion</groupId>
       <artifactId>JDA</artifactId>
-      <version>5.0.0-alpha.13</version>
+      <version>5.0.0-beta.6</version>
     </dependency>
     <dependency>
       <groupId>com.github.idpromnut</groupId>
       <artifactId>lavaplayer</artifactId>
-      <version>youtube_details_parse_bug-SNAPSHOT</version>
+      <version>youtube_details_parse_bug</version>
     </dependency>
     <dependency>
       <groupId>com.jcraft</groupId>

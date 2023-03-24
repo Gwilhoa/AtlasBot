@@ -13,6 +13,7 @@
 package fr.atlas.objects;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
 import net.dv8tion.jda.internal.entities.ActivityImpl;
 
 /**
@@ -32,7 +33,7 @@ public class activity extends ActivityImpl {
         super(name, url, type);
     }
 
-    public activity(String name, String url, ActivityType type, Timestamps timestamps, Emoji emoji) {
+    public activity(String name, String url, ActivityType type, Timestamps timestamps, EmojiUnion emoji) {
         super(name, url, type, timestamps, emoji);
     }
 }

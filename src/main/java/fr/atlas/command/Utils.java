@@ -5,13 +5,19 @@ import fr.atlas.builder.CommandMap;
 import fr.atlas.command.CommandBuilder.HelpCommand;
 import fr.atlas.command.CommandBuilder.ProfilCommand;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -78,7 +84,10 @@ public class Utils {
             im = resize(im, 1032*2, 546*2, 0, 0, true);
             im = resize(im, 1032*2, 546*2, 0, 0, false);
             ImageIO.write(im, "png", baos);
-            textChannel.sendFile(baos.toByteArray(), "meteo.png").queue();
+            File f = new File("meteo.png");
+            ArrayList<FileUpload> files = new ArrayList<>();
+            files.add(FileUpload.fromData(f));
+            textChannel.sendFiles(files).queue();
         } catch (IOException e) {
             textChannel.sendMessage("météo introuvable").queue();
         }
