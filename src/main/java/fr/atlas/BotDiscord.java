@@ -36,7 +36,7 @@ public class BotDiscord implements Runnable{
         Orianna.setRiotAPIKey("RGAPI-2e977103-c601-4803-9f93-98e058b48168");
         Orianna.setDefaultRegion(Region.EUROPE_WEST);
         Orianna.setDefaultLocale("fr_FR");
-        jda = JDABuilder.create(token, GatewayIntent.getIntents(GatewayIntent.DEFAULT | GatewayIntent.getRaw(GatewayIntent.GUILD_MEMBERS) | GatewayIntent.getRaw(GatewayIntent.GUILD_PRESENCES)))
+        jda = JDABuilder.create(token, GatewayIntent.getIntents(GatewayIntent.DEFAULT | GatewayIntent.getRaw(GatewayIntent.GUILD_MEMBERS) | GatewayIntent.getRaw(GatewayIntent.GUILD_PRESENCES) | GatewayIntent.getRaw(GatewayIntent.GUILD_VOICE_STATES) | GatewayIntent.getRaw(GatewayIntent.GUILD_MESSAGE_REACTIONS) | GatewayIntent.getRaw(GatewayIntent.DIRECT_MESSAGE_REACTIONS) | GatewayIntent.getRaw(GatewayIntent.DIRECT_MESSAGE_TYPING) | GatewayIntent.getRaw(GatewayIntent.GUILD_MESSAGE_TYPING) | GatewayIntent.getRaw(GatewayIntent.MESSAGE_CONTENT)))
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .disableCache(CacheFlag.ACTIVITY)
