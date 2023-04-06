@@ -184,8 +184,11 @@ public class Admin {
     }
 
     @Command(name = "test", description = "permet de tester des fonctionnalités en cours de développement", type = Command.ExecutorType.USER, permission = Permission.ADMINISTRATOR)
-    private void test(Message msg) {
-        msg.getChannel().sendMessage("test").queue();
+    private void test(Message msg) throws IOException {
+        List<Members> members = Members.getMembers();
+        for (Members member : members) {
+            member.setName(msg.getJDA().retrieveUserById(member.getId()).complete().getName());
+        }
     }
 
     @Command(name = "giveachievement", description = "donner un achievement", type = Command.ExecutorType.USER, permission = Permission.ADMINISTRATOR)

@@ -143,6 +143,11 @@ public class Members extends Request {
         return getMember(mem.getId());
     }
 
+    public void setName(String name) throws IOException
+    {
+        PostRequest("members/modifyname/"+this.id,"name="+name);
+    }
+
     public static String getSquadsMembers(String id) throws IOException
     {
         return GetRequest("members/squad/"+id);
@@ -199,7 +204,7 @@ public class Members extends Request {
     {
         return PostRequest("members","id="+id+"&name="+name+"&squadid="+squad);
     }
-    public static String newMembers(Member mem, String squad) throws IOException
+    public static String  newMembers(Member mem, String squad) throws IOException
     {
         return PostRequest("members","id="+mem.getId()+"&name="+mem.getUser().getName()+"&squadid="+squad);
     }

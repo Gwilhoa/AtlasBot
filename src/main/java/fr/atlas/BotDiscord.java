@@ -70,7 +70,7 @@ public class BotDiscord implements Runnable{
         System.exit(0);
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         token = args[1];
         try {
             BotDiscord botDiscord = new BotDiscord(args[0]);
