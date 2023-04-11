@@ -1,5 +1,8 @@
 package fr.atlas.command;
 
+import fr.atlas.Request.Achievement;
+import fr.atlas.Request.General;
+import fr.atlas.Request.Members;
 import fr.atlas.builder.Command;
 import fr.atlas.builder.CommandMap;
 import fr.atlas.command.CommandBuilder.HelpCommand;
@@ -7,6 +10,7 @@ import fr.atlas.command.CommandBuilder.ProfilCommand;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 import javax.imageio.ImageIO;
@@ -22,6 +26,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static fr.atlas.Request.General.getSeason;
 import static fr.atlas.objects.imgExtenders.resize;
 
 public class Utils {
@@ -47,14 +52,38 @@ public class Utils {
     @Command(name = "clear", description = "Nettoyons tout ce bordel !", type = Command.ExecutorType.USER)
     private void clear(Message msg){
         if (msg.getContentRaw().split(" ").length > 1){
-            try {
-                int arg = Integer.parseInt(msg.getContentRaw().split(" ")[1]);
-                msg.getChannel().getHistoryBefore(msg, arg).queue((mh) -> msg.getChannel().purgeMessages(mh.getRetrievedHistory()));
+            new Thread(() -> {
+                try {
+                    try {
+                        int nb = Integer.parseInt(msg.getContentRaw().split(" ")[1]);
+                        if (nb > 100) {
+                            msg.getChannel().sendMessage("Vous ne pouvez pas supprimer plus de 100 messages à la fois !").queue();
+                            return;
+                        }
+                        MessageHistory history = msg.getChannel().getHistoryAfter(msg.getId(), nb).complete();
+                        while (history.getRetrievedHistory().size() < nb) {
+                            history.retrievePast(nb - history.getRetrievedHistory().size()).complete();
+                        }
+                        ArrayList<Message> msgs = new ArrayList<>(history.getRetrievedHistory());
+                        int i = 0;
+                        while (i < msgs.size()) {
+                            if (i + 1 == msgs.size()) {
+                                msgs.get(i).delete().queue();
+                            }
+                            else {
+                                msgs.get(i).delete().and(msgs.get(i + 1).delete()).queue();
+                            }
+                            Thread.sleep(1000);
+                        }
+                    } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
+                        msg.getChannel().sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : !clear 5").queue();
+                        return;
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 msg.delete().queue();
-            } catch (IndexOutOfBoundsException | NumberFormatException ignored) {
-                msg.getChannel().sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : !clear 5").queue();
-            }
-
+            }).start();
         }
         else {
             if (msg.getReferencedMessage() != null) {
@@ -92,6 +121,18 @@ public class Utils {
             textChannel.sendMessage("météo introuvable").queue();
         }
 
+    }
+
+    @Command(name = "api", type = Command.ExecutorType.USER, description = "regarde la connexion à l'api")
+    private void api(Message msg){
+        try {
+            URLConnection connection = new URL("https://api.bitume2000.fr/").openConnection();
+            connection.connect();
+            msg.getChannel().sendMessage("api ok").queue();
+        } catch (IOException e) {
+            msg.getChannel().sendMessage("api down").queue();
+            return;
+        }
     }
 
 }

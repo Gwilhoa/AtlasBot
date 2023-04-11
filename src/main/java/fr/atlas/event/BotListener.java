@@ -19,10 +19,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import fr.atlas.BotDiscord;
-import fr.atlas.Request.Members;
-import fr.atlas.Request.Squads;
-import fr.atlas.Request.Waifu;
-import fr.atlas.Request.WaifuMembers;
+import fr.atlas.Request.*;
 import fr.atlas.command.CommandBuilder.ProfilCommand;
 import fr.atlas.command.CommandBuilder.TopCommand;
 import fr.atlas.builder.CommandMap;
@@ -38,6 +35,7 @@ import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
@@ -124,6 +122,7 @@ public class BotListener implements EventListener {
 
 		try {
 			if (event instanceof ReadyEvent) onEnable((ReadyEvent) event);
+			else if (event instanceof GuildUpdateNameEvent) onUpdateNameEvent((GuildUpdateNameEvent) event);
 			else if (event instanceof MessageReceivedEvent) onMessage((MessageReceivedEvent) event);
 			else if (event instanceof GuildMemberJoinEvent) onGuildMemberJoin((GuildMemberJoinEvent) event);
 			else if (event instanceof GuildMemberRemoveEvent) onGuildMemberLeave((GuildMemberRemoveEvent) event);
@@ -148,6 +147,10 @@ public class BotListener implements EventListener {
 			e.printStackTrace();
 			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
 		}
+	}
+
+	private void onUpdateNameEvent(GuildUpdateNameEvent event) throws IOException {
+		General.setSeason(event.getNewName());
 	}
 
 	private void onVoiceUpdate(GuildVoiceUpdateEvent event) throws IOException {

@@ -52,7 +52,7 @@ public class ReactionEvent {
 
         if (StringExtenders.containsWord(msg.getContentRaw(),"lyon"))
         {
-            msg.getChannel().sendMessage("les portes s'ouvriront à droite dans le sens de la circulation").queue();
+            msg.getChannel().sendMessage("Les portes s'ouvriront à droite dans le sens de la circulation").queue();
         }
         if (containsIgnoreCase(msg.getContentRaw(), "je suis"))
         {
@@ -92,16 +92,20 @@ public class ReactionEvent {
 
         String s = msg.getContentRaw().replace("?","").replace(".","").replace(" ","");
         HashMap<String, String> map = new HashMap<>();
-        map.put("quoi", "feur");
+        map.put("pourquoi", "parceque feur");
+        map.put("quoi", "feur,feur,quoicoubeh");
         map.put("what", "ibulle");
         map.put("oui", "stiti");
         map.put("non", "bril");
         map.put("ouais", "stern");
+        map.put("ouai", "stern"); //pour les gens qui savent pas ecrire
+        map.put("hein", "2,deux,2,deux,apanyan,dien");
 
 
         for (String str : map.keySet()) {
             if (s.substring(Math.max(0, s.length() - str.length())).equalsIgnoreCase(str)) {
-                msg.getChannel().sendMessage(map.get(str)).queue();
+                String[] splitedResponse = map.get(str).split(",");
+                msg.getChannel().sendMessage(splitedResponse[new Random().nextInt(splitedResponse.length)]).queue();
                 return;
             }
         }

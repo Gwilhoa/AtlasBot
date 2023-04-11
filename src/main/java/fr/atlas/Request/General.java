@@ -6,15 +6,12 @@ import java.io.IOException;
 public class General {
     private String season;
 
-    public General(String season) {
-        this.season = season;
+
+    public static String getSeason() throws IOException {
+        return Request.GetRequest("general/season");
     }
 
-    public String getSeason() throws IOException {
-        return Request.GetRequest("https://api.cringebot.fr/general/season");
-    }
-
-    public void setSeason(String season) throws IOException {
-        Request.PostRequest("https://api.cringebot.fr/general/season", "season=" + season);
+    public static void setSeason(String season) throws IOException {
+        Request.PostRequest("general/season", "season=" + season);
     }
 }
