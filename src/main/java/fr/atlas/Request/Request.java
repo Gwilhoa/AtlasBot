@@ -5,8 +5,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 import java.io.*;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import static com.diogonunes.jcolor.Ansi.colorize;
 import static fr.atlas.BotDiscord.token;
@@ -14,6 +16,14 @@ import static fr.atlas.BotDiscord.token;
 public class Request {
     private static final String apiurl = "https://api.bitume2000.fr/v1/";
 
+    public static boolean isOnline() {
+        try {
+            GetRequest("");
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
     public static String GetRequest(String route) throws IOException {
         System.out.println(colorize("[API] GET "+ apiurl + route, Attribute.TEXT_COLOR(25,99, 100)));
         URL url = new URL(apiurl + route);
@@ -22,9 +32,8 @@ public class Request {
         con.setRequestProperty("token", token);
         con.connect();
         String response = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-        if (response == null) {
-            throw new IOException("null response");
-        }
+        if (con.getResponseCode() == 502)
+            throw new ConnectException("API offline" + con.getResponseCode());
         return response;
     }
 
@@ -44,6 +53,8 @@ public class Request {
         if (con.getResponseCode() == 500) {
             throw new RuntimeException("Failed : HTTP error code : " + con.getResponseCode());
         }
+        if (con.getResponseCode() == 502)
+            throw new ConnectException("API offline" + con.getResponseCode());
         return con.getResponseMessage();
     }
 

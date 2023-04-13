@@ -16,6 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TopCommand {
     public static EmbedBuilder CommandTop(String name, Guild guild, Member sender) {
+        if (!Request.isOnline())
+            return Request.DisconnectedEmbed();
         if (name != null && name.equals("scoreboard"))
             name = null;
         EmbedBuilder embedBuilder = new EmbedBuilder();

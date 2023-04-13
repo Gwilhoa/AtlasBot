@@ -3,6 +3,7 @@ package fr.atlas.command;
 import fr.atlas.Request.Achievement;
 import fr.atlas.Request.General;
 import fr.atlas.Request.Members;
+import fr.atlas.Request.Request;
 import fr.atlas.builder.Command;
 import fr.atlas.builder.CommandMap;
 import fr.atlas.command.CommandBuilder.HelpCommand;
@@ -125,14 +126,10 @@ public class Utils {
 
     @Command(name = "api", type = Command.ExecutorType.USER, description = "regarde la connexion à l'api")
     private void api(Message msg){
-        try {
-            URLConnection connection = new URL("https://api.bitume2000.fr/").openConnection();
-            connection.connect();
-            msg.getChannel().sendMessage("api ok").queue();
-        } catch (IOException e) {
-            msg.getChannel().sendMessage("api down").queue();
-            return;
-        }
+        if (Request.isOnline())
+            msg.getChannel().sendMessage("L'api est en ligne !").queue();
+        else
+            msg.getChannel().sendMessage("L'api est hors ligne !").queue();
     }
 
 }

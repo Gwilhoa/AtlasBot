@@ -14,6 +14,8 @@ import java.util.Objects;
 public class ProfilCommand {
 
     public static EmbedBuilder CommandProfil(Member member){
+        if (!Request.isOnline())
+            return Request.DisconnectedEmbed();
         Members mem = null;
         List<Members> lst = null;
         List<Achievement> ach = null;

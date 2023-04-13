@@ -196,6 +196,11 @@ public class BotListener implements EventListener {
 				Members.newMembers(event.getMember(), event.getComponentId().split(";")[1]);
 			}
 		} else if (event.getComponentId().substring(2).startsWith("memes")) {
+			if (!Request.isOnline())
+			{
+				event.reply("le serveur est hors ligne").setEphemeral(true).queue();
+				return;
+			}
 			if (getMemeAuthor(event.getMessage()).getId().equals(event.getMember().getId()))
 			{
 				event.reply("tu ne peux pas voter pour tes propres memes").setEphemeral(true).queue();
