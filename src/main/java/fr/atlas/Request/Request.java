@@ -32,6 +32,7 @@ public class Request {
         con.setRequestProperty("token", token);
         con.connect();
         String response = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
+        System.out.println(colorize("[API] RESPONSE "+ response, Attribute.TEXT_COLOR(25,99, 100)));
         if (con.getResponseCode() == 502)
             throw new ConnectException("API offline" + con.getResponseCode());
         return response;

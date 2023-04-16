@@ -278,7 +278,7 @@ public class Members extends Request {
             return;
         }
         Achievement ach = Achievement.getAchievement(achievement);
-        Members.addTitle(mem, ach.getTitle());
+        //Members.addTitle(mem, ach.getTitle());
         if (announcechannel != null)
         {
             Members.addPoints(mem.getId(), ach.getPoints(), mem.getGuild());

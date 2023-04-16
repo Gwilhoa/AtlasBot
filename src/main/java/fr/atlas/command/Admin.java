@@ -1,5 +1,6 @@
 package fr.atlas.command;
 
+import fr.atlas.BotDiscord;
 import fr.atlas.Request.Achievement;
 import fr.atlas.Request.Members;
 import fr.atlas.Request.Squads;
@@ -197,7 +198,7 @@ public class Admin {
         if (args.length == 2)
         {
             try {
-                Members.addAchievement(msg.getMentions().getMembers().get(0), args[1], msg.getChannel());
+                Members.addAchievement(msg.getMentions().getMembers().get(0), args[1], msg.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
             } catch (IOException e) {
                 e.printStackTrace();
             }
