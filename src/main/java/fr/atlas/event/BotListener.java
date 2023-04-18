@@ -149,6 +149,9 @@ public class BotListener implements EventListener {
 		}
 	}
 
+
+
+
 	private void onUpdateNameEvent(GuildUpdateNameEvent event) throws IOException {
 		General.setSeason(event.getNewName());
 	}
