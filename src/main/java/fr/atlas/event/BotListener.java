@@ -119,7 +119,6 @@ public class BotListener implements EventListener {
 	@Override
 	public void onEvent(GenericEvent event) {
 		System.out.println(colorize( "[Event] "+ event.getClass().getSimpleName(), Attribute.TEXT_COLOR(169, 169, 169)));
-
 		try {
 			if (event instanceof ReadyEvent) onEnable((ReadyEvent) event);
 			else if (event instanceof GuildUpdateNameEvent) onUpdateNameEvent((GuildUpdateNameEvent) event);
@@ -563,6 +562,7 @@ public class BotListener implements EventListener {
 	 */
 	private void onMessage(MessageReceivedEvent event) throws IOException, InterruptedException {
 		Message msg = event.getMessage();
+		if (msg.getAuthor().isBot()) return;
 		if (event.getAuthor().equals(event.getJDA().getSelfUser())) return;
 		if (!event.getGuild().getId().equals("382938797442334720")) return;
 		try {
