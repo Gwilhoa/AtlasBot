@@ -1,6 +1,7 @@
 package fr.atlas;
 
 
+import com.diogonunes.jcolor.Attribute;
 import com.merakianalytics.orianna.Orianna;
 import com.merakianalytics.orianna.types.common.Region;
 import fr.atlas.builder.CommandMap;
@@ -14,7 +15,11 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
 import java.util.Scanner;
+
+import static com.diogonunes.jcolor.Ansi.colorize;
+import static fr.atlas.Request.Request.login;
 
 public class BotDiscord implements Runnable{
 
@@ -48,6 +53,10 @@ public class BotDiscord implements Runnable{
 
     }
 
+    public static void debug(String data) {
+        System.out.println(colorize(data, Attribute.TEXT_COLOR(255, 192, 203)));
+    }
+
     public JDA getJda() {
         return jda;
     }
@@ -74,9 +83,12 @@ public class BotDiscord implements Runnable{
         token = args[1];
         try {
             BotDiscord botDiscord = new BotDiscord(args[0]);
+            login();
             new Thread(botDiscord, "bot").start();
         } catch (LoginException | IllegalArgumentException | RateLimitedException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

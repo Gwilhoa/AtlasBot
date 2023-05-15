@@ -1,7 +1,7 @@
 package fr.atlas.command;
 
 import com.jcraft.jsch.JSchException;
-import fr.atlas.Request.Members;
+import fr.atlas.Request.User;
 import fr.atlas.Request.Waifu;
 import fr.atlas.Request.WaifuMembers;
 import fr.atlas.builder.Command;
@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 public class Waifus {
     @Command(name = "harem", description = "Donne les Waifus attrapé par une personne", type = Command.ExecutorType.USER)
     private void harem(Message msg) throws IOException {
-        Members mem = Members.getMember(msg.getMember());
+        User mem = User.getMember(msg.getMember());
         List<WaifuMembers> waifuMembers = mem.getWaifuMembers();
         System.out.println(waifuMembers);
         ArrayList<MessageEmbed> embeds = new ArrayList<>();
@@ -44,7 +44,7 @@ public class Waifus {
         {
             WaifuMembers w = null;
             try {
-                w = Members.catchwaifu(msg.getMember());
+                w = User.catchwaifu(msg.getMember());
             } catch (IOException error) {
                 try {
                     long waitingTime = Long.parseLong(error.getMessage()) - System.currentTimeMillis();

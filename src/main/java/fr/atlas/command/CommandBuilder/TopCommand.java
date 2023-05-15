@@ -1,11 +1,10 @@
 package fr.atlas.command.CommandBuilder;
 
-import fr.atlas.Request.Members;
+import fr.atlas.Request.User;
 import fr.atlas.Request.Request;
 import fr.atlas.Request.Squads;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.awt.*;
@@ -15,9 +14,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TopCommand {
-    public static EmbedBuilder CommandTop(String name, Guild guild, Member sender) {
-        if (!Request.isOnline())
-            return Request.DisconnectedEmbed();
+    public static EmbedBuilder CommandTop(String name, Guild guild, net.dv8tion.jda.api.entities.Member sender) {
         if (name != null && name.equals("scoreboard"))
             name = null;
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -32,17 +29,17 @@ public class TopCommand {
                 e.printStackTrace();
             }
             if (sq != null) {
-                sq.sort((o1, o2) -> o2.getPointsTotal() - o1.getPointsTotal());
+                sq.remove(0);
+                sq.sort((o1, o2) -> Math.toIntExact(o2.getPointsTotal() - o1.getPointsTotal()));
                 EmbedBuilder finalEmbedBuilder = embedBuilder;
                 sq.forEach(squads -> {
-                    List<Members> mem = null;
+                    List<User> mem = null;
                     try {
-                        mem = Squads.getMembers(squads);
+                        mem = Squads.getMembers(squads.getId());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     if (mem != null) {
-                        mem.sort((o1, o2) -> o2.getPoints() - o1.getPoints());
                         if (squads.getPointsTotal() == 0) {
                             finalEmbedBuilder.addField(squads.getName() + " - Top 1 : ---", "Points : pas encore de point | Points d'équipe : " + squads.getPointsGiven(), false);
 
@@ -64,15 +61,15 @@ public class TopCommand {
                 embedBuilder.setColor(Color.RED);
             }
         } else if (name.equalsIgnoreCase("general")) {
-            List<Members> mem = null;
+            List<User> mem = null;
             try {
-                mem = Members.getMembers();
+                mem = User.getMembers();
             } catch (ConnectException e) {
                 return Request.DisconnectedEmbed();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            mem.sort((o1, o2) -> o2.getPoints() - o1.getPoints());
+            mem.sort((o1, o2) -> Math.toIntExact(o2.getPoints() - o1.getPoints()));
             embedBuilder.setTitle("Classement général");
             AtomicInteger i = new AtomicInteger(1);
             EmbedBuilder finalEmbedBuilder1 = embedBuilder;
@@ -90,16 +87,15 @@ public class TopCommand {
             else
             {
                 Role role = roleList.get(0);
-                List<Members> mem = null;
+                List<User> mem = null;
                 try {
-                    mem = Squads.getMembers(Squads.getSquads(role.getId()));
+                    mem = Squads.getMembers(role.getId());
                 } catch (ConnectException e) {
                     return Request.DisconnectedEmbed();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 if (mem != null) {
-                    mem.sort((o1, o2) -> o2.getPoints() - o1.getPoints());
                     embedBuilder.setTitle("Classement de l'escouade " + name);
                     embedBuilder.setColor(role.getColor());
                     EmbedBuilder finalEmbedBuilder = embedBuilder;
@@ -115,7 +111,7 @@ public class TopCommand {
         return embedBuilder;
     }
 
-    private static void displaymember(Member sender, List<Members> mem, AtomicInteger i, EmbedBuilder finalEmbedBuilder1) {
+    private static void displaymember(net.dv8tion.jda.api.entities.Member sender, List<User> mem, AtomicInteger i, EmbedBuilder finalEmbedBuilder1) {
         mem.forEach(members -> {
             if (i.get() <= 10) {
                 String name = members.getName();

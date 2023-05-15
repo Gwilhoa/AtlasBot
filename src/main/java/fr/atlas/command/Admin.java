@@ -2,7 +2,7 @@ package fr.atlas.command;
 
 import fr.atlas.BotDiscord;
 import fr.atlas.Request.Achievement;
-import fr.atlas.Request.Members;
+import fr.atlas.Request.User;
 import fr.atlas.Request.Squads;
 import fr.atlas.builder.Command;
 import net.dv8tion.jda.api.Permission;
@@ -39,7 +39,7 @@ public class Admin {
         msg.getMentions().getMembers().get(0).getUser().openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("vous avez été ajouté à l'escouade " + msg.getMentions().getRoles().get(0).getName()).queue());
         msg.getGuild().addRoleToMember(msg.getMentions().getMembers().get(0), msg.getMentions().getRoles().get(0)).queue();
         try {
-            Members.newMembers(msg.getMentions().getMembers().get(0), msg.getMentions().getRoles().get(0).getId());
+            User.newMembers(msg.getMentions().getMembers().get(0), msg.getMentions().getRoles().get(0).getId());
         } catch (ConnectException e) {
             msg.getChannel().sendMessage("disconnected").queue();
         } catch (Exception e) {
@@ -177,7 +177,7 @@ public class Admin {
     @Command(name = "revokeachievement", description = "enlever un achievement à quelqu'un", type = Command.ExecutorType.USER, permission = Permission.ADMINISTRATOR)
     private void revokeAchievement(Message msg, String[] args) throws IOException {
         if (args.length == 2) {
-            Members.revokeAchievement(msg.getMentions().getMembers().get(0), args[1]);
+            User.revokeAchievement(msg.getMentions().getMembers().get(0), args[1]);
             msg.getChannel().sendMessage("succès révoqué").queue();
         } else {
             msg.getChannel().sendMessage("Mauvais usage de la commande ! il faut mettre par exemple : >revokeachievement @user id").queue();
@@ -186,10 +186,8 @@ public class Admin {
 
     @Command(name = "test", description = "permet de tester des fonctionnalités en cours de développement", type = Command.ExecutorType.USER, permission = Permission.ADMINISTRATOR)
     private void test(Message msg) throws IOException {
-        List<Members> members = Members.getMembers();
-        for (Members member : members) {
-            member.setName(msg.getJDA().retrieveUserById(member.getId()).complete().getName());
-        }
+        List<User> users = User.getMembers();
+        msg.getChannel().sendMessage(users.toString()).queue();
     }
 
     @Command(name = "giveachievement", description = "donner un achievement", type = Command.ExecutorType.USER, permission = Permission.ADMINISTRATOR)
@@ -198,7 +196,7 @@ public class Admin {
         if (args.length == 2)
         {
             try {
-                Members.addAchievement(msg.getMentions().getMembers().get(0), args[1], msg.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+                User.addAchievement(msg.getMentions().getMembers().get(0).getId(), args[1]);
             } catch (IOException e) {
                 e.printStackTrace();
             }

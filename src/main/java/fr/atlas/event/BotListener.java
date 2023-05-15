@@ -20,8 +20,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
 import fr.atlas.BotDiscord;
 import fr.atlas.Request.*;
-import fr.atlas.command.CommandBuilder.ProfilCommand;
-import fr.atlas.command.CommandBuilder.TopCommand;
+import fr.atlas.Request.User;
 import fr.atlas.builder.CommandMap;
 import fr.atlas.objects.StringExtenders;
 import fr.atlas.experiences.TextualExperience;
@@ -48,7 +47,6 @@ import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
-import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -62,7 +60,6 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -135,7 +132,7 @@ public class BotListener implements EventListener {
 //			else if (event instanceof GuildVoiceLeaveEvent) onDisconnect((GuildVoiceLeaveEvent) event);
 			else if (event instanceof MessageEmbedEvent) onEmbed((MessageEmbedEvent) event);
 //			else if (event instanceof GuildVoiceMoveEvent) onMove((GuildVoiceMoveEvent) event);
-			else if (event instanceof SlashCommandInteraction) onSlashCommand((SlashCommandInteraction) event);
+//			else if (event instanceof SlashCommandInteraction) onSlashCommand((SlashCommandInteraction) event);
 			else if (event instanceof CommandAutoCompleteInteraction) onAutoComplete((CommandAutoCompleteInteraction) event);
 //			else if (event instanceof SelectMenuInteractionEvent) onSelectMenu((SelectMenuInteractionEvent) event);
 			else if (event instanceof ButtonInteractionEvent) onButton((ButtonInteractionEvent) event);
@@ -161,7 +158,7 @@ public class BotListener implements EventListener {
 		} else if (event.getNewValue() == null) {
 			if (connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
 			{
-				Members.addAchievement(event.getMember(), "9", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+				User.addAchievement(event.getMember().getId(), "9");
 			}
 			connectedUsers.remove(event.getMember().getId());
 		} else {
@@ -174,14 +171,14 @@ public class BotListener implements EventListener {
 
 	private void onRoleAdd(GuildMemberRoleAddEvent event) throws IOException {
 		Guild guild = event.getGuild();
-		Members mem = Members.getMember(event.getMember());
+		User mem = User.getMember(event.getMember());
 		if (event.getRoles().contains(event.getGuild().getRoleById("680431143283458077")))
 		{
-			mem.addAchievement("3", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+			User.addAchievement(mem.getId(),"3");
 		}
 		if (mem.getMember(guild).getRoles().contains(guild.getRoleById("849925828069687296")))
 		{
-			mem.addAchievement("2", guild.getTextChannelById(BotDiscord.AnnounceSalonId), guild);
+			User.addAchievement(mem.getId(), "2");
 		}
 	}
 
@@ -195,12 +192,14 @@ public class BotListener implements EventListener {
 					event.getGuild().addRoleToMember(member, event.getGuild().getRoleById(event.getComponentId().split(";")[1])).queue();
 				});
 				event.reply("vous avez rejoint la squad").setEphemeral(true).queue();
-				Members.newMembers(event.getMember(), event.getComponentId().split(";")[1]);
+				User.newMembers(event.getMember(), event.getComponentId().split(";")[1]);
 			}
 		} else if (event.getComponentId().substring(2).startsWith("memes")) {
-			if (!Request.isOnline())
-			{
-				event.reply("le serveur est hors ligne").setEphemeral(true).queue();
+			User user;
+			try {
+				user = User.getMember(event.getMember());
+			} catch (IOException e) {
+				e.printStackTrace();
 				return;
 			}
 			if (getMemeAuthor(event.getMessage()).getId().equals(event.getMember().getId()))
@@ -224,11 +223,11 @@ public class BotListener implements EventListener {
 					nid = nid + ";" + event.getMember().getId();
 					did = "d_memes;" + (Integer.parseInt(did.split(";")[1]) + 1);
 				} else if (event.getComponentId().contains("g")) {
-					if (Integer.parseInt(Members.getMemeVote(event.getMember().getId())) <= 0) {
+					if (user.getMemevote() <= 0) {
 						event.reply("tu n'as plus de super vote").setEphemeral(true).queue();
 						return;
 					}
-					Members.addMemeVote(event.getMember().getId());
+					user = User.addMemeVote(event.getMember().getId());
 					gid = gid + ";" + event.getMember().getId();
 					did = "d_memes;" + (Integer.parseInt(did.split(";")[1]) + 2);
 				}
@@ -237,29 +236,29 @@ public class BotListener implements EventListener {
 				buttons.add(Button.primary(gid, supervoteLabel));
 				buttons.add(Button.danger(did, MemesEvent.res(Integer.parseInt(did.split(";")[1]))).asDisabled());
 				event.getMessage().editMessageComponents(ActionRow.of(buttons)).queue();
-				event.reply("tu as bien voté pour ce meme\n il te reste " + Members.getMemeVote(event.getMember().getId()) + " super vote").setEphemeral(true).queue();
+				event.reply("tu as bien voté pour ce meme\n il te reste " + user.getMemevote() + " super vote").setEphemeral(true).queue();
 				if (Integer.parseInt(did.split(";")[1]) >= UpvoteRequired * 2) {
 					Message message = event.getMessage();
 					if (message.getEmbeds().isEmpty()) {
 						File f = imgExtenders.getFile(message.getAttachments().get(0).getProxyUrl(), message.getAttachments().get(0).getFileName(), null);
 						message.getGuild().getTextChannelById("911549374696411156").sendMessage(MessageCreateData.fromMessage(message)).setFiles(FileUpload.fromData(f)).queue();
 						f.delete();
-						Members.addBestMemes(getMemeAuthor(message));
+						User.addBestMemes(getMemeAuthor(message));
 						message.delete().queue();
 					} else {
 						if (message.getEmbeds().get(0).getAuthor() != null && message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("reddit")) {
 							repostReddit(message, null, message.getGuild().getTextChannelById("911549374696411156"));
-							Members.addBestMemes(getMemeAuthor(message));
+							User.addBestMemes(getMemeAuthor(message));
 							message.delete().queue();
 						}
 						else if (message.getEmbeds().get(0).getAuthor() != null && message.getEmbeds().get(0).getAuthor().getName().equalsIgnoreCase("twitter")) {
 							repostTwitter(message, null, message.getGuild().getTextChannelById("911549374696411156"));
-							Members.addBestMemes(getMemeAuthor(message));
+							User.addBestMemes(getMemeAuthor(message));
 							message.delete().queue();
 						}
 						else if (!message.getContentRaw().isEmpty()) {
 							message.getGuild().getTextChannelById("911549374696411156").sendMessage(message.getContentRaw()).queue();
-							Members.addBestMemes(getMemeAuthor(message));
+							User.addBestMemes(getMemeAuthor(message));
 							message.delete().queue();
 						} else {
 							String name = message.getEmbeds().get(0).getImage().getUrl().split(" ")[0].split("/")[message.getEmbeds().get(0).getImage().getUrl().split("/").length - 1];
@@ -283,7 +282,7 @@ public class BotListener implements EventListener {
 											.build()
 							).queue();
 							f.delete();
-							Members.addBestMemes(getMemeAuthor(message));
+							User.addBestMemes(getMemeAuthor(message));
 							message.delete().queue();
 							return;
 						}
@@ -314,7 +313,7 @@ public class BotListener implements EventListener {
 		}
 		else if (event.getComponentId().startsWith("harem")) {
 			String id = event.getComponentId().split(";")[3];
-			Members mem = Members.getMember(id);
+			User mem = User.getMember(id);
 			int page = Integer.parseInt(event.getComponentId().split(";")[2]);
 			if (event.getComponentId().contains("next")) {
 				page++;
@@ -405,23 +404,23 @@ public class BotListener implements EventListener {
 		}
 	}
 
-	private void onSlashCommand(SlashCommandInteraction event) {
-		if (event.getName().equals("top")) {
-			event.replyEmbeds(TopCommand.CommandTop(event.getOption("squad").getAsString(), event.getGuild(), event.getMember()).build()).queue();
-		}
-		else if (event.getName().equals("profil")) {
-			if (event.getOption("pseudo") == null)
-				event.replyEmbeds(ProfilCommand.CommandProfil(event.getMember()).build()).queue();
-			else
-				event.replyEmbeds(ProfilCommand.CommandProfil(event.getGuild().getMemberById(event.getOption("pseudo").getAsUser().getId())).build()).queue();
-		} else
-			event.reply("coming soon").queue();
-	}
+//	private void onSlashCommand(SlashCommandInteraction event) {
+//		if (event.getName().equals("top")) {
+//			event.replyEmbeds(TopCommand.CommandTop(event.getOption("squad").getAsString(), event.getGuild(), event.getMember()).build()).queue();
+//		}
+//		else if (event.getName().equals("profil")) {
+//			if (event.getOption("pseudo") == null)
+//				event.replyEmbeds(ProfilCommand.CommandProfil(event.getMember()).build()).queue();
+//			else
+//				event.replyEmbeds(ProfilCommand.CommandProfil(event.getGuild().getMemberById(event.getOption("pseudo").getAsUser().getId())).build()).queue();
+//		} else
+//			event.reply("coming soon").queue();
+//	}
 
 //	private void onMove(GuildVoiceMoveEvent event) throws IOException {
 //		if (event.getChannelJoined().getId().equals(BotDiscord.AFKSalonId) && connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
 //		{
-//			Members.addAchievement(event.getMember(), "10", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+//			User.addAchievement(event.getMember(), "10", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
 //		}
 //		connectedUsers.remove(event.getMember().getId());
 //	}
@@ -431,7 +430,7 @@ public class BotListener implements EventListener {
 //	private void onDisconnect(GuildVoiceLeaveEvent event) throws IOException {
 //		if (connectedUsers.get(event.getMember().getId()) != null && connectedUsers.get(event.getMember().getId()) + 86400000L < System.currentTimeMillis())
 //		{
-//			Members.addAchievement(event.getMember(), "9", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
+//			User.addAchievement(event.getMember(), "9", event.getGuild().getTextChannelById(BotDiscord.AnnounceSalonId));
 //		}
 //		connectedUsers.remove(event.getMember().getId());
 //	}

@@ -7,15 +7,18 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.gson.Gson;
+
+import static fr.atlas.BotDiscord.debug;
 
 public class Squads extends Request {
     private  String id;
     private  String name;
     private  Integer PointsGiven;
-    private  Integer PointsTotal;
-    private  Integer color;
+    private  Long PointsTotal;
+    private  Color color;
 
     /**
      *
@@ -25,7 +28,7 @@ public class Squads extends Request {
      * @param pointsTotal
      * @param color
      */
-    public Squads(String id, String name, Integer pointsGiven, Integer pointsTotal, Integer color) {
+    public Squads(String id, String name, Integer pointsGiven, Long pointsTotal, Color color) {
         this.id = id;
         this.name = name;
         this.PointsGiven = pointsGiven;
@@ -41,7 +44,8 @@ public class Squads extends Request {
         try {
             array = gson.fromJson(data, JsonArray.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            data = "[" + data + "]";
+            array = gson.fromJson(data, JsonArray.class);
         }
         array.forEach(jsonElement -> {
             squads.add(
@@ -49,8 +53,9 @@ public class Squads extends Request {
                     jsonElement.getAsJsonObject().get("id").getAsString(),
                     jsonElement.getAsJsonObject().get("name").getAsString(),
                     jsonElement.getAsJsonObject().get("PointsGiven").getAsInt(),
-                    jsonElement.getAsJsonObject().get("PointsTotal").getAsInt(),
-                    jsonElement.getAsJsonObject().get("color").getAsInt()));
+                    jsonElement.getAsJsonObject().get("PointsTotal").getAsLong(),
+                    Color.decode(String.format("%6s", jsonElement.getAsJsonObject().get("color").getAsString()).replace(' ', '0'))
+                    ));
         });
         return squads;
     }
@@ -59,15 +64,15 @@ public class Squads extends Request {
 
     //------------------------------------------------------------//
 
-    public static List<Members> getMembers(Squads sq) throws IOException {
-        return Members.getObjMembers(Request.GetRequest("squads/members/"+sq.id), sq);
+    public static List<User> getMembers(String id) throws IOException {
+        return User.getObjMembers(Request.GetRequest("squads/members/" + id));
     }
 
     public String getName() {
         return name;
     }
 
-    public Integer getPointsTotal() {
+    public Long getPointsTotal() {
         return PointsTotal;
     }
 
@@ -75,7 +80,7 @@ public class Squads extends Request {
         return PointsGiven;
     }
 
-    public Integer getColor() {
+    public Color getColor() {
         return color;
     }
 

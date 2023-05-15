@@ -1,6 +1,6 @@
 package fr.atlas.experiences;
 
-import fr.atlas.Request.Members;
+import fr.atlas.Request.User;
 import net.dv8tion.jda.api.entities.Guild;
 
 
@@ -16,10 +16,10 @@ public class TextualExperience {
 
     public static void sendMessage(String id, Guild guild) throws IOException {
         if (lastMessage.get(id) == null) {
-                Members.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue(), guild);
+                User.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue());
             lastMessage.put(id, System.currentTimeMillis());
         } else {
-                Members.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue(), guild);
+                User.addPoints(id, getTextualPoint(System.currentTimeMillis() - t).intValue());
             lastMessage.replace(id, System.currentTimeMillis());
         }
     }

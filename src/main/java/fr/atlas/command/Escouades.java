@@ -1,7 +1,7 @@
 package fr.atlas.command;
 
 import fr.atlas.Request.Achievement;
-import fr.atlas.Request.Members;
+import fr.atlas.Request.User;
 import fr.atlas.builder.Command;
 import fr.atlas.command.CommandBuilder.ProfilCommand;
 import fr.atlas.command.CommandBuilder.TopCommand;
@@ -43,7 +43,7 @@ public class Escouades {
         StringBuilder sb = new StringBuilder();
         java.util.List<String> titles = new ArrayList<>();
         try {
-            titles = Members.getTitles(msg.getMember());
+            titles = User.getTitles(msg.getMember());
         } catch (IOException e) {
             msg.getChannel().sendMessage("erreur de connexion").queue();
         }
@@ -63,7 +63,7 @@ public class Escouades {
         java.util.List<Achievement> memAchievement;
         try {
             achievement = Achievement.getAchievements();
-            memAchievement = Members.getAchievements(msg.getMember());
+            memAchievement = User.getAchievementsById(msg.getMember().getId());
         } catch (IOException e) {
             msg.getChannel().sendMessage("erreur de connexion").queue();
             return;
@@ -95,7 +95,7 @@ public class Escouades {
         if (args.length == 1)
         {
             try {
-                if (Members.setTitle(msg.getMember(), args[0]))
+                if (User.setTitle(msg.getMember(), args[0]))
                     msg.getChannel().sendMessage("titre défini").queue();
                 else
                     msg.getChannel().sendMessage("vous n'avez pas ce titre").queue();

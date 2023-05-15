@@ -1,8 +1,5 @@
 package fr.atlas.command;
 
-import fr.atlas.Request.Achievement;
-import fr.atlas.Request.General;
-import fr.atlas.Request.Members;
 import fr.atlas.Request.Request;
 import fr.atlas.builder.Command;
 import fr.atlas.builder.CommandMap;
@@ -11,7 +8,6 @@ import fr.atlas.command.CommandBuilder.ProfilCommand;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 import javax.imageio.ImageIO;
@@ -22,12 +18,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static fr.atlas.Request.General.getSeason;
 import static fr.atlas.objects.imgExtenders.resize;
 
 public class Utils {
@@ -46,7 +40,7 @@ public class Utils {
     }
 
     @Command(name = "help", type = Command.ExecutorType.USER, description = "Affiche la liste des commandes.")
-    private void help(User user, MessageChannel channel, Guild guild, Member mem){
+    private void help(net.dv8tion.jda.api.entities.User user, MessageChannel channel, Guild guild, Member mem){
         HelpCommand.help(user, channel, guild, mem, commandMap);
     }
 
@@ -125,11 +119,13 @@ public class Utils {
     }
 
     @Command(name = "api", type = Command.ExecutorType.USER, description = "regarde la connexion à l'api")
-    private void api(Message msg){
-        if (Request.isOnline())
+    private void api(Message msg) {
+        try {
+            Request.GetRequest("");
             msg.getChannel().sendMessage("L'api est en ligne !").queue();
-        else
+        } catch (Exception e) {
             msg.getChannel().sendMessage("L'api est hors ligne !").queue();
+        }
     }
 
 }

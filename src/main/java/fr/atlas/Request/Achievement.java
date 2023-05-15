@@ -39,6 +39,7 @@ public class Achievement {
 
     public static List<Achievement> getObjAchievement(String data) throws IOException {
         ArrayList<Achievement> achievements = new ArrayList<>();
+        if (data == null) return achievements;
         GsonBuilder builder = new GsonBuilder();
         builder.create().fromJson(data, JsonArray.class).forEach(jsonElement -> {
             achievements.add(
@@ -46,16 +47,16 @@ public class Achievement {
                             jsonElement.getAsJsonObject().get("id").getAsString(),
                             jsonElement.getAsJsonObject().get("name").getAsString(),
                             jsonElement.getAsJsonObject().get("description").getAsString(),
-                            jsonElement.getAsJsonObject().get("pointprice").getAsInt(),
-                            jsonElement.getAsJsonObject().get("coinsprice").getAsInt(),
-                            jsonElement.getAsJsonObject().get("titleprice").getAsString()
+                            jsonElement.getAsJsonObject().get("points").getAsInt(),
+                            jsonElement.getAsJsonObject().get("coins").getAsInt(),
+                            jsonElement.getAsJsonObject().get("title").getAsString()
                     ));
         });
         return achievements;
     }
 
     public static boolean createAchievement(String name, String description, int points, int coins, String title) throws IOException {
-        Request.PostRequest("achievement", "name=" + name + "&description=" + description + "&points=" + points + "&coins=" + coins + "&title=" + title);
+        Request.PostRequest("achievement", "{ \"name\" : \"" + name + "\", \"description\" : \"" + description + "\", \"points\" : \"" + points + "\", \"coins\" :\"" + coins + "\", \"title\" : \"" + title + "\" }");
         return true;
     }
 
