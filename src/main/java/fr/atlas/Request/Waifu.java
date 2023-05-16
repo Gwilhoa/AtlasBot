@@ -23,7 +23,7 @@ public class Waifu {
         this.name = name;
         this.id = id;
         this.description = description;
-        this.imageurl = "https://cdn.bitume2000.fr/waifu/"+ id+".png";
+        this.imageurl = "https://cdn.bitume2000.fr/waifus/"+ id+".png";
         this.rare = rare;
         this.epic = epic;
         this.legendary = legendary;

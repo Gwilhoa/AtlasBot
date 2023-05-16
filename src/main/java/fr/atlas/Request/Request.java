@@ -19,7 +19,7 @@ import static com.diogonunes.jcolor.Ansi.colorize;
 import static fr.atlas.BotDiscord.token;
 
 public class Request {
-    //private static final String apiurl = "http://localhost:42000/v2/";
+//    private static final String apiurl = "http://localhost:42000/v2/";
     private static final String apiurl = "https://api.bitume2000.fr/v2/";
     private static String accessToken = null;
     private static final OkHttpClient client = new OkHttpClient();

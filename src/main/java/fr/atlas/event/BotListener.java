@@ -313,7 +313,6 @@ public class BotListener implements EventListener {
 		}
 		else if (event.getComponentId().startsWith("harem")) {
 			String id = event.getComponentId().split(";")[3];
-			User mem = User.getMember(id);
 			int page = Integer.parseInt(event.getComponentId().split(";")[2]);
 			if (event.getComponentId().contains("next")) {
 				page++;
@@ -322,7 +321,7 @@ public class BotListener implements EventListener {
 			}
 			ArrayList<Button> buttons = new ArrayList<>();
 			ArrayList<MessageEmbed> embeds = new ArrayList<>();
-			List<WaifuMembers> waifus = mem.getWaifuMembers();
+			List<WaifuMembers> waifus = User.getWaifuMembers(id);
 			if (page != 0)
 				buttons.add(Button.primary("harem;prev;" + page + ";" + id, "page précédents"));
 

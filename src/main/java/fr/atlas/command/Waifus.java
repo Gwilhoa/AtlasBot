@@ -1,10 +1,13 @@
 package fr.atlas.command;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.jcraft.jsch.JSchException;
 import fr.atlas.Request.User;
 import fr.atlas.Request.Waifu;
 import fr.atlas.Request.WaifuMembers;
 import fr.atlas.builder.Command;
+import fr.atlas.objects.StringExtenders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -18,8 +21,7 @@ import java.util.concurrent.ExecutionException;
 public class Waifus {
     @Command(name = "harem", description = "Donne les Waifus attrapé par une personne", type = Command.ExecutorType.USER)
     private void harem(Message msg) throws IOException {
-        User mem = User.getMember(msg.getMember());
-        List<WaifuMembers> waifuMembers = mem.getWaifuMembers();
+        List<WaifuMembers> waifuMembers = User.getWaifuMembers(msg.getMember().getId());
         System.out.println(waifuMembers);
         ArrayList<MessageEmbed> embeds = new ArrayList<>();
         int i = 0;
@@ -33,7 +35,9 @@ public class Waifus {
             embeds.add(waifuMembers.get(i).getEmbed().build());
             i++;
         }
-        Button button = Button.primary("harem;next;0;"+mem.getId(), "page suivante");
+        Button button = Button.primary("harem;next;0;"+msg.getMember().getId(), "page suivante");
+        if (waifuMembers.size() < 5)
+            button = button.asDisabled();
         msg.getChannel().sendMessageEmbeds(embeds).setActionRow(button).queue();
     }
 
@@ -47,7 +51,9 @@ public class Waifus {
                 w = User.catchwaifu(msg.getMember());
             } catch (IOException error) {
                 try {
-                    long waitingTime = Long.parseLong(error.getMessage()) - System.currentTimeMillis();
+                    String e = error.getMessage();
+                    JsonObject json = StringExtenders.StringToJson(e);
+                    long waitingTime = json.get("message_code").getAsLong() - System.currentTimeMillis();
                     msg.getChannel().sendMessage("vous devez attendre " + waitingTime/1000 + " secondes avant de pouvoir récuperer une nouvelle waifu").queue();
                 } catch (NumberFormatException e) {
                     msg.getChannel().sendMessage(error.getMessage()).queue();

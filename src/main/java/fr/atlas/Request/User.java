@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static fr.atlas.BotDiscord.debug;
+
 
 public class User extends Request {
 
@@ -77,7 +79,7 @@ public class User extends Request {
 
     public static WaifuMembers catchwaifu(net.dv8tion.jda.api.entities.Member member) throws IOException {
         WaifuMembers waifu = null;
-        String data = Request.GetRequest("members/catchwaifu/" + member.getId());
+        String data = Request.PostRequest("members/waifus/" + member.getId(), "");
         try {
             System.out.println("[WAIFU] new catch by "+member.getUser().getName()+" : " + data);
             waifu = WaifuMembers.getObjWaifuMembers("[" + data + "]").get(0);
@@ -262,7 +264,7 @@ public class User extends Request {
 
     public static List<String> getTitles(net.dv8tion.jda.api.entities.Member mem) throws IOException
     {
-        String data = GetRequest("members/title/get/"+mem.getId());
+        String data = GetRequest("members/title/"+mem.getId());
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         JsonArray array = null;
@@ -278,9 +280,9 @@ public class User extends Request {
         return titles;
     }
 
-    public List<WaifuMembers> getWaifuMembers() throws IOException {
+    public static List<WaifuMembers> getWaifuMembers(String id) throws IOException {
 
-        String data = GetRequest("members/waifus/"+this.getId());
+        String data = GetRequest("members/waifus/"+id);
         List<WaifuMembers> waifus = WaifuMembers.getObjWaifuMembers(data);
         return waifus;
     }

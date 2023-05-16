@@ -13,6 +13,10 @@
 package fr.atlas.objects;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import java.util.Locale;
 
 public class StringExtenders {
@@ -103,6 +107,10 @@ public class StringExtenders {
         str1 = BetterLowCase(str1);
         str2 = BetterLowCase(str2);
         return (str1.equalsIgnoreCase(str2));
+    }
+
+    public static JsonObject StringToJson(String str){
+        return (new Gson().fromJson(str, JsonObject.class));
     }
 }
 
