@@ -37,6 +37,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageEmbedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -51,6 +52,7 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
 import java.awt.*;
 import java.io.BufferedInputStream;
@@ -118,6 +120,7 @@ public class BotListener implements EventListener {
 		System.out.println(colorize( "[Event] "+ event.getClass().getSimpleName(), Attribute.TEXT_COLOR(169, 169, 169)));
 		try {
 			if (event instanceof ReadyEvent) onEnable((ReadyEvent) event);
+			else if (event instanceof StringSelectInteractionEvent) onMenuClick((StringSelectInteractionEvent) event);
 			else if (event instanceof GuildUpdateNameEvent) onUpdateNameEvent((GuildUpdateNameEvent) event);
 			else if (event instanceof MessageReceivedEvent) onMessage((MessageReceivedEvent) event);
 			else if (event instanceof GuildMemberJoinEvent) onGuildMemberJoin((GuildMemberJoinEvent) event);
@@ -145,7 +148,25 @@ public class BotListener implements EventListener {
 		}
 	}
 
-
+	private void onMenuClick(StringSelectInteractionEvent event) throws IOException {
+		if (!event.getMember().getId().equals(event.getValues().get(0).split(";")[1]))
+		{
+			event.reply("Vous n'avez pas le droit de faire ça \nJe parles à votre camarade, pas vous").setEphemeral(true).queue();
+		}
+		else
+		{
+			Item item = Item.getItemById(event.getValues().get(0).split(";")[0]);
+			String quote = item.getName() + " ? bon choix !, combien en voulez vous ?";
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setTitle("Acheter");
+			eb.setDescription( 1 + "x " + item.getName() + " pour " + item.getPrice() + " B2C");
+			ArrayList<Button> buttons = new ArrayList<>();
+			buttons.add(Button.danger("buy;"+event.getMember().getId() + ";" + item.getId() + ";-1", "-1").asDisabled());
+			buttons.add(Button.success("buy;"+event.getMember().getId() + ";" + item.getId() + ";_1", "acheter"));
+			buttons.add(Button.primary("buy;"+event.getMember().getId() + ";" + item.getId() + ";2", "+1"));
+			event.getMessage().editMessage(quote).setEmbeds(eb.build()).setActionRow(buttons).queue();
+		}
+	}
 
 
 	private void onUpdateNameEvent(GuildUpdateNameEvent event) throws IOException {
@@ -335,7 +356,7 @@ public class BotListener implements EventListener {
 			event.editMessageEmbeds(embeds).setActionRow(buttons).queue();
 		}
 		else if (event.getComponentId().startsWith("zik")){
-			String args[] = event.getComponentId().split(";");
+			String[] args = event.getComponentId().split(";");
 			MusicPlayer player = MusicPlayer.getMusicPlayer(event.getGuild());
 			if (args[1].equals("stop")) {
 				player.getListener().stop();
@@ -374,6 +395,47 @@ public class BotListener implements EventListener {
 				event.editMessageEmbeds(player.getListener().getVolumeEmbed().build()).setActionRow(player.getListener().getVolumeButtons()).queue();
 			}
 
+		}
+		else if (event.getComponentId().startsWith("buy"))
+		{
+			String splited[] = event.getComponentId().split(";");
+			if (!splited[1].equals(event.getMember().getId())) {
+				event.reply("je ne te parles pas, toi").setEphemeral(true).queue();
+				return;
+			}
+			Item item = Item.getItemById(splited[2]);
+			if (splited[3].startsWith("_")) {
+				User user = User.getMember(event.getMember());
+				EmbedBuilder buyed = new EmbedBuilder();
+				if (user.buy(item.getId(), Integer.parseInt(splited[3].substring(1))))
+				{
+					buyed.setColor(Color.GREEN);
+					buyed.setTitle("achat effectué");
+					buyed.setDescription("tu as acheté " + item.getName() + " x" + splited[3].substring(1));
+				}
+				else {
+					buyed.setTitle("achat impossible");
+					buyed.setDescription("tu n'as pas assez d'argent pour acheter " + item.getName() + " x" + splited[3].substring(1));
+					buyed.setColor(Color.RED);
+				}
+				event.editMessage("merci au revoir !").setEmbeds(buyed.build()).setActionRow(Button.danger("/", "achat effectué").asDisabled()).queue();
+			}
+			else {
+				int number = Integer.parseInt(splited[3]);
+				String quote = item.getName() + " ? bon choix !, combien en voulez vous ?";
+				EmbedBuilder eb = new EmbedBuilder();
+				eb.setTitle("Acheter");
+				eb.setDescription( number + "x " + item.getName() + " pour " + (item.getPrice()*number)+ " B2C");
+				ArrayList<Button> buttons = new ArrayList<>();
+				Button b = Button.danger("buy;"+event.getMember().getId() + ";" + item.getId() + ";" + (number - 1), "-1");
+				if (number == 1)
+					b = b.asDisabled();
+				buttons.add(b);
+				buttons.add(Button.success("buy;"+event.getMember().getId() + ";" + item.getId() + ";_"+ number, "acheter"));
+				buttons.add(Button.primary("buy;"+event.getMember().getId() + ";" + item.getId() + ";" + (number + 1), "+1"));
+				event.getMessage().editMessage(quote).setEmbeds(eb.build()).setActionRow(buttons).queue();
+				event.reply(".").complete().deleteOriginal().queue();
+			}
 		}
 		else
 		{

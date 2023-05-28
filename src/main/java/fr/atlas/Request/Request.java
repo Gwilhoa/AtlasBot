@@ -13,13 +13,11 @@ import okhttp3.Response;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 
 import static com.diogonunes.jcolor.Ansi.colorize;
-import static fr.atlas.BotDiscord.token;
 
 public class Request {
-//    private static final String apiurl = "http://localhost:42000/v2/";
+    //private static final String apiurl = "http://localhost:42000/v2/";
     private static final String apiurl = "https://api.bitume2000.fr/v2/";
     private static String accessToken = null;
     private static final OkHttpClient client = new OkHttpClient();
@@ -30,23 +28,23 @@ public class Request {
         Gson gson = new Gson();
         accessToken = gson.fromJson(response, JsonObject.class).get("token").getAsString();
     }
-    public static String GetRequest(String route) throws IOException {
-        URL url = new URL(apiurl + route);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("authorization", "Bearer " + accessToken);
-        con.connect();
-        if (con.getResponseCode() == 401)
-        {
-            login();
-            return GetRequest(route);
-        }
-        String response = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-        if (con.getResponseCode() == 502)
-            throw new ConnectException("API offline" + con.getResponseCode());
-        System.out.println(colorize("[API] GET "+ apiurl + route + "\n" + con.getResponseCode() + " RESPONSE : "+ response , Attribute.TEXT_COLOR(25,99, 100)));
-        return response;
-    }
+//    public static String GetRequest(String route) throws IOException {
+//        URL url = new URL(apiurl + route);
+//        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//        con.setRequestMethod("GET");
+//        con.setRequestProperty("authorization", "Bearer " + accessToken);
+//        con.connect();
+//        if (con.getResponseCode() == 401)
+//        {
+//            login();
+//            return GetRequest(route);
+//        }
+//        String response = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
+//        if (con.getResponseCode() == 502)
+//            throw new ConnectException("API offline" + con.getResponseCode());
+//        System.out.println(colorize("[API] GET "+ apiurl + route + "\n" + con.getResponseCode() + " RESPONSE : "+ response , Attribute.TEXT_COLOR(25,99, 100)));
+//        return response;
+//    }
 
 //    public static String PostRequest(String route, String content) throws IOException {
 //        URL url = new URL(apiurl + route);
@@ -73,6 +71,35 @@ public class Request {
 //        return response;
 //    }
 
+    public static String GetRequest(String route) throws IOException {
+
+        String ApiUrl = apiurl + route;
+
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(ApiUrl)
+                .get()
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + accessToken)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            int responseCode = response.code();
+            if (responseCode == 502) {
+                throw new ConnectException("API offline " + responseCode);
+            } else if (responseCode == 401) {
+                login();
+                return GetRequest(route);
+            } else if (response.isSuccessful()) {
+                String responseString = response.body().string();
+                System.out.println(colorize("[API] GET "+ ApiUrl +"\n" + response.code() + " RESPONSE : "+ responseString, Attribute.TEXT_COLOR(25,99, 100)));
+                return responseString;
+            } else {
+                String responseString = response.body().string();
+                System.out.println(colorize("[API] GET " + ApiUrl + " failed with response code: " + response.code() +"\n" + responseString, Attribute.RED_TEXT()));
+                return responseString;
+            }
+        }
+    }
     public static String PostRequest(String route, String content) throws IOException {
 
         String ApiUrl = apiurl + route;
@@ -91,7 +118,7 @@ public class Request {
                 throw new ConnectException("API offline " + responseCode);
             } else if (responseCode == 401) {
                 login();
-                return PatchRequest(route, content);
+                return PostRequest(route, content);
             } else if (response.isSuccessful()) {
                 String responseString = response.body().string();
                 System.out.println(colorize("[API] POST "+ ApiUrl +"\n" + response.code() + " RESPONSE : "+ responseString, Attribute.TEXT_COLOR(25,99, 100)));

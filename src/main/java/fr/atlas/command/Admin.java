@@ -2,9 +2,11 @@ package fr.atlas.command;
 
 import fr.atlas.BotDiscord;
 import fr.atlas.Request.Achievement;
+import fr.atlas.Request.Item;
 import fr.atlas.Request.User;
 import fr.atlas.Request.Squads;
 import fr.atlas.builder.Command;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -203,6 +205,21 @@ public class Admin {
         }
         else
             msg.getChannel().sendMessage("mauvais usage de la commande").queue();
+    }
+
+    @Command(name = "createitem", description = "permet de créer un item", type = Command.ExecutorType.USER, permission = Permission.ADMINISTRATOR)
+    private void createItem(Message msg) throws IOException {
+        String[] args = msg.getContentRaw().split(";");
+        if (args.length == 4) {
+            int price = Integer.parseInt(args[3]);
+            Item item = Item.createItem(args[1], args[2], price);
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setTitle("Item créé");
+            embedBuilder.setDescription("**" + item.getName() + "**\n" + item.getDescription() + "\n" + item.getPrice() + " coins");
+            msg.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
+        } else {
+            msg.getChannel().sendMessage("mauvais usage de la commande").queue();
+        }
     }
 
 }

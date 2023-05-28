@@ -306,4 +306,14 @@ public class User extends Request {
     public long getWaifutime() {
         return waifutime;
     }
+
+    public boolean buy(String id, int quantity) throws IOException {
+
+        String ret = PostRequest("members/inventory/"+this.id,"{ \"item_id\" : \""+id+"\", \"quantity\" : \""+quantity+"\" }");
+        return !ret.startsWith("{\"message_code");
+    }
+
+    public static ArrayList<MyItem> getInventory(String id) throws IOException {
+        return MyItem.getItemsObj(GetRequest("members/inventory/"+id));
+    }
 }
