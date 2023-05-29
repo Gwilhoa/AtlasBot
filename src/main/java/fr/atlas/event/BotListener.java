@@ -165,6 +165,7 @@ public class BotListener implements EventListener {
 			buttons.add(Button.success("buy;"+event.getMember().getId() + ";" + item.getId() + ";_1", "acheter"));
 			buttons.add(Button.primary("buy;"+event.getMember().getId() + ";" + item.getId() + ";2", "+1"));
 			event.getMessage().editMessage(quote).setEmbeds(eb.build()).setActionRow(buttons).queue();
+			event.reply(".").complete().deleteOriginal().queue();
 		}
 	}
 
