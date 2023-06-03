@@ -54,7 +54,7 @@ public class Squads extends Request {
                     jsonElement.getAsJsonObject().get("name").getAsString(),
                     jsonElement.getAsJsonObject().get("PointsGiven").getAsInt(),
                     jsonElement.getAsJsonObject().get("PointsTotal").getAsLong(),
-                    Color.decode(String.format("%6s", jsonElement.getAsJsonObject().get("color").getAsString()).replace(' ', '0'))
+                    Color.decode(String.format("%6s", "#" + jsonElement.getAsJsonObject().get("color").getAsString()).replace(' ', '0'))
                     ));
         });
         return squads;
