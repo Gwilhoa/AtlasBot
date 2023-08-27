@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static fr.atlas.BotDiscord.setError;
 import static fr.atlas.objects.imgExtenders.resize;
 
 public class Utils {
@@ -33,7 +34,7 @@ public class Utils {
     @Command(name = "profil", description = "information sur un joueur", type = Command.ExecutorType.USER)
     private void profil(Message msg) {
         Member member = msg.getMember();
-        if (msg.getMentions().getMembers().size() > 0) {
+        if (!msg.getMentions().getMembers().isEmpty()) {
             member = msg.getMentions().getMembers().get(0);
         }
         msg.replyEmbeds(ProfilCommand.CommandProfil(member).build()).queue();
@@ -75,7 +76,7 @@ public class Utils {
                         return;
                     }
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    setError(e);
                 }
                 msg.delete().queue();
             }).start();

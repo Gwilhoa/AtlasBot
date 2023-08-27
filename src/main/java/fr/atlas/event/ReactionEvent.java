@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import static fr.atlas.BotDiscord.setError;
 import static fr.atlas.objects.StringExtenders.*;
 import static fr.atlas.objects.imgExtenders.getImage;
 import static fr.atlas.objects.imgExtenders.resize;
@@ -215,8 +216,8 @@ public class ReactionEvent {
                 ImageIO.write(ret, "png", baos);
                 tc.sendFiles(FileUpload.fromData(baos.toByteArray(), "sus.png")).queue();
             } catch (IOException e) {
-                e.printStackTrace();
-        }
+                setError(e);
+            }
     }
     /**
      * quelqu'un veut rendre respect ? press f to respect
@@ -308,7 +309,7 @@ public class ReactionEvent {
             ImageIO.write(im, "png", baos);
             msg.getChannel().sendFiles(FileUpload.fromData(baos.toByteArray(), "thunk.png")).queue();
         } catch (IOException e) {
-            e.printStackTrace();
+            setError(e);
         }
     }
 

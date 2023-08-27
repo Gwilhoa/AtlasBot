@@ -3,10 +3,13 @@ package fr.atlas.Request;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import fr.atlas.BotDiscord;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static fr.atlas.BotDiscord.setError;
 
 public class Item {
 
@@ -58,7 +61,7 @@ public class Item {
         try {
             return getItemsObj(Request.GetRequest("item"));
         } catch (IOException e) {
-            e.printStackTrace();
+            setError(e);
         }
         return null;
     }

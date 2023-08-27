@@ -15,6 +15,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static fr.atlas.BotDiscord.setError;
+
 public class MemesEvent {
 
     public static Integer UpvoteRequired = 7;
@@ -54,7 +56,7 @@ public class MemesEvent {
             processmeme(msg);
         } catch (Exception e) {
             msg.getChannel().sendMessage("putain les mêmes bordel GUIGUI ! VIENS Là\ncontenu :\n" + msg.getContentRaw()).queue();
-            e.printStackTrace();
+            setError(e);
         }
     }
 

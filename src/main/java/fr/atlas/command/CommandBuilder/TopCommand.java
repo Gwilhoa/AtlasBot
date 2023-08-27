@@ -13,6 +13,8 @@ import java.net.ConnectException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static fr.atlas.BotDiscord.setError;
+
 public class TopCommand {
     public static EmbedBuilder CommandTop(String name, Guild guild, net.dv8tion.jda.api.entities.Member sender) {
         if (name != null && name.equals("scoreboard"))
@@ -26,7 +28,7 @@ public class TopCommand {
             } catch (ConnectException e) {
                 return Request.DisconnectedEmbed();
             } catch (Exception e) {
-                e.printStackTrace();
+                setError(e);
             }
             if (sq != null) {
                 sq.remove(0);
@@ -37,7 +39,7 @@ public class TopCommand {
                     try {
                         mem = Squads.getMembers(squads.getId());
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        setError(e);
                     }
                     if (mem != null) {
                         if (squads.getPointsTotal() == 0) {
@@ -67,7 +69,7 @@ public class TopCommand {
             } catch (ConnectException e) {
                 return Request.DisconnectedEmbed();
             } catch (Exception e) {
-                e.printStackTrace();
+                setError(e);
             }
             mem.sort((o1, o2) -> Math.toIntExact(o2.getPoints() - o1.getPoints()));
             embedBuilder.setTitle("Classement général");
@@ -93,7 +95,7 @@ public class TopCommand {
                 } catch (ConnectException e) {
                     return Request.DisconnectedEmbed();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    setError(e);
                 }
                 if (mem != null) {
                     embedBuilder.setTitle("Classement de l'escouade " + name);

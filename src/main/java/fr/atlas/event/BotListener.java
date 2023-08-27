@@ -66,6 +66,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.diogonunes.jcolor.Ansi.colorize;
+import static fr.atlas.BotDiscord.setError;
 import static fr.atlas.event.MemesEvent.*;
 
 
@@ -142,8 +143,7 @@ public class BotListener implements EventListener {
 			else if (event instanceof GuildMemberRoleAddEvent) onRoleAdd((GuildMemberRoleAddEvent) event);
 			else if (event instanceof MessageDeleteEvent) onDeleteMessage((MessageDeleteEvent) event);
 		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException e) {
-
-			e.printStackTrace();
+			setError(e);
 			event.getJDA().getGuilds().get(0).getMemberById("315431392789921793").getUser().openPrivateChannel().complete().sendMessage("erreur sur " + event.getClass().getSimpleName()).queue();
 		}
 	}
@@ -221,7 +221,7 @@ public class BotListener implements EventListener {
 			try {
 				user = User.getMember(event.getMember());
 			} catch (IOException e) {
-				e.printStackTrace();
+				setError(e);
 				return;
 			}
 			if (getMemeAuthor(event.getMessage()).getId().equals(event.getMember().getId()))
@@ -292,7 +292,7 @@ public class BotListener implements EventListener {
 									fos.write(data, 0, byteContent);
 								}
 							} catch (IOException e) {
-								e.printStackTrace(System.out);
+								setError(e);
 							}
 							File f = new File(name);
 							message.getGuild().getTextChannelById("911549374696411156").sendFiles(FileUpload.fromData(f)).setEmbeds(
@@ -544,7 +544,7 @@ public class BotListener implements EventListener {
 			try {
 				recupMeme(event.getJDA().getGuildById("382938797442334720"));
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				setError(e);
 			}
 		}).start();
 
@@ -562,7 +562,7 @@ public class BotListener implements EventListener {
 		try {
 			Squads.getSquads().forEach(squad -> buttons.add(Button.primary("squad;"+squad.getId() +";" + event.getMember().getId(), squad.getName())));
 		} catch (IOException e) {
-			e.printStackTrace();
+			setError(e);
 		}
 		event.getGuild().getTextChannelById("947564791759777792").sendMessage("Bonjour "+ event.getMember() + "Bienvenue dans le monde du bitume, choisis ton escouade !").setActionRow(buttons).queue();
 		event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("734011696242360331")).and(event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("634839000644845619"))).and(event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("734012661494317077"))).queue();

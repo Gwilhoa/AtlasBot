@@ -19,6 +19,8 @@ import java.net.ConnectException;
 import java.util.Date;
 import java.util.List;
 
+import static fr.atlas.BotDiscord.setError;
+
 public class Admin {
     private static boolean isArchived = false;
 
@@ -30,7 +32,7 @@ public class Admin {
             } catch (ConnectException e) {
                 msg.getChannel().sendMessage("disconnected").queue();
             } catch (Exception e) {
-                e.printStackTrace();
+                setError(e);
             }
         }
     }
@@ -45,7 +47,7 @@ public class Admin {
         } catch (ConnectException e) {
             msg.getChannel().sendMessage("disconnected").queue();
         } catch (Exception e) {
-            e.printStackTrace();
+            setError(e);
         }
         TextChannel tc = msg.getGuild().getTextChannelById("947564791759777792");
         tc.sendMessage(msg.getMentions().getMembers().get(0).getAsMention() + "a rejoint l'équipe "+ msg.getMentions().getRoles().get(0).getName()).queue();
@@ -61,7 +63,7 @@ public class Admin {
             } catch (ConnectException e) {
             msg.getChannel().sendMessage("disconnected").queue();
             } catch (Exception e) {
-                e.printStackTrace();
+                setError(e);
             }
         } else {
             msg.getChannel().sendMessage("tu n'as pas les droits").queue();
@@ -74,7 +76,7 @@ public class Admin {
             Achievement.removeAchievement(args[0]);
             channel.sendMessage("L'achievement " + args[0] + " a bien été supprimé.").queue();
         } catch (IOException e) {
-            e.printStackTrace();
+            setError(e);
             channel.sendMessage("Une erreur est survenue lors de la suppression de l'achievement.").queue();
         }
     }
@@ -157,7 +159,7 @@ public class Admin {
                 msg.getChannel().sendMessage("archivage terminée").queue();
                 isArchived = false;
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                setError(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -200,7 +202,7 @@ public class Admin {
             try {
                 User.addAchievement(msg.getMentions().getMembers().get(0).getId(), args[1]);
             } catch (IOException e) {
-                e.printStackTrace();
+                setError(e);
             }
         }
         else

@@ -19,6 +19,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import static fr.atlas.BotDiscord.setError;
 import static java.lang.Thread.sleep;
 import static net.dv8tion.jda.api.interactions.components.buttons.Button.primary;
 
@@ -67,7 +68,7 @@ public class AudioListener extends AudioEventAdapter {
             try {
                 msg.editMessageEmbeds(new EmbedBuilder().setTitle("B2KMusique").setDescription("disconnected").setColor(Color.red).build()).setActionRow(primary("nothing", "arrêté").asDisabled()).queue();
             } catch (Exception e) {
-                e.printStackTrace();
+                setError(e);
             }
         }
         SongMessage.clear();

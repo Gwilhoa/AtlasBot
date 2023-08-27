@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static fr.atlas.BotDiscord.debug;
+import static fr.atlas.BotDiscord.setError;
 
 
 public class User extends Request {
@@ -225,7 +226,7 @@ public class User extends Request {
         try {
             PostRequest("members/achievements/" + id, "{\"achievement_id\" : \"" + achievementId + "\"}");
         } catch (IOException e) {
-            e.printStackTrace();
+            setError(e);
         }
     }
 

@@ -11,6 +11,7 @@ import java.net.ConnectException;
 import java.util.List;
 
 import static fr.atlas.BotDiscord.debug;
+import static fr.atlas.BotDiscord.setError;
 
 
 public class ProfilCommand {
@@ -28,7 +29,7 @@ public class ProfilCommand {
         } catch (ConnectException e) {
             return Request.DisconnectedEmbed();
         } catch (Exception e) {
-            e.printStackTrace();
+            setError(e);
         }
         int i = 0;
         for (User user : lst) {

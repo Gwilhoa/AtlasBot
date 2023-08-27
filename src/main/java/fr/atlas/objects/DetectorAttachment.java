@@ -13,6 +13,8 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static fr.atlas.BotDiscord.setError;
+
 
 public class DetectorAttachment {
     private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
@@ -43,7 +45,7 @@ public class DetectorAttachment {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                setError(e);
             }
 
         }
@@ -87,7 +89,7 @@ public class DetectorAttachment {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                setError(e);
             }
 
         }

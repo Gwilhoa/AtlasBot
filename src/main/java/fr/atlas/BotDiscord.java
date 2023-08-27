@@ -16,6 +16,8 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Scanner;
 
 import static com.diogonunes.jcolor.Ansi.colorize;
@@ -33,6 +35,8 @@ public class BotDiscord implements Runnable{
     private final Scanner scanner = new Scanner(System.in);
     public static String token;
 
+    private static JDA jda_;
+
     public static final String activity = " avec le monde";
 
     private boolean running;
@@ -49,6 +53,7 @@ public class BotDiscord implements Runnable{
                 .addEventListeners(
                         new BotListener(commandMap, this)
                 ).build();
+        jda_ = jda;
         System.out.println("Bot connected.");
 
     }
@@ -86,9 +91,16 @@ public class BotDiscord implements Runnable{
             login();
             new Thread(botDiscord, "bot").start();
         } catch (LoginException | IllegalArgumentException | RateLimitedException e) {
-            e.printStackTrace();
+           setError(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void setError(Exception e)
+    {
+        StringWriter errors = new StringWriter();
+        e.printStackTrace(new PrintWriter(errors));
+        jda_.getGuildById("382938797442334720").getTextChannelById("1144988275434586153").sendMessage(errors.toString()).queue();
     }
 }

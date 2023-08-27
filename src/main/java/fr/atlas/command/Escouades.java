@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fr.atlas.BotDiscord.setError;
+
 public class Escouades {
     @Command(name = "top", description = "Afficher le classement des Escouades")
     private void top(Message msg, String[] args) {
@@ -100,7 +102,7 @@ public class Escouades {
                 else
                     msg.getChannel().sendMessage("vous n'avez pas ce titre").queue();
             } catch (IOException e) {
-                e.printStackTrace();
+                setError(e);
             }
         }
         else

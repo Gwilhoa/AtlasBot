@@ -25,6 +25,8 @@ import java.net.URL;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static fr.atlas.BotDiscord.setError;
+
 /**
  * tout ce qui touche au images
  */
@@ -67,7 +69,7 @@ public class imgExtenders {
             image = ImageIO.read(imgExtenders.class.getClassLoader().getResource(name));
         } catch (Exception e) {
             image = null;
-            e.printStackTrace();
+            setError(e);
         }
         return image;
     }
@@ -84,7 +86,7 @@ public class imgExtenders {
             image = ImageIO.read(url);
         } catch (Exception e) {
             image = null;
-            e.printStackTrace();
+            setError(e);
         }
         download.unlock();
         return image;
