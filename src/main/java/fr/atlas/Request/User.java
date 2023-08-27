@@ -152,12 +152,12 @@ public class User extends Request {
 
     public static User addMemeVote(String id) throws IOException
     {
-        return getObjMembers(PatchRequest("members/memes/"+id,"")).get(0);
+        return getObjMembers(PatchRequest("members/memesvotes/"+id,"")).get(0);
     }
 
     public static User addBestMemes(String id) throws IOException
     {
-        return getObjMembers(PatchRequest("members/bestmeme/"+id,"")).get(0);
+        return getObjMembers(PatchRequest("members/memes/"+id,"")).get(0);
     }
 
     public static String addBestMemes(net.dv8tion.jda.api.entities.Member mem) throws IOException
