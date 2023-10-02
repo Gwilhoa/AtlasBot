@@ -19,7 +19,7 @@ import static fr.atlas.BotDiscord.setError;
 
 public class MemesEvent {
 
-    public static Integer UpvoteRequired = 0;
+    public static Integer UpvoteRequired = 7;
     public static String DownvoteLabel = "bof...";
     public static String UpvoteLabel = "bien";
     public static String supervoteLabel = "super";
