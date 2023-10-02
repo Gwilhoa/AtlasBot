@@ -5,6 +5,7 @@ import fr.atlas.builder.Command;
 import fr.atlas.builder.CommandMap;
 import fr.atlas.command.CommandBuilder.HelpCommand;
 import fr.atlas.command.CommandBuilder.ProfilCommand;
+import fr.atlas.event.MemesEvent;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -127,6 +128,15 @@ public class Utils {
         } catch (Exception e) {
             msg.getChannel().sendMessage("L'api est hors ligne !").queue();
         }
+    }
+
+    @Command(name = "meme", type = Command.ExecutorType.USER, description = "mettre un meme ce que tu vois")
+    private void meme(Message msg) {
+        if (msg.getReferencedMessage() == null) {
+            msg.getChannel().sendMessage("mauvais usage de la commande").queue();
+            return;
+        }
+        MemesEvent.postmeme(msg.getReferencedMessage());
     }
 
 }

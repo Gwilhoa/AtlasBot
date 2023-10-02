@@ -224,7 +224,7 @@ public class BotListener implements EventListener {
 				setError(e);
 				return;
 			}
-			if (getMemeAuthor(event.getMessage()).getId().equals(event.getMember().getId()))
+			if (false && getMemeAuthor(event.getMessage()).getId().equals(event.getMember().getId()))
 			{
 				event.reply("tu ne peux pas voter pour tes propres memes").setEphemeral(true).queue();
 				return;
@@ -284,6 +284,7 @@ public class BotListener implements EventListener {
 							message.delete().queue();
 						} else {
 							String name = message.getEmbeds().get(0).getImage().getUrl().split(" ")[0].split("/")[message.getEmbeds().get(0).getImage().getUrl().split("/").length - 1];
+							name = name.substring(0, StringExtenders.firstsearch(name, "?"));
 							try (BufferedInputStream bis = new BufferedInputStream(new URL(message.getEmbeds().get(0).getImage().getUrl()).openStream());
 								 FileOutputStream fos = new FileOutputStream(name)) {
 								byte[] data = new byte[1024];
