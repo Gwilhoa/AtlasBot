@@ -34,6 +34,6 @@ public class activity extends ActivityImpl {
     }
 
     public activity(String name, String url, ActivityType type, Timestamps timestamps, EmojiUnion emoji) {
-        super(name, url, type, timestamps, emoji);
+        super(name);
     }
 }

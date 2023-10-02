@@ -106,7 +106,9 @@ public class ReactionEvent {
         for (String str : map.keySet()) {
             if (s.substring(Math.max(0, s.length() - str.length())).equalsIgnoreCase(str)) {
                 String[] splitedResponse = map.get(str).split(",");
-                msg.getChannel().sendMessage(splitedResponse[new Random().nextInt(splitedResponse.length)]).queue();
+                int r = new Random().nextInt(100);
+                if (r < 15)
+                    msg.getChannel().sendMessage(splitedResponse[new Random().nextInt(splitedResponse.length)]).queue();
                 return;
             }
         }

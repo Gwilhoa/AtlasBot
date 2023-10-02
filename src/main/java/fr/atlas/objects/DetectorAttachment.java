@@ -97,12 +97,13 @@ public class DetectorAttachment {
     }
 
     public static boolean isTwitter(String message) {
-        Matcher m = p.matcher(message);
-        if (m.find()) {
-            String url = m.group();
-            return url.contains("twitter.com");
-        }
         return false;
+//        Matcher m = p.matcher(message);
+//        if (m.find()) {
+//            String url = m.group();
+//            return url.contains("twitter.com");
+//        }
+//        return false;
     }
     public static boolean isReddit(String message)
     {
