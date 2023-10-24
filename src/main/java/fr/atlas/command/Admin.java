@@ -117,46 +117,51 @@ public class Admin {
 				.queue();*/
     }
 
-    @Command(name="archive", description = "permet d'archiver n'importe quelle salon", type = Command.ExecutorType.USER, permission = Permission.ADMINISTRATOR)
+    @Command(name = "archive", description = "Permet d'archiver n'importe quel salon", type = Command.ExecutorType.USER, permission = Permission.ADMINISTRATOR)
     private void archive(Message msg) throws IOException {
         File directory = new File("archive");
-        if (directory.mkdir())
+        if (directory.mkdir()) {
             System.out.println("[EVENT] directory created");
-        else
-            System.out.println("[DEBUG] directory already exist");
-        File file = new File("archive/" + msg.getChannel().getName() + "_" + new Date(System.currentTimeMillis()).getDay() + "_" + new Date(System.currentTimeMillis()).getMonth() + "_" + new Date(System.currentTimeMillis()).getMonth()  + ".txt");
-        if (file.exists())
-            file.delete();
-        try {
-            file.createNewFile();
-        } catch (IOException error) {
-            error.printStackTrace();
+        } else {
+            System.out.println("[DEBUG] directory already exists");
         }
+
+        Date currentDate = new Date(System.currentTimeMillis());
+        String fileName = "archive/" + msg.getChannel().getName() + "_"
+                + (currentDate.getYear() + 1900) + "_" + (currentDate.getMonth() + 1) + "_" + currentDate.getDate() + ".html";
+
         if (isArchived) {
-            msg.getChannel().sendMessage("un archivage est déjà en cours").queue();
+            msg.getChannel().sendMessage("Une archivage est déjà en cours").queue();
             return;
         }
-        msg.getChannel().sendMessage("archive en cours").queue();
+
+        msg.getChannel().sendMessage("Archivage en cours...").queue();
         isArchived = true;
+
         new Thread(() -> {
             try {
-                FileWriter fileWriter = new FileWriter(file);
-                boolean finish = true;
+                FileWriter fileWriter = new FileWriter(fileName);
+                fileWriter.write("<html><head><link rel='stylesheet' type='text/css' href='styles.css'></head><body><div class='channel'>");
+
                 Message pin = msg.getChannel().getHistoryFromBeginning(1).complete().getRetrievedHistory().get(0);
-                String endid = msg.getId();
-                while (finish) {
-                    Thread.sleep(1000);
+                String endId = msg.getId();
+
+                while (!pin.getId().equals(endId)) {
                     for (Message message : msg.getChannel().getHistoryAfter(pin, 100).complete().getRetrievedHistory()) {
-                        fileWriter.write(message.getAuthor().getName() + " : " + message.getContentRaw() + "\n\n");
-                        if (message.getId().equals(endid)) {
-                            finish = false;
+                        fileWriter.write("<div class='message'>");
+                        fileWriter.write("<span class='username'>" + message.getAuthor().getName() + ":</span>");
+                        fileWriter.write("<span class='content'>" + message.getContentRaw() + "</span>");
+                        fileWriter.write("</div>");
+                        pin = message;
+                        if (message.getId().equals(endId)) {
                             break;
                         }
-                        pin = message;
                     }
+                    Thread.sleep(1000);
                 }
+                fileWriter.write("</div></body></html>");
                 fileWriter.close();
-                msg.getChannel().sendMessage("archivage terminée").queue();
+                msg.getChannel().sendMessage("Archivage terminé. [Lien vers l'archive](" + fileName + ")").queue();
                 isArchived = false;
             } catch (InterruptedException e) {
                 setError(e);
@@ -165,6 +170,7 @@ public class Admin {
             }
         }).start();
     }
+
     @Command(name = "reset", description = "permet de remettre a 0 certaines choses [PAS DEV]" ,type = Command.ExecutorType.USER)
     private void reset(Message msg) throws IOException {
         msg.getChannel().sendMessage("coming soon").queue();
