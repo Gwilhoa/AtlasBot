@@ -15,7 +15,6 @@ import static fr.atlas.BotDiscord.setError;
 
 
 public class ProfilCommand {
-
     public static EmbedBuilder CommandProfil(Member member){
         User mem = null;
         List<User> lst = null;

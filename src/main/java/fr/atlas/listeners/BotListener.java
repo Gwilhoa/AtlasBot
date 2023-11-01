@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 
-package fr.atlas.event;
+package fr.atlas.listeners;
 
 import com.diogonunes.jcolor.Attribute;
 import com.google.gson.Gson;
@@ -23,9 +23,9 @@ import fr.atlas.Request.*;
 import fr.atlas.Request.User;
 import fr.atlas.builder.CommandMap;
 import fr.atlas.objects.StringExtenders;
-import fr.atlas.experiences.TextualExperience;
+import fr.atlas.fonctionnalities.experiences.TextualExperience;
 import fr.atlas.objects.imgExtenders;
-import fr.atlas.music.MusicPlayer;
+import fr.atlas.fonctionnalities.music.MusicPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
@@ -52,7 +52,6 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
-import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
 import java.awt.*;
 import java.io.BufferedInputStream;
@@ -67,7 +66,7 @@ import java.util.List;
 
 import static com.diogonunes.jcolor.Ansi.colorize;
 import static fr.atlas.BotDiscord.setError;
-import static fr.atlas.event.MemesEvent.*;
+import static fr.atlas.listeners.MemesEvent.*;
 
 
 /**

@@ -2,8 +2,7 @@ package fr.atlas.command;
 
 import fr.atlas.builder.Command;
 import fr.atlas.builder.Command.ExecutorType;
-import fr.atlas.music.MusicManager;
-import fr.atlas.music.MusicPlayer;
+import fr.atlas.fonctionnalities.music.MusicManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;

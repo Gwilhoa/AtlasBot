@@ -5,7 +5,7 @@ import fr.atlas.builder.Command;
 import fr.atlas.builder.CommandMap;
 import fr.atlas.command.CommandBuilder.HelpCommand;
 import fr.atlas.command.CommandBuilder.ProfilCommand;
-import fr.atlas.event.MemesEvent;
+import fr.atlas.listeners.MemesEvent;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;

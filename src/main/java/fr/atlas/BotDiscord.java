@@ -5,7 +5,7 @@ import com.diogonunes.jcolor.Attribute;
 import com.merakianalytics.orianna.Orianna;
 import com.merakianalytics.orianna.types.common.Region;
 import fr.atlas.builder.CommandMap;
-import fr.atlas.event.BotListener;
+import fr.atlas.listeners.BotListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;

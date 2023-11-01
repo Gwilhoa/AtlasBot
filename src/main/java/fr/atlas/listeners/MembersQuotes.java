@@ -1,4 +1,4 @@
-package fr.atlas.event;
+package fr.atlas.listeners;
 
 import fr.atlas.objects.imgExtenders;
 import net.dv8tion.jda.api.entities.Message;

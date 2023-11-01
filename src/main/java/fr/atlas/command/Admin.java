@@ -16,8 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ConnectException;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static fr.atlas.BotDiscord.setError;
 
@@ -117,51 +116,84 @@ public class Admin {
 				.queue();*/
     }
 
-    @Command(name = "archive", description = "Permet d'archiver n'importe quel salon", type = Command.ExecutorType.USER, permission = Permission.ADMINISTRATOR)
+    @Command(name="archive", description = "permet d'archiver n'importe quelle salon", type = Command.ExecutorType.USER, permission = Permission.ADMINISTRATOR)
     private void archive(Message msg) throws IOException {
+        ArrayList<String> messagesId = new ArrayList<>();
         File directory = new File("archive");
-        if (directory.mkdir()) {
+        if (directory.mkdir())
             System.out.println("[EVENT] directory created");
-        } else {
-            System.out.println("[DEBUG] directory already exists");
+        else
+            System.out.println("[DEBUG] directory already exist");
+        File file = new File("archive/" + msg.getChannel().getName() + "_" + new Date(System.currentTimeMillis()).getDay() + "_" + new Date(System.currentTimeMillis()).getMonth() + "_" + new Date(System.currentTimeMillis()).getMonth()  + ".html");
+        if (file.exists())
+            file.delete();
+        try {
+            file.createNewFile();
+        } catch (IOException error) {
+            error.printStackTrace();
         }
-
-        Date currentDate = new Date(System.currentTimeMillis());
-        String fileName = "archive/" + msg.getChannel().getName() + "_"
-                + (currentDate.getYear() + 1900) + "_" + (currentDate.getMonth() + 1) + "_" + currentDate.getDate() + ".html";
-
         if (isArchived) {
-            msg.getChannel().sendMessage("Une archivage est déjà en cours").queue();
+            msg.getChannel().sendMessage("un archivage est déjà en cours").queue();
             return;
         }
-
-        msg.getChannel().sendMessage("Archivage en cours...").queue();
+        msg.getChannel().sendMessage("archive en cours").queue();
         isArchived = true;
-
         new Thread(() -> {
             try {
-                FileWriter fileWriter = new FileWriter(fileName);
-                fileWriter.write("<html><head><link rel='stylesheet' type='text/css' href='styles.css'></head><body><div class='channel'>");
-
+                FileWriter fileWriter = new FileWriter(file);
+                boolean finish = true;
                 Message pin = msg.getChannel().getHistoryFromBeginning(1).complete().getRetrievedHistory().get(0);
-                String endId = msg.getId();
-
-                while (!pin.getId().equals(endId)) {
-                    for (Message message : msg.getChannel().getHistoryAfter(pin, 100).complete().getRetrievedHistory()) {
-                        fileWriter.write("<div class='message'>");
-                        fileWriter.write("<span class='username'>" + message.getAuthor().getName() + ":</span>");
-                        fileWriter.write("<span class='content'>" + message.getContentRaw() + "</span>");
-                        fileWriter.write("</div>");
-                        pin = message;
-                        if (message.getId().equals(endId)) {
+                String endid = msg.getId();
+                while (finish) {
+                    Thread.sleep(500);
+                    fileWriter.write("<head>\n" +
+                            "    <meta charset=\"utf-8\">\n<style>\n" +
+                                    "        .avatar {\n" +
+                                    "            width: 50px; /* Largeur de l'avatar */\n" +
+                                    "            height: 50px; /* Hauteur de l'avatar */\n" +
+                                    "            border-radius: 50%; /* Arrondi les coins pour créer une forme de cercle */\n" +
+                                    "        }\n" +
+                                    "        .message {\n" +
+                                    "            background-color: #f2f2f2; /* Couleur de fond du message */\n" +
+                                    "            padding: 10px; /* Espace interne du message */\n" +
+                                    "            border: 1px solid #ccc; /* Bordure autour du message */\n" +
+                                    "            border-radius: 5px; /* Coins arrondis */\n" +
+                                    "        }\n" +
+                                    "    </style>\n</head>\n"
+                            );
+                    ArrayList<Message> messages = new ArrayList<>(msg.getChannel().getHistoryAfter(pin, 100).complete().getRetrievedHistory());
+                    Collections.reverse(messages);
+                    for (Message message : messages) {
+                        if (messagesId.contains(message.getId()))
+                            continue;
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("<img class=\"avatar\" src=\"");
+                        sb.append(message.getAuthor().getAvatarUrl());
+                        sb.append("\" alt=\"\">");
+                        sb.append("<div class=\"message\">");
+                        sb.append(message.getAuthor().getName());
+                        sb.append(" (").append(message.getTimeCreated().getDayOfMonth()).append("/").append(message.getTimeCreated().getMonthValue()).append("/").append(message.getTimeCreated().getYear()).append(" à ").append(message.getTimeCreated().getHour()).append(":").append(message.getTimeCreated().getMinute()).append(") ");
+                        sb.append(" : ");
+                        sb.append(message.getContentRaw());
+                        sb.append("\n");
+                        for (Message.Attachment attachment : message.getAttachments()) {
+                            sb.append("<img src=\"");
+                            sb.append(attachment.getUrl());
+                            sb.append("\" alt=\"\">");
+                            sb.append("\n");
+                        }
+                        sb.append("\n</div>");
+                        fileWriter.write(sb.toString());
+                        messagesId.add(message.getId());
+                        if (message.getId().equals(endid)) {
+                            finish = false;
                             break;
                         }
+                        pin = message;
                     }
-                    Thread.sleep(1000);
                 }
-                fileWriter.write("</div></body></html>");
                 fileWriter.close();
-                msg.getChannel().sendMessage("Archivage terminé. [Lien vers l'archive](" + fileName + ")").queue();
+                msg.getChannel().sendMessage("archivage terminée").queue();
                 isArchived = false;
             } catch (InterruptedException e) {
                 setError(e);
@@ -170,7 +202,6 @@ public class Admin {
             }
         }).start();
     }
-
     @Command(name = "reset", description = "permet de remettre a 0 certaines choses [PAS DEV]" ,type = Command.ExecutorType.USER)
     private void reset(Message msg) throws IOException {
         msg.getChannel().sendMessage("coming soon").queue();
@@ -208,7 +239,7 @@ public class Admin {
             try {
                 User.addAchievement(msg.getMentions().getMembers().get(0).getId(), args[1]);
             } catch (IOException e) {
-                setError(e);
+                e.printStackTrace();
             }
         }
         else

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-package fr.atlas.event;
+package fr.atlas.listeners;
 
 import fr.atlas.objects.DetectorAttachment;
 import fr.atlas.objects.MessageConsumer;

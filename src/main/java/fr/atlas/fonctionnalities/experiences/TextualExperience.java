@@ -1,4 +1,4 @@
-package fr.atlas.experiences;
+package fr.atlas.fonctionnalities.experiences;
 
 import fr.atlas.Request.User;
 import net.dv8tion.jda.api.entities.Guild;

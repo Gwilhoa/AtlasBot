@@ -1,4 +1,4 @@
-package fr.atlas.event;
+package fr.atlas.listeners;
 
 import fr.atlas.Request.Squads;
 import fr.atlas.objects.DetectorAttachment;
