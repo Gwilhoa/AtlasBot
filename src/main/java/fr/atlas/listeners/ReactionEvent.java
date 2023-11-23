@@ -191,6 +191,9 @@ public class ReactionEvent {
 
         if (containsIgnoreCase(msg.getContentRaw(), "je possede des thunes") || containsIgnoreCase(msg.getContentRaw(), "je possède des thunes"))
             msg.getChannel().sendMessage(msg.getMember().getAsMention() + " est à l'aise financièrement").queue();
+        if (StringExtenders.startWithIgnoreCase(msg.getContentRaw(), "@league of"))
+            msg.getChannel().sendMessage(msg.getGuild().getRoleById("1114306111357599804").getAsMention() + " https://tenor.com/view/league-of-legends-gif-25112659").setMessageReference(msg).queue();
+        MembersQuotes.MemberReact(msg);
     }
 
 

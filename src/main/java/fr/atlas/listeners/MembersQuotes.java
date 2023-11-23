@@ -157,33 +157,33 @@ public class MembersQuotes {
 					"un homme bon a marier"
 			};
     public static boolean MemberReact(Message msg) throws IOException {
-        if (msg.getContentRaw().equalsIgnoreCase("max"))
+        if (msg.getContentRaw().contains("max"))
             quoteDefault(msg, max);
-        else if (msg.getContentRaw().equalsIgnoreCase("logan"))
+        else if (msg.getContentRaw().contains("logan"))
         	quoteDefault(msg, logan);
-        else if (msg.getContentRaw().equalsIgnoreCase("guigui"))
+        else if (msg.getContentRaw().contains("guigui"))
         	quoteDefault(msg, guigui);
-        else if (msg.getContentRaw().equalsIgnoreCase("enki"))
+        else if (msg.getContentRaw().contains("enki"))
         	quoteDefault(msg, enki);
-        else if (msg.getContentRaw().equalsIgnoreCase("oscar"))
+        else if (msg.getContentRaw().contains("oscar"))
         	quoteDefault(msg, oscar);
-        else if (msg.getContentRaw().equalsIgnoreCase("antonin"))
+        else if (msg.getContentRaw().contains("antonin"))
         	quoteDefault(msg, anto);
-        else if (msg.getContentRaw().equalsIgnoreCase("jonathan"))
+        else if (msg.getContentRaw().contains("jonathan"))
             Jojo(msg);
-        else if (msg.getContentRaw().equalsIgnoreCase("roro"))
+        else if (msg.getContentRaw().contains("roro"))
 			Roro(msg);
-		else if (msg.getContentRaw().equalsIgnoreCase("yann"))
+		else if (msg.getContentRaw().contains("yann"))
 			quoteDefault(msg, yann);
-		else if (msg.getContentRaw().equalsIgnoreCase("jules"))
+		else if (msg.getContentRaw().contains("jules"))
 			Jules(msg);
-		else if (msg.getContentRaw().equalsIgnoreCase("noke"))
+		else if (msg.getContentRaw().contains("noke"))
 			quoteDefault(msg, noke);
-		else if (msg.getContentRaw().equalsIgnoreCase("jhuna"))
+		else if (msg.getContentRaw().contains("jhuna"))
 			quoteDefault(msg, jhuna);
-		else if (msg.getContentRaw().equalsIgnoreCase("virgile"))
+		else if (msg.getContentRaw().contains("virgile"))
 			Virgile(msg);
-		else if (msg.getContentRaw().equalsIgnoreCase("smog") || msg.getContentRaw().equalsIgnoreCase("aurel")){
+		else if (msg.getContentRaw().contains("smog") || msg.getContentRaw().contains("aurel")){
 			quoteDefault(msg,smog);
 		}
 		else return false;
