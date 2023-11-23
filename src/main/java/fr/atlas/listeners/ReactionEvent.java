@@ -117,6 +117,8 @@ public class ReactionEvent {
 
         if (containsIgnoreCase(msg.getContentRaw().replace('é', 'e'), "societer"))
             msg.getChannel().sendFiles(FileUpload.fromData(imgExtenders.getFile("societer.png"))).queue();
+        if (msg.getContentRaw().startsWith("repose"))
+            retakethis(msg);
         if (containsIgnoreCase(msg.getContentRaw(), "putain")) {
             putain(msg);
         }
@@ -283,6 +285,13 @@ public class ReactionEvent {
      */
     public static void putain(Message msg){
         msg.getChannel().sendMessage("┬─┬ノ( º _ ºノ)").queue(new MessageConsumer("(°-°)\\ ┬─┬", 100, new MessageConsumer("(╯°□°)╯    ]", 100, new MessageConsumer("(╯°□°)╯  ︵  ┻━┻", 100, null))));
+    }
+
+    public static void retakethis(Message msg) {
+        if (msg.getReferencedMessage() != null && msg.getContentRaw().startsWith("repose"))
+        {
+            msg.getReferencedMessage().editMessage("(╯°□°)╯  ︵  ┻━┻").queue(new MessageConsumer("(╯°□°)╯    ]", 100, new MessageConsumer("(°-°)\\ ┬─┬", 100, new MessageConsumer("┬─┬ノ( º _ ºノ)", 100, null))));
+        }
     }
 
     /**

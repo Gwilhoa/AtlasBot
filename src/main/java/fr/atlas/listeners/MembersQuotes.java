@@ -97,7 +97,7 @@ public class MembersQuotes {
     static String[] enki =
 	{
 		"https://www.alcool-info-service.fr",
-		"https://www.pole-emploi.fr",
+		"https://mediapi.org/support",
 		"https://www.caf.fr/",
 		"Enki, c'est mon hébergeur, il a chopé 2147483647 fois le covid\nil est parfois un peu con dans ses décisions",
 		"il a pas une carte fidelité burger king ?",
@@ -109,9 +109,9 @@ public class MembersQuotes {
 	{
 		"TRACTEUR VROUM VROUM !!!!!",
 		"vitesse moyenne en montagne : 250km/h",
-		"aparemment le porc ça le connait",
+		"apparemment le porc ça le connait",
 		"hmmm, de ce qu'on m'a dis il aime bien boire, et il vole des panneaux",
-		"aparemment il sait qui gagne entre un tracteur et un mur"
+		"apparemment il sait qui gagne entre un tracteur et un mur"
 	};
     
     static String[] anto =
@@ -195,7 +195,7 @@ public class MembersQuotes {
 	static void Virgile(Message msg) throws IOException {
 		int r = new Random().nextInt(virgile.length);
 		if (r == 7) {
-			msg.getChannel().sendMessage("il a juste fait 2147483647 game,\nen vrai il en a peut etre fait plus mais j'arrive plus a compter");
+			msg.getChannel().sendMessage("il a juste fait 2147483647 game,\nen vrai il en a peut etre fait plus mais j'arrive plus a compter").queue();
 		} else {
 			msg.getChannel().sendMessage(virgile[r]).queue();
 		}
