@@ -1,6 +1,9 @@
 # AtlasBot
+![logo_b2K.svg](documentations%2Flogo_b2K.svg)
+
 
 Atlas est un projet d'un bot développé pour le groupe Bitume2000 il a un interet amusant et utile pour les membres du groupe.
+
 
 # Dépendances principales
 
