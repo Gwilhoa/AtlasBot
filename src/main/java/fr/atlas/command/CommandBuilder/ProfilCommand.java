@@ -49,9 +49,9 @@ public class ProfilCommand {
                 .setFooter("rang : "+ i);
         System.out.println("\""+mem.getTitle()+"\"");
         if (mem.getTitle() != null) {
-            eb.setTitle("Profil de __" + mem.getTitle() + "__ " + member.getUser().getName());
+            eb.setTitle("Profil de __" + mem.getTitle() + "__ " + mem.getName());
         } else {
-            eb.setTitle("Profil de " + member.getUser().getName());
+            eb.setTitle("Profil de " + mem.getName());
         }
         return eb;
     }
